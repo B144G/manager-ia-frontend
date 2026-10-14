@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Connexion · MANAGER-IA</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b1322">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/home.css">
+</head>
+<body class="home au" data-mode="login">
+<div class="au-grid">
+  <aside class="au-side" aria-hidden="false">
+    <a class="logo" href="index.html" aria-label="MANAGER-IA, accueil">MANAGER<b>-IA</b></a>
+    <div class="au-pitch">
+      <h2>L'agent IA qui gère votre activité avec vous</h2>
+      <ul>
+        <li>Service client, projets, budget, organisation et équipe dans un seul espace</li>
+        <li>Une IA qui connaît vos données et propose, vous validez</li>
+        <li>Un assistant intégré qui vous guide à chaque étape</li>
+      </ul>
+    </div>
+    <img src="assets/img/gestion.svg" alt="Aperçu du tableau de bord MANAGER-IA" width="640" height="420">
+  </aside>
+
+  <main class="au-main">
+    <a class="logo au-logo" href="index.html" aria-label="MANAGER-IA, accueil">MANAGER<b>-IA</b></a>
+
+    <section class="au-card" id="vOff" hidden>
+      <h1>Serveur non branché</h1>
+      <p class="au-sub">Les comptes ont besoin du serveur MANAGER-IA. Ouvrez <b>config.js</b>, réglez <b>API_BASE</b> (voir le README), puis rechargez cette page.</p>
+      <a class="btn" href="index.html">Retour à l'accueil</a>
+    </section>
+
+    <section class="au-card" id="vForgot" hidden>
+      <h1>Mot de passe oublié</h1>
+      <p class="au-sub">Entrez l'e-mail ou le téléphone de votre compte. Avec un e-mail, vous recevez un lien valable 1 heure. Avec un téléphone, l'équipe vous contacte pour vérifier que c'est bien vous, puis vous envoie le lien.</p>
+      <form id="ff" novalidate>
+        <label class="fld"><span>E-mail ou téléphone</span><input id="fcontact" autocomplete="username" inputmode="email" required></label>
+        <p class="hm-err" id="ferr" role="alert"></p>
+        <p class="au-sub" id="fok" role="status" hidden></p>
+        <button class="btn primary au-go" type="submit" id="fgo">Recevoir le lien</button>
+      </form>
+      <p class="au-back"><a href="#" id="backLogin">← Retour à la connexion</a></p>
+    </section>
+
+    <section class="au-card" id="vForm">
+      <h1>Connexion</h1>
+      <p class="au-sub">Accédez à votre tableau de bord.</p>
+      <form id="f" novalidate>
+        <label class="fld"><span>E-mail ou téléphone</span><input id="contact" autocomplete="username" inputmode="email" required></label>
+        <label class="fld"><span>Mot de passe</span>
+          <span class="au-pass"><input id="pass" type="password" autocomplete="current-password" required><button type="button" id="eye" aria-label="Afficher le mot de passe" aria-pressed="false">Afficher</button></span>
+        </label>
+        <p class="hm-err" id="err" role="alert"></p>
+        <button class="btn primary au-go" type="submit" id="go">Se connecter</button>
+      </form>
+      <p class="au-alt"><a href="#oubli" id="forgotLink">Mot de passe oublié ?</a></p>
+      <p class="au-alt">Pas encore de compte ? <a href="inscription.html">Créer un compte</a></p>
+      <p class="au-back"><a href="index.html">← Retour à l'accueil</a></p>
+    </section>
+  </main>
+</div>
+<script src="config.js"></script>
+<script src="assets/site-assistant.js"></script>
+<script src="assets/auth.js"></script>
+</body>
+</html>

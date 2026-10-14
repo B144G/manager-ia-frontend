@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Espace de travail · MANAGER-IA</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b1322">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/ws.css">
+</head>
+<body class="ws">
+<div id="app"><p class="ws-boot">Chargement…</p></div>
+<div id="toasts" aria-live="polite"></div>
+
+<!-- Noyau, puis une sous-application par fichier : pour en ajouter une, créez un fichier et ajoutez sa ligne ici. -->
+<script src="config.js"></script>
+<script src="assets/ws/core.js"></script>
+<script src="assets/ws/dashboard.js"></script>
+<script src="assets/ws/alerts.js"></script>
+<script src="assets/ws/support.js"></script>
+<script src="assets/ws/projects.js"></script>
+<script src="assets/ws/budget.js"></script>
+<script src="assets/ws/stock.js"></script>
+<script src="assets/ws/crm.js"></script>
+<script src="assets/ws/hr.js"></script>
+<script src="assets/vendor/qrcode.min.js"></script>
+<script src="assets/ws/sales.js"></script>
+<script src="assets/ws/structure.js"></script>
+<script src="assets/ws/processes.js"></script>
+<script src="assets/ws/team.js"></script>
+<script>WS.start();</script>
+</body>
+</html>
