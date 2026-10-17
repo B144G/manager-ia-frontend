@@ -35,14 +35,64 @@ function h(tag, attrs) {
 function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); return n; }
 
 /* ---------- Serveur ---------- */
-function rq(method, path, body) {
+var reauthTask = null;
+function reauthenticate() {
+  if (reauthTask) return reauthTask;
+  if (!window.MIWebAuthn) return Promise.reject(new Error("La vérification biométrique n'est pas disponible dans ce navigateur."));
+  reauthTask = fetch((CFG.API_BASE || "") + "/api/webauthn/session/options", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" } })
+    .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { var e = new Error(j.error || "Vérification biométrique impossible."); e.status = r.status; throw e; } return j; }); })
+    .then(function (j) { return new Promise(function (resolve, reject) {
+      var overlay = h("div", { class: "ws-modal", role: "dialog", "aria-modal": "true", "aria-label": "Vérification biométrique" });
+      var box = h("div", { class: "ws-box" });
+      var error = h("p", { class: "ws-err" });
+      var button = h("button", { class: "btn primary", type: "button", text: "Vérifier mon identité" });
+      box.appendChild(h("div", { class: "ws-box-h" }, h("h2", { text: "Session verrouillée" })));
+      box.appendChild(h("div", { class: "ws-box-b" }, h("p", { text: "Confirmez avec l'empreinte digitale, le visage ou le code de déverrouillage de votre appareil pour reprendre." }), error, button));
+      overlay.appendChild(box); document.body.appendChild(overlay);
+      button.addEventListener("click", function () {
+        error.textContent = ""; button.disabled = true;
+        var proof;
+        try { proof = window.MIWebAuthn.authenticate(j.options); }
+        catch (e) { error.textContent = e.message; button.disabled = false; return; }
+        Promise.resolve(proof).then(function (response) {
+          return fetch((CFG.API_BASE || "") + "/api/webauthn/session/verify", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ challengeId: j.challengeId, response: response }) });
+        }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (body) { if (!r.ok) throw new Error(body.error || "Empreinte ou vérification de l'appareil incorrecte."); }); })
+          .then(function () { overlay.remove(); resolve(); }, function (e) {
+            error.textContent = e.message; button.disabled = false;
+            fetch((CFG.API_BASE || "") + "/api/webauthn/session/options", { method: "POST", credentials: "include", headers: { "Content-Type": "application/json" } })
+              .then(function (r) { return r.json(); }).then(function (fresh) { if (fresh.options) j = fresh; }).catch(function () {});
+          });
+      });
+      button.focus();
+    }); })
+    .then(function () { reauthTask = null; }, function (e) { reauthTask = null; if (/Enregistrez la sécurité biométrique/.test(e.message)) location.replace("connexion.html?passkey=setup"); throw e; });
+  return reauthTask;
+}
+
+function rq(method, path, body, retried) {
   return fetch((CFG.API_BASE || "") + path, { method: method, credentials: "include", headers: { "Content-Type": "application/json" }, body: body === undefined ? undefined : JSON.stringify(body) })
     .then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) {
+        if (r.status === 428 && !retried && !path.startsWith("/api/webauthn/")) return reauthenticate().then(function () { return rq(method, path, body, true); });
         if (!r.ok) { var e = new Error(j.error || "Une erreur est survenue. Réessayez."); e.status = r.status; throw e; }
         return j;
       });
     });
+}
+
+var lastActivityPing = 0;
+function recordActivity() {
+  if (document.visibilityState !== "visible" || Date.now() - lastActivityPing < 45000) return;
+  lastActivityPing = Date.now();
+  rq("POST", "/api/session/activity").catch(function () {});
+}
+function startActivityTracking() {
+  ["pointerdown", "keydown", "touchstart"].forEach(function (eventName) {
+    window.addEventListener(eventName, recordActivity, { passive: true });
+  });
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") rq("GET", "/api/me").catch(function () {});
+  });
 }
 function api(method, path, body) { return rq(method, "/api/ws" + path, body); }
 function oapi(method, path, body) { return api(method, "/orgs/" + S.orgId + path, body); }
@@ -404,7 +454,12 @@ window.WS = {
         h("p", { text: "L'espace de travail a besoin du serveur MANAGER-IA (comptes, données, IA). Ouvrez config.js et réglez API_BASE : \"\" si le site est servi par le serveur, ou l'adresse du serveur sinon. Voir le README." }),
         h("a", { class: "btn", href: "index.html", text: "Retour au site" })));
     }
-    rq("GET", "/api/me").then(function (j) { S.user = j.user; boot(); }, function () { showAuth(); });
+    rq("GET", "/api/me").then(function (j) { S.user = j.user; startActivityTracking(); boot(); }, function (e) {
+      if (e && e.status === 428) return reauthenticate().then(function () {
+        return rq("GET", "/api/me").then(function (j) { S.user = j.user; startActivityTracking(); boot(); });
+      }).catch(function () { showAuth(); });
+      showAuth();
+    });
   }
 };
 })();

@@ -15,6 +15,35 @@ function rq(method, path, body) {
     .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { var e = new Error(j.error || "Une erreur est survenue. Réessayez."); e.status = r.status; throw e; } return j; }); });
 }
 
+function finishLogin(j) {
+  var enroll = j.webauthn === "register";
+  showPasskey(j.options, j.challengeId, enroll, "/api/webauthn/login/verify");
+}
+
+function enrollPasskey() {
+  return rq("POST", "/api/webauthn/register/options").then(function (j) {
+    showPasskey(j.options, j.challengeId, true, "/api/webauthn/register/verify");
+  });
+}
+
+function showPasskey(options, challengeId, enroll, verifyPath) {
+  var panel = $("vPasskey"), button = $("passkeyGo"), error = $("passkeyErr");
+  $("vForm").hidden = true;
+  if ($("vCode")) $("vCode").hidden = true;
+  panel.hidden = false;
+  button.disabled = false;
+  button.onclick = function () {
+    error.textContent = "";
+    button.disabled = true;
+    var proof;
+    try { proof = enroll ? window.MIWebAuthn.register(options) : window.MIWebAuthn.authenticate(options); }
+    catch (e) { error.textContent = e.message; button.disabled = false; return; }
+    Promise.resolve(proof).then(function (response) {
+      return rq("POST", verifyPath, { challengeId: challengeId, enroll: verifyPath === "/api/webauthn/login/verify" && enroll, response: response });
+    }).then(function () { location.replace(DASHBOARD); }).catch(function (e) { error.textContent = e.message; button.disabled = false; });
+  };
+}
+
 $("eye").addEventListener("click", function () {
   var p = $("pass"), show = p.type === "password";
   p.type = show ? "text" : "password";
@@ -31,16 +60,32 @@ $("f").addEventListener("submit", function (e) {
   if ((mode === "register" && !name) || !contact || !pass) { err.textContent = mode === "register" ? "Remplissez tous les champs." : "Entrez votre e-mail ou téléphone et votre mot de passe."; return; }
   btn.disabled = true;
   rq("POST", mode === "register" ? "/api/register" : "/api/login", mode === "register" ? { name: name, contact: contact, pass: pass } : { contact: contact, pass: pass })
-    .then(function (j) { if (j && j.verify) { btn.disabled = false; askCode(contact, j); } else location.replace(DASHBOARD); })
+    .then(function (j) {
+      if (j && j.verify) { btn.disabled = false; askCode(contact, j); return; }
+      if (j && j.webauthn) return finishLogin(j);
+      location.replace(DASHBOARD);
+    })
     .catch(function (x) { err.textContent = x.message; btn.disabled = false; });
 });
 
-// Inscription : étape du code reçu par e-mail (valable 1 minute).
-var tick = null, pending = "";
+// Inscription : code e-mail valable 30 secondes, puis enregistrement de la clé d'accès.
+var tick = null, pending = "", pendingLogin = false;
+if (mode === "register") {
+  rq("GET", "/api/register/info").then(function (j) {
+    if (!j.emailReady) {
+      var notice = $("signupNotice");
+      notice.textContent = "L'inscription est temporairement indisponible : le serveur doit d'abord être configuré pour envoyer des e-mails (SMTP).";
+      notice.hidden = false;
+      $("go").disabled = true;
+    }
+  }).catch(function () {});
+}
 function askCode(contact, j) {
-  pending = contact; $("vForm").hidden = true; $("vCode").hidden = false;
+  pending = contact; pendingLogin = j.loginVerify === true; $("vForm").hidden = true; $("vCode").hidden = false;
   $("codeTo").textContent = j.contact || contact; $("code").value = ""; $("cerr").textContent = "";
-  countdown(j.expiresIn || 60, j.resendIn || 20); $("code").focus();
+  $("vCode").querySelector("h1").textContent = pendingLogin ? "Confirmez votre adresse e-mail" : "Vérifiez votre e-mail";
+  $("cgo").textContent = pendingLogin ? "Continuer vers la clé biométrique" : "Valider et accéder à mon espace";
+  countdown(j.expiresIn || 30, j.resendIn || 20); $("code").focus();
 }
 function countdown(life, wait) {
   clearInterval(tick);
@@ -63,19 +108,17 @@ if ($("fc")) {
     err.textContent = "";
     if (code.length !== 6) { err.textContent = "Entrez le code à 6 chiffres."; return; }
     btn.disabled = true;
-    rq("POST", "/api/register/verify", { contact: pending, code: code })
-      .then(function () { clearInterval(tick); location.replace(DASHBOARD); })
+    (pendingLogin ? rq("POST", "/api/login/verify-email", { contact: pending, code: code }).then(finishLogin) : rq("POST", "/api/register/verify", { contact: pending, code: code }).then(function () { clearInterval(tick); return enrollPasskey(); }))
+      .then(function () { clearInterval(tick); })
       .catch(function (x) { err.textContent = x.message; btn.disabled = false; });
   });
   $("resend").addEventListener("click", function () {
     $("cerr").textContent = "";
     rq("POST", "/api/register/resend", { contact: pending })
-      .then(function (j) { countdown(j.expiresIn || 60, j.resendIn || 20); $("code").value = ""; $("code").focus(); })
+      .then(function (j) { countdown(j.expiresIn || 30, j.resendIn || 20); $("code").value = ""; $("code").focus(); })
       .catch(function (x) { $("cerr").textContent = x.message; });
   });
   $("cback").addEventListener("click", function (e) { e.preventDefault(); clearInterval(tick); $("vCode").hidden = true; $("vForm").hidden = false; });
-  // Si les e-mails sont actifs, le champ demande une adresse e-mail.
-  rq("GET", "/api/register/info").then(function (j) { if (j.verify) { var l = $("contact").previousElementSibling; if (l) l.textContent = "Adresse e-mail"; $("contact").placeholder = "vous@exemple.com"; var s = document.querySelector(".au-sub"); if (s) s.textContent = "C'est gratuit. Un code de vérification vous est envoyé par e-mail."; } }).catch(function () {});
 }
 
 // Mot de passe oublié (page de connexion seulement)

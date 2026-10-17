@@ -90,11 +90,6 @@ function openModal(content) {
   document.addEventListener("keydown", onKey); x.focus();
   return m;
 }
-$("playBtn").addEventListener("click", function () {
-  var v = document.createElement("video"); v.controls = true; v.autoplay = true; v.playsInline = true; v.poster = "video/poster.jpg"; v.setAttribute("aria-label", "Vidéo de présentation de MANAGER-IA");
-  var s = document.createElement("source"); s.src = "video/manager-ia.mp4"; s.type = "video/mp4"; v.appendChild(s);
-  openModal(v);
-});
 function zoom(img) {
   var wrap = document.createElement("div"); wrap.className = "s-zoom";
   var im = document.createElement("img"); im.src = img.currentSrc || img.src; im.alt = img.getAttribute("alt") || "";

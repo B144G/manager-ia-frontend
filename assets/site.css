@@ -26,6 +26,7 @@ body.site{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 var(--f-
 .site :focus-visible{outline:3px solid var(--p);outline-offset:3px;border-radius:8px}
 .s-sec{padding-block:clamp(64px,9vw,120px);position:relative}
 .s-sec.alt{background:var(--bg2)}
+.s-presentation-video{display:block;width:min(100%,1000px);max-height:min(70vh,640px);aspect-ratio:16/9;object-fit:contain;margin-inline:auto;border-radius:8px;background:#080808;box-shadow:var(--sh2)}
 .s-eyebrow{display:inline-flex;align-items:center;gap:8px;font:700 13px/1 var(--f-h);color:var(--p);letter-spacing:.02em;padding:8px 14px;border-radius:999px;background:var(--soft);border:1px solid var(--soft2)}
 .s-head{max-width:760px;margin:0 auto clamp(36px,5vw,64px);text-align:center;display:grid;gap:16px;justify-items:center}
 .s-head h2{font-size:clamp(30px,4.6vw,52px);font-weight:800}
@@ -61,6 +62,25 @@ body.site{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 var(--f-
 .s-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .s-links.open{display:grid;position:absolute;left:0;right:0;top:100%;background:var(--bg);border-bottom:1px solid var(--line);padding:12px clamp(18px,4vw,32px) 22px;gap:2px;box-shadow:0 30px 40px -30px rgba(11,16,32,.5)}
 .s-links.open a{font-size:18px;padding:14px 8px;border-radius:12px;color:var(--ink)}
+@media (max-width:640px){
+  .s-wrap{padding-inline:16px}
+  .s-nav .s-wrap{min-height:60px;padding-top:env(safe-area-inset-top,0px)}
+  .s-brand{font-size:18px}
+  .s-hero{padding-top:28px}
+  .s-hero h1{font-size:clamp(30px,12vw,46px)}
+  .s-hero .lead{font-size:16px}
+  .s-act{width:100%}
+  .s-act .btn{width:100%}
+  .s-head{margin-bottom:28px}
+  .s-hero .s-cta{display:grid;grid-template-columns:1fr;gap:10px;max-width:100%}
+  .s-bento,.s-sec-grid,.s-plans,.s-road,.s-flow,.s-contact,.s-panel.on{grid-template-columns:1fr}
+  .s-panel{padding:16px}
+  .s-row{padding:12px 14px}
+  .s-row .t b{font-size:16px}
+  .s-form,.s-cta{display:grid;grid-template-columns:1fr;gap:10px}
+  .s-final h2{font-size:clamp(28px,9vw,42px)}
+  .s-modal .box{padding:8px}
+}
 @media (min-width:640px){.s-act .pri{display:inline-flex}}
 @media (min-width:1100px){.s-links{display:flex}.s-act{margin-left:0}#burger{display:none}.s-nav .s-wrap{gap:20px}}
 @media (min-width:1280px){.s-act .login{display:inline-flex}.s-nav .s-wrap{gap:28px}}

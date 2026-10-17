@@ -15,6 +15,7 @@ function readEnv() {
 }
 const env = readEnv();
 if (process.env.API_BASE !== undefined) env.API_BASE = process.env.API_BASE; // une variable d'environnement prime sur .env (pratique pour un essai ponctuel)
+if (env.API_BASE === undefined) env.API_BASE = 'http://localhost:3000';
 let base = env.API_BASE;
 let value;
 if (base === undefined || base === 'null') value = 'null';

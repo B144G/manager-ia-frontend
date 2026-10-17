@@ -22,8 +22,11 @@ img{max-width:100%}
   --ok:#4cd39b; --pink:#f07aa3; --wa:#25d366; --wa-fg:#06210f; --warn-bg:#33290f; color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--f-body);-webkit-text-size-adjust:100%;overflow-x:hidden}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--f-body);-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;overflow-x:hidden;padding-bottom:max(0px,env(safe-area-inset-bottom))}
 a{color:inherit}
+img,svg,video{display:block;max-width:100%}
+input,select,textarea,button{font:inherit}
+input,select,textarea{font-size:16px}
 h1,h2,h3{font-family:var(--f-display);line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.02em}
 p{margin:0}
 .wrap{max-width:1120px;margin-inline:auto;padding-inline:20px}
@@ -195,6 +198,43 @@ footer .wrap{display:grid;gap:12px}
 #cform input{min-width:0}
 #cform button{padding:0 18px;border-radius:10px;border:0;background:var(--accent);color:var(--accent-fg);font-weight:700;min-height:48px}
 
+@media (max-width:640px){
+  .wrap{padding-inline:16px}
+  header.top .wrap{min-height:56px;padding-top:env(safe-area-inset-top,0px)}
+  nav.main{gap:0;margin-left:0;max-width:100%;padding-bottom:2px}
+  nav.main a{padding:8px 10px;font-size:13px}
+  .logo{font-size:18px}
+  .hero{padding-block:28px 28px}
+  .hero h1{font-size:clamp(30px,11vw,40px);margin-top:12px}
+  .hero p.lead{font-size:16px}
+  .cta-row{display:grid;grid-template-columns:1fr;gap:10px;margin-top:24px}
+  .cta-row > *{width:100%}
+  .btn{min-height:46px;padding:12px 16px}
+  .stats{gap:12px 18px}
+  .stats b{font-size:28px}
+  .phone{max-width:100%}
+  section{padding-block:52px}
+  .head{margin-bottom:24px}
+  .head h2{font-size:clamp(26px,8vw,34px)}
+  .head p{font-size:15px}
+  .step,.card,.plan{padding:18px}
+  .cards,.plans,.steps,.two{grid-template-columns:1fr}
+  .plan .price{font-size:32px}
+  .crow{padding:12px 14px}
+  .crow .t b{font-size:16px}
+  .crow .btn{flex:1 1 100%}
+  #fab,#waf,#chat{bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+  #fab{right:12px}
+  #waf{left:12px}
+  #chat{right:10px;left:10px;width:auto;height:min(70vh,520px)}
+}
+@media (max-width:420px){
+  .top .wrap{gap:8px}
+  .logo{letter-spacing:-.02em}
+  nav.main a{padding-inline:8px}
+  .marq span{padding:8px 12px;font-size:13px}
+  .b{max-width:92%}
+}
 @media (min-width:860px){
   .hero .grid{grid-template-columns:1.15fr .85fr;gap:56px}
   .cards.c3{grid-template-columns:repeat(3,1fr)}
