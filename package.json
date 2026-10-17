@@ -1,0 +1,12 @@
+{
+  "name": "manager-ia-frontend",
+  "version": "1.0.0",
+  "description": "Site MANAGER-IA (page de présentation, connexion, espace de travail). Pages statiques : aucun framework, aucune dépendance.",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "config": "node scripts/make-config.js",
+    "start": "node scripts/make-config.js && node scripts/serve.js"
+  }
+}

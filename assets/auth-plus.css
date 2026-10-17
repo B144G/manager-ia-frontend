@@ -1,0 +1,36 @@
+/* Pages de connexion, d'inscription et de mot de passe : écran partagé, formulaire net, même langage visuel que la page de présentation. */
+body.au{background:var(--bg)}
+.au-grid{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr)}
+.au-main{display:grid;place-content:center;justify-items:center;gap:26px;padding:28px 18px 80px;position:relative;background:radial-gradient(60% 40% at 50% 0,color-mix(in srgb,var(--p) 10%,transparent),transparent 70%)}
+.au-logo{display:flex}
+.au-card{width:min(460px,100%);padding:clamp(26px,4vw,40px);border:1px solid var(--line);border-radius:28px;background:var(--card);box-shadow:var(--sh2)}
+.au-card h1{font-size:clamp(28px,4vw,34px);font-weight:800;margin-bottom:8px;letter-spacing:-.03em}
+.au-sub{color:var(--muted);margin-bottom:22px;font-size:16px}
+.au-card form{display:grid;gap:18px}
+.au-card .fld{display:grid;gap:8px}.au-card .fld span{font:600 14px var(--f-h)}.au-card .fld small{color:var(--muted)}
+.au-card .fld input,.au-card .fld textarea{width:100%;font:16px var(--f-b);color:var(--ink);background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-height:54px;resize:vertical;transition:border-color .2s,box-shadow .2s,background .2s}
+.au-card .fld input:focus,.au-card .fld textarea:focus{outline:0;border-color:var(--p);box-shadow:0 0 0 4px var(--soft2);background:var(--card)}
+.au-pass{display:flex;gap:8px;align-items:stretch}.au-pass input{flex:1;min-width:0}
+.au-pass button{border:1px solid var(--line);border-radius:14px;background:var(--bg2);padding:0 14px;font:600 14px var(--f-h);min-width:96px;color:var(--ink);cursor:pointer}
+.au-pass button:hover{border-color:var(--p)}
+.au-go{width:100%}
+.au-alt{margin-top:22px;padding-top:20px;border-top:1px solid var(--line);text-align:center;color:var(--muted)}
+.au-alt a,.au-alt button.link{color:var(--p);font-weight:700;text-decoration:none}.au-alt a:hover{text-decoration:underline}
+.au-back{margin-top:14px;text-align:center;font-size:14px}.au-back a{color:var(--muted);text-decoration:none}.au-back a:hover{color:var(--ink)}
+.hm-err{color:var(--rose);font-weight:600;font-size:14px;min-height:1em}
+#timer{font-weight:600}
+.au-side{display:none}
+@media (min-width:980px){
+  .au-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
+  .au-logo{display:none}
+  .au-main{padding:48px}
+  .au-side{display:flex;flex-direction:column;justify-content:space-between;gap:34px;padding:44px 56px;background:#0b1020;color:#eef1fa;position:relative;overflow:hidden}
+  .au-side::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 55% at 10% 0,rgba(99,102,241,.55),transparent 65%),radial-gradient(55% 45% at 100% 100%,rgba(167,139,250,.45),transparent 65%)}
+  .au-side>*{position:relative}
+  .au-side .s-logo{color:#fff}.au-side .s-logo b{color:#a5b4fc}
+  .au-pitch h2{font:800 clamp(32px,3.4vw,46px)/1.08 var(--f-h);letter-spacing:-.03em;max-width:16ch;color:#fff}
+  .au-pitch ul{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:14px;max-width:48ch}
+  .au-pitch li{display:flex;gap:12px;color:#c4cbe6;font-size:17px;line-height:1.5}
+  .au-pitch li::before{content:"";flex:none;width:24px;height:24px;margin-top:1px;border-radius:50%;background:rgba(18,183,106,.2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234ade80' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/14px no-repeat}
+  .au-side img{width:112%;max-width:none;height:auto;border-radius:22px 0 0 22px;border:1px solid rgba(255,255,255,.14);border-right:0;box-shadow:0 40px 80px -30px rgba(0,0,0,.8);margin-right:-56px;margin-bottom:-44px}
+}

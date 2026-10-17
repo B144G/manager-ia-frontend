@@ -5,11 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Espace de travail · MANAGER-IA</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#0b1322">
+<meta name="theme-color" content="#4f46e5">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="stylesheet" href="assets/ws.css">
+<link rel="stylesheet" href="assets/ws-plus.css">
 </head>
 <body class="ws">
 <div id="app"><p class="ws-boot">Chargement…</p></div>
@@ -26,11 +30,15 @@
 <script src="assets/ws/stock.js"></script>
 <script src="assets/ws/crm.js"></script>
 <script src="assets/ws/hr.js"></script>
+<script src="assets/ws/accounting.js"></script>
+<script src="assets/ws/integrations.js"></script>
+<script src="assets/ws/billing.js"></script>
 <script src="assets/vendor/qrcode.min.js"></script>
 <script src="assets/ws/sales.js"></script>
 <script src="assets/ws/structure.js"></script>
 <script src="assets/ws/processes.js"></script>
 <script src="assets/ws/team.js"></script>
-<script>WS.start();</script>
+<script src="assets/app-start.js"></script>
+<script src="assets/pwa.js"></script>
 </body>
 </html>

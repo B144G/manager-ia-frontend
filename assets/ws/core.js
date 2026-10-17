@@ -58,7 +58,7 @@ function fail(e) { if (e && e.status === 401) { S.user = null; showAuth(); retur
 function modal(title, build, opts) {
   var back = h("div", { class: "ws-modal", role: "dialog", "aria-modal": "true", "aria-label": title });
   var box = h("div", { class: "ws-box" + (opts && opts.wide ? " wide" : "") });
-  function close() { back.remove(); document.removeEventListener("keydown", esc); }
+  function close() { if (!back.parentNode) return; back.remove(); document.removeEventListener("keydown", esc); if (opts && opts.onclose) opts.onclose(); }
   function esc(ev) { if (ev.key === "Escape") close(); }
   document.addEventListener("keydown", esc);
   back.addEventListener("mousedown", function (ev) { if (ev.target === back) close(); });
@@ -112,7 +112,7 @@ function confirmBox(text, onYes, yesText) {
 }
 
 /* ---------- Outils d'affichage ---------- */
-function money(n) { return Number(n || 0).toLocaleString("fr-FR") + " " + (S.info ? S.info.org.currency : "FCFA"); }
+function money(n) { return Number(n || 0).toLocaleString("fr-FR").replace(/\u202f/g, "\u00a0") + "\u00a0" + (S.info ? S.info.org.currency : "FCFA"); } /* espace insécable classique : toutes les polices la savent afficher */
 function dateFr(d) { if (!d) return ""; var p = String(d).slice(0, 10).split("-"); return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : d; }
 function today() { return new Date().toISOString().slice(0, 10); }
 var RANK = { member: 1, manager: 2, admin: 3, owner: 4 };

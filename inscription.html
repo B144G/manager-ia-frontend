@@ -5,34 +5,30 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Créer un compte · MANAGER-IA</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#0b1322">
+<meta name="theme-color" content="#4f46e5">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="stylesheet" href="assets/home.css">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/auth-plus.css">
 </head>
-<body class="home au" data-mode="register">
+<body class="site au" data-mode="register">
 <div class="au-grid">
   <aside class="au-side" aria-hidden="false">
-    <a class="logo" href="index.html" aria-label="MANAGER-IA, accueil">MANAGER<b>-IA</b></a>
-    <div class="au-pitch">
-      <h2>L'agent IA qui gère votre activité avec vous</h2>
-      <ul>
-        <li>Service client, projets, budget, organisation et équipe dans un seul espace</li>
-        <li>Une IA qui connaît vos données et propose, vous validez</li>
-        <li>Un assistant intégré qui vous guide à chaque étape</li>
-      </ul>
-    </div>
+    <a class="s-logo" href="index.html" aria-label="MANAGER-IA, accueil"><i>MI</i><span>MANAGER<b>-IA</b></span></a>
+    <div class="au-pitch"><h2>Créez votre espace gratuit</h2><ul><li>Réponses aux clients sur WhatsApp, stock, factures, équipe</li><li>Une IA qui propose, vous validez</li><li>Paiement MTN et Orange Money quand vous êtes prêt</li></ul></div>
     <img src="assets/img/gestion.svg" alt="Aperçu du tableau de bord MANAGER-IA" width="640" height="420">
   </aside>
 
   <main class="au-main">
-    <a class="logo au-logo" href="index.html" aria-label="MANAGER-IA, accueil">MANAGER<b>-IA</b></a>
+    <a class="s-logo au-logo" href="index.html" aria-label="MANAGER-IA, accueil"><i>MI</i><span>MANAGER<b>-IA</b></span></a>
 
     <section class="au-card" id="vOff" hidden>
       <h1>Serveur non branché</h1>
       <p class="au-sub">Les comptes ont besoin du serveur MANAGER-IA. Ouvrez <b>config.js</b>, réglez <b>API_BASE</b> (voir le README), puis rechargez cette page.</p>
-      <a class="btn" href="index.html">Retour à l'accueil</a>
+      <a class="s-btn" href="index.html">Retour à l'accueil</a>
     </section>
 
     <section class="au-card" id="vForm">
@@ -43,10 +39,10 @@
         <label class="fld"><span>E-mail ou téléphone</span><input id="contact" autocomplete="username" inputmode="email" required></label>
         <label class="fld"><span>Mot de passe</span>
           <span class="au-pass"><input id="pass" type="password" autocomplete="new-password" required><button type="button" id="eye" aria-label="Afficher le mot de passe" aria-pressed="false">Afficher</button></span>
-          <small>6 caractères minimum</small>
+          <small>8 caractères minimum, évitez les mots de passe faciles</small>
         </label>
         <p class="hm-err" id="err" role="alert"></p>
-        <button class="btn primary au-go" type="submit" id="go">Créer mon compte</button>
+        <button class="s-btn pri big au-go" type="submit" id="go">Créer mon compte</button>
       </form>
       <p class="au-alt">Déjà un compte ? <a href="connexion.html">Se connecter</a></p>
       <p class="au-back"><a href="index.html">← Retour à l'accueil</a></p>
@@ -59,7 +55,7 @@
         <label class="fld"><span>Code reçu</span><input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*" aria-describedby="timer" required></label>
         <p class="au-sub" id="timer" aria-live="polite"></p>
         <p class="hm-err" id="cerr" role="alert"></p>
-        <button class="btn primary au-go" type="submit" id="cgo">Valider et accéder à mon espace</button>
+        <button class="s-btn pri big au-go" type="submit" id="cgo">Valider et accéder à mon espace</button>
       </form>
       <p class="au-alt"><button type="button" class="link" id="resend" disabled>Renvoyer le code</button> · <a href="#" id="cback">Changer d'adresse</a></p>
     </section>

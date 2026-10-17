@@ -6,35 +6,39 @@
 <title>Nouveau mot de passe · MANAGER-IA</title>
 <meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#0b1322">
+<meta name="theme-color" content="#4f46e5">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="stylesheet" href="assets/home.css">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/auth-plus.css">
 </head>
-<body class="home au">
+<body class="site au">
 <div class="au-grid">
-  <aside class="au-side"><a class="logo" href="index.html" aria-label="MANAGER-IA, accueil">MANAGER<b>-IA</b></a>
-    <div class="au-pitch"><h2>Choisissez un nouveau mot de passe</h2><ul><li>Au moins 6 caractères</li><li>Le lien ne sert qu'une fois et dure 1 heure</li><li>Vos autres appareils seront déconnectés</li></ul></div></aside>
+  <aside class="au-side"><a class="s-logo" href="index.html" aria-label="MANAGER-IA, accueil"><i>MI</i><span>MANAGER<b>-IA</b></span></a>
+    <div class="au-pitch"><h2>Choisissez un nouveau mot de passe</h2><ul><li>Au moins 8 caractères, pas trop facile à deviner</li><li>Le lien ne sert qu'une fois et dure 1 heure</li><li>Vos autres appareils seront déconnectés</li></ul></div></aside>
   <main class="au-main">
-    <a class="logo au-logo" href="index.html" aria-label="MANAGER-IA, accueil">MANAGER<b>-IA</b></a>
+    <a class="s-logo au-logo" href="index.html" aria-label="MANAGER-IA, accueil"><i>MI</i><span>MANAGER<b>-IA</b></span></a>
     <section class="au-card" id="vForm">
       <h1>Nouveau mot de passe</h1>
       <form id="f" novalidate>
         <label class="fld"><span>Nouveau mot de passe</span><input id="p1" type="password" autocomplete="new-password" required></label>
         <label class="fld"><span>Répétez-le</span><input id="p2" type="password" autocomplete="new-password" required></label>
         <p class="hm-err" id="err" role="alert"></p>
-        <button class="btn primary au-go" type="submit" id="go">Enregistrer</button>
+        <button class="s-btn pri big au-go" type="submit" id="go">Enregistrer</button>
       </form>
     </section>
     <section class="au-card" id="vDone" hidden>
       <h1>C'est fait</h1>
       <p class="au-sub">Votre mot de passe est changé. Vous pouvez vous connecter.</p>
-      <a class="btn primary au-go" href="connexion.html?stay=1">Me connecter</a>
+      <a class="s-btn pri big au-go" href="connexion.html?stay=1">Me connecter</a>
     </section>
     <section class="au-card" id="vOff" hidden>
       <h1>Lien non valable</h1>
       <p class="au-sub">Ce lien est incomplet ou le serveur n'est pas branché. Demandez un nouveau lien depuis la page de connexion.</p>
-      <a class="btn" href="connexion.html">Retour à la connexion</a>
+      <a class="s-btn" href="connexion.html">Retour à la connexion</a>
     </section>
   </main>
 </div>
