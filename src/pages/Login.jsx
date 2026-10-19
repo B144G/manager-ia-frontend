@@ -16,6 +16,8 @@ export default function Login() {
   const [ferr, setFerr] = useState('');
   const [fok, setFok] = useState('');
   const [fbusy, setFbusy] = useState(false);
+  const [tfa, setTfa] = useState(null);      // { ticket } : étape du code de double authentification
+  const [code, setCode] = useState('');
 
   // Déjà connecté : direction le tableau de bord.
   useEffect(() => { if (params.get('stay')) return; rq('GET', '/api/me').then(() => navigate('/app', { replace: true }), () => {}); }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -25,7 +27,17 @@ export default function Login() {
     const contact = v.contact.trim();
     if (!contact || !v.pass) { setErr('Entrez votre e-mail ou téléphone et votre mot de passe.'); return; }
     setBusy(true);
-    try { await rq('POST', '/api/login', { contact, pass: v.pass }); navigate('/app', { replace: true }); } catch (x) { setErr(x.message); setBusy(false); }
+    try {
+      const j = await rq('POST', '/api/login', { contact, pass: v.pass });
+      if (j && j.twofa) { setTfa({ ticket: j.ticket }); setCode(''); setBusy(false); return; }
+      navigate('/app', { replace: true });
+    } catch (x) { setErr(x.message); setBusy(false); }
+  }
+  async function submitCode(e) {
+    e.preventDefault(); setErr('');
+    if (!code.trim()) { setErr('Entrez le code de votre application.'); return; }
+    setBusy(true);
+    try { await rq('POST', '/api/login/2fa', { ticket: tfa.ticket, code: code.trim() }); navigate('/app', { replace: true }); } catch (x) { setErr(x.message); setBusy(false); if (/étape a expiré/i.test(x.message)) setTfa(null); }
   }
   async function submitForgot(e) {
     e.preventDefault(); setFerr(''); setFok('');
@@ -39,7 +51,18 @@ export default function Login() {
   return (
     <>
       <AuthLayout pitch="Bon retour parmi nous" bullets={['Vos clients, votre stock et vos factures vous attendent', 'Une IA qui propose, vous validez', 'Un assistant qui vous guide à chaque étape']}>
-        {forgot ? (
+        {tfa ? (
+          <section className="au-card" id="vTfa">
+            <h1>Vérification</h1>
+            <p className="au-sub">Entrez le code à 6 chiffres de votre application d'authentification. Vous avez perdu votre téléphone ? Utilisez un de vos codes de secours.</p>
+            <form id="ft" noValidate onSubmit={submitCode}>
+              <label className="fld"><span>Code</span><input id="tcode" inputMode="numeric" autoComplete="one-time-code" required autoFocus value={code} onChange={(e) => setCode(e.target.value)} placeholder="123456" /></label>
+              <p className="hm-err" id="terr" role="alert">{err}</p>
+              <button className="s-btn pri big au-go" type="submit" id="tgo" disabled={busy}>Valider</button>
+            </form>
+            <p className="au-back"><a href="#" onClick={(e) => { e.preventDefault(); setTfa(null); setErr(''); }}>← Recommencer</a></p>
+          </section>
+        ) : forgot ? (
           <section className="au-card" id="vForgot">
             <h1>Mot de passe oublié</h1>
             <p className="au-sub">Entrez l'e-mail ou le téléphone de votre compte. Avec un e-mail, vous recevez un lien valable 1 heure. Avec un téléphone, l'équipe vous contacte pour vérifier que c'est bien vous, puis vous envoie le lien.</p>

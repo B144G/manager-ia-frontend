@@ -1,6 +1,7 @@
 import { Component, Suspense, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import InstallPrompt from '../components/InstallPrompt.jsx';
+import AccountSecurity from './AccountSecurity.jsx';
 import AIPanel from './AIPanel.jsx';
 import { MODULE_ICONS, hasModule, moduleComponent } from './registry.js';
 import { Empty, Form, Icon, Loading } from './ui.jsx';
@@ -64,7 +65,8 @@ const AI_MODULES = new Set(['support', 'projects', 'budget', 'stock', 'crm', 'hr
 /** Coque : menu, barre du haut, module affiché, panneau de l'IA. */
 function Shell() {
   const ws = useWs();
-  const { user, orgs, orgId, info, dash, route, aiOpen, setAiOpen, askAI, logout, loadOrg, refreshKey, refreshBadges, setOrgs } = ws;
+  const { user, orgs, orgId, info, dash, route, aiOpen, setAiOpen, askAI, logout, loadOrg, refreshKey, refreshBadges, setOrgs, modal } = ws;
+  const openSecurity = () => modal('Sécurité du compte', () => <AccountSecurity />, { wide: true });
   const shell = useRef(null);
   const main = useRef(null);
   const mods = info.modules.filter((m) => hasModule(m.id));
@@ -127,6 +129,7 @@ function Shell() {
         <div className="ws-me">
           <span className="av gold">{initialsOf(user && user.name)}</span>
           <div><b>{user ? user.name : ''}</b><small>{info.me.roleLabel}</small></div>
+          <button type="button" className="out" title="Sécurité du compte" aria-label="Sécurité du compte" onClick={openSecurity}><Icon name="shield" /></button>
           <button type="button" className="out" title="Me déconnecter" aria-label="Me déconnecter" onClick={logout}><Icon name="out" /></button>
         </div>
       </aside>
@@ -135,7 +138,7 @@ function Shell() {
           <AskBar onAsk={askAI} />
           <span className="grow" />
           <Link className="bell" to={`/app/${orgId}/alerts`} aria-label="Alertes"><Icon name="alerts" /><i className="dot" hidden={!bell} /></Link>
-          <div className="ws-user"><span className="av">{initialsOf(user && user.name)}</span><div><b>{user ? user.name : ''}</b><small>{info.me.roleLabel}</small></div></div>
+          <div className="ws-user" role="button" tabIndex={0} title="Sécurité du compte" style={{ cursor: 'pointer' }} onClick={openSecurity} onKeyDown={(e) => { if (e.key === 'Enter') openSecurity(); }}><span className="av">{initialsOf(user && user.name)}</span><div><b>{user ? user.name : ''}</b><small>{info.me.roleLabel}</small></div></div>
         </header>
         <main className="ws-main" id="ws-main" ref={main}>
           <div className="ws-mod" key={`${orgId}-${cur}-${refreshKey}`}>
