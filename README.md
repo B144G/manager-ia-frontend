@@ -1,90 +1,72 @@
-# Liaison site (frontend) ↔ serveur (backend)
+# MANAGER-IA : le site et l'espace de travail (frontend React)
 
-Deux dossiers, deux adresses. Le site doit connaître l'adresse du serveur, et le serveur doit autoriser l'adresse du site.
+Application **React 18 + Vite**, prévue pour être hébergée sur **Vercel**. Elle parle au serveur (API Node.js / PostgreSQL) du dépôt `manager-ia-backend`, hébergé sur **Render** (base de données chez **Neon**).
 
-| | Dossier | Adresse en essai local | Où se règle le lien |
-|---|---|---|---|
-| **Serveur (API)** | `manager-ia-backend` | `http://localhost:3000` | fichier `.env` du serveur : `PORT`, `SITE_URL`, `ALLOWED_ORIGINS` |
-| **Site** | `manager-ia-frontend` | `http://localhost:5173` | fichier `.env` du site : `API_BASE` (puis `npm run config`) |
-
-## Essayer sur votre ordinateur (3 commandes de chaque côté)
-
-```bash
-# 1) Le serveur
-cd manager-ia-backend
-npm run setup      # crée .env avec des secrets aléatoires et affiche le mot de passe administrateur
-npm install
-npm start          # http://localhost:3000
-
-# 2) Le site (autre terminal)
-cd manager-ia-frontend
-npm start          # écrit config.js depuis .env puis sert le site sur http://localhost:5173
+```
+Navigateur ──► Vercel (ce dépôt : pages React)
+                 │  /api/...  (redirigé par vercel.json, même domaine pour le navigateur)
+                 └────────────► Render (manager-ia-backend) ──► Neon (PostgreSQL)
 ```
 
-Ouvrez <http://localhost:5173>. Si le port 3000 est déjà pris sur votre machine, changez `PORT` dans le `.env` du serveur **et** `API_BASE` dans le `.env` du site (puis `npm run config`).
+## Contenu
 
-## En ligne
-
-| Situation | `.env` du site | `.env` du serveur |
-|---|---|---|
-| **Même domaine** (recommandé : copiez le site dans `manager-ia-backend/public`) | `API_BASE=` (vide) | `ALLOWED_ORIGINS` vide, `COOKIE_SAMESITE=lax` |
-| **Deux domaines** (site `https://manager-ia.com`, serveur `https://api.manager-ia.com`) | `API_BASE=https://api.manager-ia.com` | `ALLOWED_ORIGINS=https://manager-ia.com`, `SITE_URL=https://manager-ia.com`, `COOKIE_SAMESITE=none`, `COOKIE_SECURE=true` (HTTPS obligatoire) |
-
-Vérifications : `https://<serveur>/api/health` doit répondre `{"ok":true}` ; dans le navigateur, la connexion crée un cookie `mia_token`. Une erreur « Origine non autorisée » signifie que `ALLOWED_ORIGINS` ne contient pas l'adresse exacte du site (avec `http`/`https` et sans `/` final).
-
-Le `.env` du site ne contient **aucun secret** (l'adresse du serveur est publique). Celui du serveur en contient : ne le publiez jamais (il est exclu des zips et de Git).
-
----
-
-# MANAGER-IA : le site (frontend)
-
-Le site est un ensemble de pages statiques (HTML, CSS, JavaScript simples, rien à compiler) :
-
-| Fichier | Rôle |
+| Adresse | Page |
 |---|---|
-| `index.html` | **Page de présentation** (style : `assets/site.css`, comportements : `assets/site.js`) : message d'accueil, bandeau défilant, grille des fonctions, histoire au défilement, glissière des sous-applications, onglets « pour qui », contrôle et sécurité, tarifs, questions, contact |
-| `connexion.html` | Page de connexion. Sous le formulaire : « Créer un compte » |
-| `inscription.html` | Page d'inscription. Sous le formulaire : « Se connecter » |
-| `app.html` | **Le tableau de bord** (espace de travail de l'agent IA). On y arrive après la connexion ou l'inscription |
-| `form.html` | Formulaire public pour les clients d'une organisation (chaque message devient une demande de service client) |
-| `assets/ws/*.js`, `assets/ws.css` | Le tableau de bord : une sous-application par fichier (`core.js` = noyau, menu, panneau de l'IA) |
-| `assets/home.css`, `assets/home.js`, `assets/auth.js`, `assets/site-assistant.js` | Style et comportement de la présentation, des pages de connexion/inscription et de l'assistant IA intégré |
-| `assets/img/*.svg` | Illustrations de chaque sous-application (modifiables) |
-| `config.js` | **Le seul fichier à modifier pour brancher votre serveur** |
-| `video/` | La vidéo de présentation et son image d'aperçu |
+| `/` | Présentation (accueil, tarifs, FAQ, contact, assistant du site) |
+| `/connexion`, `/inscription`, `/reinitialiser` | Comptes (code par e-mail à l'inscription, mot de passe oublié) |
+| `/app` , `/app/<organisation>/<module>` | Espace de travail (15 sous-applications, assistant IA, installable comme application) |
+| `/chat?o=<jeton>&c=<campagne>` | Chat public d'une organisation (lien de publicité, QR code) |
+| `/form?o=<jeton>` | Formulaire « Nous écrire » d'une organisation |
 
-## Parcours d'un visiteur
+Les anciennes adresses (`connexion.html`, `app.html`, `chat.html`…) sont redirigées (`vercel.json`), pour que les e-mails et liens déjà envoyés continuent de marcher.
 
-`index.html` → « Commencer gratuitement » → `connexion.html` → (sans compte : « Créer un compte » → `inscription.html`) → après la connexion ou l'inscription : `app.html` (tableau de bord).
+## Essayer sur votre ordinateur
 
-## 1. Voir le site sur votre ordinateur
+```bash
+# 1) le serveur (voir le README de manager-ia-backend) : http://localhost:3000
+# 2) le site
+cd manager-ia-frontend
+npm install
+cp .env.example .env      # DEV_API_TARGET = adresse du serveur (3000 par défaut)
+npm run dev               # http://localhost:5173
+```
 
-Lancez le backend (voir son README) avec ce dossier copié dans `public/` et `API_BASE: ""` dans `config.js`, puis ouvrez http://localhost:3000. La présentation fonctionne seule (`python3 -m http.server 8080`), mais la connexion, l'inscription et le tableau de bord demandent le backend.
+Vite renvoie `/api/...` vers le serveur : le navigateur ne voit qu'un seul site, les cookies de connexion fonctionnent sans réglage. Si le port 3000 est déjà pris sur votre machine, changez `PORT` dans le `.env` du serveur et `DEV_API_TARGET` ici.
 
-## 2. Brancher votre backend (`config.js`)
+Autres commandes : `npm run build` (dossier `dist/`), `npm run preview`, `npm run lint`.
 
-- **Même domaine (recommandé)** : copiez ce dossier dans `public/` du backend et mettez `API_BASE: ""`.
-- **Autre domaine** : `API_BASE: "https://votre-backend.exemple.com"`, puis dans le `.env` du backend : `ALLOWED_ORIGINS=https://votre-site.exemple.com`, `COOKIE_SAMESITE=none`, `COOKIE_SECURE=true` (HTTPS obligatoire des deux côtés).
+## Mettre en ligne sur Vercel
 
-## 3. Modifier le site
+1. Déployez d'abord le serveur sur Render (voir son README) et notez son adresse, par exemple `https://manager-ia-backend.onrender.com`.
+2. **Ouvrez `vercel.json`** et remplacez `https://VOTRE-SERVEUR.onrender.com` par l'adresse de votre serveur (ligne `"/api/:path*"`). C'est ce qui garde les cookies « du même site » (indispensable sur iPhone/Safari) et évite tout réglage CORS.
+3. Sur <https://vercel.com> : *Add New → Project* → importez ce dépôt GitHub. Vercel détecte Vite (`npm run build`, dossier `dist`). Aucune variable n'est obligatoire.
+4. Une fois en ligne, sur **Render**, réglez `SITE_URL` et `ALLOWED_ORIGINS` avec l'adresse Vercel (ou votre domaine), `COOKIE_SAMESITE=lax`, puis redéployez le serveur.
+5. Testez : `https://votre-site.vercel.app/api/health` doit répondre `{"ok":true,"db":true}` ; puis inscrivez-vous.
+6. Votre propre nom de domaine : *Settings → Domains* sur Vercel, puis mettez-le dans `SITE_URL` / `ALLOWED_ORIGINS` du serveur.
 
-- **Vos numéros et e-mail** : cherchez `237653621388`, `237697836796` et `tendabrandon9@gmail.com` dans `index.html` et `assets/site-assistant.js`.
-- **La vidéo** : remplacez `video/manager-ia.mp4` (même nom) et `video/poster.jpg`.
-- **Les couleurs** : début de `assets/style.css` (variables `--accent`, `--signal`, etc.).
-- **Ajouter une sous-application au tableau de bord** : créez `assets/ws/ma-sous-app.js` (modèle : `WS.register({ id, icon, render(root, c){…} })`), ajoutez sa ligne dans `app.html` et dans `src/workspace/modules.js` côté serveur.
+**Variante sans redirection** : mettre `VITE_API_BASE=https://votre-serveur.onrender.com` dans les variables Vercel et `COOKIE_SAMESITE=none` côté serveur. Moins fiable (Safari bloque les cookies tiers) : à éviter.
 
+Les liens de webhook (WhatsApp, Messenger, Campay) pointent directement vers le **serveur** (Render), pas vers Vercel.
 
-## Vidéo de la page d'accueil
-`video/manager-ia.mp4` (1 min 20, 1080p, voix-off et sous-titres incrustés, environ 19 Mo) et `video/poster.jpg` (image affichée avant la lecture). Pour la remplacer, gardez les mêmes noms de fichiers (MP4 H.264 + AAC de préférence) ou modifiez la balise `<video>` dans `index.html`. La version complète (3 min) n'est pas dans le site : elle est fournie à part pour les démonstrations.
+## Organisation du code
 
+```
+src/
+  main.jsx, App.jsx          routes (React Router) ; chaque groupe de pages ne charge que ses styles (lib/styles.jsx)
+  pages/                     Home (+ pages/home/*), Login, Register, Reset, ContactForm, PublicChat
+  components/                Logo, AuthLayout, SiteAssistant, InstallPrompt
+  lib/                       api.js (appels serveur), format.js, theme.js, styles.jsx
+  styles/                    feuilles de style (site, espace de travail, chat)
+  ws/                        espace de travail : Workspace.jsx (menu, connexion), WsContext.jsx (useWs), ui.jsx, AIPanel.jsx
+  ws/modules/<id>.jsx        une sous-application = un fichier (voir ws/modules/README.md)
+public/                      images, icônes, manifest, service worker (sw.js), page hors connexion
+```
 
-## Fichiers de réglage du site
+Ajouter une sous-application : créez `src/ws/modules/<id>.jsx` (composant par défaut), puis ajoutez son identifiant et son icône dans `src/ws/registry.js` ; le serveur doit la déclarer dans `info.modules`.
 
-| Fichier | Rôle |
-|---|---|
-| `.env` / `.env.example` | `API_BASE` (adresse du serveur) et `PORT` du serveur local |
-| `package.json` | `npm run config` (écrit `config.js` depuis `.env`), `npm start` (config + site local) |
-| `config.js` | **Généré** : lu par le navigateur. Ne le modifiez pas à la main |
-| `scripts/` | `make-config.js`, `serve.js` (aucune dépendance) |
+## Sécurité
 
-Les aperçus (`assets/img/*.svg`) sont des illustrations générées ; pour les modifier, voir le générateur fourni à part (`design-src`).
+- Aucun secret dans ce dépôt : seules des adresses publiques (`.env.example`).
+- Toute donnée affichée passe par React (échappée) ; aucun `dangerouslySetInnerHTML`.
+- `vercel.json` ajoute des en-têtes de sécurité (anti-iframe, `nosniff`, politique de référent).
+- Le service worker (`public/sw.js`) ne met en cache que les fichiers du site, jamais les données (`/api/` n'est pas intercepté).
