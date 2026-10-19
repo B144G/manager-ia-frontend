@@ -86,6 +86,7 @@ export function WsProvider({ children }) {
   const loadOrg = useCallback(async (id, mod, replace) => {
     try {
       const i = await wsApi('GET', '/orgs/' + id);
+      if (orgRef.current !== id) setDash(null); // évite d'afficher les chiffres d'une autre organisation
       orgRef.current = id;
       setOrgId(id); setInfo(i); setOnboarding(null);
       navigate(`/app/${id}/${mod || 'dashboard'}`, { replace: Boolean(replace) });
