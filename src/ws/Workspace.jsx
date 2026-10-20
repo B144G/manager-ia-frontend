@@ -1,4 +1,4 @@
-import { Component, Suspense, useEffect, useLayoutEffect, useRef } from 'react';
+import { Component, Suspense, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import InstallPrompt from '../components/InstallPrompt.jsx';
 import AccountSecurity from './AccountSecurity.jsx';
@@ -74,16 +74,17 @@ function Shell() {
   if (!mods.some((m) => m.id === cur)) cur = 'dashboard';
   const Mod = moduleComponent(cur);
 
-  // Mise en page : la structure de la maquette est gardée identique de 640 à 1400 px de large (réduite pour tenir) ; sous 640 px, version téléphone.
-  useLayoutEffect(() => {
-    const fit = () => {
-      const w = window.innerWidth, z = w >= 640 && w < 1400 ? w / 1400 : 1;
-      document.documentElement.style.setProperty('--z', String(z));
-      if (shell.current) shell.current.style.zoom = z === 1 ? '' : String(z);
-    };
-    fit(); window.addEventListener('resize', fit);
-    return () => window.removeEventListener('resize', fit);
-  }, []);
+  // Menu : barre latérale fixe sur grand écran (≥ 1100 px), tiroir qui glisse depuis la gauche sur tablette et téléphone.
+  const [navOpen, setNavOpen] = useState(false);
+  useEffect(() => { setNavOpen(false); }, [cur, orgId]);
+  useEffect(() => {
+    document.body.classList.toggle('nav-open', navOpen);
+    if (!navOpen) return undefined;
+    const esc = (e) => { if (e.key === 'Escape') setNavOpen(false); };
+    document.addEventListener('keydown', esc);
+    return () => { document.removeEventListener('keydown', esc); document.body.classList.remove('nav-open'); };
+  }, [navOpen]);
+  useEffect(() => { const big = () => { if (window.innerWidth >= 1100) setNavOpen(false); }; window.addEventListener('resize', big); return () => window.removeEventListener('resize', big); }, []);
   useEffect(() => { document.body.classList.toggle('ai-open', aiOpen); return () => document.body.classList.remove('ai-open'); }, [aiOpen]);
   useEffect(() => { if (main.current) main.current.scrollTop = 0; window.scrollTo(0, 0); }, [cur, orgId]);
   useEffect(() => { refreshBadges(); }, [cur, refreshKey, refreshBadges]);
@@ -111,9 +112,10 @@ function Shell() {
   const members = info.limits.membersUsed;
 
   return (
-    <div className="ws-shell" ref={shell}>
-      <aside className="ws-side">
-        <Link className="logo" to="/">MANAGER<b>-IA</b></Link>
+    <div className={'ws-shell' + (navOpen ? ' nav-open' : '')} ref={shell}>
+      <div className="ws-scrim" onClick={() => setNavOpen(false)} aria-hidden="true" />
+      <aside className="ws-side" id="ws-side" aria-label="Menu principal">
+        <div className="ws-side-h"><Link className="logo" to="/">MANAGER<b>-IA</b></Link><button type="button" className="ws-close" aria-label="Fermer le menu" onClick={() => setNavOpen(false)}>×</button></div>
         <div className="ws-org">
           <span className="av">{initialsOf(info.org.name)}</span>
           <div>
@@ -135,6 +137,9 @@ function Shell() {
       </aside>
       <div className="ws-col">
         <header className="ws-top2">
+          <button type="button" className="ws-burger" aria-label="Ouvrir le menu" aria-expanded={navOpen} aria-controls="ws-side" onClick={() => setNavOpen(!navOpen)}>
+            <svg viewBox="0 0 24 24" className="ic" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+          </button>
           <AskBar onAsk={askAI} />
           <span className="grow" />
           <Link className="bell" to={`/app/${orgId}/alerts`} aria-label="Alertes"><Icon name="alerts" /><i className="dot" hidden={!bell} /></Link>

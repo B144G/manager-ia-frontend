@@ -40,7 +40,7 @@ Autres commandes : `npm run build` (dossier `dist/`), `npm run preview`, `npm ru
 1. Déployez d'abord le serveur sur Render (voir son README) et notez son adresse, par exemple `https://manager-ia-backend.onrender.com`.
 2. **Ouvrez `vercel.json`** et remplacez `https://VOTRE-SERVEUR.onrender.com` par l'adresse de votre serveur (ligne `"/api/:path*"`). C'est ce qui garde les cookies « du même site » (indispensable sur iPhone/Safari) et évite tout réglage CORS.
 3. Sur <https://vercel.com> : *Add New → Project* → importez ce dépôt GitHub. Vercel détecte Vite (`npm run build`, dossier `dist`). Aucune variable n'est obligatoire.
-4. Une fois en ligne, sur **Render**, réglez `SITE_URL` et `ALLOWED_ORIGINS` avec l'adresse Vercel (ou votre domaine), `COOKIE_SAMESITE=lax`, puis redéployez le serveur.
+4. Une fois en ligne, sur **Render**, réglez `SITE_URL` et `ALLOWED_ORIGINS` avec l'adresse Vercel (ou votre domaine), `COOKIE_SAMESITE=lax` et **`TRUST_PROXY=2`** (Vercel puis Render : sans cela, tous les visiteurs auraient la même adresse IP), puis redéployez le serveur.
 5. Testez : `https://votre-site.vercel.app/api/health` doit répondre `{"ok":true,"db":true}` ; puis inscrivez-vous.
 6. Votre propre nom de domaine : *Settings → Domains* sur Vercel, puis mettez-le dans `SITE_URL` / `ALLOWED_ORIGINS` du serveur.
 
@@ -63,6 +63,13 @@ public/                      images, icônes, manifest, service worker (sw.js), 
 ```
 
 Ajouter une sous-application : créez `src/ws/modules/<id>.jsx` (composant par défaut), puis ajoutez son identifiant et son icône dans `src/ws/registry.js` ; le serveur doit la déclarer dans `info.modules`.
+
+## Affichage sur tous les écrans (responsive)
+
+- **Téléphones iOS et Android (dès 320 px)**, tablettes et ordinateurs : aucun défilement horizontal de la page. Les seuls défilements latéraux sont des **carrousels voulus** (onglets, offres tarifaires, sous-applications de l'accueil, colonnes du Kanban, planning).
+- **Espace de travail** (`src/styles/responsive.css`) : barre latérale fixe dès 1100 px ; en dessous, **menu tiroir** (bouton ☰), assistant IA en panneau plein écran sur téléphone, fenêtres en feuille qui monte du bas. Les grilles se règlent sur la largeur réelle du contenu (requêtes de conteneur), même quand l'assistant IA est ouvert.
+- **Site public et comptes** (`src/styles/responsive-site.css`) : zones tactiles de 44 px minimum, champs à 16 px (iOS ne zoome plus), marges de sécurité des écrans à encoche (`env(safe-area-inset-*)`), textes très longs coupés plutôt que débordants.
+- Pour ajouter un écran : laissez les classes existantes (`ws-head`, `ws-tabs`, `g2/g3/g4`, `kpis4`, `kan`…) faire le travail, et n'utilisez pas de largeurs fixes en pixels.
 
 ## Sécurité
 

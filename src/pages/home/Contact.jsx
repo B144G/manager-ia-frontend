@@ -23,7 +23,7 @@ export default function Contact() {
   return (
     <section className="s-sec alt" id="contact"><div className="s-wrap s-contact">
       <div className="rv">
-        <div className="s-head left"><span className="s-eyebrow">Contact</span><h2>Une question ? Parlons-en</h2><p>Le plus rapide : un message sur WhatsApp. Vous pouvez aussi nous écrire par e-mail ou avec le formulaire.</p></div>
+        <div className="s-head left"><span className="s-eyebrow">Contact</span><h2>Une question ? Parlons-en</h2><p>Le plus rapide : un message sur WhatsApp. Vous pouvez aussi nous écrire par e-mail ou avec le formulaire.</p></div>
         <div className="s-rows">
           <div className="s-row"><div className="t"><small>WhatsApp</small><b>+237 653 62 13 88</b></div><a className="s-btn wa" href={`https://wa.me/${SUPPORT_WHATSAPP}`} target="_blank" rel="noopener noreferrer">Écrire</a></div>
           <div className="s-row"><div className="t"><small>WhatsApp</small><b>+237 697 83 67 96</b></div><a className="s-btn wa" href="https://wa.me/237697836796" target="_blank" rel="noopener noreferrer">Écrire</a></div>

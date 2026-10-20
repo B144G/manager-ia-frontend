@@ -1,0 +1,104 @@
+/* ================================================================================================
+   ESPACE DE TRAVAIL : mise en page adaptative (téléphones iOS / Android, tablettes, ordinateurs)
+   Chargé en dernier : c'est lui qui décide de la structure.
+   - ≥ 1100 px : barre latérale fixe + contenu (+ colonne de l'assistant IA à droite si ouverte)
+   - < 1100 px : barre latérale = tiroir (bouton menu), assistant IA = panneau qui se superpose
+   - Les grilles se règlent sur la largeur RÉELLE du contenu (requêtes de conteneur), pas sur celle de l'écran
+   - Rien ne dépasse horizontalement : les seuls défilements latéraux sont des carrousels voulus (Kanban, planning)
+   ================================================================================================ */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body.ws{min-height:100vh;min-height:100dvh;overflow-x:clip}
+img,svg,video,canvas{max-width:100%}
+/* un nom, un e-mail ou une adresse très long (saisi par un client) ne doit jamais élargir la page */
+.ws-main :is(p,span,b,strong,small,a,h1,h2,h3,li,td,label,code){overflow-wrap:anywhere}
+.ws-shell *{min-width:0}
+.ws-shell{display:grid;grid-template-columns:268px minmax(0,1fr);min-height:100vh;min-height:100dvh}
+body.ai-open .ws-shell{grid-template-columns:268px minmax(0,1fr) 380px}
+.ws-side{position:sticky;top:0;height:100vh;height:100dvh}
+.ws-col{min-width:0}
+.ws-main{container:ws-main/inline-size;min-width:0}
+.ws-main>.ws-mod{width:100%;max-width:1360px;margin-inline:auto}
+.ws-ai{position:sticky;top:0;height:100vh;height:100dvh}
+.ws-burger,.ws-scrim,.ws-close{display:none}
+.ws-side-h{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+/* ---- Grilles du tableau de bord : selon la largeur du contenu ---- */
+.g2,.g3,.g4{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
+@container ws-main (min-width:760px){.g2{grid-template-columns:minmax(0,1.78fr) minmax(0,1fr)}.g3{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr)}}
+@container ws-main (min-width:1000px){.g4{grid-template-columns:minmax(0,1.9fr) minmax(0,1fr) minmax(0,.86fr)}}
+@container ws-main (min-width:720px){.kpis4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@container ws-main (min-width:480px) and (max-width:719px){.kpis4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Contenu étroit : service client en une colonne, Kanban en CARROUSEL (on glisse de colonne en colonne) */
+@container ws-main (max-width:759px){
+  .tk{grid-template-columns:minmax(0,1fr)}
+  .kan{display:flex;gap:12px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:12px;scrollbar-width:thin}
+  .kan>*{flex:0 0 min(86%,360px);scroll-snap-align:start}
+}
+.plan-wrap{overscroll-behavior-x:contain}
+
+/* ---- Tablette et téléphone : le menu devient un tiroir ---- */
+@media (max-width:1099px){
+  .ws-shell,body.ai-open .ws-shell{grid-template-columns:minmax(0,1fr)}
+  .ws-burger{display:grid;place-items:center;flex:none;width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+  .ws-burger .ic{width:22px;height:22px;stroke:currentColor}
+  .ws-side{position:fixed;top:0;left:0;bottom:0;z-index:90;width:min(86vw,340px);height:100vh;height:100dvh;overflow-y:auto;overscroll-behavior:contain;
+    padding:calc(18px + env(safe-area-inset-top,0px)) 14px calc(18px + env(safe-area-inset-bottom,0px));
+    transform:translateX(-102%);visibility:hidden;transition:transform .26s cubic-bezier(.2,.8,.2,1),visibility 0s linear .26s}
+  .ws-shell.nav-open .ws-side{transform:none;visibility:visible;transition:transform .26s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 90px rgba(0,0,0,.6)}
+  .ws-scrim{display:block;position:fixed;inset:0;z-index:85;background:rgba(5,9,20,.58);opacity:0;pointer-events:none;transition:opacity .2s}
+  .ws-shell.nav-open .ws-scrim{opacity:1;pointer-events:auto}
+  body.nav-open{overflow:hidden}
+  .ws-close{display:grid;place-items:center;flex:none;width:44px;height:44px;border:0;border-radius:50%;background:#16264a;color:#fff;font-size:26px;line-height:1;cursor:pointer}
+  .ws-nav a{padding:13px 12px}
+  .ws-top2{padding:calc(10px + env(safe-area-inset-top,0px)) clamp(12px,3vw,24px) 10px;gap:10px}
+  .ws-ask{max-width:none}
+  .ws-main{padding:18px clamp(14px,3vw,28px) calc(110px + env(safe-area-inset-bottom,0px))}
+  input,select,textarea{font-size:16px} /* évite le zoom automatique d'iOS dans les champs */
+  /* Assistant IA : panneau qui se superpose */
+  .ws-ai{position:fixed;top:0;right:0;bottom:0;left:auto;z-index:95;width:min(440px,100vw);border-left:1px solid var(--line);box-shadow:-24px 0 70px rgba(0,0,0,.4);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .ws-ai[hidden]{display:none!important}
+  .ws-fab{right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+}
+
+/* ---- Barres d'onglets : une seule ligne qu'on fait glisser (carrousel) ---- */
+@media (max-width:1099px){
+  .ws-tabs{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 2px 8px;margin-bottom:6px}
+  .ws-tabs::-webkit-scrollbar{display:none}
+  .ws-tabs .tab{flex:none;scroll-snap-align:start;white-space:nowrap;min-height:44px;padding-inline:16px}
+}
+
+/* ---- Téléphone ---- */
+@media (max-width:639px){
+  .ws-ai{width:100vw;border:0;box-shadow:none}
+  .ws-user div{display:none}
+  .ws-top2 .bell{width:42px;height:42px}
+  .ws-ask input{font-size:16px}
+  .kpi b,.stat b{font-size:clamp(15px,4.7vw,21px);white-space:nowrap}
+  .kpis,.kpis4{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .ws-head{flex-direction:column;align-items:stretch;gap:12px}
+  /* boutons d'action du titre : grille régulière, le bouton principal sur toute la largeur */
+  .ws-head .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%}
+  .ws-head .row .btn,.ws-head .row input,.ws-head .row select{width:100%;min-height:46px;border-radius:14px;padding:10px 12px;line-height:1.2;text-align:center}
+  .ws-head .row .btn.primary{grid-column:1/-1}
+  .ws-head .row .btn:only-child,.ws-head .row .btn:nth-last-child(2):nth-child(odd){grid-column:1/-1}
+  .ws-modal{padding:0;align-items:flex-end}
+  .ws-box,.ws-box.wide{width:100%;max-width:100%;max-height:94vh;max-height:94dvh;border-radius:20px 20px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
+  .ws-box-b{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  .ws-form .row{flex-direction:column;align-items:stretch}.ws-form .row .btn{width:100%}
+  #toasts{left:12px;right:12px;width:auto;transform:none;bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .toast{width:100%}
+}
+
+/* ---- Tablette ---- */
+@media (min-width:640px) and (max-width:1099px){
+  .ws-box{width:min(640px,92vw)}.ws-box.wide{width:min(860px,94vw)}
+  .ws-fab span{display:inline}
+}
+
+/* ---- Très grands écrans : le contenu reste lisible ---- */
+@media (min-width:1700px){.ws-main{padding-inline:clamp(32px,4vw,72px)}}
+
+/* ---- Préférences d'accessibilité ---- */
+@media (prefers-reduced-motion:reduce){.ws-side,.ws-scrim{transition:none!important}}
+
+h1,h2,h3{text-wrap:balance}
