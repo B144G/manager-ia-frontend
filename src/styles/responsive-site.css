@@ -1,0 +1,49 @@
+/* ================================================================================================
+   SITE PUBLIC ET PAGES DE COMPTE : finitions téléphone / tablette (chargé en dernier)
+   - Aucun débordement horizontal : les seuls défilements latéraux sont des carrousels voulus (onglets, tarifs, sous-applications)
+   - Zones tactiles ≥ 44 px, champs à 16 px (iOS ne zoome pas), marges de sécurité des écrans à encoche
+   ================================================================================================ */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body.site{overflow-x:clip}
+img,svg,video,canvas{max-width:100%}
+.s-wrap :is(p,li,h1,h2,h3,a,span,small,b){overflow-wrap:break-word}
+.s-wrap{--gut:clamp(18px,4vw,32px);padding-inline:max(var(--gut),env(safe-area-inset-left,0px)) max(var(--gut),env(safe-area-inset-right,0px))}
+.s-row .t b,.s-foot a,.s-plan li{overflow-wrap:anywhere}
+
+@media (max-width:1079px){
+  /* Tarifs : carrousel (on glisse d'une offre à l'autre) */
+  .s-plans{display:flex;gap:14px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+    margin-inline:calc(var(--gut) * -1);padding:18px var(--gut) 22px;scroll-padding-inline:var(--gut)}
+  .s-plans::-webkit-scrollbar{display:none}
+  .s-plans>.s-plan{flex:0 0 min(84%,340px);scroll-snap-align:start;grid-column:auto}
+}
+@media (min-width:700px) and (max-width:1079px){.s-plans>.s-plan{flex-basis:min(46%,340px)}}
+
+@media (max-width:760px){
+  /* Onglets « Pour qui » : une seule ligne qu'on fait glisser */
+  .s-tabs{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+    margin-inline:calc(var(--gut) * -1);padding:2px var(--gut) 8px}
+  .s-tabs::-webkit-scrollbar{display:none}
+  .s-tab{flex:none;white-space:nowrap;scroll-snap-align:start;min-height:44px}
+  .s-btn,.s-icon{min-height:44px}
+  input,textarea,select{font-size:16px}
+  .s-foot{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+  .s-final{padding-inline:max(22px,env(safe-area-inset-left,0px))}
+  #sa{left:8px;right:8px;width:auto;max-width:none;bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+}
+
+/* ---- Connexion, inscription, mot de passe, formulaire ---- */
+@media (max-width:979px){
+  .au-main{padding:max(18px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+  .au-card{width:100%;max-width:520px;margin-inline:auto}
+}
+.au-card .au-sub{margin-bottom:20px}
+.au-card form{row-gap:14px}
+.au-card .hm-err{margin:0;min-height:0}.au-card .hm-err:empty{margin-top:-14px}
+@media (max-width:979px){.au-main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:420px){.au-card{padding:22px 18px;border-radius:22px}.au-card h1{font-size:28px}}
+
+@media (prefers-reduced-motion:reduce){.s-plans,.s-tabs,.s-rail{scroll-behavior:auto}}
+
+h1,h2,h3{text-wrap:balance}
+p,li{text-wrap:pretty}

@@ -1,13 +1,33 @@
 {
   "name": "manager-ia-frontend",
-  "version": "1.0.0",
-  "description": "Site MANAGER-IA (page de présentation, connexion, espace de travail). Pages statiques : aucun framework, aucune dépendance.",
+  "version": "2.0.0",
+  "description": "Site et espace de travail MANAGER-IA : application React (Vite), hébergeable sur Vercel. Le serveur (API) est dans le dépôt manager-ia-backend (Render + PostgreSQL Neon).",
   "private": true,
   "license": "UNLICENSED",
-  "engines": { "node": ">=18" },
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "config": "node scripts/make-config.js",
-    "dev": "npm start",
-    "start": "node scripts/make-config.js && node scripts/serve.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "vite",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "vite": "^6.0.0"
   }
 }
