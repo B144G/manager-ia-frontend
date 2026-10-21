@@ -215,3 +215,11 @@ body.ai-open .ws-fab{display:none}
 /* QR codes et guide WhatsApp */
 .ws-qrs{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:16px}.ws-qr{display:grid;gap:8px;justify-items:start}
 .ws-steps{margin:8px 0 0;padding-left:22px;display:grid;gap:8px}
+
+.wa-bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:8px 0}.wa-bar i{display:block;height:100%;background:var(--brand,#1d4ed8);transition:width .3s}
+.wa-steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.wa-steps li{border:1px solid var(--line);border-radius:12px;padding:10px 12px}.wa-steps li.done{opacity:.75}.wa-steps li.open{border-color:var(--brand,#1d4ed8)}
+.wa-h{display:flex;gap:10px;align-items:center}.wa-n{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--line);background:var(--surface);font-weight:700;cursor:pointer;color:inherit}
+.wa-steps li.done .wa-n{background:#16a34a;border-color:#16a34a;color:#fff}.wa-n.info{display:grid;place-items:center;cursor:default}
+.wa-t{flex:1;min-width:0;text-align:left;background:none;border:0;font:inherit;font-weight:600;cursor:pointer;color:inherit;padding:6px 0;overflow-wrap:anywhere}
+.wa-b{padding:8px 0 2px 40px;display:grid;gap:6px}.wa-b p{margin:0}

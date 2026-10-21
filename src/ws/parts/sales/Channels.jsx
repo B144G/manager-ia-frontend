@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useWs } from '../../WsContext.jsx';
 import { Empty, Form, Loading, useLoad } from '../../ui.jsx';
+import { WaWizard } from './WaWizard.jsx';
 import { Pill, QrBlock, ReadOnly, hasQr, publicBase } from './util.jsx';
 
 /** Adresse du webhook + jeton de vérification, à coller dans Meta. */
@@ -40,16 +41,7 @@ export function Whatsapp({ onChange }) {
         <p>{w.connected ? <Pill t={['Connecté', 'good']} /> : <Pill t={['Non connecté', 'bad']} />}<span>{w.number ? '  +' + w.number : ''}</span></p>
         <p className="muted">Quand un prospect écrit sur votre numéro WhatsApp (par exemple après une publicité « Cliquer pour envoyer un message »), l'assistant lui répond, l'enregistre et prend sa commande, comme sur la page web. Vous pouvez reprendre la conversation à tout moment.</p>
       </div>
-      <div className="ws-card">
-        <h2>Comment le connecter</h2>
-        <ol className="ws-steps">
-          <li>Créez un compte Meta Business et une application de type « Entreprise » sur developers.facebook.com, puis ajoutez le produit WhatsApp.</li>
-          <li>Ajoutez votre numéro WhatsApp Business. Il ne doit pas rester utilisé dans l'application WhatsApp normale.</li>
-          <li>Copiez ci-dessous l'identifiant du numéro (Phone number ID), un jeton d'accès permanent et le secret de l'application.</li>
-          <li>Dans Meta (WhatsApp &gt; Configuration), collez l'adresse du webhook et le jeton de vérification affichés plus bas, puis abonnez le champ « messages ».</li>
-          <li>Cliquez sur « Tester la connexion », puis écrivez un message à votre numéro pour essayer.</li>
-        </ol>
-      </div>
+      <WaWizard w={w} />
       <div className="ws-card">
         <h2>Vos identifiants</h2>
         <Form
