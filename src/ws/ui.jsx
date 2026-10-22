@@ -15,6 +15,16 @@ export const ICONS = {
   structure: 'M12 3v5M5 14v-3h14v3M5 14v4M12 14v4M19 14v4M9 3h6v5H9zM2 18h6v3H2zM9 18h6v3H9zM16 18h6v3h-6z',
   processes: 'M4 6h16M4 12h10M4 18h7M17 15l2 2 3-4',
   team: 'M16 11a4 4 0 10-8 0M4 21a8 8 0 0116 0M20 8a3 3 0 010 6',
+  payroll: 'M4 6h16v12H4zM4 10h16M8 15h3M15 15h1',
+  fiscal: 'M6 3h9l4 4v14H6zM14 3v5h5M9 13h6M9 17h6',
+  marketing: 'M3 11v3a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1zM15 9a4 4 0 010 6M18 6a8 8 0 010 12',
+  logistics: 'M2 6h12v10H2zM14 9h4l3 3v4h-7zM6 19a2 2 0 100-4 2 2 0 000 4zM17 19a2 2 0 100-4 2 2 0 000 4z',
+  production: 'M3 21V10l6 3V10l6 3V6h6v15zM7 17h2M12 17h2M17 17h2',
+  construction: 'M4 21V8l8-5 8 5v13M9 21v-6h6v6M8 11h2M14 11h2',
+  maintenance: 'M14 6a4 4 0 005 5l-9 9a2.1 2.1 0 01-3-3l9-9a4 4 0 00-2-2zM15 5l3 3',
+  legal: 'M12 3v18M5 7h14M5 7l-3 7a3 3 0 006 0zM19 7l-3 7a3 3 0 006 0zM8 21h8',
+  memory: 'M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3zM5 17a3 3 0 013-3h11M9 8h6',
+  agents: 'M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2zM18 15l1 2 2 1-2 1-1 2-1-2-2-1 2-1z',
   out: 'M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9',
   alerts: 'M6 8a6 6 0 1112 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 004 0',
   shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',
@@ -86,9 +96,9 @@ export function Form({ fields, submitText, onSubmit, extra, className = 'ws-form
       {fields.map((d) => {
         const id = 'f_' + d.k;
         let el;
-        if (d.type === 'select') el = <select id={id} value={vals[d.k]} onChange={(e) => set(d.k, e.target.value)}>{(d.options || []).map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select>;
-        else if (d.type === 'textarea') el = <textarea id={id} rows={d.rows || 4} placeholder={d.placeholder || ''} value={vals[d.k]} onChange={(e) => set(d.k, e.target.value)} />;
-        else el = <input id={id} type={d.type || 'text'} placeholder={d.placeholder || ''} autoComplete="off" value={vals[d.k]} onChange={(e) => set(d.k, e.target.value)} />;
+        if (d.type === 'select') el = <select id={id} style={{ fontSize: 16 }} value={vals[d.k]} onChange={(e) => set(d.k, e.target.value)}>{(d.options || []).map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select>;
+        else if (d.type === 'textarea') el = <textarea id={id} style={{ fontSize: 16 }} rows={d.rows || 4} placeholder={d.placeholder || ''} value={vals[d.k]} onChange={(e) => set(d.k, e.target.value)} />;
+        else el = <input id={id} style={{ fontSize: 16 }} type={d.type || 'text'} placeholder={d.placeholder || ''} autoComplete="off" value={vals[d.k]} onChange={(e) => set(d.k, e.target.value)} />;
         return <label className="fld" htmlFor={id} key={d.k}><span>{d.label}</span>{el}{d.hint ? <small>{d.hint}</small> : null}</label>;
       })}
       <p className="ws-err" role="alert">{err}</p>
@@ -104,7 +114,7 @@ export function ModalBox({ title, wide, onClose, children }) {
   return (
     <div className="ws-modal" role="dialog" aria-modal="true" aria-label={title} onMouseDown={(ev) => { if (ev.target === ev.currentTarget) onClose(); }}>
       <div className={'ws-box' + (wide ? ' wide' : '')}>
-        <div className="ws-box-h"><h2>{title}</h2><button className="x" type="button" aria-label="Fermer" onClick={onClose}>×</button></div>
+        <div className="ws-box-h"><h2>{title}</h2><button className="x" type="button" aria-label="Fermer" style={{ minWidth: 44, minHeight: 44 }} onClick={onClose}>×</button></div>
         <div className="ws-box-b" ref={body}>{children}</div>
       </div>
     </div>

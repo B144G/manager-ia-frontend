@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { SUGGEST } from './registry.js';
+import NoteBox from './parts/memory/NoteBox.jsx';
 import { useWs } from './WsContext.jsx';
 
 /** Panneau de l'assistant IA (colonne de droite) : une discussion par sous-application. */
 export default function AIPanel({ mod }) {
-  const { oapi, fail, info, aiOpen, setAiOpen, pendingAsk, setPendingAsk } = useWs();
+  const { oapi, fail, info, aiOpen, setAiOpen, pendingAsk, setPendingAsk, modal } = useWs();
   const [msgs, setMsgs] = useState([]);
   const [remaining, setRemaining] = useState(null);
   const [text, setText] = useState('');
@@ -48,6 +49,11 @@ export default function AIPanel({ mod }) {
   }, [mod, oapi]);
   useEffect(() => { if (pendingAsk && aiOpen) { const q = pendingAsk; setPendingAsk(null); setTimeout(() => go(q), 0); } }, [pendingAsk]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // « Noter ceci » : propose d'enregistrer un résumé de la discussion dans la mémoire de l'entreprise (après relecture et validation).
+  const lastAnswer = [...msgs].reverse().find((m) => m.role === 'assistant' && !m.err && !m.wait);
+  const canNote = msgs.some((m) => m.role === 'user') && info.modules.some((m) => m.id === 'memory');
+  const note = () => modal('Noter ceci dans la mémoire', (close) => <NoteBox mod={mod} fallback={lastAnswer ? lastAnswer.content : ''} close={close} />, { wide: true });
+
   // Dictée vocale (navigateurs qui la proposent : Chrome, Edge, Safari récents)
   const dictate = () => {
     if (!SR) return;
@@ -74,6 +80,7 @@ export default function AIPanel({ mod }) {
         <div className="row">
           <button className="btn primary small" type="button" disabled={busy} onClick={() => go()}>Envoyer</button>
           {SR ? <button className="btn small" type="button" title="Dicter votre message à la voix" onClick={dictate}>{rec ? 'Écoute… (toucher pour arrêter)' : 'Parler'}</button> : null}
+          {canNote ? <button className="btn small" type="button" title="Enregistrer un résumé de cette discussion dans la mémoire de l'entreprise" onClick={note}>Noter ceci</button> : null}
           <button className="btn small" type="button" onClick={() => oapi('DELETE', '/ai/history?module=' + mod).then(() => setMsgs([{ role: 'assistant', content: 'Discussion effacée.' }]), fail)}>Effacer</button>
         </div>
         <p className="ai-info">{remaining === null ? '' : remaining + ' message(s) IA restant(s) avant le renouvellement'}</p>

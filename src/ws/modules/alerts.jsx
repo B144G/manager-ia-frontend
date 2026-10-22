@@ -3,11 +3,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWs } from '../WsContext.jsx';
 import { Empty, Loaded, useLoad } from '../ui.jsx';
+import Digest from '../parts/alerts/Digest.jsx';
 
 const LV = { high: 'Urgent', medium: 'À surveiller', info: 'Conseil' };
 
 export default function Alerts() {
-  const { oapi, orgId, askAI, fail } = useWs();
+  const { oapi, orgId, askAI, fail, can } = useWs();
   const navigate = useNavigate();
   const [out, setOut] = useState('');
   const [busy, setBusy] = useState(false);
@@ -47,6 +48,7 @@ export default function Alerts() {
         )}
         </Loaded>
       </div>
+      {can('manager') ? <Digest /> : null}
     </>
   );
 }

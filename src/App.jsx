@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { StyleLayout } from './lib/styles.jsx';
 
@@ -13,6 +13,8 @@ const Workspace = lazy(() => import('./ws/Workspace.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
 
 export default function App() {
+  // Le programme a démarré : l'écran de secours d'index.html n'a plus lieu d'être.
+  useEffect(() => { window.__miaStarted = true; const box = document.getElementById('mia-fail'); if (box) box.remove(); }, []);
   return (
     <Suspense fallback={null}>
       <Routes>

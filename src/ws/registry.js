@@ -5,6 +5,7 @@ import { lazy } from 'react';
 export const MODULE_ICONS = {
   dashboard: 'dashboard', alerts: 'alerts', support: 'support', projects: 'projects', budget: 'budget', stock: 'stock', crm: 'crm', hr: 'hr',
   accounting: 'budget', integrations: 'processes', billing: 'budget', sales: 'sales', structure: 'structure', processes: 'processes', team: 'team',
+  payroll: 'payroll', fiscal: 'fiscal', marketing: 'marketing', logistics: 'logistics', production: 'production', construction: 'construction', maintenance: 'maintenance', legal: 'legal', memory: 'memory', agents: 'agents',
 };
 
 const loaders = import.meta.glob('./modules/*.jsx');
@@ -29,5 +30,14 @@ export const SUGGEST = {
   sales: ['Quelle campagne marche le mieux ?', 'Que dois-je faire des prospects non convertis ?', 'Que manque-t-il à mon catalogue ?'],
   structure: ['Quels postes me manquent ?', 'Y a-t-il des zones floues dans mon organisation ?'],
   processes: ['Quelles procédures devrais-je écrire en premier ?', 'Comment rendre mon équipe autonome ?'],
+  payroll: ['Prépare la paie du mois', 'Quel est le coût total de mon équipe ?'],
+  fiscal: ['Quelles déclarations dois-je préparer ?', 'Mes comptes sont-ils prêts pour la liasse ?'],
+  marketing: ['Quelle campagne rapporte le plus ?', 'Écris une publicité pour mon produit phare'],
+  logistics: ['Quelles livraisons sont en retard ?', 'Quel transporteur me coûte le moins cher ?'],
+  production: ['Que puis-je produire avec mon stock actuel ?', 'Quelles matières vont manquer ?'],
+  construction: ['Quels chantiers dépassent leur budget ?', 'Quelles phases sont en retard ?'],
+  maintenance: ['Quelles machines ont une maintenance en retard ?', 'Quelles pannes reviennent le plus souvent ?'],
+  legal: ['Quels contrats arrivent à échéance ?', 'Quelles obligations dois-je respecter ce mois-ci ?'],
+  memory: ['Pourquoi avons-nous pris cette décision ?', 'Retrouve ce qui s\'est passé avec ce fournisseur'],
   team: ['Comment organiser mes antennes ?', 'Quels rôles donner à chacun ?'],
 };

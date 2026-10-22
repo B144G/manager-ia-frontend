@@ -20,6 +20,22 @@ Navigateur ──► Vercel (ce dépôt : pages React)
 
 Les anciennes adresses (`connexion.html`, `app.html`, `chat.html`…) sont redirigées (`vercel.json`), pour que les e-mails et liens déjà envoyés continuent de marcher.
 
+## Ouvrir le site partout
+
+Objectif : le site doit s'ouvrir et rester utilisable sur le plus grand nombre d'appareils.
+
+**Navigateurs visés** : Chrome, Edge, Firefox et Safari des 3-4 dernières années ; iOS 13 et plus ; Android 7 et plus (avec un Chrome / WebView à jour).
+
+**Ce qui est fait**
+- Compilation adaptée : JavaScript abaissé à ES2019 (`build.target` dans `vite.config.js`, y compris pour les dépendances), cible CSS identique (`build.cssTarget`), `.browserslistrc`.
+- Replis CSS ajoutés à la compilation (`tools/postcss-fallbacks.js`) : couleur calculée placée avant chaque `color-mix()`, repli `overflow-x:hidden` avant `overflow-x:clip` ; requêtes de conteneur doublées par des requêtes de média (`responsive.css`) ; `100vh` suivi de `100dvh` ; sélecteur `:has()` isolé dans sa propre règle.
+- `index.html` : `lang="fr"`, `viewport-fit=cover`, `color-scheme`, `theme-color` clair et sombre, icônes Apple, manifeste ; message français si JavaScript est désactivé (`<noscript>`) ; écran d'erreur lisible (avec lien WhatsApp) si le programme du site ne se charge pas (navigateur trop ancien, script bloqué, réseau coupé).
+- Service worker (`public/sw.js`) : réseau d'abord pour les pages et les fichiers, cache de secours seulement ; ne touche jamais à l'API ; changer `CACHE_VERSION` purge les anciens caches ; une erreur de cache ne bloque jamais l'ouverture.
+- `vercel.json` : toute adresse inconnue renvoie `index.html` (le site affiche sa page « introuvable »), en-têtes de sécurité conservés, aucune règle par navigateur ou par pays.
+- Écrans à encoche (zones de sécurité), clavier virtuel (champs à 16 px), zones tactiles de 44 px, focus visible au clavier.
+
+**Pas vérifié ici (à tester sur de vrais appareils)** : Safari / WebKit réel (iPhone, iPad, Mac), vieux Android (7 à 9), Firefox, Edge, mode hors connexion sur mobile, installation « sur l'écran d'accueil ». Les essais ont été faits avec Chrome (émulation d'écrans de téléphone et de tablette). Sur iOS 13 à 14.4, l'espacement `gap` entre éléments flex n'existe pas : l'affichage reste utilisable mais plus serré.
+
 ## GUIDE COMPLET : mettre MANAGER-IA en ligne (base de données, serveur, site)
 
 Trois services, tous créés par **vous** avec **vos** comptes (ne donnez jamais vos mots de passe ni vos clés à personne, ni dans un chat) :

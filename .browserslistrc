@@ -1,0 +1,9 @@
+# Navigateurs visés (utilisé par les outils qui lisent browserslist)
+last 4 years and > 0.5%
+Chrome >= 64
+Edge >= 88
+Firefox >= 78
+Safari >= 13
+iOS >= 13
+Android >= 7
+not dead

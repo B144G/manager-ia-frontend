@@ -1,19 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import SiteAssistant from '../components/SiteAssistant.jsx';
-import Contact from './home/Contact.jsx';
-import Control from './home/Control.jsx';
 import Faq from './home/Faq.jsx';
+import Essentials from './home/Essentials.jsx';
 import Final from './home/Final.jsx';
 import Footer from './home/Footer.jsx';
 import Header from './home/Header.jsx';
 import Hero from './home/Hero.jsx';
-import Marquee from './home/Marquee.jsx';
 import Plans from './home/Plans.jsx';
-import Product from './home/Product.jsx';
-import Rail from './home/Rail.jsx';
-import Soon from './home/Soon.jsx';
-import Story from './home/Story.jsx';
-import Who from './home/Who.jsx';
 
 /** Fenêtre (vidéo ou aperçu agrandi) : Échap ou clic à côté pour fermer, le focus revient là où il était. */
 function Lightbox({ onClose, label, children }) {
@@ -57,16 +50,9 @@ export default function Home() {
       <Header />
       <main id="haut">
         <Hero onPlay={() => setVideo(true)} />
-        <Marquee />
-        <Product />
-        <Story />
-        <Rail />
-        <Who />
-        <Control />
-        <Soon />
+        <Essentials />
         <Plans />
         <Faq />
-        <Contact />
         <Final />
       </main>
       <Footer />
