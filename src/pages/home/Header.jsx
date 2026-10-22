@@ -16,7 +16,7 @@ export default function Header() {
   return (
     <>
       <a className="skip" href="#haut">Aller au contenu</a>
-      <div className="s-ann">Nouveau : comptabilité simple, relances WhatsApp, Messenger et Instagram.<a href="#modules">Découvrir</a></div>
+      <div className="s-ann">Nouveau : paie, production, chantiers, maintenance, juridique et agents spécialisés.<a href="#modules">Découvrir</a></div>
       <header className={'s-nav' + (stuck ? ' stuck' : '')} id="top"><div className="s-wrap">
         <Logo />
         <nav className={'s-links' + (open ? ' open' : '')} id="nav" aria-label="Navigation principale" onClick={close}>
