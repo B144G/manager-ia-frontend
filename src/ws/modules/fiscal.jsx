@@ -4,10 +4,13 @@ import { Loading, useLoad } from '../ui.jsx';
 import Calendar from '../parts/fiscal/Calendar.jsx';
 import Liasse from '../parts/fiscal/Liasse.jsx';
 import Vat from '../parts/fiscal/Vat.jsx';
+import Exercises from '../parts/fiscal/Exercises.jsx';
+import Classification from '../parts/fiscal/Classification.jsx';
+import { BTN } from '../parts/finance/util.jsx';
 
-/* Fiscalité et liasse : document de travail de fin d'exercice, calendrier fiscal paramétrable, TVA du mois.
+/* Fiscalité et liasse : document de travail de fin d'exercice, calendrier fiscal paramétrable (échéances répétées), TVA du mois, exercices (clôture), classement des comptes.
    Réservé aux administrateurs. Ce n'est PAS une liasse officielle : à faire valider par un expert-comptable. */
-const TABS = [['calendar', 'Calendrier'], ['liasse', 'Liasse de fin d\'exercice'], ['vat', 'TVA du mois']];
+const TABS = [['calendar', 'Calendrier'], ['liasse', 'Liasse de fin d\'exercice'], ['vat', 'TVA du mois'], ['exercises', 'Exercices'], ['classif', 'Classement']];
 
 export default function Fiscal() {
   const { oapi, money } = useWs();
@@ -31,12 +34,14 @@ export default function Fiscal() {
         </div>
       ) : null}
       <p className="ws-card small" role="note"><b>Document de travail préparé par MANAGER-IA, à faire valider par un expert-comptable avant tout dépôt officiel.</b></p>
-      <div className="ws-tabs">
-        {TABS.map((t) => <button key={t[0]} type="button" className={'tab' + (tab === t[0] ? ' on' : '')} onClick={() => setTab(t[0])}>{t[1]}</button>)}
+      <div className="ws-tabs" style={{ flexWrap: 'wrap', overflowX: 'visible' }}>
+        {TABS.map((t) => <button key={t[0]} type="button" className={'tab' + (tab === t[0] ? ' on' : '')} style={BTN} onClick={() => setTab(t[0])}>{t[1]}</button>)}
       </div>
       {tab === 'calendar' ? <Calendar onChange={st.reload} /> : null}
       {tab === 'liasse' ? <Liasse year={year} setYear={setYear} /> : null}
       {tab === 'vat' ? <Vat /> : null}
+      {tab === 'exercises' ? <Exercises onChange={st.reload} /> : null}
+      {tab === 'classif' ? <Classification /> : null}
     </>
   );
 }

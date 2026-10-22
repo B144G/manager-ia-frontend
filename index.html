@@ -2,23 +2,70 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MANAGER-IA · Gérez votre entreprise avec une IA qui travaille pour vous</title>
 <meta name="description" content="MANAGER-IA répond à vos clients sur WhatsApp, suit votre stock, vos factures, votre équipe et votre comptabilité. Elle propose, vous validez. Gratuit pour commencer, paiement MTN et Orange Money.">
 <meta property="og:title" content="MANAGER-IA · Gérez votre entreprise avec une IA">
 <meta property="og:description" content="Réponses aux clients sur WhatsApp, stock, factures, équipe, comptabilité : une IA qui propose, vous validez.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="/video/poster.jpg">
-<meta name="theme-color" content="#4f46e5">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1322" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MANAGER-IA">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="/assets/icons/icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
+<style>
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;color-scheme:light dark}
+body{margin:0}
+.mia-fail{display:none;box-sizing:border-box;min-height:100vh;padding:24px 16px;align-items:center;justify-content:center;background:#f4f5fb;color:#0b1020;font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.mia-fail.on{display:flex}
+.mia-fail div{max-width:440px;text-align:center;background:#fff;border:1px solid #dfe3f1;border-radius:18px;padding:28px 22px}
+.mia-fail h1{margin:0 0 8px;font-size:22px;line-height:1.25}.mia-fail p{margin:0 0 12px;color:#4b5670}
+.mia-fail a,.mia-fail button{display:inline-block;box-sizing:border-box;min-height:44px;margin:4px;padding:11px 20px;border:0;border-radius:12px;background:#4f46e5;color:#fff;font:600 16px/1.4 system-ui,sans-serif;text-decoration:none;cursor:pointer}
+.mia-fail a.alt{background:#16a34a}
+@media (prefers-color-scheme:dark){.mia-fail{background:#0b1322;color:#e8edf7}.mia-fail div{background:#111b33;border-color:#22305a}.mia-fail p{color:#b8c4dd}}
+</style>
 </head>
 <body>
 <div id="root"></div>
-<noscript>MANAGER-IA a besoin de JavaScript pour fonctionner.</noscript>
+<noscript>
+<div class="mia-fail on" role="alert"><div>
+<h1>JavaScript est désactivé</h1>
+<p>MANAGER-IA est une application : elle a besoin de JavaScript pour s'afficher. Activez JavaScript dans les réglages de votre navigateur, puis rechargez la page.</p>
+<p>Besoin d'aide ? Écrivez-nous sur WhatsApp, nous vous guidons pas à pas.</p>
+<a class="alt" href="https://wa.me/237653621388?text=Bonjour%2C%20je%20n%27arrive%20pas%20%C3%A0%20ouvrir%20MANAGER-IA">Demander de l'aide sur WhatsApp</a>
+</div></div>
+</noscript>
+<div id="mia-fail" class="mia-fail" role="alert"><div>
+<h1>Le site n'a pas pu s'ouvrir</h1>
+<p>Votre navigateur est peut-être trop ancien, ou la connexion a été coupée pendant le chargement. Essayez de recharger la page, de mettre à jour votre navigateur (Chrome, Firefox, Edge ou Safari), ou d'ouvrir le site dans un autre navigateur.</p>
+<button type="button" onclick="location.reload()">Recharger la page</button>
+<a class="alt" href="https://wa.me/237653621388?text=Bonjour%2C%20je%20n%27arrive%20pas%20%C3%A0%20ouvrir%20MANAGER-IA">Demander de l'aide sur WhatsApp</a>
+</div></div>
+<script nomodule>document.getElementById('mia-fail').className='mia-fail on';document.getElementById('root').style.display='none';</script>
+<script>
+/* Écran de secours : si le programme du site ne démarre pas (script bloqué, réseau coupé, navigateur trop ancien), on l'affiche au lieu d'une page blanche. */
+(function () {
+  var shown = false;
+  function fail() {
+    var box = document.getElementById('mia-fail');
+    if (shown || !box || window.__miaStarted) return;
+    shown = true; box.className = 'mia-fail on';
+  }
+  window.addEventListener('error', function (e) { var t = e.target; if (t && t.tagName === 'SCRIPT') fail(); }, true);
+  window.addEventListener('unhandledrejection', function () { setTimeout(fail, 0); });
+  setTimeout(fail, 20000);
+})();
+</script>
 <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>

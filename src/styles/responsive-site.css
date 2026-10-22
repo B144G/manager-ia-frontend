@@ -47,3 +47,36 @@ img,svg,video,canvas{max-width:100%}
 
 h1,h2,h3{text-wrap:balance}
 p,li{text-wrap:pretty}
+
+/* ================================================================================================
+   FINITIONS MOBILE : encoche, zones tactiles, hauteurs avec barre d'adresse mobile, clavier
+   ================================================================================================ */
+.s-nav{padding-top:env(safe-area-inset-top,0px)}
+.s-ann{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+#sa-btn{right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px) + var(--kb,0px))}
+#sa{right:max(16px,env(safe-area-inset-right,0px));height:min(520px,calc(100vh - 110px));height:min(520px,calc(100dvh - 110px - var(--kb,0px)))}
+html.kb-open #sa-btn{display:none}
+@media (max-width:760px){
+  #sa{right:max(8px,env(safe-area-inset-right,0px));left:max(8px,env(safe-area-inset-left,0px));bottom:calc(76px + env(safe-area-inset-bottom,0px));height:min(520px,calc(100vh - 110px - env(safe-area-inset-top,0px)));height:min(520px,calc(100dvh - 110px - env(safe-area-inset-top,0px) - var(--kb,0px)))}
+  html.kb-open #sa{bottom:8px;height:calc(100dvh - var(--kb,0px) - 16px - env(safe-area-inset-top,0px))}
+}
+.s-modal{height:100vh;height:100dvh;padding-top:max(20px,env(safe-area-inset-top,0px));padding-bottom:max(20px,env(safe-area-inset-bottom,0px));padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.s-modal video{max-height:calc(100vh - 110px);max-height:calc(100dvh - 110px);object-fit:contain}
+@media (pointer:coarse),(max-width:1099px){
+  .s-logo{display:inline-flex;align-items:center;min-height:44px}
+  .s-foot nav a,.s-links a{display:inline-flex;align-items:center;min-height:44px;min-width:44px}
+  .s-btn,.s-icon,.bt,.btn,.btn.small{min-height:44px}
+  #sa-btn{min-height:48px}
+  .s-act .s-btn{min-height:44px}
+  .s-ann a{display:inline-block;padding:13px 6px;margin:-13px 0 -13px 2px;border-bottom:0;text-decoration:underline}
+  #sa .x,#sa-chips button,#sa form button{min-width:44px;min-height:44px}
+  #sa .x{width:44px;height:44px}
+  .au-card .link,.au-card button.link,.au-card a{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  input,textarea,select{font-size:16px}
+}
+@media (max-height:500px) and (orientation:landscape){
+  .s-modal .x{top:6px;right:6px;z-index:2}
+  .s-modal video{max-height:calc(100dvh - 24px)}
+  .au-main{align-items:flex-start}
+}
+.au-card .au-sub a,.au-card p a{min-height:0;display:inline}

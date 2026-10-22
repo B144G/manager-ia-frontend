@@ -1,5 +1,6 @@
 import { useWs } from '../../WsContext.jsx';
 import { Empty, Form, Loaded, useLoad } from '../../ui.jsx';
+import { Act, Btn } from './Act.jsx';
 
 /**
  * Liste modifiable générique du module Juridique : charge `path`, affiche `data[listKey]` (ligne : `line(item, data)`),
@@ -18,24 +19,24 @@ export default function Crud({ path, listKey, title, intro, addLabel, formTitle,
   ), { wide: true });
   return (
     <div className="ws-card">
-      <div className="ws-head"><h2>{title}</h2><button className="btn primary small" type="button" onClick={() => edit(null, st.data)} disabled={!st.data}>{addLabel}</button></div>
+      <div className="ws-head"><h2>{title}</h2><Btn className="btn primary small" onClick={() => edit(null, st.data)} disabled={!st.data}>{addLabel}</Btn></div>
       {intro ? <p className="muted small">{intro}</p> : null}
       <Loaded state={st}>{(j) => (
         <>
           {presets ? (
             <div className="row" style={{ flexWrap: 'wrap', marginBottom: 8 }}>
               <small className="muted">{'Exemples à adapter à votre pays et votre activité : '}</small>
-              {presets.map((p) => <button key={p.label} className="btn small" type="button" onClick={() => edit(null, j, p.values)}>{p.label}</button>)}
+              {presets.map((p) => <Btn key={p.label} className="btn small" onClick={() => edit(null, j, p.values)}>{p.label}</Btn>)}
             </div>
           ) : null}
           {!j[listKey].length ? <Empty text={empty} /> : null}
           {j[listKey].map((it) => (
             <div className="line" key={it.id} style={{ flexWrap: 'wrap' }}>
               <span style={{ flex: '1 1 240px' }}>{line(it, j)}</span>
-              <span className="row">
+              <span className="row" style={{ flexWrap: 'wrap' }}>
                 {extra ? extra(it, reload) : null}
-                <button className="link" type="button" onClick={() => edit(it, j)}>Modifier</button>
-                <button className="link" type="button" onClick={() => confirm(deleteText, () => { oapi('DELETE', path + '/' + it.id).then(reload).catch(fail); })}>Supprimer</button>
+                <Act onClick={() => edit(it, j)}>Modifier</Act>
+                <Act onClick={() => confirm(deleteText, () => { oapi('DELETE', path + '/' + it.id).then(reload).catch(fail); })}>Supprimer</Act>
               </span>
             </div>
           ))}

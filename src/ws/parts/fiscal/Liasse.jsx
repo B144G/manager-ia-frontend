@@ -1,6 +1,6 @@
 import { useWs } from '../../WsContext.jsx';
 import { Empty, Loading, useLoad } from '../../ui.jsx';
-import { PrintFrame, downloadCsv } from '../finance/util.jsx';
+import { BTN, INP, PrintFrame, downloadCsv } from '../finance/util.jsx';
 
 /* Liasse de fin d'exercice (document de travail) : contrôles, soldes intermédiaires de gestion, compte de résultat, bilan. */
 const LV = { error: ['À corriger', 'bad'], warn: ['À vérifier', 'mid'], info: ['Bon à savoir', 'good'] };
@@ -58,15 +58,15 @@ export default function Liasse({ year, setYear }) {
       <div className="ws-card">
         <div className="row">
           <span className="muted small">Exercice :</span>
-          <select aria-label="Année" value={year} onChange={(e) => setYear(e.target.value)}>{years.map((v) => <option key={v} value={v}>{v}</option>)}</select>
+          <select aria-label="Année" style={INP} value={year} onChange={(e) => setYear(e.target.value)}>{years.map((v) => <option key={v} value={v}>{v}</option>)}</select>
           <span className="grow" />
-          <button className="btn small" type="button" onClick={() => modal('Vue imprimable', () => <PrintFrame title="Document de travail" height="68vh"><Printable l={l} year={year} /></PrintFrame>, { wide: true })}>Voir / imprimer</button>
+          <button className="btn small" type="button" style={BTN} onClick={() => modal('Vue imprimable', () => <PrintFrame title="Document de travail" height="68vh"><Printable l={l} year={year} /></PrintFrame>, { wide: true })}>Voir / imprimer</button>
         </div>
         <p className="small" role="note"><b>{l.notice}</b></p>
         <div className="row" style={{ flexWrap: 'wrap' }}>
-          <button className="btn small" type="button" onClick={csvBilan}>Bilan (CSV)</button>
-          <button className="btn small" type="button" onClick={csvRes}>Résultat (CSV)</button>
-          <button className="btn small" type="button" onClick={csvSig}>Soldes de gestion (CSV)</button>
+          <button className="btn small" type="button" style={BTN} onClick={csvBilan}>Bilan (CSV)</button>
+          <button className="btn small" type="button" style={BTN} onClick={csvRes}>Résultat (CSV)</button>
+          <button className="btn small" type="button" style={BTN} onClick={csvSig}>Soldes de gestion (CSV)</button>
         </div>
       </div>
       <div className="ws-card">
@@ -85,7 +85,7 @@ export default function Liasse({ year, setYear }) {
           <div className="ws-card">
             <h2>Soldes intermédiaires de gestion</h2>
             {l.sig.lines.map((x) => <div className="line" key={x.key}><span>{x.total ? <b>{x.label}</b> : x.label}</span>{x.total ? <b>{money(x.amount)}</b> : <span>{money(x.amount)}</span>}</div>)}
-            <p className="muted small">Classement simplifié des comptes d'après leur numéro (SYSCOHADA) : à vérifier avec votre expert-comptable.</p>
+            <p className="muted small">Classement des comptes d'après leur numéro (SYSCOHADA, tableau dans l'onglet « Classement ») : à vérifier avec votre expert-comptable.</p>
           </div>
           <div className="ws-card">
             <h2>Compte de résultat</h2>
@@ -94,7 +94,8 @@ export default function Liasse({ year, setYear }) {
             <div className="line"><span><b>Résultat de l'exercice</b></span><b className={l.resultat.resultat < 0 ? 'late' : 'ok'}>{money(l.resultat.resultat)}</b></div>
           </div>
           <div className="ws-card">
-            <h2>Bilan</h2>
+            <h2>Bilan (soldes cumulés depuis l'ouverture)</h2>
+            <p className="muted small">{'Exercice ' + year + (l.exercise.closed ? ' clôturé (verrou au ' + l.exercise.lockedUntil + ')' : ' ouvert') + (l.carry.priorResult ? ' · résultat des exercices précédents non affecté : ' + money(l.carry.priorResult) : '') + '.'}</p>
             {l.bilan.actif.map((x) => <div className="line" key={x.key}><span>{x.label}</span><span>{money(x.amount)}</span></div>)}
             <div className="line"><span><b>Total actif</b></span><b>{money(l.bilan.totalActif)}</b></div>
             {l.bilan.passif.map((x) => <div className="line" key={x.key}><span>{x.label}</span><span>{money(x.amount)}</span></div>)}

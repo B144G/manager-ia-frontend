@@ -6,7 +6,7 @@ import Templates from '../parts/legal/Templates.jsx';
 
 /* Sous-application : Juridique et conformité (responsables et plus). Aide-mémoire d'organisation : ne remplace pas un avocat. */
 
-const KIND = { contract_end: 'Fin de contrat', notice: 'Date limite de préavis', obligation: 'Obligation' };
+const KIND = { contract_end: 'Fin de contrat', notice: 'Date limite de préavis', obligation: 'Obligation', dispute_step: 'Étape de dossier' };
 const TABS = [['dash', 'Échéances'], ['contracts', 'Contrats'], ['obligations', 'Obligations'], ['disputes', 'Litiges'], ['privacy', 'Données personnelles'], ['templates', 'Modèles']];
 
 export default function Legal() {
@@ -18,9 +18,9 @@ export default function Legal() {
     <>
       <div className="ws-head">
         <div><h1>Juridique et conformité</h1><p className="muted">Vos contrats, vos échéances et vos obligations, pour ne rien oublier.</p></div>
-        <div className="row"><button className="btn signal small" type="button" onClick={() => askAI('Quelles sont mes échéances juridiques à venir et que dois-je faire en priorité ?')}>Demander à l'IA</button></div>
+        <div className="row"><button className="btn signal small" type="button" style={{ minHeight: 44 }} onClick={() => askAI('Quelles sont mes échéances juridiques à venir et que dois-je faire en priorité ?')}>Demander à l'IA</button></div>
       </div>
-      <p className="muted small">Aide-mémoire d'organisation : cet outil ne remplace pas un avocat et ne dit jamais qu'un document est « conforme ». Faites relire les textes importants par un professionnel du droit de votre pays.</p>
+      <p className="muted small">Rappels à 30 et 7 jours avant chaque échéance : ils apparaissent aussi dans Alertes et dans les réponses de l'IA. Aide-mémoire d'organisation : cet outil ne remplace pas un avocat et ne dit jamais qu'un document est « conforme ». Faites relire les textes importants par un professionnel du droit de votre pays.</p>
       <div className="ws-tabs">
         {TABS.map((t) => <button key={t[0]} type="button" className={'tab' + (tab === t[0] ? ' on' : '')} onClick={() => { setTab(t[0]); load(); }}>{t[1]}</button>)}
       </div>
@@ -45,7 +45,7 @@ export default function Legal() {
                 {!j.upcoming.length ? <Empty text="Aucune échéance dans les 30 prochains jours." /> : null}
                 {j.upcoming.map((u, i) => (
                   <div className="line" key={i}>
-                    <span><b>{u.title}</b> <small>{KIND[u.kind] + (u.responsible ? ' · ' + u.responsible : '')}</small></span>
+                    <span><b>{u.title}</b><br /><small>{KIND[u.kind] + (u.responsible ? ' · ' + u.responsible : '')}</small></span>
                     <span><span className={'pill ' + (u.days <= 7 ? 'bad' : 'mid')}>{u.days === 0 ? "Aujourd'hui" : 'Dans ' + u.days + ' j'}</span> <small>{dateFr(u.date)}</small></span>
                   </div>
                 ))}
@@ -53,13 +53,20 @@ export default function Legal() {
               <div className="ws-card">
                 <h2>Contrats à renouveler</h2>
                 {!j.toRenew.length ? <Empty text="Aucun contrat à renouveler pour le moment." /> : null}
-                {j.toRenew.map((c) => <div className="line" key={c.id}><span><b>{c.title}</b></span><span>{c.alerts.map((a) => <span key={a.code} className={'pill ' + (a.level === 'high' ? 'bad' : 'mid')}>{a.text}</span>)}</span></div>)}
+                {j.toRenew.map((c) => <div className="line" key={c.id}><span><b>{c.title}</b>{c.assignee ? <small>{' · ' + c.assignee}</small> : null}</span><span>{c.alerts.map((a) => <span key={a.code} className={'pill ' + (a.level === 'high' ? 'bad' : 'mid')}>{a.text}</span>)}</span></div>)}
               </div>
               <div className="ws-card">
                 <h2>Obligations en retard</h2>
                 {!j.overdueObligations.length ? <Empty text="Aucune obligation en retard." /> : null}
                 {j.overdueObligations.map((o) => <div className="line" key={o.id}><span><b>{o.title}</b>{o.responsible ? <small>{' · ' + o.responsible}</small> : null}</span><span className="pill bad">{'Échue le ' + dateFr(o.dueDate)}</span></div>)}
               </div>
+              {j.toSign.length ? (
+                <div className="ws-card">
+                  <h2>Contrats à signer</h2>
+                  {j.toSign.map((c) => <div className="line" key={c.id}><span><b>{c.title}</b>{c.signers ? <small>{' · ' + c.signers}</small> : null}</span><span className="pill mid">À signer</span></div>)}
+                  <p className="muted small">Simple suivi pour vous : ce n'est pas une signature électronique.</p>
+                </div>
+              ) : null}
               {j.expired.length ? (
                 <div className="ws-card">
                   <h2>Contrats expirés</h2>

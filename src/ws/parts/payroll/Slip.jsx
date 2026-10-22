@@ -18,7 +18,10 @@ function Bulletin({ s, orgName }) {
         <tbody>
           <R a="Salaire de base" d={money(s.base)} />
           {s.bonuses ? <R a="Primes" d={money(s.bonuses)} /> : null}
-          {s.overtime ? <R a="Heures supplémentaires" d={money(s.overtime)} /> : null}
+          {s.overtimeHours && s.overtimeHours.length
+            ? s.overtimeHours.map((h, i) => <R key={'h' + i} a={'Heures supplémentaires (' + h.hours + ' h, +' + h.rate + ' %)'} b={money(h.hourly)} c="/ heure" d={money(h.amount)} />)
+            : (s.overtime ? <R a="Heures supplémentaires" d={money(s.overtime)} /> : null)}
+          {s.annualBonus ? <R a={s.annualBonusLabel || 'Prime annuelle'} d={money(s.annualBonus)} /> : null}
           <R cls="tot" a="Salaire brut" d={money(s.gross)} />
           {emp.map((l, i) => <R key={'e' + i} a={l.label} b={money(l.basis)} c={l.rate + ' %'} d={'− ' + money(l.amount)} />)}
           {s.otherDeductions ? <R a="Autres retenues" d={'− ' + money(s.otherDeductions)} /> : null}
@@ -34,6 +37,7 @@ function Bulletin({ s, orgName }) {
         </tbody>
       </table>
       <p>{s.status === 'paid' ? 'Payé le ' + dateFr(s.paidDate) + ' (' + s.payMethodLabel + ').' : s.status === 'validated' ? 'Bulletin validé, paiement à venir.' : 'Brouillon : non validé.'}</p>
+      {s.reopenedCount ? <p className="muted">{'Bulletin rouvert ' + s.reopenedCount + ' fois. Dernier motif : ' + s.reopenReason}</p> : null}
       <p className="note">Document de travail préparé avec MANAGER-IA. Les taux de retenues et de charges sont ceux paramétrés par votre entreprise : à vérifier auprès de votre administration ou d'un expert avant toute utilisation officielle.</p>
     </>
   );

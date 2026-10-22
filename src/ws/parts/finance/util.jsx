@@ -1,6 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+/** Zone tactile d'au moins 44 px (boutons-liens) et champs à 16 px minimum : styles en ligne communs à la Paie et à la Fiscalité. */
+export const TAP = { minHeight: 44, display: 'inline-flex', alignItems: 'center', padding: '0 10px' };
+export const BTN = { minHeight: 44 };
+export const INP = { fontSize: 16 };
+/** Ligne de champs qui passe à la ligne et reste alignée à gauche (les .row du site alignent à droite quand ils s'enroulent). */
+export const WRAP = { display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'flex-end', justifyContent: 'flex-start' };
+
+/** Case à cocher accessible (zone de 44 px). */
+export function Check({ checked, onChange, label, hint, disabled }) {
+  return (
+    <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', minHeight: 44, padding: '6px 0', cursor: disabled ? 'default' : 'pointer' }}>
+      <input type="checkbox" checked={Boolean(checked)} disabled={disabled} onChange={(e) => onChange(e.target.checked)} style={{ width: 24, height: 24, minHeight: 24, flex: '0 0 24px', marginTop: 2 }} />
+      <span><b style={{ fontSize: 15 }}>{label}</b>{hint ? <><br /><small className="muted">{hint}</small></> : null}</span>
+    </label>
+  );
+}
+
 /* Outils communs à la Paie et à la Fiscalité : export CSV côté navigateur et page imprimable rendue par React (aucun HTML brut). */
 
 /** Télécharge un tableau de lignes en CSV (séparateur « ; », ouvre bien dans Excel). Les cellules qui ressemblent à une formule sont neutralisées. */
