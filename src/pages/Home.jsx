@@ -7,6 +7,7 @@ import Footer from './home/Footer.jsx';
 import Header from './home/Header.jsx';
 import Hero from './home/Hero.jsx';
 import Plans from './home/Plans.jsx';
+import Steps from './home/Steps.jsx';
 
 /** Fenêtre (vidéo ou aperçu agrandi) : Échap ou clic à côté pour fermer, le focus revient là où il était. */
 function Lightbox({ onClose, label, children }) {
@@ -51,6 +52,7 @@ export default function Home() {
       <main id="haut">
         <Hero onPlay={() => setVideo(true)} />
         <Essentials />
+        <Steps />
         <Plans />
         <Faq />
         <Final />
