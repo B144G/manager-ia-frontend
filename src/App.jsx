@@ -11,6 +11,8 @@ const ContactForm = lazy(() => import('./pages/ContactForm.jsx'));
 const PublicChat = lazy(() => import('./pages/PublicChat.jsx'));
 const Workspace = lazy(() => import('./ws/Workspace.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
+const Privacy = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Privacy })));
+const Terms = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Terms })));
 
 export default function App() {
   // Le programme a démarré : l'écran de secours d'index.html n'a plus lieu d'être.
@@ -20,6 +22,8 @@ export default function App() {
       <Routes>
         <Route element={<StyleLayout group="site" body="site" />}>
           <Route path="/" element={<Home />} />
+          <Route path="/confidentialite" element={<Privacy />} />
+          <Route path="/conditions" element={<Terms />} />
           <Route path="/index.html" element={<Navigate to="/" replace />} />
           <Route path="*" element={<NotFound />} />
         </Route>
