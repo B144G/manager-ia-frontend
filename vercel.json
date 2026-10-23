@@ -16,7 +16,7 @@
     { "source": "/apple-touch-icon-precomposed.png", "destination": "/assets/icons/icon-192.png", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://VOTRE-SERVEUR.onrender.com/api/:path*" },
+    { "source": "/api/:path*", "destination": "https://manager-ia-backend.onrender.com/api/:path*" },
     { "source": "/((?!api/|assets/|video/|sw\\.js|manifest\\.webmanifest|offline\\.html|favicon\\.svg|robots\\.txt).*)", "destination": "/index.html" }
   ],
   "headers": [
