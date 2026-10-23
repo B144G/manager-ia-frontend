@@ -5,7 +5,7 @@ import { WaWizard } from './WaWizard.jsx';
 import { Pill, QrBlock, ReadOnly, hasQr, publicBase } from './util.jsx';
 
 /** Adresse du webhook + jeton de vérification, à coller dans Meta. */
-function HookCard({ title, rows, test, disconnect, disconnectLabel }) {
+function HookCard({ title, rows, test, disconnect, disconnectLabel, subscribe, subscribeNote }) {
   const { copy } = useWs();
   const [msg, setMsg] = useState('');
   return (
@@ -19,8 +19,10 @@ function HookCard({ title, rows, test, disconnect, disconnectLabel }) {
       ))}
       <div className="row" style={{ marginTop: 14 }}>
         <button className="btn primary small" type="button" onClick={() => { setMsg('Test en cours…'); test().then(setMsg, (e) => setMsg(e.message)); }}>Tester la connexion</button>
+        {subscribe ? <button className="btn primary small" type="button" onClick={() => { setMsg('Abonnement en cours…'); subscribe().then(setMsg, (e) => setMsg(e.message)); }}>Activer la réception des messages</button> : null}
         <button className="btn small" type="button" onClick={disconnect}>{disconnectLabel}</button>
       </div>
+      {subscribeNote ? <p className="muted small">{subscribeNote}</p> : null}
       <p className="muted small">{msg}</p>
     </div>
   );
@@ -48,11 +50,12 @@ export function Whatsapp({ onChange }) {
           submitText="Enregistrer"
           fields={[
             { k: 'phoneId', label: 'Identifiant du numéro (Phone number ID)', value: w.phoneId, placeholder: '109876543210', hint: 'Chiffres seulement.' },
+            { k: 'wabaId', label: 'Identifiant du compte WhatsApp Business (WABA ID)', value: w.wabaId, placeholder: '1432309911579140', hint: "Dans Meta, Configuration de l'API : « ID du compte de messagerie ». Sert à activer la réception des messages. Chiffres seulement." },
             { k: 'number', label: "Numéro WhatsApp avec l'indicatif du pays", value: w.number, placeholder: '237677112233', hint: 'Sert au lien et au QR code WhatsApp.' },
             { k: 'token', label: "Jeton d'accès permanent" + (w.tokenSet ? ' (déjà enregistré)' : ''), type: 'password', placeholder: w.tokenSet ? 'Laisser vide pour garder le jeton actuel' : 'EAAG…', hint: 'Il est chiffré et ne s\'affiche plus jamais.' },
             { k: 'appSecret', label: "Secret de l'application" + (w.secretSet ? ' (déjà enregistré)' : ''), type: 'password', placeholder: w.secretSet ? 'Laisser vide pour garder le secret actuel' : '', hint: 'Sert à vérifier que les messages viennent bien de Meta.' },
           ]}
-          onSubmit={(v) => oapi('PUT', '/sales/whatsapp', { phoneId: v.phoneId, number: v.number, token: v.token, appSecret: v.appSecret }).then(() => { toast('Réglages enregistrés.'); onChange(); })}
+          onSubmit={(v) => oapi('PUT', '/sales/whatsapp', { phoneId: v.phoneId, wabaId: v.wabaId, number: v.number, token: v.token, appSecret: v.appSecret }).then(() => { toast('Réglages enregistrés.'); onChange(); })}
         />
       </div>
       {w.verifyToken ? (
@@ -60,6 +63,8 @@ export function Whatsapp({ onChange }) {
           title="À coller dans Meta"
           rows={[['Adresse du webhook (URL de rappel)', publicBase() + w.webhookPath], ['Jeton de vérification', w.verifyToken]]}
           test={() => oapi('POST', '/sales/whatsapp/test', {}).then((r) => 'Connexion réussie : ' + r.name + ' (' + r.number + ').')}
+          subscribe={w.wabaId ? () => oapi('POST', '/sales/whatsapp/subscribe', {}).then((r) => 'Application abonnée au compte WhatsApp' + (r.apps && r.apps.length ? ' : ' + r.apps.join(', ') : '') + '. Les messages reçus arrivent maintenant ici.') : null}
+          subscribeNote={w.wabaId ? "Après avoir collé l'adresse et le jeton chez Meta, cliquez sur « Activer la réception des messages » : sans cet abonnement, Meta n'envoie pas les messages des clients." : "Renseignez l'identifiant du compte WhatsApp Business ci-dessus pour pouvoir activer la réception des messages."}
           disconnectLabel="Déconnecter WhatsApp"
           disconnect={() => confirm("Déconnecter WhatsApp ? L'assistant cessera de répondre sur ce numéro.", () => oapi('DELETE', '/sales/whatsapp').then(() => { toast('WhatsApp déconnecté.'); onChange(); }).catch(fail), 'Oui, déconnecter')}
         />
