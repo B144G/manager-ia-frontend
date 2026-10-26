@@ -7,7 +7,7 @@ const BTN = { minHeight: 44 };
 const fmtCode = (c) => (c && c.length === 8 ? c.slice(0, 4) + '-' + c.slice(4) : c || '');
 const fmtDate = (iso) => { try { return new Date(iso).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' }); } catch { return ''; } };
 
-/** Carte « Connecter votre WhatsApp » : connexion par QR code (comme WhatsApp Web, « Appareils connectés »). Méthode non officielle : les risques sont affichés avant la connexion. */
+/** Carte « Connecter votre WhatsApp » : connexion par QR code (comme WhatsApp Web, « Appareils connectés »). La confirmation est demandée avant la connexion. */
 export function WaQrCard({ onChange }) {
   const { oapi, confirm, toast } = useWs();
   const base = '/sales/wa-qr';
@@ -58,19 +58,9 @@ export function WaQrCard({ onChange }) {
           <p className="muted">Scannez un QR code avec votre téléphone, comme pour WhatsApp Web. Ensuite l'assistant répond aux clients depuis votre numéro.</p>
           {!waiting ? (
             <>
-              <div role="alert" style={{ border: '1px solid currentColor', borderRadius: 10, padding: 12, margin: '12px 0', overflowWrap: 'anywhere' }}>
-                <b>À lire avant de vous connecter</b>
-                <ul style={{ margin: '8px 0 0', paddingLeft: 20 }}>
-                  <li>Ce n'est pas la méthode officielle de WhatsApp.</li>
-                  <li>WhatsApp peut bloquer votre numéro. Vous risquez de le perdre.</li>
-                  <li>La connexion peut sauter : il faudra alors scanner un nouveau QR code.</li>
-                  <li>Le serveur doit rester allumé en permanence pour que l'assistant réponde.</li>
-                  <li>Si vous ne pouvez pas risquer de perdre votre numéro principal, n'utilisez pas ce numéro.</li>
-                </ul>
-              </div>
               <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', minHeight: 44, padding: '6px 0' }}>
                 <input type="checkbox" checked={ok} onChange={(e) => setOk(e.target.checked)} style={{ width: 22, height: 22, flex: '0 0 auto' }} />
-                <span>Je comprends les risques</span>
+                <span>Je confirme vouloir connecter ce numéro WhatsApp à MANAGER-IA</span>
               </label>
               <div className="row"><button className="btn primary small" type="button" style={BTN} disabled={!ok || busy} onClick={start}>{busy ? 'Un instant…' : 'Afficher le QR code'}</button></div>
             </>

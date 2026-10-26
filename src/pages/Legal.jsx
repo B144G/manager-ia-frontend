@@ -76,6 +76,8 @@ export function Terms() {
         <li>Ne pas envoyer de messages non sollicités en masse, de contenus illicites, trompeurs ou dangereux.</li>
         <li>Ne pas tenter de perturber, contourner ou attaquer le service.</li>
       </ul>
+      <h2>Services de messagerie de tiers</h2>
+      <p>La connexion à WhatsApp ou à un autre service de messagerie reste soumise aux règles de ce service, sur lesquelles nous n'avons pas la main. Un numéro peut être limité, suspendu ou déconnecté par le service de messagerie, et la connexion peut devoir être refaite. Nous ne sommes pas responsables de ces décisions ni de leurs conséquences.</p>
       <h2>Intelligence artificielle et documents préparés</h2>
       <p>Les réponses, propositions et documents produits par l'IA peuvent contenir des erreurs : relisez-les. Les états comptables, fiscaux, de paie ou juridiques fournis sont des <b>documents de travail</b> : ils ne remplacent pas un expert-comptable, un conseil fiscal ou un avocat, et ne sont pas des documents officiels.</p>
       <h2>Offres et paiement</h2>

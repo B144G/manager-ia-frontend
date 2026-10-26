@@ -6,7 +6,7 @@ export default function Faq() {
         <div className="s-faq rv">
           <details><summary>Dois-je payer pour essayer ?</summary><p>Non. L'offre Gratuite permet de découvrir la plateforme sans paiement ni carte bancaire.</p></details>
           <details><summary>L'IA peut-elle modifier mes données toute seule ?</summary><p>Non. Elle propose un plan, une écriture, une commande ou une relance ; rien n'est enregistré ni envoyé tant que vous n'avez pas validé.</p></details>
-          <details><summary>Mes clients peuvent-ils m'écrire sur WhatsApp ?</summary><p>Oui. Vous connectez le WhatsApp de votre entreprise en scannant un QR code, comme pour WhatsApp Web. L'IA répond, enregistre les prospects et prend les commandes, que vous validez. Attention : ce n'est pas la méthode officielle de WhatsApp, qui peut bloquer un numéro. Utilisez de préférence un numéro dont vous pouvez vous passer.</p></details>
+          <details><summary>Mes clients peuvent-ils m'écrire sur WhatsApp ?</summary><p>Oui. Vous connectez le WhatsApp de votre entreprise en scannant un QR code, comme pour WhatsApp Web. L'IA répond, enregistre les prospects et prend les commandes, que vous validez.</p></details>
           <details><summary>La comptabilité remplace-t-elle mon comptable ?</summary><p>Non. C'est un outil d'aide : vos factures, paiements et achats deviennent des écritures, avec résultat, bilan simplifié et TVA estimée. Il ne produit pas la liasse fiscale officielle : votre comptable la prépare à partir de votre export.</p></details>
           <details><summary>Comment joindre un humain ?</summary><p>Par WhatsApp au +237 653 62 13 88 ou au +237 697 83 67 96, ou par e-mail à tendabrandon9@gmail.com.</p></details>
         </div>
