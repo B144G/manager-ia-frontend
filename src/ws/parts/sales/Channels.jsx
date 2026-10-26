@@ -3,6 +3,7 @@ import { useWs } from '../../WsContext.jsx';
 import { Empty, Form, Loading, useLoad } from '../../ui.jsx';
 import { WaWizard } from './WaWizard.jsx';
 import { OneClickCard } from './OneClick.jsx';
+import { WaQrCard } from './WaQr.jsx';
 import { Pill, QrBlock, ReadOnly, hasQr, publicBase } from './util.jsx';
 
 /** Adresse du webhook + jeton de vérification, à coller dans Meta. */
@@ -57,10 +58,22 @@ function AiTest() {
 
 /** Onglet « Canaux » : WhatsApp de l'entreprise (API officielle de Meta), puis Messenger / Instagram. */
 export function Whatsapp({ onChange }) {
-  const { oapi, toast, confirm, fail } = useWs();
-  const st = useLoad(() => oapi('GET', '/sales/whatsapp'), []);
+  const { oapi, toast, confirm, fail, info } = useWs();
+  // Interrupteurs du serveur : sans eux (ancien serveur), l'interface Meta reste visible comme avant.
+  const feat = (info && info.features) || { metaChannels: true, waQr: false };
+  const meta = feat.metaChannels !== false;
+  const st = useLoad(() => (meta ? oapi('GET', '/sales/whatsapp') : Promise.resolve(null)), [meta]);
   // Connexion en un clic : la carte n'apparaît que si le serveur l'a activée (en cas d'erreur, on considère qu'elle ne l'est pas).
-  const em = useLoad(() => oapi('GET', '/sales/whatsapp/embedded/config').catch(() => ({ enabled: false })), []);
+  const em = useLoad(() => (meta ? oapi('GET', '/sales/whatsapp/embedded/config').catch(() => ({ enabled: false })) : Promise.resolve({ enabled: false })), [meta]);
+  // Canaux Meta masqués pour le moment (le code reste en place : META_CHANNELS=1 côté serveur les réaffiche).
+  if (!meta) {
+    return (
+      <>
+        {feat.waQr ? <WaQrCard onChange={onChange} /> : <div className="ws-card"><h2>WhatsApp de votre entreprise</h2><p className="muted">La connexion de WhatsApp n'est pas disponible pour le moment.</p></div>}
+        <AiTest />
+      </>
+    );
+  }
   if (st.loading && !st.data) return <Loading />;
   if (st.error) return <p className="ws-err" role="alert">{st.error.message}</p>;
   if (!st.data) return null;
@@ -92,6 +105,7 @@ export function Whatsapp({ onChange }) {
         <p>{w.connected ? <Pill t={['Connecté', 'good']} /> : <Pill t={['Non connecté', 'bad']} />}<span>{w.number ? '  +' + w.number : ''}</span></p>
         <p className="muted">Quand un prospect écrit sur votre numéro WhatsApp (par exemple après une publicité « Cliquer pour envoyer un message »), l'assistant lui répond, l'enregistre et prend sa commande, comme sur la page web. Vous pouvez reprendre la conversation à tout moment.</p>
       </div>
+      {feat.waQr ? <WaQrCard onChange={() => { st.reload(); onChange(); }} /> : null}
       {one ? <OneClickCard cfg={em.data} connected={w.connected} number={w.number} onDone={() => { st.reload(); onChange(); }} /> : null}
       {one ? <details className="ws-card wa-adv"><summary>Avancé : saisir les identifiants à la main</summary>{manual}</details> : manual}
       {w.verifyToken ? (

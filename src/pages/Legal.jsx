@@ -35,14 +35,14 @@ export function Privacy() {
       <ul>
         <li><b>Votre compte :</b> nom, adresse e-mail ou numéro de téléphone, mot de passe (conservé sous forme chiffrée, jamais en clair) et offre choisie.</li>
         <li><b>Les données de votre organisation</b> que vous saisissez ou importez : clients, devis, factures, stock, équipe, comptabilité, projets, contrats, notes, etc. Vous en restez responsable.</li>
-        <li><b>Les messages de vos clients</b> reçus par WhatsApp, Messenger, Instagram ou la page de discussion : texte, messages vocaux transcrits, photos et documents, ainsi que le numéro ou l'identifiant de l'expéditeur. Ils servent à répondre à ces personnes et à enregistrer leur demande ou leur commande.</li>
+        <li><b>Les messages de vos clients</b> reçus par WhatsApp ou la page de discussion : texte, messages vocaux transcrits, photos et documents, ainsi que le numéro ou l'identifiant de l'expéditeur. Ils servent à répondre à ces personnes et à enregistrer leur demande ou leur commande.</li>
         <li><b>Des données techniques</b> : adresse IP, appareil et journal des actions sensibles, pour la sécurité du service.</li>
       </ul>
       <h2>À quoi elles servent</h2>
       <p>À fournir le service (gestion, réponses aux clients, notifications), à le sécuriser (détection d'abus, journal d'audit), et à vous contacter au sujet de votre compte. Nous ne vendons pas vos données et nous ne les utilisons pas pour de la publicité.</p>
       <h2>Les services qui participent au traitement</h2>
       <ul>
-        <li><b>Meta (WhatsApp, Messenger, Instagram)</b> transporte les messages entre vos clients et l'application.</li>
+        <li><b>WhatsApp</b> transporte les messages entre vos clients et l'application.</li>
         <li><b>Un fournisseur d'intelligence artificielle</b> (Anthropic, Google ou un autre service compatible, selon la configuration) reçoit les extraits nécessaires pour rédiger une réponse ou une proposition. L'IA propose : elle ne modifie pas vos données sans votre validation.</li>
         <li><b>L'hébergement :</b> Vercel (site), Render (serveur) et Neon (base de données PostgreSQL), en Europe.</li>
         <li><b>Brevo</b> envoie les e-mails du service (codes de vérification, notifications).</li>
@@ -72,7 +72,7 @@ export function Terms() {
       <p>Vous devez fournir des informations exactes, protéger votre mot de passe et nous prévenir en cas d'usage non autorisé. Vous êtes responsable des personnes que vous invitez dans votre organisation et des droits que vous leur donnez.</p>
       <h2>Utilisation acceptable</h2>
       <ul>
-        <li>Respecter la loi, les règles de WhatsApp, Messenger et Instagram, et les droits des personnes que vous contactez (consentement, désabonnement).</li>
+        <li>Respecter la loi, les règles de WhatsApp, et les droits des personnes que vous contactez (consentement, désabonnement).</li>
         <li>Ne pas envoyer de messages non sollicités en masse, de contenus illicites, trompeurs ou dangereux.</li>
         <li>Ne pas tenter de perturber, contourner ou attaquer le service.</li>
       </ul>

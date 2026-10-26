@@ -8,7 +8,7 @@ import { Chats, MineView } from '../parts/sales/Chats.jsx';
 import { Followup } from '../parts/sales/Followup.jsx';
 import { OST, Pill } from '../parts/sales/util.jsx';
 
-/* Assistant commercial : l'IA répond aux prospects (web, WhatsApp, Messenger, Instagram), les enregistre et prend les commandes. */
+/* Assistant commercial : l'IA répond aux prospects (web, WhatsApp), les enregistre et prend les commandes. */
 export default function Sales() {
   const { can } = useWs();
   return can('manager') ? <SalesAdmin /> : <MineView />;
@@ -124,7 +124,7 @@ function Settings({ s, close, onChange }) {
           { k: 'hOrder', label: "Après une commande enregistrée par l'IA", type: 'select', options: [['1', "Un conseiller prend le relais (et l'IA interne prépare son dossier)"], ['0', "L'IA continue seule"]], value: yn(s.handoffOrder, '1'), hint: 'La commande reste « à valider » dans tous les cas.' },
           { k: 'hAppt', label: "Après un rendez-vous pris par l'IA", type: 'select', options: [['1', "Un conseiller prend le relais (et l'IA interne prépare son dossier)"], ['0', "L'IA continue seule"]], value: yn(s.handoffAppt, '1') },
           { k: 'rem', label: "Rappel automatique la veille d'un rendez-vous confirmé", type: 'select', options: [['1', 'Oui : le client est rappelé à partir de 16 h'], ['0', 'Non']], value: yn(s.apptReminder, '1'), hint: "Dans les 24 h après son dernier message : texte libre. Après, WhatsApp exige un modèle approuvé par Meta de type « Rappel de rendez-vous » (onglet Relances). Messenger et Instagram : seulement dans les 24 h." },
-          { k: 'delay', label: "Délai avant la réponse de l'IA (WhatsApp, Messenger, Instagram)", type: 'select', options: [['0', 'Tout de suite'], ['30', '30 secondes'], ['60', '1 minute'], ['90', '1 minute 30'], ['120', '2 minutes'], ['150', '2 minutes 30'], ['180', '3 minutes']], value: String(s.replyDelay || 0), hint: "L'IA attend ce temps avant de répondre. Si le client écrit plusieurs messages pendant l'attente, elle les lit ensemble et fait une seule réponse. Si un conseiller reprend la conversation, elle ne répond pas." },
+          { k: 'delay', label: "Délai avant la réponse de l'IA (WhatsApp)", type: 'select', options: [['0', 'Tout de suite'], ['30', '30 secondes'], ['60', '1 minute'], ['90', '1 minute 30'], ['120', '2 minutes'], ['150', '2 minutes 30'], ['180', '3 minutes']], value: String(s.replyDelay || 0), hint: "L'IA attend ce temps avant de répondre. Si le client écrit plusieurs messages pendant l'attente, elle les lit ensemble et fait une seule réponse. Si un conseiller reprend la conversation, elle ne répond pas." },
           { k: 'voice', label: 'Réponse en message vocal', type: 'select', options: [['mirror', "Quand le client m'envoie un vocal (conseillé)"], ['always', 'Toujours'], ['off', 'Jamais']], value: s.voiceReply || 'mirror', hint: s.ttsAvailable ? "La réponse écrite part toujours ; la voix s'y ajoute. Chaque message vocal compte comme un message IA de plus." : "Indisponible : le service de voix n'est pas configuré sur le serveur (TTS_API_KEY)." },
           { k: 'info', label: 'Informations pratiques pour répondre aux clients', type: 'textarea', rows: 8, value: s.salesInfo, placeholder: 'Horaires, adresse, livraison (zones et prix), moyens de paiement, délais, conditions de retour…', hint: "L'assistant n'invente rien : il utilise ce texte et votre catalogue. Plus c'est précis, mieux il répond." },
         ]}

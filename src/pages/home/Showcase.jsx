@@ -3,7 +3,7 @@ import { ICONS } from '../../lib/icons.js';
 
 const GROUPS = ['Vendre', 'Finances', 'Opérations', 'Équipe', 'Pilotage'];
 const MODS = [
-  ['sales', 'Vendre', 'Assistant commercial', "Répond sur WhatsApp, Messenger et Instagram, enregistre les prospects et prend les commandes."],
+  ['sales', 'Vendre', 'Assistant commercial', "Répond sur WhatsApp, enregistre les prospects et prend les commandes."],
   ['crm', 'Vendre', 'Clients et ventes', 'Devis, factures, paiements et impayés, avec la relance déjà rédigée.'],
   ['marketing', 'Vendre', 'Marketing', 'Campagnes, coût par prospect, calendrier de contenu et offres.'],
   ['support', 'Vendre', 'Service client', 'Toutes les demandes au même endroit, avec un brouillon de réponse.'],

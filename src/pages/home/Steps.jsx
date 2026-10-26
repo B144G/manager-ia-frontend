@@ -1,7 +1,7 @@
 const STEPS = [
   ['1', 'Créez votre espace', 'Gratuit, sans carte bancaire. Votre organisation est prête en quelques minutes.'],
   ['2', 'Ajoutez votre activité', 'Stock, clients, équipe : saisissez ou demandez à l\'IA de vous aider à démarrer.'],
-  ['3', 'Branchez vos canaux', 'WhatsApp, Messenger et Instagram, quand vous êtes prêt.'],
+  ['3', 'Branchez vos canaux', 'Connectez votre WhatsApp en scannant un QR code, quand vous êtes prêt.'],
   ['4', 'Elle propose, vous validez', 'Commandes, relances, écritures : rien ne part sans votre accord.'],
 ];
 const TRUST = [
