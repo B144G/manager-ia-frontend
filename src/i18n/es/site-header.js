@@ -1,0 +1,20 @@
+export default {
+  "Langue": "Idioma",
+  "Aller au contenu": "Saltar al contenido",
+  "Nouveau : paie, production, chantiers, maintenance, juridique et agents spécialisés.": "Novedad: nóminas, producción, obras, mantenimiento, asuntos jurídicos y agentes especializados.",
+  "Découvrir": "Descubrir",
+  "Navigation principale": "Navegación principal",
+  "Modules": "Módulos",
+  "Tarifs": "Precios",
+  "FAQ": "Preguntas frecuentes",
+  "Contact": "Contacto",
+  "Changer le thème clair ou sombre": "Cambiar entre tema claro y oscuro",
+  "Se connecter": "Iniciar sesión",
+  "Essayer gratuitement": "Probar gratis",
+  "Ouvrir le menu": "Abrir el menú",
+  "Gestion d'activité assistée par l'IA. Fait au Cameroun.": "Gestión empresarial asistida por IA. Hecho en Camerún.",
+  "Liens du pied de page": "Enlaces del pie de página",
+  "Questions": "Preguntas",
+  "Confidentialité": "Privacidad",
+  "Conditions": "Condiciones"
+};

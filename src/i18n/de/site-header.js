@@ -1,0 +1,20 @@
+export default {
+  "Langue": "Sprache",
+  "Aller au contenu": "Zum Inhalt springen",
+  "Nouveau : paie, production, chantiers, maintenance, juridique et agents spécialisés.": "Neu: Lohnabrechnung, Produktion, Baustellen, Wartung, Recht und spezialisierte Agenten.",
+  "Découvrir": "Entdecken",
+  "Navigation principale": "Hauptnavigation",
+  "Modules": "Module",
+  "Tarifs": "Preise",
+  "FAQ": "FAQ",
+  "Contact": "Kontakt",
+  "Changer le thème clair ou sombre": "Zwischen hellem und dunklem Design wechseln",
+  "Se connecter": "Anmelden",
+  "Essayer gratuitement": "Kostenlos testen",
+  "Ouvrir le menu": "Menü öffnen",
+  "Gestion d'activité assistée par l'IA. Fait au Cameroun.": "KI-gestützte Unternehmensverwaltung. Hergestellt in Kamerun.",
+  "Liens du pied de page": "Links im Fußbereich",
+  "Questions": "Fragen",
+  "Confidentialité": "Datenschutz",
+  "Conditions": "Nutzungsbedingungen"
+};

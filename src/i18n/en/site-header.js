@@ -1,0 +1,20 @@
+export default {
+  "Langue": "Language",
+  "Aller au contenu": "Skip to content",
+  "Nouveau : paie, production, chantiers, maintenance, juridique et agents spécialisés.": "New: payroll, production, construction sites, maintenance, legal and specialised agents.",
+  "Découvrir": "Discover",
+  "Navigation principale": "Main navigation",
+  "Modules": "Modules",
+  "Tarifs": "Pricing",
+  "FAQ": "FAQ",
+  "Contact": "Contact",
+  "Changer le thème clair ou sombre": "Switch between light and dark theme",
+  "Se connecter": "Log in",
+  "Essayer gratuitement": "Try for free",
+  "Ouvrir le menu": "Open the menu",
+  "Gestion d'activité assistée par l'IA. Fait au Cameroun.": "Business management assisted by AI. Made in Cameroon.",
+  "Liens du pied de page": "Footer links",
+  "Questions": "Questions",
+  "Confidentialité": "Privacy",
+  "Conditions": "Terms"
+};
