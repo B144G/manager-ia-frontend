@@ -1,14 +1,16 @@
 import { useWs } from '../../WsContext.jsx';
+import { useT } from '../../../lib/i18n.jsx';
 
 /** Sélecteur d'exercice (5 dernières années). */
 export function YearBar({ year, setYear }) {
+  const t = useT();
   const y = new Date().getFullYear();
   const years = [];
   for (let i = y; i >= y - 4; i--) years.push(String(i));
   return (
     <div className="row" style={{ marginBottom: 8 }}>
-      <span className="muted small">Exercice :</span>
-      <select aria-label="Année" value={year} onChange={(e) => setYear(e.target.value)}>
+      <span className="muted small">{t('Exercice :')}</span>
+      <select aria-label={t("Année")} value={year} onChange={(e) => setYear(e.target.value)}>
         {years.map((v) => <option key={v} value={v}>{v}</option>)}
       </select>
     </div>
@@ -17,17 +19,18 @@ export function YearBar({ year, setYear }) {
 
 /** Une écriture comptable (carte). */
 export function EntryCard({ e, canUndo, JN, onReverse }) {
+  const t = useT();
   const { money, dateFr, confirm } = useWs();
   const tot = e.lines.reduce((a, l) => a + l.debit, 0);
   return (
     <div className="line" style={{ display: 'block' }}>
       <div className="row">
         <b>{e.number}</b>
-        <span className="muted small">{dateFr(e.date) + ' · ' + (JN[e.journal] || e.journal)}</span>
+        <span className="muted small">{dateFr(e.date) + ' · ' + (JN[e.journal] ? t(JN[e.journal]) : e.journal)}</span>
         <span className="grow" />
         <b>{money(tot)}</b>
         {canUndo && !e.reversedOf ? (
-          <button className="link" type="button" onClick={() => confirm("Annuler l'écriture " + e.number + ' par une écriture inverse ? (Elle reste visible dans le journal.)', () => onReverse(e))}>Annuler</button>
+          <button className="link" type="button" onClick={() => confirm(t("Annuler l'écriture {number} par une écriture inverse ? (Elle reste visible dans le journal.)", { number: e.number }), () => onReverse(e))}>{t('Annuler')}</button>
         ) : null}
       </div>
       <div>{e.label}</div>
@@ -45,10 +48,11 @@ export function EntryCard({ e, canUndo, JN, onReverse }) {
 
 /** Ligne « compte + libellé + montant » des états. */
 export function AmountLine({ x }) {
+  const t = useT();
   const { money } = useWs();
   return (
     <div className="line">
-      <span><b>{x.account}</b><small>{' ' + x.label}</small></span>
+      <span><b>{x.account}</b><small>{' ' + t(x.label)}</small></span>
       <span>{money(x.amount)}</span>
     </div>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import SiteAssistant from '../components/SiteAssistant.jsx';
+import { useT } from '../lib/i18n.jsx';
 import Faq from './home/Faq.jsx';
 import Essentials from './home/Essentials.jsx';
 import Final from './home/Final.jsx';
@@ -11,6 +12,7 @@ import Steps from './home/Steps.jsx';
 
 /** Fenêtre (vidéo ou aperçu agrandi) : Échap ou clic à côté pour fermer, le focus revient là où il était. */
 function Lightbox({ onClose, label, children }) {
+  const t = useT();
   const last = useRef(document.activeElement);
   useEffect(() => {
     const key = (e) => { if (e.key === 'Escape') onClose(); };
@@ -20,12 +22,13 @@ function Lightbox({ onClose, label, children }) {
   }, [onClose]);
   return (
     <div className="s-modal" role="dialog" aria-modal="true" aria-label={label} onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="box"><button type="button" className="x" aria-label="Fermer" autoFocus onClick={onClose}>×</button>{children}</div>
+      <div className="box"><button type="button" className="x" aria-label={t("Fermer")} autoFocus onClick={onClose}>×</button>{children}</div>
     </div>
   );
 }
 
 export default function Home() {
+  const t = useT();
   const [video, setVideo] = useState(false);
   const [zoom, setZoom] = useState(null);
   const page = useRef(null);
@@ -60,8 +63,8 @@ export default function Home() {
       <Footer />
       <SiteAssistant />
       {video ? (
-        <Lightbox label="Vidéo de présentation de MANAGER-IA" onClose={() => setVideo(false)}>
-          <video controls autoPlay playsInline poster="/video/poster.jpg" aria-label="Vidéo de présentation de MANAGER-IA"><source src="/video/manager-ia.mp4" type="video/mp4" /></video>
+        <Lightbox label={t("Vidéo de présentation de MANAGER-IA")} onClose={() => setVideo(false)}>
+          <video controls autoPlay playsInline poster="/video/poster.jpg" aria-label={t("Vidéo de présentation de MANAGER-IA")}><source src="/video/manager-ia.mp4" type="video/mp4" /></video>
         </Lightbox>
       ) : null}
       {zoom ? <Lightbox label={zoom.alt} onClose={() => setZoom(null)}><div className="s-zoom"><img src={zoom.src} alt={zoom.alt} /></div></Lightbox> : null}

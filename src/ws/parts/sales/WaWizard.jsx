@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useWs } from '../../WsContext.jsx';
+import { useT } from '../../../lib/i18n.jsx';
 
 const ONE_CLICK = { id: 'oneclick', t: 'Connexion en un clic', auto: (w) => w.connected, body: ["Le bouton « Connecter WhatsApp » en haut de la page ouvre une fenêtre de Meta : vous y choisissez votre compte et votre numéro, sans copier aucun identifiant.", "Si cela fonctionne pour vous, vous pouvez ignorer toutes les étapes suivantes. Elles servent seulement à la saisie manuelle."],
   ask: "Comment fonctionne la connexion WhatsApp en un clic de Meta et que dois-je préparer ?" };
@@ -28,6 +29,7 @@ const BASE = [
 
 /** Assistant d'installation WhatsApp : étapes cochables, avance seul selon ce qui est déjà enregistré. */
 export function WaWizard({ w, embedded }) {
+  const t = useT();
   const { orgId, askAI } = useWs();
   const key = 'mia-wa-steps-' + orgId;
   const [manual, setManual] = useState({});
@@ -41,24 +43,24 @@ export function WaWizard({ w, embedded }) {
   const cur = STEPS.find((s) => !s.info && !isDone(s));
   return (
     <div className="ws-card wa-wiz">
-      <h2>Assistant d'installation WhatsApp</h2>
-      <div className="wa-bar" role="progressbar" aria-valuemin={0} aria-valuemax={todo.length} aria-valuenow={done} aria-label="Progression"><i style={{ width: (100 * done / todo.length) + '%' }} /></div>
-      <p className="muted small">{done} étape(s) sur {todo.length} faites. Cochez au fur et à mesure : les étapes d'identifiants se cochent seules quand vous enregistrez. Ne collez jamais un jeton ou un secret dans la discussion avec l'assistant IA.</p>
+      <h2>{t("Assistant d'installation WhatsApp")}</h2>
+      <div className="wa-bar" role="progressbar" aria-valuemin={0} aria-valuemax={todo.length} aria-valuenow={done} aria-label={t("Progression")}><i style={{ width: (100 * done / todo.length) + '%' }} /></div>
+      <p className="muted small">{t("{done} étape(s) sur {total} faites. Cochez au fur et à mesure : les étapes d'identifiants se cochent seules quand vous enregistrez. Ne collez jamais un jeton ou un secret dans la discussion avec l'assistant IA.", { done, total: todo.length })}</p>
       <ol className="wa-steps">
         {STEPS.map((s, i) => {
           const d = isDone(s), o = open === s.id || (open === null && cur && cur.id === s.id);
           return (
             <li key={s.id} className={(d ? 'done ' : '') + (o ? 'open' : '')}>
               <div className="wa-h">
-                {s.info ? <span className="wa-n info">i</span> : <button type="button" className="wa-n" aria-pressed={d} aria-label={(d ? 'Décocher : ' : 'Cocher : ') + s.t} onClick={() => !s.auto || !s.auto(w) ? toggle(s.id) : null}>{d ? '✓' : i + 1}</button>}
-                <button type="button" className="wa-t" aria-expanded={o} onClick={() => setOpen(o ? '' : s.id)}>{s.t}</button>
+                {s.info ? <span className="wa-n info">i</span> : <button type="button" className="wa-n" aria-pressed={d} aria-label={d ? t('Décocher : {step}', { step: t(s.t) }) : t('Cocher : {step}', { step: t(s.t) })} onClick={() => !s.auto || !s.auto(w) ? toggle(s.id) : null}>{d ? '✓' : i + 1}</button>}
+                <button type="button" className="wa-t" aria-expanded={o} onClick={() => setOpen(o ? '' : s.id)}>{t(s.t)}</button>
               </div>
               {o ? (
                 <div className="wa-b">
-                  {s.body.map((p) => <p key={p}>{p}</p>)}
+                  {s.body.map((p) => <p key={p}>{t(p)}</p>)}
                   <div className="row">
-                    {s.url ? <a className="btn small" href={s.url} target="_blank" rel="noopener noreferrer">{s.link}</a> : null}
-                    {s.ask ? <button type="button" className="btn small" onClick={() => askAI(s.ask)}>Je bloque : demander à l'assistant IA</button> : null}
+                    {s.url ? <a className="btn small" href={s.url} target="_blank" rel="noopener noreferrer">{t(s.link)}</a> : null}
+                    {s.ask ? <button type="button" className="btn small" onClick={() => askAI(t(s.ask))}>{t("Je bloque : demander à l'assistant IA")}</button> : null}
                   </div>
                 </div>
               ) : null}

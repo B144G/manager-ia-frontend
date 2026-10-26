@@ -1,3 +1,5 @@
+import { useT } from '../../lib/i18n.jsx';
+
 const STEPS = [
   ['1', 'Créez votre espace', 'Gratuit, sans carte bancaire. Votre organisation est prête en quelques minutes.'],
   ['2', 'Ajoutez votre activité', 'Stock, clients, équipe : saisissez ou demandez à l\'IA de vous aider à démarrer.'],
@@ -12,14 +14,15 @@ const TRUST = [
 
 /** « Comment ça marche » en quatre étapes, puis les garanties de sécurité. */
 export default function Steps() {
+  const t = useT();
   return (
     <section className="s-sec alt" id="comment"><div className="s-wrap">
-      <div className="s-head rv"><span className="s-eyebrow">Simple et sûr</span><h2>Démarrez en quatre étapes</h2></div>
+      <div className="s-head rv"><span className="s-eyebrow">{t('Simple et sûr')}</span><h2>{t('Démarrez en quatre étapes')}</h2></div>
       <ol className="s-steps4 rv">
-        {STEPS.map(([n, t, p]) => <li key={n}><b>{n}</b><h3>{t}</h3><p>{p}</p></li>)}
+        {STEPS.map(([n, h, p]) => <li key={n}><b>{n}</b><h3>{t(h)}</h3><p>{t(p)}</p></li>)}
       </ol>
       <div className="s-trust3 rv">
-        {TRUST.map(([t, p]) => <div key={t}><h3>{t}</h3><p>{p}</p></div>)}
+        {TRUST.map(([h, p]) => <div key={h}><h3>{t(h)}</h3><p>{t(p)}</p></div>)}
       </div>
     </div></section>
   );

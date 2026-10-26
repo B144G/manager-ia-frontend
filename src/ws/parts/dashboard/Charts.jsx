@@ -1,3 +1,4 @@
+import { tr } from '../../../lib/i18n.jsx';
 import { MN } from './helpers.js';
 
 /** Anneau du score de santé (SVG à la main). */
@@ -6,7 +7,7 @@ export function HealthRing({ score }) {
   const C2 = 2 * Math.PI * R;
   const tone = score >= 80 ? 'good' : score >= 60 ? 'mid' : 'bad';
   return (
-    <svg viewBox="0 0 120 120" width="120" height="120" role="img" aria-label={'Score de santé ' + score + ' sur 100'}>
+    <svg viewBox="0 0 120 120" width="120" height="120" role="img" aria-label={tr('Score de santé {score} sur 100', { score })}>
       <circle cx="60" cy="60" r={String(R)} fill="none" strokeWidth="12" className="ring-bg" />
       <circle cx="60" cy="60" r={String(R)} fill="none" strokeWidth="12" strokeLinecap="round" className={'ring ' + tone} strokeDasharray={(C2 * score / 100).toFixed(1) + ' ' + C2.toFixed(1)} transform="rotate(-90 60 60)" />
     </svg>
@@ -37,7 +38,7 @@ export function flowChart(series) {
   return {
     unit,
     svg: (
-      <svg viewBox={'0 0 ' + W + ' ' + H} className="chart" role="img" aria-label="Entrées et sorties des six derniers mois">
+      <svg viewBox={'0 0 ' + W + ' ' + H} className="chart" role="img" aria-label={tr('Entrées et sorties des six derniers mois')}>
         {grid}
         {series.map((m, i) => {
           const x = 62 + i * 96;
@@ -45,7 +46,7 @@ export function flowChart(series) {
             <g key={m.month}>
               <rect x={String(x)} y={String(base - m.income * sc)} width="32" height={String(Math.max(m.income * sc, 0))} rx="6" className="b-in" />
               <rect x={String(x + 40)} y={String(base - m.expense * sc)} width="32" height={String(Math.max(m.expense * sc, 0))} rx="6" className="b-out" />
-              <text x={String(x + 36)} y={String(base + 22)} textAnchor="middle" className="ax">{MN[Number(m.month.slice(5)) - 1]}</text>
+              <text x={String(x + 36)} y={String(base + 22)} textAnchor="middle" className="ax">{MN(Number(m.month.slice(5)) - 1)}</text>
             </g>
           );
         })}

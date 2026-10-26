@@ -1,6 +1,8 @@
 import { Component, Suspense, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import InstallPrompt from '../components/InstallPrompt.jsx';
+import LangSwitch from '../components/LangSwitch.jsx';
+import { useT } from '../lib/i18n.jsx';
 import AccountSecurity from './AccountSecurity.jsx';
 import AIPanel from './AIPanel.jsx';
 import { MODULE_ICONS, hasModule, moduleComponent } from './registry.js';
@@ -14,13 +16,14 @@ export default function Workspace() {
 
 function Gate() {
   const ws = useWs();
+  const t = useT();
   useEffect(() => {
     // « Installer l'application » (PWA) : enregistrement du service worker
     if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) navigator.serviceWorker.register('/sw.js').catch(() => {});
   }, []);
-  if (ws.booting) return <p className="ws-boot">Chargement…</p>;
+  if (ws.booting) return <p className="ws-boot">{t('Chargement…')}</p>;
   if (ws.onboarding) return <Onboarding />;
-  if (!ws.info) return <p className="ws-boot">Chargement…</p>;
+  if (!ws.info) return <p className="ws-boot">{t('Chargement…')}</p>;
   return <><Shell /><InstallPrompt /></>;
 }
 
@@ -31,29 +34,30 @@ const Center = ({ children }) => (
 /** Premier pas : créer son organisation ou rejoindre celle d'un collègue avec un code. */
 function Onboarding() {
   const { user, api, loadOrg, onboarding, setOnboarding, orgs, logout, firstName } = useWs();
+  const t = useT();
   const go = (j) => loadOrg(j.id, 'dashboard');
   return (
     <Center>
       <div className="ws-card">
-        <h1>Bienvenue{user ? ', ' + firstName() : ''}</h1>
-        <p className="muted">Créez votre organisation (entreprise, boutique, association, équipe…) ou rejoignez celle d'un collègue avec un code d'invitation.</p>
+        <h1>{user ? t('Bienvenue, {name}', { name: firstName() }) : t('Bienvenue')}</h1>
+        <p className="muted">{t("Créez votre organisation (entreprise, boutique, association, équipe…) ou rejoignez celle d'un collègue avec un code d'invitation.")}</p>
         <div className="ws-cols">
           <div className="ws-sub">
-            <h2>Créer mon organisation</h2>
-            <Form submitText="Créer" onSubmit={(v) => api('POST', '/orgs', v).then(go)} fields={[
-              { k: 'name', label: 'Nom', required: true, placeholder: 'Boutique Awa' },
-              { k: 'sector', label: "Secteur d'activité", placeholder: 'Commerce, restauration, services…' },
-              { k: 'description', label: 'Décrivez votre activité', type: 'textarea', rows: 3, hint: "L'IA s'en sert pour mieux vous conseiller." },
-              { k: 'currency', label: 'Monnaie', value: 'FCFA' },
+            <h2>{t('Créer mon organisation')}</h2>
+            <Form submitText={t('Créer')} onSubmit={(v) => api('POST', '/orgs', v).then(go)} fields={[
+              { k: 'name', label: t('Nom'), required: true, placeholder: 'Boutique Awa' },
+              { k: 'sector', label: t("Secteur d'activité"), placeholder: t('Commerce, restauration, services…') },
+              { k: 'description', label: t('Décrivez votre activité'), type: 'textarea', rows: 3, hint: t("L'IA s'en sert pour mieux vous conseiller.") },
+              { k: 'currency', label: t('Monnaie'), value: 'FCFA' },
             ]} />
           </div>
           <div className="ws-sub">
-            <h2>Rejoindre avec un code</h2>
-            <Form submitText="Rejoindre" onSubmit={(v) => api('POST', '/orgs/join', v).then(go)} fields={[{ k: 'code', label: "Code d'invitation", required: true, value: (onboarding && onboarding.code) || '' }]} />
+            <h2>{t('Rejoindre avec un code')}</h2>
+            <Form submitText={t('Rejoindre')} onSubmit={(v) => api('POST', '/orgs/join', v).then(go)} fields={[{ k: 'code', label: t("Code d'invitation"), required: true, value: (onboarding && onboarding.code) || '' }]} />
           </div>
         </div>
-        {orgs.length ? <p className="small"><button className="link" type="button" onClick={() => setOnboarding(null)}>← Retour à mon espace</button></p> : null}
-        <p className="small"><button className="link" type="button" onClick={logout}>Me déconnecter</button></p>
+        {orgs.length ? <p className="small"><button className="link" type="button" onClick={() => setOnboarding(null)}>{t('← Retour à mon espace')}</button></p> : null}
+        <p className="small"><button className="link" type="button" onClick={logout}>{t('Me déconnecter')}</button></p>
       </div>
     </Center>
   );
@@ -65,8 +69,9 @@ const AI_MODULES = new Set(['support', 'projects', 'budget', 'stock', 'crm', 'hr
 /** Coque : menu, barre du haut, module affiché, panneau de l'IA. */
 function Shell() {
   const ws = useWs();
+  const t = useT();
   const { user, orgs, orgId, info, dash, route, aiOpen, setAiOpen, askAI, logout, loadOrg, refreshKey, refreshBadges, setOrgs, modal } = ws;
-  const openSecurity = () => modal('Sécurité du compte', () => <AccountSecurity />, { wide: true });
+  const openSecurity = () => modal(t('Sécurité du compte'), () => <AccountSecurity />, { wide: true });
   const shell = useRef(null);
   const main = useRef(null);
   const mods = info.modules.filter((m) => hasModule(m.id));
@@ -103,7 +108,7 @@ function Shell() {
     const n = badgeOf(m.id);
     return (
       <Link key={m.id} to={`/app/${orgId}/${m.id}`} className={m.id === cur ? 'on' : ''} aria-current={m.id === cur ? 'page' : undefined}>
-        <Icon name={MODULE_ICONS[m.id] || m.id} /><span className="nl">{m.title}</span>
+        <Icon name={MODULE_ICONS[m.id] || m.id} /><span className="nl">{t(m.title)}</span>
         <span className="nbadge" hidden={!n}>{n}</span>
       </Link>
     );
@@ -114,36 +119,38 @@ function Shell() {
   return (
     <div className={'ws-shell' + (navOpen ? ' nav-open' : '')} ref={shell}>
       <div className="ws-scrim" onClick={() => setNavOpen(false)} aria-hidden="true" />
-      <aside className="ws-side" id="ws-side" aria-label="Menu principal">
-        <div className="ws-side-h"><Link className="logo" to="/">MANAGER<b>-IA</b></Link><button type="button" className="ws-close" aria-label="Fermer le menu" onClick={() => setNavOpen(false)}>×</button></div>
+      <aside className="ws-side" id="ws-side" aria-label={t('Menu principal')}>
+        <div className="ws-side-h"><Link className="logo" to="/">MANAGER<b>-IA</b></Link><button type="button" className="ws-close" aria-label={t('Fermer le menu')} onClick={() => setNavOpen(false)}>×</button></div>
         <div className="ws-org">
           <span className="av">{initialsOf(info.org.name)}</span>
           <div>
-            <select className="org-sel" aria-label="Organisation" value={orgId} onChange={(e) => { const v = e.target.value; if (v === 'new') ws.setOnboarding({ code: '' }); else loadOrg(Number(v), 'dashboard'); }}>
+            <select className="org-sel" aria-label={t('Organisation')} value={orgId} onChange={(e) => { const v = e.target.value; if (v === 'new') ws.setOnboarding({ code: '' }); else loadOrg(Number(v), 'dashboard'); }}>
               {orgs.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
-              <option value="new">+ Nouvelle organisation / rejoindre</option>
+              <option value="new">{t('+ Nouvelle organisation / rejoindre')}</option>
             </select>
-            <small>{(info.org.sector ? info.org.sector + ' · ' : '') + members + ' personne' + (members > 1 ? 's' : '')}</small>
+            <small>{(info.org.sector ? info.org.sector + ' · ' : '') + (members > 1 ? t('{n} personnes', { n: members }) : t('{n} personne', { n: members }))}</small>
           </div>
         </div>
-        <div className="ws-label">MON ESPACE</div>
-        <nav className="ws-nav" aria-label="Sous-applications">{mainMods.map(link)}{alertMod.length ? <><hr />{alertMod.map(link)}</> : null}</nav>
+        <LangSwitch className="ws-lang ws-lang-side" />
+        <div className="ws-label">{t('MON ESPACE')}</div>
+        <nav className="ws-nav" aria-label={t('Sous-applications')}>{mainMods.map(link)}{alertMod.length ? <><hr />{alertMod.map(link)}</> : null}</nav>
         <div className="ws-me">
           <span className="av gold">{initialsOf(user && user.name)}</span>
-          <div><b>{user ? user.name : ''}</b><small>{info.me.roleLabel}</small></div>
-          <button type="button" className="out" title="Sécurité du compte" aria-label="Sécurité du compte" onClick={openSecurity}><Icon name="shield" /></button>
-          <button type="button" className="out" title="Me déconnecter" aria-label="Me déconnecter" onClick={logout}><Icon name="out" /></button>
+          <div><b>{user ? user.name : ''}</b><small>{t(info.me.roleLabel)}</small></div>
+          <button type="button" className="out" title={t('Sécurité du compte')} aria-label={t('Sécurité du compte')} onClick={openSecurity}><Icon name="shield" /></button>
+          <button type="button" className="out" title={t('Me déconnecter')} aria-label={t('Me déconnecter')} onClick={logout}><Icon name="out" /></button>
         </div>
       </aside>
       <div className="ws-col">
         <header className="ws-top2">
-          <button type="button" className="ws-burger" aria-label="Ouvrir le menu" aria-expanded={navOpen} aria-controls="ws-side" onClick={() => setNavOpen(!navOpen)}>
+          <button type="button" className="ws-burger" aria-label={t('Ouvrir le menu')} aria-expanded={navOpen} aria-controls="ws-side" onClick={() => setNavOpen(!navOpen)}>
             <svg viewBox="0 0 24 24" className="ic" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
           </button>
           <AskBar onAsk={askAI} />
           <span className="grow" />
-          <Link className="bell" to={`/app/${orgId}/alerts`} aria-label="Alertes"><Icon name="alerts" /><i className="dot" hidden={!bell} /></Link>
-          <div className="ws-user" role="button" tabIndex={0} title="Sécurité du compte" style={{ cursor: 'pointer' }} onClick={openSecurity} onKeyDown={(e) => { if (e.key === 'Enter') openSecurity(); }}><span className="av">{initialsOf(user && user.name)}</span><div><b>{user ? user.name : ''}</b><small>{info.me.roleLabel}</small></div></div>
+          <LangSwitch className="ws-lang ws-lang-top" />
+          <Link className="bell" to={`/app/${orgId}/alerts`} aria-label={t('Alertes')}><Icon name="alerts" /><i className="dot" hidden={!bell} /></Link>
+          <div className="ws-user" role="button" tabIndex={0} title={t('Sécurité du compte')} style={{ cursor: 'pointer' }} onClick={openSecurity} onKeyDown={(e) => { if (e.key === 'Enter') openSecurity(); }}><span className="av">{initialsOf(user && user.name)}</span><div><b>{user ? user.name : ''}</b><small>{t(info.me.roleLabel)}</small></div></div>
         </header>
         <main className="ws-main" id="ws-main" ref={main}>
           <div className="ws-mod" key={`${orgId}-${cur}-${refreshKey}`}>
@@ -152,17 +159,18 @@ function Shell() {
         </main>
       </div>
       <AIPanel mod={AI_MODULES.has(cur) ? cur : 'general'} />
-      <button className="ws-fab" type="button" id="aiBtn" onClick={() => setAiOpen(!aiOpen)}><Icon name="ai" /><span>Assistant IA</span></button>
+      <button className="ws-fab" type="button" id="aiBtn" onClick={() => setAiOpen(!aiOpen)}><Icon name="ai" /><span>{t('Assistant IA')}</span></button>
     </div>
   );
 }
 
 function AskBar({ onAsk }) {
+  const t = useT();
   const ref = useRef(null);
   return (
     <form className="ws-ask" onSubmit={(ev) => { ev.preventDefault(); const q = ref.current.value.trim(); if (q) { ref.current.value = ''; onAsk(q); } }}>
       <Icon name="ai" />
-      <input ref={ref} type="text" placeholder={window.innerWidth < 640 ? 'Demandez à MANAGER-IA…' : "Demandez à MANAGER-IA : « Quels sont les problèmes urgents aujourd'hui ? »"} aria-label="Demandez à MANAGER-IA" autoComplete="off" />
+      <input ref={ref} type="text" placeholder={window.innerWidth < 640 ? t('Demandez à MANAGER-IA…') : t("Demandez à MANAGER-IA : « Quels sont les problèmes urgents aujourd'hui ? »")} aria-label={t('Demandez à MANAGER-IA')} autoComplete="off" />
     </form>
   );
 }
@@ -172,5 +180,10 @@ class ModBoundary extends Component {
   constructor(p) { super(p); this.state = { err: null }; }
   static getDerivedStateFromError(err) { return { err }; }
   componentDidCatch(err) { console.error(err); } // eslint-disable-line no-console
-  render() { return this.state.err ? <Empty text={"Cette partie n'a pas pu s'afficher : " + this.state.err.message} /> : this.props.children; }
+  render() { return this.state.err ? <ModError err={this.state.err} /> : this.props.children; }
+}
+
+function ModError({ err }) {
+  const t = useT();
+  return <Empty text={t("Cette partie n'a pas pu s'afficher : {msg}", { msg: err.message })} />;
 }

@@ -1,4 +1,6 @@
 /* Libellés et petits éléments du module Maintenance. */
+import { getLocale, tr, useT } from '../../../lib/i18n.jsx';
+
 export const KIND = [['machine', 'Machine'], ['vehicle', 'Véhicule'], ['building', 'Bâtiment'], ['tool', 'Outil'], ['it', 'Informatique']];
 export const KIND_FR = Object.fromEntries(KIND);
 export const EQ_STATUS = [['running', 'En service'], ['broken', 'En panne'], ['stopped', "À l'arrêt"], ['retired', 'Réformé']];
@@ -8,13 +10,14 @@ export const PRIO = [['low', 'Basse'], ['normal', 'Normale'], ['high', 'Haute'],
 export const PRIO_FR = Object.fromEntries(PRIO);
 export const ORDER_FR = { open: ['Ouverte', 'mid'], in_progress: ['En cours', 'good'], done: ['Terminée', ''] };
 export const PERIOD = [['days', 'Tous les X jours'], ['hours', 'Toutes les X heures de marche'], ['km', 'Tous les X km']];
-export const qty = (n) => Number(n).toLocaleString('fr-FR', { maximumFractionDigits: 3 });
-export function Pill({ t }) {
-  return t && t[0] ? <span className={'pill ' + t[1]}>{t[0]}</span> : null;
+export const qty = (n) => Number(n).toLocaleString(getLocale(), { maximumFractionDigits: 3 });
+export function Pill({ s }) {
+  const t = useT();
+  return s && s[0] ? <span className={'pill ' + s[1]}>{t(s[0])}</span> : null;
 }
 /** Texte de l'échéance d'un plan. */
 export function dueText(p, dateFr) {
-  if (p.periodKind === 'days') return p.left < 0 ? 'en retard de ' + Math.abs(p.left) + ' jour(s) (échéance ' + dateFr(p.nextDueAt) + ')' : p.left === 0 ? "à faire aujourd'hui" : 'dans ' + p.left + ' jour(s) (' + dateFr(p.nextDueAt) + ')';
+  if (p.periodKind === 'days') return p.left < 0 ? tr('en retard de {n} jour(s) (échéance {date})', { n: Math.abs(p.left), date: dateFr(p.nextDueAt) }) : p.left === 0 ? tr("à faire aujourd'hui") : tr('dans {n} jour(s) ({date})', { n: p.left, date: dateFr(p.nextDueAt) });
   const u = p.periodKind === 'km' ? 'km' : 'h';
-  return p.left <= 0 ? 'dépassé de ' + qty(Math.abs(p.left)) + ' ' + u : 'dans ' + qty(p.left) + ' ' + u + ' (à ' + qty(p.nextMeter) + ' ' + u + ')';
+  return p.left <= 0 ? tr('dépassé de {n} {unit}', { n: qty(Math.abs(p.left)), unit: u }) : tr('dans {n} {unit} (à {at} {unit})', { n: qty(p.left), unit: u, at: qty(p.nextMeter) });
 }

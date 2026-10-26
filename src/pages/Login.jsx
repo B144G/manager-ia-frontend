@@ -3,8 +3,11 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout.jsx';
 import SiteAssistant from '../components/SiteAssistant.jsx';
 import { rq } from '../lib/api.js';
+import { useT } from '../lib/i18n.jsx';
+import { serverMsg } from '../components/serverMsg.js';
 
 export default function Login() {
+  const t = useT();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const [forgot, setForgot] = useState(false);
@@ -50,46 +53,46 @@ export default function Login() {
 
   return (
     <>
-      <AuthLayout pitch="Bon retour parmi nous" bullets={['Vos clients, votre stock et vos factures vous attendent', 'Une IA qui propose, vous validez', 'Un assistant qui vous guide à chaque étape']}>
+      <AuthLayout pitch={t('Bon retour parmi nous')} bullets={[t('Vos clients, votre stock et vos factures vous attendent'), t('Une IA qui propose, vous validez'), t('Un assistant qui vous guide à chaque étape')]}>
         {tfa ? (
           <section className="au-card" id="vTfa">
-            <h1>Vérification</h1>
-            <p className="au-sub">Entrez le code à 6 chiffres de votre application d'authentification. Vous avez perdu votre téléphone ? Utilisez un de vos codes de secours.</p>
+            <h1>{t('Vérification')}</h1>
+            <p className="au-sub">{t("Entrez le code à 6 chiffres de votre application d'authentification. Vous avez perdu votre téléphone ? Utilisez un de vos codes de secours.")}</p>
             <form id="ft" noValidate onSubmit={submitCode}>
-              <label className="fld"><span>Code</span><input id="tcode" inputMode="numeric" autoComplete="one-time-code" required autoFocus value={code} onChange={(e) => setCode(e.target.value)} placeholder="123456" /></label>
-              <p className="hm-err" id="terr" role="alert">{err}</p>
-              <button className="s-btn pri big au-go" type="submit" id="tgo" disabled={busy}>Valider</button>
+              <label className="fld"><span>{t('Code')}</span><input id="tcode" inputMode="numeric" autoComplete="one-time-code" required autoFocus value={code} onChange={(e) => setCode(e.target.value)} placeholder={t('123456')} /></label>
+              <p className="hm-err" id="terr" role="alert">{err ? serverMsg(t, err) : ''}</p>
+              <button className="s-btn pri big au-go" type="submit" id="tgo" disabled={busy}>{t('Valider')}</button>
             </form>
-            <p className="au-back"><a href="#" onClick={(e) => { e.preventDefault(); setTfa(null); setErr(''); }}>← Recommencer</a></p>
+            <p className="au-back"><a href="#" onClick={(e) => { e.preventDefault(); setTfa(null); setErr(''); }}>{t('← Recommencer')}</a></p>
           </section>
         ) : forgot ? (
           <section className="au-card" id="vForgot">
-            <h1>Mot de passe oublié</h1>
-            <p className="au-sub">Entrez l'e-mail ou le téléphone de votre compte. Avec un e-mail, vous recevez un lien valable 1 heure. Avec un téléphone, l'équipe vous contacte pour vérifier que c'est bien vous, puis vous envoie le lien.</p>
+            <h1>{t('Mot de passe oublié')}</h1>
+            <p className="au-sub">{t("Entrez l'e-mail ou le téléphone de votre compte. Avec un e-mail, vous recevez un lien valable 1 heure. Avec un téléphone, l'équipe vous contacte pour vérifier que c'est bien vous, puis vous envoie le lien.")}</p>
             <form id="ff" noValidate onSubmit={submitForgot}>
-              <label className="fld"><span>E-mail ou téléphone</span><input id="fcontact" autoComplete="username" inputMode="email" required autoFocus value={fc} onChange={(e) => setFc(e.target.value)} /></label>
-              <p className="hm-err" id="ferr" role="alert">{ferr}</p>
-              {fok ? <p className="au-sub" id="fok" role="status">{fok}</p> : null}
-              <button className="s-btn pri big au-go" type="submit" id="fgo" disabled={fbusy}>Recevoir le lien</button>
+              <label className="fld"><span>{t('E-mail ou téléphone')}</span><input id="fcontact" autoComplete="username" inputMode="email" required autoFocus value={fc} onChange={(e) => setFc(e.target.value)} /></label>
+              <p className="hm-err" id="ferr" role="alert">{ferr ? serverMsg(t, ferr) : ''}</p>
+              {fok ? <p className="au-sub" id="fok" role="status">{serverMsg(t, fok)}</p> : null}
+              <button className="s-btn pri big au-go" type="submit" id="fgo" disabled={fbusy}>{t('Recevoir le lien')}</button>
             </form>
-            <p className="au-back"><a href="#" id="backLogin" onClick={(e) => { e.preventDefault(); setForgot(false); }}>← Retour à la connexion</a></p>
+            <p className="au-back"><a href="#" id="backLogin" onClick={(e) => { e.preventDefault(); setForgot(false); }}>{t('← Retour à la connexion')}</a></p>
           </section>
         ) : (
           <section className="au-card" id="vForm">
-            <h1>Connexion</h1>
-            <p className="au-sub">Accédez à votre tableau de bord.</p>
+            <h1>{t('Connexion')}</h1>
+            <p className="au-sub">{t('Accédez à votre tableau de bord.')}</p>
             <form id="f" noValidate onSubmit={submit}>
-              <label className="fld"><span>E-mail ou téléphone</span><input id="contact" autoComplete="username" inputMode="email" required value={v.contact} onChange={(e) => setV({ ...v, contact: e.target.value })} /></label>
-              <label className="fld"><span>Mot de passe</span>
+              <label className="fld"><span>{t('E-mail ou téléphone')}</span><input id="contact" autoComplete="username" inputMode="email" required value={v.contact} onChange={(e) => setV({ ...v, contact: e.target.value })} /></label>
+              <label className="fld"><span>{t('Mot de passe')}</span>
                 <span className="au-pass"><input id="pass" type={show ? 'text' : 'password'} autoComplete="current-password" required value={v.pass} onChange={(e) => setV({ ...v, pass: e.target.value })} />
-                  <button type="button" id="eye" aria-label={show ? 'Masquer le mot de passe' : 'Afficher le mot de passe'} aria-pressed={show} onClick={() => setShow(!show)}>{show ? 'Masquer' : 'Afficher'}</button></span>
+                  <button type="button" id="eye" aria-label={show ? t('Masquer le mot de passe') : t('Afficher le mot de passe')} aria-pressed={show} onClick={() => setShow(!show)}>{show ? t('Masquer') : t('Afficher')}</button></span>
               </label>
-              <p className="hm-err" id="err" role="alert">{err}</p>
-              <button className="s-btn pri big au-go" type="submit" id="go" disabled={busy}>Se connecter</button>
+              <p className="hm-err" id="err" role="alert">{err ? serverMsg(t, err) : ''}</p>
+              <button className="s-btn pri big au-go" type="submit" id="go" disabled={busy}>{t('Se connecter')}</button>
             </form>
-            <p className="au-alt"><a href="#oubli" id="forgotLink" onClick={(e) => { e.preventDefault(); setForgot(true); }}>Mot de passe oublié ?</a></p>
-            <p className="au-alt">Pas encore de compte ? <Link to="/inscription">Créer un compte</Link></p>
-            <p className="au-back"><Link to="/">← Retour à l'accueil</Link></p>
+            <p className="au-alt"><a href="#oubli" id="forgotLink" onClick={(e) => { e.preventDefault(); setForgot(true); }}>{t('Mot de passe oublié ?')}</a></p>
+            <p className="au-alt">{t('Pas encore de compte ?')} <Link to="/inscription">{t('Créer un compte')}</Link></p>
+            <p className="au-back"><Link to="/">{t("← Retour à l'accueil")}</Link></p>
           </section>
         )}
       </AuthLayout>

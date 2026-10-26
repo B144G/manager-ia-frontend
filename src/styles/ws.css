@@ -144,7 +144,7 @@ body.ai-open .ws-fab{display:none}
 .health p{margin-top:8px}
 .kpis4{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:18px}
 .kpi{display:grid;gap:4px;text-align:left;padding:16px 18px;border-radius:16px;border:1px solid var(--line);border-left:6px solid var(--accent);background:var(--surface);cursor:pointer;box-shadow:0 6px 18px -12px rgba(27,47,94,.25)}
-.kpi small{color:var(--muted);font-weight:600;font-size:13px}.kpi b{font:800 clamp(22px,2.4vw,28px)/1.15 var(--f-display);overflow-wrap:anywhere}.kpi .sub{font-size:13px;font-weight:600;color:var(--muted)}
+.kpi small{color:var(--muted);font-weight:600;font-size:13px}.kpi b{font:800 clamp(22px,2.4vw,28px)/1.15 var(--f-display);overflow-wrap:break-word}.kpi .sub{font-size:13px;font-weight:600;color:var(--muted)}
 .kpi.blue{border-left-color:var(--accent)}.kpi.green{border-left-color:var(--ok)}.kpi.green .sub{color:var(--ok)}.kpi.red{border-left-color:var(--pink)}.kpi.red .sub{color:var(--pink)}.kpi.amber{border-left-color:var(--signal)}.kpi.amber .sub{color:#a86a00}
 .chart{width:100%;height:auto}.chart .grid{stroke:var(--line)}.chart .ax{fill:var(--muted);font-size:12px}.chart .b-in{fill:var(--accent)}.chart .b-out{fill:color-mix(in srgb,var(--accent) 38%,var(--surface))}
 .legend{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;font-weight:600;margin-bottom:6px}.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}.legend .li{background:var(--accent)}.legend .lo{background:color-mix(in srgb,var(--accent) 38%,var(--surface));margin-left:12px}

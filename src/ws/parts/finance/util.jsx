@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { getLang, getLocale, useT } from '../../../lib/i18n.jsx';
 
 /** Zone tactile d'au moins 44 px (boutons-liens) et champs à 16 px minimum : styles en ligne communs à la Paie et à la Fiscalité. */
 export const TAP = { minHeight: 44, display: 'inline-flex', alignItems: 'center', padding: '0 10px' };
@@ -41,6 +42,7 @@ const PRINT_CSS = 'body{font:14px/1.45 Arial,Helvetica,sans-serif;color:#111;mar
 
 /** Aperçu imprimable : le contenu React est affiché dans un cadre isolé ; « Imprimer » n'imprime que ce cadre. */
 export function PrintFrame({ title, children, height = '60vh' }) {
+  const t = useT();
   const ref = useRef(null);
   const [doc, setDoc] = useState(null);
   const sync = () => { const d = ref.current && ref.current.contentDocument; if (d && d.body) setDoc(d); };
@@ -48,12 +50,18 @@ export function PrintFrame({ title, children, height = '60vh' }) {
   const print = () => { const w = ref.current && ref.current.contentWindow; if (w) { w.focus(); w.print(); } };
   return (
     <>
-      <div className="row" style={{ marginBottom: 8 }}><button className="btn primary small" type="button" onClick={print}>Imprimer</button></div>
-      <iframe ref={ref} title={title} onLoad={sync} srcDoc={'<!doctype html><html lang="fr"><head><meta charset="utf-8"></head><body></body></html>'} style={{ width: '100%', height, border: '1px solid var(--line)', borderRadius: 8, background: '#fff' }} />
+      <div className="row" style={{ marginBottom: 8 }}><button className="btn primary small" type="button" onClick={print}>{t('Imprimer')}</button></div>
+      <iframe ref={ref} title={title} onLoad={sync} srcDoc={'<!doctype html><html lang="' + getLang() + '"><head><meta charset="utf-8"></head><body></body></html>'} style={{ width: '100%', height, border: '1px solid var(--line)', borderRadius: 8, background: '#fff' }} />
       {doc ? createPortal(<><style>{PRINT_CSS}</style>{children}</>, doc.body) : null}
     </>
   );
 }
 
 /** Texte de l'exercice ou du mois en toutes lettres : « septembre 2026 ». */
-export const monthLabel = (m) => { const d = new Date(m + '-01T00:00:00'); return Number.isNaN(d.getTime()) ? m : d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }); };
+export const monthLabel = (m) => { const d = new Date(m + '-01T00:00:00'); return Number.isNaN(d.getTime()) ? m : d.toLocaleDateString(getLocale(), { month: 'long', year: 'numeric' }); };
+
+/** Texte « à compléter » renvoyé par le serveur (français) : les messages à variables sont retraduits ici. */
+export const incompleteText = (t, x) => {
+  const m = /^(\d+) rubrique\(s\) sans taux/.exec(x || '');
+  return m ? t('{n} rubrique(s) sans taux (« à compléter »).', { n: m[1] }) : t(x);
+};

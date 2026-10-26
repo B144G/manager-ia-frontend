@@ -2,6 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api as wsApi, rq } from '../lib/api.js';
 import { dateFr, firstName, formatMoney, initials, today } from '../lib/format.js';
+import { useLang, useT } from '../lib/i18n.jsx';
+import { tsrv } from '../lib/srv.js';
 import { Loading, ModalBox } from './ui.jsx';
 
 const Ctx = createContext(null);
@@ -18,6 +20,8 @@ export function parseRoute(pathname) {
 
 export function WsProvider({ children }) {
   const navigate = useNavigate();
+  const t = useT();
+  const lang = useLang();
   const loc = useLocation();
   const [user, setUser] = useState(null);
   const [booting, setBooting] = useState(true);
@@ -39,7 +43,7 @@ export function WsProvider({ children }) {
   const toast = useCallback((msg, bad) => {
     const id = ++seq.current;
     setToasts((l) => [...l, { id, msg, bad }]);
-    setTimeout(() => setToasts((l) => l.filter((t) => t.id !== id)), bad ? 6000 : 3200);
+    setTimeout(() => setToasts((l) => l.filter((x) => x.id !== id)), bad ? 6000 : 3200);
   }, []);
   const fail = useCallback((e) => {
     if (e && e.status === 401) { setUser(null); navigate('/connexion', { replace: true }); return; }
@@ -62,16 +66,16 @@ export function WsProvider({ children }) {
   }, [modals, closeModal]);
   /** confirm(texte, siOui, texteDuBouton) */
   const confirm = useCallback((text, onYes, yesText) => {
-    modal('Confirmer', (close) => (
+    modal(t('Confirmer'), (close) => (
       <>
-        <p>{text}</p>
+        <p>{tsrv(text)}</p>
         <div className="row" style={{ marginTop: 16 }}>
-          <button className="btn primary" type="button" onClick={() => { close(); onYes(); }}>{yesText || 'Oui, continuer'}</button>
-          <button className="btn" type="button" onClick={close}>Annuler</button>
+          <button className="btn primary" type="button" onClick={() => { close(); onYes(); }}>{yesText ? tsrv(yesText) : t('Oui, continuer')}</button>
+          <button className="btn" type="button" onClick={close}>{t('Annuler')}</button>
         </div>
       </>
     ));
-  }, [modal]);
+  }, [modal, t]);
 
   /* ---------- Serveur ---------- */
   const api = wsApi;
@@ -136,13 +140,13 @@ export function WsProvider({ children }) {
 
   /* ---------- Outils ---------- */
   const can = useCallback((min) => Boolean(info && RANK[info.me.role] >= RANK[min]), [info]);
-  const money = useCallback((n) => formatMoney(n, info ? info.org.currency : 'FCFA'), [info]);
+  const money = useCallback((n) => formatMoney(n, info ? info.org.currency : 'FCFA'), [info, lang]); // eslint-disable-line react-hooks/exhaustive-deps
   const memberName = useCallback((id, list) => { const m = (list || []).find((x) => x.userId === id); return m ? m.name : ''; }, []);
   const copy = useCallback((text, label) => {
-    const done = () => toast(label || 'Copié.');
-    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => window.prompt('Copiez :', text));
-    else window.prompt('Copiez :', text);
-  }, [toast]);
+    const done = () => toast(label || t('Copié.'));
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => window.prompt(t('Copiez :'), text));
+    else window.prompt(t('Copiez :'), text);
+  }, [toast, t]);
 
   const value = useMemo(() => ({
     // état
@@ -158,7 +162,7 @@ export function WsProvider({ children }) {
     // IA
     askAI, openAI, propose, aiOpen, setAiOpen, pendingAsk, setPendingAsk,
     onboarding, setOnboarding, booting, boot,
-  }), [user, orgs, orgId, info, dash, route, oapi, toast, fail, modal, confirm, money, can, copy, memberName, refreshKey, loadOrg, refreshBadges, logout, askAI, openAI, propose, aiOpen, pendingAsk, onboarding, booting, boot]); // eslint-disable-line react-hooks/exhaustive-deps
+  }), [user, orgs, orgId, info, dash, route, oapi, toast, fail, modal, confirm, money, can, copy, memberName, refreshKey, loadOrg, refreshBadges, logout, askAI, openAI, propose, aiOpen, pendingAsk, onboarding, booting, boot, lang, t]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Ctx.Provider value={value}>
@@ -168,7 +172,7 @@ export function WsProvider({ children }) {
           {m.render(() => closeModal(m.id))}
         </ModalBox>
       ))}
-      <div id="toasts" aria-live="polite">{toasts.map((t) => <div key={t.id} className={'toast' + (t.bad ? ' bad' : '')}>{t.msg}</div>)}</div>
+      <div id="toasts" aria-live="polite">{toasts.map((x) => <div key={x.id} className={'toast' + (x.bad ? ' bad' : '')}>{tsrv(x.msg)}</div>)}</div>
     </Ctx.Provider>
   );
 }
@@ -176,6 +180,7 @@ export function WsProvider({ children }) {
 /** Contenu de la fenêtre « Proposition de l'IA » : l'IA ne modifie jamais rien toute seule. */
 function ProposePanel({ kind, input, o, close }) {
   const { oapi, toast, fail } = useWs();
+  const t = useT();
   const [st, setSt] = useState({ loading: true, proposal: null, error: '' });
   const [busy, setBusy] = useState(false);
   useEffect(() => {
@@ -184,18 +189,18 @@ function ProposePanel({ kind, input, o, close }) {
     return () => { off = true; };
   }, [kind, input, oapi]);
   if (st.loading) return <Loading />;
-  if (st.error) return <><p className="ws-err">{st.error}</p><button className="btn" type="button" onClick={close}>Fermer</button></>;
+  if (st.error) return <><p className="ws-err">{tsrv(st.error)}</p><button className="btn" type="button" onClick={close}>{t('Fermer')}</button></>;
   const apply = () => {
     setBusy(true);
-    oapi('POST', '/ai/apply', { kind, proposal: st.proposal }).then((r) => { close(); toast("C'est fait."); if (o.done) o.done(r); }, (e) => { setBusy(false); fail(e); });
+    oapi('POST', '/ai/apply', { kind, proposal: st.proposal }).then((r) => { close(); toast(t("C'est fait.")); if (o.done) o.done(r); }, (e) => { setBusy(false); fail(e); });
   };
   return (
     <div>
-      <p className="muted small">Proposition de l'IA. Relisez-la : rien n'est enregistré tant que vous n'avez pas validé.</p>
+      <p className="muted small">{t("Proposition de l'IA. Relisez-la : rien n'est enregistré tant que vous n'avez pas validé.")}</p>
       <div className="ws-prop">{o.render(st.proposal)}</div>
       <div className="row" style={{ marginTop: 16 }}>
-        {o.apply !== false ? <button className="btn primary" type="button" disabled={busy} onClick={apply}>{o.applyText || 'Appliquer'}</button> : null}
-        <button className="btn" type="button" onClick={close}>{o.apply === false ? 'Fermer' : 'Annuler'}</button>
+        {o.apply !== false ? <button className="btn primary" type="button" disabled={busy} onClick={apply}>{t(o.applyText || 'Appliquer')}</button> : null}
+        <button className="btn" type="button" onClick={close}>{o.apply === false ? t('Fermer') : t('Annuler')}</button>
       </div>
       {o.after ? o.after(st.proposal, close) : null}
     </div>

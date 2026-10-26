@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { API_BASE } from '../../../lib/api.js';
 import { useWs } from '../../WsContext.jsx';
+import { tr, useT } from '../../../lib/i18n.jsx';
 
 /* Outils locaux du module « sales » (anciens petits utilitaires de sales.js). */
 
@@ -9,7 +10,7 @@ export const OST = { pending: ['À valider', 'mid'], confirmed: ['Confirmée', '
 export const CHANNELS = { whatsapp: 'WhatsApp', messenger: 'Messenger', instagram: 'Instagram' };
 
 /** Pastille : t = [texte, classe]. */
-export const Pill = ({ t }) => <span className={'pill ' + t[1]}>{t[0]}</span>;
+export const Pill = ({ t }) => <span className={'pill ' + t[1]}>{tr(t[0])}</span>;
 
 /** Adresse publique du serveur (pour les webhooks et l'agenda). */
 export const publicBase = () => API_BASE || window.location.origin;
@@ -33,6 +34,7 @@ export function saveBlob(blob, name, delay) {
 
 /** Comme Form (ui.jsx) mais prévient le parent des valeurs courantes (onValues), pour les champs qui dépendent d'un autre. */
 export function Form2({ fields, submitText, onSubmit, onValues }) {
+  const t = useT();
   const { fail } = useWs();
   const [vals, setVals] = useState(() => Object.fromEntries(fields.map((d) => [d.k, d.value === undefined || d.value === null ? (d.type === 'select' && d.options && d.options[0] ? d.options[0][0] : '') : d.value])));
   const [err, setErr] = useState('');
@@ -44,9 +46,9 @@ export function Form2({ fields, submitText, onSubmit, onValues }) {
   async function submit(ev) {
     ev.preventDefault();
     setErr('');
-    for (const d of fields) if (d.required && !String(vals[d.k]).trim()) { setErr('Remplissez : ' + d.label.toLowerCase() + '.'); return; }
+    for (const d of fields) if (d.required && !String(vals[d.k]).trim()) { setErr(t('Remplissez : {label}.', { label: d.label.toLowerCase() })); return; }
     setBusy(true);
-    try { await onSubmit(vals); } catch (e) { if (alive.current) setErr(e.message || 'Erreur'); if (e && e.status === 401) fail(e); }
+    try { await onSubmit(vals); } catch (e) { if (alive.current) setErr(t(e.message || 'Erreur')); if (e && e.status === 401) fail(e); }
     if (alive.current) setBusy(false);
   }
   return (
@@ -73,6 +75,7 @@ export const ReadOnly = ({ value, label, ...rest }) => (
 export const hasQr = () => typeof window.qrcode === 'function';
 
 export function QrBlock({ label, text, file }) {
+  const t = useT();
   const { copy } = useWs();
   const cv = useRef(null);
   useEffect(() => {
@@ -90,10 +93,10 @@ export function QrBlock({ label, text, file }) {
   return (
     <div className="ws-qr">
       <b>{label}</b>
-      <canvas ref={cv} role="img" aria-label={'QR code : ' + label} style={{ width: 200, height: 200, maxWidth: '100%', imageRendering: 'pixelated', border: '1px solid var(--line)', borderRadius: 8 }} />
+      <canvas ref={cv} role="img" aria-label={t('QR code : {label}', { label })} style={{ width: 200, height: 200, maxWidth: '100%', imageRendering: 'pixelated', border: '1px solid var(--line)', borderRadius: 8 }} />
       <div className="row">
-        <button className="btn small" type="button" onClick={() => cv.current.toBlob((bl) => saveBlob(bl, file + '.png'))}>Télécharger l'image</button>
-        <button className="btn small" type="button" onClick={() => copy(text, 'Lien copié.')}>Copier le lien</button>
+        <button className="btn small" type="button" onClick={() => cv.current.toBlob((bl) => saveBlob(bl, file + '.png'))}>{t("Télécharger l'image")}</button>
+        <button className="btn small" type="button" onClick={() => copy(text, t('Lien copié.'))}>{t('Copier le lien')}</button>
       </div>
     </div>
   );

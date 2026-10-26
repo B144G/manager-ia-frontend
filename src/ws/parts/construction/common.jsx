@@ -1,4 +1,6 @@
 /* Libellés et petits éléments du module Chantiers. */
+import { getLocale, useT } from '../../../lib/i18n.jsx';
+
 export const STATUS = [['preparation', 'En préparation'], ['active', 'En cours'], ['suspended', 'Suspendu'], ['done', 'Terminé'], ['received', 'Réceptionné']];
 export const STATUS_FR = Object.fromEntries(STATUS);
 export const STATUS_TONE = { preparation: '', active: 'good', suspended: 'mid', done: 'good', received: '' };
@@ -6,9 +8,10 @@ export const CATS = [['materials', 'Matériaux'], ['labor', "Main-d'œuvre"], ['
 export const CAT_FR = Object.fromEntries(CATS);
 export const KINDS = [['incident', 'Incident'], ['safety', 'Sécurité'], ['snag', 'Réserve à lever']];
 export const KIND_FR = Object.fromEntries(KINDS);
-export const qty = (n) => Number(n).toLocaleString('fr-FR', { maximumFractionDigits: 3 });
-export function Pill({ t }) {
-  return t && t[0] ? <span className={'pill ' + t[1]}>{t[0]}</span> : null;
+export const qty = (n) => Number(n).toLocaleString(getLocale(), { maximumFractionDigits: 3 });
+export function Pill({ s }) {
+  const t = useT();
+  return s && s[0] ? <span className={'pill ' + s[1]}>{t(s[0])}</span> : null;
 }
 /** Barre d'avancement (0 à 100 %). */
 export function Bar({ value, bad }) {

@@ -1,4 +1,5 @@
 import { useWs } from '../../WsContext.jsx';
+import { useT } from '../../../lib/i18n.jsx';
 import { Empty, Form, Loaded, useLoad } from '../../ui.jsx';
 import { Act, Btn } from './Act.jsx';
 
@@ -7,12 +8,13 @@ import { Act, Btn } from './Act.jsx';
  * bouton d'ajout, modification et suppression avec confirmation. `fields(item, data)` décrit le formulaire.
  */
 export default function Crud({ path, listKey, title, intro, addLabel, formTitle, empty, fields, line, extra, presets, deleteText, onChange, payload }) {
+  const t = useT();
   const { oapi, modal, confirm, fail } = useWs();
   const st = useLoad(() => oapi('GET', path), []);
   const reload = () => { st.reload(); if (onChange) onChange(); };
-  const edit = (item, data, preset) => modal(item ? 'Modifier' : formTitle, (close) => (
+  const edit = (item, data, preset) => modal(item ? t('Modifier') : formTitle, (close) => (
     <Form
-      submitText="Enregistrer"
+      submitText={t("Enregistrer")}
       fields={fields(item || preset || null, data)}
       onSubmit={(v) => oapi(item ? 'PUT' : 'POST', path + (item ? '/' + item.id : ''), payload ? payload(v) : v).then(() => { close(); reload(); })}
     />
@@ -25,7 +27,7 @@ export default function Crud({ path, listKey, title, intro, addLabel, formTitle,
         <>
           {presets ? (
             <div className="row" style={{ flexWrap: 'wrap', marginBottom: 8 }}>
-              <small className="muted">{'Exemples à adapter à votre pays et votre activité : '}</small>
+              <small className="muted">{t('Exemples à adapter à votre pays et votre activité : ')}</small>
               {presets.map((p) => <Btn key={p.label} className="btn small" onClick={() => edit(null, j, p.values)}>{p.label}</Btn>)}
             </div>
           ) : null}
@@ -35,8 +37,8 @@ export default function Crud({ path, listKey, title, intro, addLabel, formTitle,
               <span style={{ flex: '1 1 240px' }}>{line(it, j)}</span>
               <span className="row" style={{ flexWrap: 'wrap' }}>
                 {extra ? extra(it, reload) : null}
-                <Act onClick={() => edit(it, j)}>Modifier</Act>
-                <Act onClick={() => confirm(deleteText, () => { oapi('DELETE', path + '/' + it.id).then(reload).catch(fail); })}>Supprimer</Act>
+                <Act onClick={() => edit(it, j)}>{t('Modifier')}</Act>
+                <Act onClick={() => confirm(deleteText, () => { oapi('DELETE', path + '/' + it.id).then(reload).catch(fail); })}>{t('Supprimer')}</Act>
               </span>
             </div>
           ))}
