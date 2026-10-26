@@ -28,6 +28,32 @@ function HookCard({ title, rows, test, disconnect, disconnectLabel, subscribe, s
   );
 }
 
+
+/** Test de l'IA du serveur : une petite question, avec la durée et la raison exacte d'un éventuel échec. */
+function AiTest() {
+  const { oapi } = useWs();
+  const [out, setOut] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const run = () => {
+    setBusy(true); setOut(null);
+    oapi('POST', '/ai/ping', {}).then(setOut, (e) => setOut({ ok: false, error: e.message })).then(() => setBusy(false));
+  };
+  return (
+    <div className="ws-card">
+      <h2>Tester l'assistant IA</h2>
+      <p className="muted">Envoie une très petite question à l'IA du serveur et affiche le résultat. Utile si l'assistant répond « un conseiller va vous répondre ».</p>
+      <div className="row"><button className="btn primary small" type="button" disabled={busy} onClick={run}>{busy ? 'Test en cours (jusqu\'à 2 minutes)…' : "Tester l'IA"}</button></div>
+      {out ? (
+        <div role="status" style={{ marginTop: 12, overflowWrap: 'anywhere' }}>
+          <p>{out.ok ? <Pill t={['L\'IA répond', 'good']} /> : <Pill t={['Échec', 'bad']} />}{out.ms !== undefined ? '  ' + (out.ms / 1000).toFixed(1) + ' s' : ''}</p>
+          {out.ok ? <p>{'Réponse : « ' + out.text + ' »'}</p> : <p className="ws-err">{out.error}</p>}
+          {out.model ? <p className="muted small">{'Fournisseur : ' + out.provider + ' · modèle : ' + out.model + ' · serveur : ' + (out.host || '?') + ' · réflexion : ' + (out.reasoning || 'réglage du service') + ' · délai maximal : ' + Math.round((out.timeoutMs || 0) / 1000) + ' s'}</p> : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 /** Onglet « Canaux » : WhatsApp de l'entreprise (API officielle de Meta), puis Messenger / Instagram. */
 export function Whatsapp({ onChange }) {
   const { oapi, toast, confirm, fail } = useWs();
@@ -69,6 +95,7 @@ export function Whatsapp({ onChange }) {
           disconnect={() => confirm("Déconnecter WhatsApp ? L'assistant cessera de répondre sur ce numéro.", () => oapi('DELETE', '/sales/whatsapp').then(() => { toast('WhatsApp déconnecté.'); onChange(); }).catch(fail), 'Oui, déconnecter')}
         />
       ) : null}
+      <AiTest />
       <div><MetaChannels /></div>
     </>
   );
