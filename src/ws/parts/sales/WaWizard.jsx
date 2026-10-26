@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useWs } from '../../WsContext.jsx';
 
-const STEPS = [
+const ONE_CLICK = { id: 'oneclick', t: 'Connexion en un clic', auto: (w) => w.connected, body: ["Le bouton « Connecter WhatsApp » en haut de la page ouvre une fenêtre de Meta : vous y choisissez votre compte et votre numéro, sans copier aucun identifiant.", "Si cela fonctionne pour vous, vous pouvez ignorer toutes les étapes suivantes. Elles servent seulement à la saisie manuelle."],
+  ask: "Comment fonctionne la connexion WhatsApp en un clic de Meta et que dois-je préparer ?" };
+const BASE = [
   { id: 'compte', t: 'Créer votre compte Meta Developers', url: 'https://developers.facebook.com', link: 'Ouvrir developers.facebook.com',
     body: ["Connectez-vous d'abord à facebook.com avec votre compte, puis ouvrez developers.facebook.com dans le même navigateur.", 'Cliquez sur « Démarrer », acceptez les conditions et confirmez votre téléphone si Meta le demande. Pour le rôle, choisissez « Dirigeant/Fondateur ».'],
     ask: "Je suis bloqué à la création de mon compte Meta Developers. Que dois-je faire ?" },
@@ -25,7 +27,7 @@ const STEPS = [
 ];
 
 /** Assistant d'installation WhatsApp : étapes cochables, avance seul selon ce qui est déjà enregistré. */
-export function WaWizard({ w }) {
+export function WaWizard({ w, embedded }) {
   const { orgId, askAI } = useWs();
   const key = 'mia-wa-steps-' + orgId;
   const [manual, setManual] = useState({});
@@ -33,6 +35,7 @@ export function WaWizard({ w }) {
   useEffect(() => { try { setManual(JSON.parse(localStorage.getItem(key) || '{}')); } catch { setManual({}); } }, [key]);
   const toggle = (id) => setManual((m) => { const n = { ...m, [id]: !m[id] }; try { localStorage.setItem(key, JSON.stringify(n)); } catch { /* stockage indisponible */ } return n; });
   const isDone = (s) => (s.auto ? s.auto(w) : false) || Boolean(manual[s.id]);
+  const STEPS = embedded ? [ONE_CLICK, ...BASE] : BASE;
   const todo = STEPS.filter((s) => !s.info);
   const done = todo.filter(isDone).length;
   const cur = STEPS.find((s) => !s.info && !isDone(s));

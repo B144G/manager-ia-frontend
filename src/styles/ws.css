@@ -223,3 +223,6 @@ body.ai-open .ws-fab{display:none}
 .wa-steps li.done .wa-n{background:#16a34a;border-color:#16a34a;color:#fff}.wa-n.info{display:grid;place-items:center;cursor:default}
 .wa-t{flex:1;min-width:0;text-align:left;background:none;border:0;font:inherit;font-weight:600;cursor:pointer;color:inherit;padding:6px 0;overflow-wrap:anywhere}
 .wa-b{padding:8px 0 2px 40px;display:grid;gap:6px}.wa-b p{margin:0}
+.wa-oneclick .row{margin-top:8px}.wa-oneclick .btn{min-height:44px;max-width:100%}.wa-oneclick p{overflow-wrap:anywhere}
+.wa-adv{padding:0}.wa-adv>summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center;padding:0 14px;overflow-wrap:anywhere}.wa-adv[open]>summary{border-bottom:1px solid var(--line)}.wa-adv>*:not(summary){margin:12px}
+.ws-ok{color:var(--ok);font-weight:700}

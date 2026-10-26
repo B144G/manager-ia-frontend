@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useWs } from '../../WsContext.jsx';
 import { Empty, Form, Loading, useLoad } from '../../ui.jsx';
 import { WaWizard } from './WaWizard.jsx';
+import { OneClickCard } from './OneClick.jsx';
 import { Pill, QrBlock, ReadOnly, hasQr, publicBase } from './util.jsx';
 
 /** Adresse du webhook + jeton de vérification, à coller dans Meta. */
@@ -58,18 +59,16 @@ function AiTest() {
 export function Whatsapp({ onChange }) {
   const { oapi, toast, confirm, fail } = useWs();
   const st = useLoad(() => oapi('GET', '/sales/whatsapp'), []);
+  // Connexion en un clic : la carte n'apparaît que si le serveur l'a activée (en cas d'erreur, on considère qu'elle ne l'est pas).
+  const em = useLoad(() => oapi('GET', '/sales/whatsapp/embedded/config').catch(() => ({ enabled: false })), []);
   if (st.loading && !st.data) return <Loading />;
   if (st.error) return <p className="ws-err" role="alert">{st.error.message}</p>;
   if (!st.data) return null;
   const w = st.data;
-  return (
+  const one = Boolean(em.data && em.data.enabled && em.data.appId && em.data.configId);
+  const manual = (
     <>
-      <div className="ws-card">
-        <h2>WhatsApp de votre entreprise</h2>
-        <p>{w.connected ? <Pill t={['Connecté', 'good']} /> : <Pill t={['Non connecté', 'bad']} />}<span>{w.number ? '  +' + w.number : ''}</span></p>
-        <p className="muted">Quand un prospect écrit sur votre numéro WhatsApp (par exemple après une publicité « Cliquer pour envoyer un message »), l'assistant lui répond, l'enregistre et prend sa commande, comme sur la page web. Vous pouvez reprendre la conversation à tout moment.</p>
-      </div>
-      <WaWizard w={w} />
+      <WaWizard w={w} embedded={one} />
       <div className="ws-card">
         <h2>Vos identifiants</h2>
         <Form
@@ -84,6 +83,17 @@ export function Whatsapp({ onChange }) {
           onSubmit={(v) => oapi('PUT', '/sales/whatsapp', { phoneId: v.phoneId, wabaId: v.wabaId, number: v.number, token: v.token, appSecret: v.appSecret }).then(() => { toast('Réglages enregistrés.'); onChange(); })}
         />
       </div>
+    </>
+  );
+  return (
+    <>
+      <div className="ws-card">
+        <h2>WhatsApp de votre entreprise</h2>
+        <p>{w.connected ? <Pill t={['Connecté', 'good']} /> : <Pill t={['Non connecté', 'bad']} />}<span>{w.number ? '  +' + w.number : ''}</span></p>
+        <p className="muted">Quand un prospect écrit sur votre numéro WhatsApp (par exemple après une publicité « Cliquer pour envoyer un message »), l'assistant lui répond, l'enregistre et prend sa commande, comme sur la page web. Vous pouvez reprendre la conversation à tout moment.</p>
+      </div>
+      {one ? <OneClickCard cfg={em.data} connected={w.connected} number={w.number} onDone={() => { st.reload(); onChange(); }} /> : null}
+      {one ? <details className="ws-card wa-adv"><summary>Avancé : saisir les identifiants à la main</summary>{manual}</details> : manual}
       {w.verifyToken ? (
         <HookCard
           title="À coller dans Meta"
