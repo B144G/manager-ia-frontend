@@ -4,6 +4,7 @@ import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
 import { Empty, Form, Loading, useLoad } from '../ui.jsx';
+import { CsvTools, Deliveries } from '../parts/w3/DataExtras.jsx';
 
 /* Sous-application : Intégrations (clés d'API et webhooks) pour relier MANAGER-IA à Zapier, Make, n8n ou votre site. Administrateurs. */
 
@@ -113,6 +114,8 @@ export default function Integrations() {
               <div className="row" style={{ marginTop: 8 }}><button className="btn small" type="button" onClick={addHook}>{t('Ajouter un webhook')}</button></div>
             </div>
 
+            <Deliveries />
+            <CsvTools />
             <div className="ws-card">
               <h2>{t('Pour les développeurs')}</h2>
               <p className="muted small">{t("API à utiliser avec une clé : GET /api/v1/customers, POST /api/v1/customers (nom + téléphone ou e-mail), GET /api/v1/orders, GET /api/v1/invoices?status=sent. 120 requêtes par minute et par clé. Chaque webhook est signé : vérifiez l'en-tête X-MIA-Signature (HMAC-SHA256 du corps avec votre secret).")}</p>

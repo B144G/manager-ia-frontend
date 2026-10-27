@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Logo from '../components/Logo.jsx';
 import LangSwitch from '../components/LangSwitch.jsx';
@@ -14,14 +14,16 @@ export default function ContactForm() {
   const [v, setV] = useState({ name: '', contact: '', subject: '', message: '' });
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [sent, setSent] = useState('');
+  const [faq, setFaq] = useState([]);
+  useEffect(() => { if (token) rq('GET', '/api/ws/public/intake/' + encodeURIComponent(token) + '/info').then((j) => setFaq(j.faq || []), () => {}); }, [token]);
   const set = (k) => (e) => setV((s) => ({ ...s, [k]: e.target.value }));
   async function submit(e) {
     e.preventDefault(); setErr('');
     const name = v.name.trim(), message = v.message.trim();
     if (!name || !message) { setErr('Indiquez votre nom et votre message.'); return; }
     setBusy(true);
-    try { await rq('POST', '/api/ws/public/intake/' + encodeURIComponent(token), { name, contact: v.contact.trim(), subject: v.subject.trim(), message }); setSent(true); } catch (x) { setErr(x.message); setBusy(false); }
+    try { const j = await rq('POST', '/api/ws/public/intake/' + encodeURIComponent(token), { name, contact: v.contact.trim(), subject: v.subject.trim(), message }); setSent(j.ref || 'ok'); } catch (x) { setErr(x.message); setBusy(false); }
   }
   return (
     <div className="au-main" style={{ minHeight: '100vh' }}>
@@ -39,7 +41,8 @@ export default function ContactForm() {
             <p className="hm-err" id="err" role="alert">{err ? serverMsg(t, err) : ''}</p>
             <button className="s-btn pri big au-go" type="submit" id="go" disabled={busy}>{t('Envoyer')}</button>
           </form>
-        ) : <p id="ok" className="s-ok">{t('Merci ! Votre message a bien été envoyé. Nous revenons vers vous très vite.')}</p>}
+        ) : <p id="ok" className="s-ok">{t('Merci ! Votre message a bien été envoyé. Nous revenons vers vous très vite.')}{sent !== 'ok' ? ' ' + t('Votre référence : {ref}', { ref: sent }) : ''}</p>}
+        {!sent && faq.length ? (<><h2 style={{ fontSize: 16 }}>{t('Questions fréquentes')}</h2>{faq.slice(0, 8).map((q, i) => <details key={i}><summary>{q.question}</summary><p>{q.answer}</p></details>)}</>) : null}
       </div>
     </div>
   );

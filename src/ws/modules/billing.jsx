@@ -88,7 +88,7 @@ export default function Billing() {
             return (
               <div className="line" key={p.reference || i}>
                 <span><b>{t(p.plan) + ' · ' + money(p.amountXAF)}</b><small>{' ' + fr(dateFr, p.createdAt) + ' · ' + (p.operator === 'orange' ? 'Orange Money' : 'MTN Mobile Money') + ' · ' + t('réf. {ref}', { ref: p.reference })}</small></span>
-                <span className={'pill ' + stt[1]}>{t(stt[0])}</span>
+                <span className="row">{p.status === 'paid' ? <a className="link" style={{ minHeight: 44, display: 'inline-flex', alignItems: 'center' }} href={'/recu/' + encodeURIComponent(p.reference)} target="_blank" rel="noopener noreferrer">{t('Reçu à imprimer')}</a> : null}<span className={'pill ' + stt[1]}>{t(stt[0])}</span></span>
               </div>
             );
           })}

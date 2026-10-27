@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useWs } from '../WsContext.jsx';
 import { useT } from '../../lib/i18n.jsx';
+import { ActionButtons, Schedule } from '../parts/w3/AgentExtras.jsx';
 import { Empty, Form, Loaded, useLoad } from '../ui.jsx';
 
 /* Sous-application : Agents spécialisés (équipe d'agents IA par domaine). Les agents LISENT vos données et conseillent : ils ne modifient jamais rien.
@@ -40,6 +41,7 @@ function Result({ r }) {
                 <div className="line" key={x.rank}>
                   <span><b>{x.rank + '. ' + x.title}</b>{x.why ? <><br /><small>{x.why}</small></> : null}</span>
                   {x.owner ? <small>{x.owner}</small> : null}
+                  <ActionButtons x={x} />
                 </div>
               ))}
             </>
@@ -101,6 +103,7 @@ export default function Agents() {
             <div className="stat"><b>{j.agents.filter((a) => a.available && a.enabled).length}</b><span>{t('agents à votre service')}</span></div>
             <div className="stat"><b>{j.remaining}</b><span>{t('messages IA restants')}</span></div>
           </div>
+          <Schedule />
           {!j.enabled ? <p className="ws-err">{t("L'IA n'est pas encore activée sur ce serveur : les agents ne peuvent pas répondre.")}</p> : null}
           <div className="ws-card">
             <h2>{t("Réunion d'agents")}</h2>
