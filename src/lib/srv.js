@@ -67,6 +67,20 @@ rule(/^« (.+) » : préavis à envoyer avant le (.+) \((\d+) jours\)$/, '« {na
 rule(/^Dossier « (.+?) » : (.+?) (aujourd'hui|demain|dans \d+ jours) \((.+)\)$/, 'Dossier « {name} » : {step} {when} ({date})', ['name', 'step', 'when', 'date']);
 rule(/^Dossier « (.+?) » (aujourd'hui|demain|dans \d+ jours) \((.+)\)$/, 'Dossier « {name} » {when} ({date})', ['name', 'when', 'date']);
 
+// Vague 3 : alertes fabriquées par le serveur (délais de service client, échéances RH, paie, conformité, seuils réglables).
+pl('demande a dépassé son délai (SLA)', 'demandes ont dépassé leur délai (SLA)');
+pl('procédure est à réviser', 'procédures sont à réviser');
+for (const what of ['fin de contrat', "fin de période d'essai", 'visite médicale', 'habilitation']) {
+  rule(new RegExp('^' + esc(what) + ' de (.+) dépassée depuis le (.+)$'), what + ' de {who} dépassée depuis le {date}', ['who', 'date']);
+  rule(new RegExp('^' + esc(what) + ' de (.+) avant le (.+)$'), what + ' de {who} avant le {date}', ['who', 'date']);
+}
+rule(/^Les créances clients \((.+)\) dépassent votre seuil$/, 'Les créances clients ({amount}) dépassent votre seuil', ['amount']);
+rule(/^La trésorerie \((.+)\) est sous votre seuil$/, 'La trésorerie ({amount}) est sous votre seuil', ['amount']);
+rule(/^Échéance dépassée \((.+?)\) · à vérifier$/, 'Échéance dépassée ({date}) · à vérifier', ['date']);
+rule(/^Échéance dépassée \((.+?)\)$/, 'Échéance dépassée ({date})', ['date']);
+rule(/^À faire avant le (.+?) · à vérifier$/, 'À faire avant le {date} · à vérifier', ['date']);
+rule(/^À faire avant le (.+)$/, 'À faire avant le {date}', ['date']);
+
 const FR_HINT = /[àâçéèêëîïôùûœ]|\b(vous|votre|vos|pour|dans|aucun|aucune|avec|cette|sont)\b/i;
 /** Recherche sans signaler de manque (un texte déjà traduit n'est pas une erreur). */
 function quiet(fn) {
