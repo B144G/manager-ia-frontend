@@ -8,6 +8,7 @@ import { useWs } from '../WsContext.jsx';
 import { Empty, Form, Icon, Loading } from '../ui.jsx';
 import { HealthRing, flowChart } from '../parts/dashboard/Charts.jsx';
 import { monthName, ago, when } from '../parts/dashboard/helpers.js';
+import { Circuit, Kpis, Notices } from '../parts/dashboard/Wave3.jsx';
 
 function delta(cur, prev, label) {
   if (!prev) return { text: label, cls: '' };
@@ -146,11 +147,12 @@ export default function Dashboard() {
             {!j.decisions.length ? <Empty text={j.canDecide ? t('Aucune décision en attente.') : t("Vous n'avez aucune demande en attente.")} /> : null}
             {j.decisions.map((d) => (
               <div className="dec" key={d.id}>
-                <div className="dt"><b>{d.title}</b><small>{(d.amount ? money(d.amount) + ' · ' : '') + (d.detail || t('demandé par {name}', { name: d.requester || t('un membre') }))}</small></div>
+                <div className="dt"><b>{d.title}</b><small>{(d.amount ? money(d.amount) + ' · ' : '') + (d.detail || t('demandé par {name}', { name: d.requester || t('un membre') }))}</small>{d.steps && d.steps.length ? <small className="muted">{t('Niveau en cours : {role} ({i}/{n})', { role: t(d.currentRole === 'owner' ? 'Propriétaire' : d.currentRole === 'admin' ? 'Administrateur' : 'Responsable'), i: d.steps.filter((x) => x.status === 'approved').length + 1, n: d.steps.length })}</small> : null}{d.link ? <small className="muted">{t('Lié : {kind} n°{id}', { kind: t(d.link.label), id: d.link.id })}</small> : null}</div>
                 {j.canDecide ? (
                   <div className="row nowrap">
                     <button className="dv" type="button" onClick={() => decide(d, 'approved')}>{t('Valider')}</button>
                     <button className="dr" type="button" onClick={() => decide(d, 'rejected')}>{t('Refuser')}</button>
+                    <button className="link" type="button" onClick={() => oapi('POST', '/decisions/' + d.id + '/remind', {}).then(() => toast(t('Rappel envoyé.'))).catch(fail)}>{t('Rappeler')}</button>
                   </div>
                 ) : <span className="pill mid">{t('En attente')}</span>}
               </div>
@@ -186,6 +188,10 @@ export default function Dashboard() {
               );
             })}
           </section>
+        </div>
+        <div className="g4">
+          <Notices />
+          {info.me && info.me.role !== 'member' ? <><Kpis /><Circuit /></> : null}
         </div>
       </div>
     </>
