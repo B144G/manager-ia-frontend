@@ -2,7 +2,7 @@ import { useWs } from '../../WsContext.jsx';
 import { useT } from '../../../lib/i18n.jsx';
 import { Empty, Form } from '../../ui.jsx';
 
-export const LEAVE = { annual: 'Congé annuel', sick: 'Maladie', other: 'Autre' };
+export const LEAVE = { annual: 'Congé annuel', sick: 'Maladie', unpaid: 'Sans solde (retenue sur la paie)', other: 'Autre' };
 
 /** Fiche employé : création / modification. */
 export function EmployeeForm({ employee, close, done }) {
@@ -12,6 +12,11 @@ export function EmployeeForm({ employee, close, done }) {
   const branches = info.branches;
   const f = [{ k: 'name', label: t('Nom'), required: true, value: e.name }, { k: 'job', label: t('Poste'), value: e.job }, { k: 'phone', label: t('Téléphone'), value: e.phone }, { k: 'hiredAt', label: t("Date d'embauche"), type: 'date', value: e.hiredAt || '' }];
   if (can('admin')) f.push({ k: 'salary', label: t('Salaire mensuel ({currency})', { currency: info.org.currency }), value: e.salary || '' });
+  if (can('admin')) {
+    f.push({ k: 'cnpsNo', label: t('Matricule CNPS'), value: e.cnpsNo || '' }, { k: 'niu', label: t('NIU de l\'employé'), value: e.niu || '' },
+      { k: 'payChannel', label: t('Paiement du salaire'), type: 'select', value: e.payChannel || '', options: [['', t('Non précisé')], ['bank', t('Virement bancaire')], ['mobile', t('Mobile Money')]] },
+      { k: 'payAccount', label: t('Compte bancaire ou numéro Mobile Money'), value: e.payAccount || '', hint: t('Utilisé pour le fichier de virement en masse (Paie).') });
+  }
   if (e.id) f.push({ k: 'status', label: t('Situation'), type: 'select', options: [['active', t('En poste')], ['left', t('Parti')]], value: e.status });
   else if (branches.length) f.push({ k: 'branchId', label: t('Antenne'), type: 'select', options: [['', t("Toute l'organisation")]].concat(branches.map((x) => [String(x.id), x.name])) });
   return (
@@ -20,7 +25,7 @@ export function EmployeeForm({ employee, close, done }) {
       submitText={t("Enregistrer")}
       onSubmit={(v) => {
         const p = { name: v.name, job: v.job, phone: v.phone, hiredAt: v.hiredAt || null };
-        if (can('admin')) p.salary = v.salary;
+        if (can('admin')) Object.assign(p, { salary: v.salary, cnpsNo: v.cnpsNo, niu: v.niu, payChannel: v.payChannel, payAccount: v.payAccount });
         if (e.id) p.status = v.status; else if (v.branchId) p.branchId = v.branchId;
         return oapi(e.id ? 'PUT' : 'POST', '/hr/employees' + (e.id ? '/' + e.id : ''), p).then(() => { close(); done(); });
       }}

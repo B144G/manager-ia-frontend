@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { getLang, getLocale, useT } from '../../../lib/i18n.jsx';
+import { API_BASE } from '../../../lib/api.js';
+import { useWs } from '../../WsContext.jsx';
 
 /** Zone tactile d'au moins 44 px (boutons-liens) et champs à 16 px minimum : styles en ligne communs à la Paie et à la Fiscalité. */
 export const TAP = { minHeight: 44, display: 'inline-flex', alignItems: 'center', padding: '0 10px' };
@@ -63,5 +65,30 @@ export const monthLabel = (m) => { const d = new Date(m + '-01T00:00:00'); retur
 /** Texte « à compléter » renvoyé par le serveur (français) : les messages à variables sont retraduits ici. */
 export const incompleteText = (t, x) => {
   const m = /^(\d+) rubrique\(s\) sans taux/.exec(x || '');
-  return m ? t('{n} rubrique(s) sans taux (« à compléter »).', { n: m[1] }) : t(x);
+  if (m) return t('{n} rubrique(s) sans taux (« à compléter »).', { n: m[1] });
+  const c = /^Barème Cameroun : (\d+) taux à renseigner/.exec(x || '');
+  return c ? t('Barème Cameroun : {n} taux à renseigner (par exemple le taux accidents du travail).', { n: c[1] }) : t(x);
 };
+
+/** Bouton de téléchargement d'un fichier du serveur (CSV…) avec le cookie de connexion : path = '/payroll/cm/export/cnps.csv?month=…' (relatif à l'organisation). */
+export function DownloadBtn({ path, name, children, className = 'btn small' }) {
+  const t = useT();
+  const { orgId, fail } = useWs();
+  const go = () => {
+    fetch(API_BASE + '/api/ws/orgs/' + orgId + path, { credentials: 'include' })
+      .then(async (r) => { if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.error || t('Export impossible.')); } return r.blob(); })
+      .then((b) => {
+        const url = URL.createObjectURL(b);
+        const a = document.createElement('a');
+        a.href = url; a.download = name;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+      }).catch(fail);
+  };
+  return <button className={className} type="button" style={BTN} onClick={go}>{children}</button>;
+}
+
+/** Bandeau d'avertissement « document de travail » (rouge discret, toujours visible sur les écrans de paie, compta et budget prévisionnels). */
+export function WorkNotice({ children }) {
+  return <p className="ws-card small late" role="note" style={{ margin: '8px 0' }}>{children}</p>;
+}

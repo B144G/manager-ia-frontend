@@ -4,6 +4,7 @@ import { useT } from '../../lib/i18n.jsx';
 import { Empty, Form, Loading, useLoad } from '../ui.jsx';
 import Settings from '../parts/payroll/Settings.jsx';
 import { SlipModal } from '../parts/payroll/Slip.jsx';
+import { CmTab, CmWarning, ExportsTab, SettlementsTab } from '../parts/payroll/Cameroon.jsx';
 import SlipForm from '../parts/payroll/SlipForm.jsx';
 import { BTN, INP, TAP, downloadCsv, incompleteText, monthLabel } from '../parts/finance/util.jsx';
 
@@ -79,13 +80,17 @@ export default function Payroll() {
         </div>
       </div>
       <div className="ws-tabs" style={{ flexWrap: 'wrap', overflowX: 'visible' }}>
-        {[['slips', 'Bulletins'], ['settings', 'Paramètres']].map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} style={BTN} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
+        {[['slips', 'Bulletins'], ['cm', 'Paie Cameroun'], ['exports', 'Déclarations et virements'], ['settlements', 'Solde de tout compte'], ['settings', 'Paramètres']].map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} style={BTN} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
       </div>
       {tab === 'settings' ? <Settings onSaved={load} /> : null}
+      {tab === 'cm' ? <CmTab onChanged={load} /> : null}
+      {tab === 'exports' ? <ExportsTab month={month} /> : null}
+      {tab === 'settlements' ? <SettlementsTab /> : null}
       {tab === 'slips' && st.loading && !j ? <Loading /> : null}
       {tab === 'slips' && st.error ? <p className="ws-err" role="alert">{t(st.error.message)}</p> : null}
       {tab === 'slips' && j ? (
         <>
+          {j.settings.options.engine === 'cm' ? <CmWarning /> : null}
           {j.settings.incomplete.length ? <p className="ws-card small late" role="alert"><b>{t('À compléter dans les paramètres :')}</b>{' ' + inc(j.settings.incomplete)}</p> : null}
           {j.settings.isDefault ? <p className="ws-card small" role="note"><b>{t("Taux d'exemple.")}</b>{' ' + t(j.settings.disclaimer) + ' ' + t("Ouvrez l'onglet Paramètres pour les adapter.")}</p> : null}
           <div className="kpis">
@@ -99,7 +104,7 @@ export default function Payroll() {
             {!j.slips.length ? <Empty text={t("Aucun bulletin ce mois-ci. Cliquez sur « Lancer la paie du mois » pour créer les brouillons.")} /> : null}
             {j.slips.map((s) => (
               <div className="line" key={s.id} style={{ flexWrap: 'wrap' }}>
-                <span><b>{s.employee}</b>{' '}<span className={'pill ' + ST[s.status][1]}>{t(ST[s.status][0])}</span>{s.accEntryId ? <>{' '}<span className="pill good">{t('Comptabilisé')}</span></> : null}<br /><small style={{ overflowWrap: 'anywhere' }}>{t('Net {net} · coût employeur {cost}', { net: money(s.net), cost: money(s.employerCost) })}{s.overtime ? ' · ' + t('heures sup.') + ' ' + money(s.overtime) : ''}{s.annualBonus ? ' · ' + (s.annualBonusLabel || t('prime annuelle')) + ' ' + money(s.annualBonus) : ''}</small>{s.reopenedCount ? <><br /><small className="muted">{t('Rouvert : {reason}', { reason: s.reopenReason })}</small></> : null}</span>
+                <span><b>{s.employee}</b>{' '}<span className={'pill ' + ST[s.status][1]}>{t(ST[s.status][0])}</span>{s.accEntryId ? <>{' '}<span className="pill good">{t('Comptabilisé')}</span></> : null}<br /><small style={{ overflowWrap: 'anywhere' }}>{t('Net {net} · coût employeur {cost}', { net: money(s.net), cost: money(s.employerCost) })}{s.overtime ? ' · ' + t('heures sup.') + ' ' + money(s.overtime) : ''}{s.absenceDeduction ? ' · ' + t('absences non payées : {days} j, − {amount}', { days: s.absenceDays, amount: money(s.absenceDeduction) }) : ''}{s.annualBonus ? ' · ' + (s.annualBonusLabel || t('prime annuelle')) + ' ' + money(s.annualBonus) : ''}</small>{s.reopenedCount ? <><br /><small className="muted">{t('Rouvert : {reason}', { reason: s.reopenReason })}</small></> : null}</span>
                 <span className="row" style={{ flexWrap: 'wrap' }}>
                   <button className="link" type="button" style={TAP} onClick={() => view(s)}>{t('Voir / imprimer')}</button>
                   {s.status === 'draft' ? <button className="link" type="button" style={TAP} onClick={() => edit(s)}>{t('Modifier')}</button> : null}

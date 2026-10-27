@@ -24,8 +24,9 @@ function Bulletin({ s, orgName }) {
             ? s.overtimeHours.map((h, i) => <R key={'h' + i} a={t('Heures supplémentaires ({hours} h, +{rate} %)', { hours: h.hours, rate: h.rate })} b={money(h.hourly)} c={t('/ heure')} d={money(h.amount)} />)
             : (s.overtime ? <R a={t("Heures supplémentaires")} d={money(s.overtime)} /> : null)}
           {s.annualBonus ? <R a={s.annualBonusLabel || t('Prime annuelle')} d={money(s.annualBonus)} /> : null}
+          {s.absenceDeduction ? <R a={t('Absences non payées ({days} j)', { days: s.absenceDays })} d={'− ' + money(s.absenceDeduction)} /> : null}
           <R cls="tot" a={t("Salaire brut")} d={money(s.gross)} />
-          {emp.map((l, i) => <R key={'e' + i} a={l.label} b={money(l.basis)} c={l.rate + ' %'} d={'− ' + money(l.amount)} />)}
+          {emp.map((l, i) => <R key={'e' + i} a={l.code ? t(l.label) : l.label} b={money(l.basis)} c={l.rate + ' %'} d={'− ' + money(l.amount)} />)}
           {s.otherDeductions ? <R a={t("Autres retenues")} d={'− ' + money(s.otherDeductions)} /> : null}
           {s.advances ? <R a={t("Avances et acomptes déjà versés")} d={'− ' + money(s.advances)} /> : null}
           <R cls="tot" a={t("Net à payer")} d={money(s.net)} />
@@ -34,12 +35,13 @@ function Bulletin({ s, orgName }) {
       <h2>{t("Charges de l'employeur")}</h2>
       <table>
         <tbody>
-          {boss.length ? boss.map((l, i) => <R key={'b' + i} a={l.label} b={money(l.basis)} c={l.rate + ' %'} d={money(l.amount)} />) : <tr><td>{t('Aucune charge patronale paramétrée')}</td></tr>}
+          {boss.length ? boss.map((l, i) => <R key={'b' + i} a={l.code ? t(l.label) : l.label} b={money(l.basis)} c={l.rate + ' %'} d={money(l.amount)} />) : <tr><td>{t('Aucune charge patronale paramétrée')}</td></tr>}
           <R cls="tot" a={t("Coût total employeur")} d={money(s.employerCost)} />
         </tbody>
       </table>
       <p>{s.status === 'paid' ? t('Payé le {date} ({method}).', { date: dateFr(s.paidDate), method: t(s.payMethodLabel || '') }) : s.status === 'validated' ? t('Bulletin validé, paiement à venir.') : t('Brouillon : non validé.')}</p>
       {s.reopenedCount ? <p className="muted">{t('Bulletin rouvert {n} fois. Dernier motif : {reason}', { n: s.reopenedCount, reason: s.reopenReason })}</p> : null}
+      {s.engine === 'cm' ? <p className="note">{t('Barème Cameroun, version {version} : barème à faire valider par un expert-comptable ou le CNPS/DGI avant usage officiel.', { version: s.modelVersion })}</p> : null}
       <p className="note">{t("Document de travail préparé avec MANAGER-IA. Les taux de retenues et de charges sont ceux paramétrés par votre entreprise : à vérifier auprès de votre administration ou d'un expert avant toute utilisation officielle.")}</p>
     </>
   );
