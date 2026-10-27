@@ -222,5 +222,13 @@ export default {
   "Messenger": "Messenger",
   "WhatsApp": "WhatsApp",
   "Appareil inconnu": "Unbekanntes Gerät",
-  "{browser} sur {os}": "{browser} auf {os}"
+  "{browser} sur {os}": "{browser} auf {os}",
+  "Adresse e-mail invalide.": "Ungültige E-Mail-Adresse.",
+  "Choisissez e-mail ou WhatsApp.": "Wählen Sie E-Mail oder WhatsApp.",
+  "Indiquez l'adresse e-mail où recevoir le résumé et les alertes.": "Geben Sie die E-Mail-Adresse an, an die Übersicht und Warnungen gehen sollen.",
+  "Cochez la case de consentement pour recevoir des e-mails à cette adresse.": "Setzen Sie das Häkchen bei der Einwilligung, um E-Mails an diese Adresse zu erhalten.",
+  "Enregistrez d'abord vos réglages et votre consentement, puis réessayez.": "Speichern Sie zuerst Ihre Einstellungen und Ihre Einwilligung und versuchen Sie es dann erneut.",
+  "Enregistrez d'abord votre adresse e-mail et votre consentement, puis réessayez.": "Speichern Sie zuerst Ihre E-Mail-Adresse und Ihre Einwilligung und versuchen Sie es dann erneut.",
+  "L'envoi d'e-mails n'est pas activé sur ce serveur.": "Der E-Mail-Versand ist auf diesem Server nicht aktiviert.",
+  "Aucune adresse e-mail pour vous écrire : indiquez-en une dans vos réglages.": "Keine E-Mail-Adresse für Sie vorhanden: Geben Sie in Ihren Einstellungen eine an."
 };

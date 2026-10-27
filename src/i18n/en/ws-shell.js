@@ -82,7 +82,6 @@ export default {
   "Désactiver la double authentification": "Disable two-factor authentication",
   "Double authentification désactivée.": "Two-factor authentication disabled.",
   "Code à scanner": "Code to scan",
-  "Résumé du matin et alertes sur WhatsApp": "Morning summary and alerts on WhatsApp",
   "Réglages enregistrés.": "Settings saved.",
   "Vous êtes désabonné.": "You are unsubscribed.",
   "Vous êtes désabonné : plus aucun message ne sera envoyé.": "You are unsubscribed: no more messages will be sent.",
@@ -217,5 +216,19 @@ export default {
   "Secteur d'activité": "Business sector",
   "Commerce, restauration, services…": "Retail, catering, services…",
   "Décrivez votre activité": "Describe your business",
-  "L'IA s'en sert pour mieux vous conseiller.": "The AI uses it to advise you better."
+  "L'IA s'en sert pour mieux vous conseiller.": "The AI uses it to advise you better.",
+  "Résumé du matin et alertes": "Morning summary and alerts",
+  "Envoyé par e-mail": "Sent by email",
+  "Non envoyé (l'envoi d'e-mails n'est pas activé sur le serveur)": "Not sent (email sending is not enabled on the server)",
+  "Non envoyé (aucune adresse e-mail)": "Not sent (no email address)",
+  "Non envoyé (limite d'e-mails du jour atteinte)": "Not sent (daily email limit reached)",
+  "L'envoi d'e-mails n'est pas encore activé sur ce serveur : le résumé et les alertes ne partiront pas tant que l'administrateur n'a pas configuré le service d'e-mail.": "Email sending is not yet enabled on this server: the summary and alerts will not be sent until the administrator has set up the email service.",
+  "Où recevoir le résumé et les alertes ?": "Where do you want to receive the summary and alerts?",
+  "E-mail (recommandé)": "Email (recommended)",
+  "Adresse e-mail de réception": "Email address to receive them",
+  "Laissez vide pour utiliser l'adresse de votre compte : {email}.": "Leave empty to use your account address: {email}.",
+  "Votre compte n'a pas d'adresse e-mail : indiquez celle où recevoir les messages.": "Your account has no email address: enter the one where you want to receive messages.",
+  "Enregistrez d'abord pour tester ce canal.": "Save first to test this channel.",
+  "Envoyer un test": "Send a test",
+  "J'accepte de recevoir, par e-mail à l'adresse indiquée, le résumé du matin et/ou les alertes urgentes de mon organisation. Je peux me désabonner à tout moment (lien dans chaque e-mail).": "I agree to receive, by email at the address given, the morning summary and/or urgent alerts from my organisation. I can unsubscribe at any time (link in every email)."
 };

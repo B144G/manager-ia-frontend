@@ -82,7 +82,6 @@ export default {
   "Désactiver la double authentification": "Desactivar la verificación en dos pasos",
   "Double authentification désactivée.": "Verificación en dos pasos desactivada.",
   "Code à scanner": "Código para escanear",
-  "Résumé du matin et alertes sur WhatsApp": "Resumen matinal y alertas por WhatsApp",
   "Réglages enregistrés.": "Ajustes guardados.",
   "Vous êtes désabonné.": "Se ha dado de baja.",
   "Vous êtes désabonné : plus aucun message ne sera envoyé.": "Se ha dado de baja: no se enviará ningún mensaje más.",
@@ -217,5 +216,19 @@ export default {
   "Secteur d'activité": "Sector de actividad",
   "Commerce, restauration, services…": "Comercio, restauración, servicios…",
   "Décrivez votre activité": "Describa su actividad",
-  "L'IA s'en sert pour mieux vous conseiller.": "La IA lo usa para aconsejarle mejor."
+  "L'IA s'en sert pour mieux vous conseiller.": "La IA lo usa para aconsejarle mejor.",
+  "Résumé du matin et alertes": "Resumen matinal y alertas",
+  "Envoyé par e-mail": "Enviado por correo electrónico",
+  "Non envoyé (l'envoi d'e-mails n'est pas activé sur le serveur)": "No enviado (el envío de correos no está activado en el servidor)",
+  "Non envoyé (aucune adresse e-mail)": "No enviado (sin dirección de correo)",
+  "Non envoyé (limite d'e-mails du jour atteinte)": "No enviado (límite diario de correos alcanzado)",
+  "L'envoi d'e-mails n'est pas encore activé sur ce serveur : le résumé et les alertes ne partiront pas tant que l'administrateur n'a pas configuré le service d'e-mail.": "El envío de correos aún no está activado en este servidor: el resumen y las alertas no se enviarán hasta que el administrador configure el servicio de correo.",
+  "Où recevoir le résumé et les alertes ?": "¿Dónde quiere recibir el resumen y las alertas?",
+  "E-mail (recommandé)": "Correo electrónico (recomendado)",
+  "Adresse e-mail de réception": "Dirección de correo de recepción",
+  "Laissez vide pour utiliser l'adresse de votre compte : {email}.": "Déjela vacía para usar la dirección de su cuenta: {email}.",
+  "Votre compte n'a pas d'adresse e-mail : indiquez celle où recevoir les messages.": "Su cuenta no tiene dirección de correo: indique la que quiere usar para recibir los mensajes.",
+  "Enregistrez d'abord pour tester ce canal.": "Guarde primero para probar este canal.",
+  "Envoyer un test": "Enviar una prueba",
+  "J'accepte de recevoir, par e-mail à l'adresse indiquée, le résumé du matin et/ou les alertes urgentes de mon organisation. Je peux me désabonner à tout moment (lien dans chaque e-mail).": "Acepto recibir, por correo electrónico en la dirección indicada, el resumen matinal y/o las alertas urgentes de mi organización. Puedo darme de baja en cualquier momento (enlace en cada correo)."
 };

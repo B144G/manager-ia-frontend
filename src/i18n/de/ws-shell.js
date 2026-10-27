@@ -82,7 +82,6 @@ export default {
   "Désactiver la double authentification": "Zwei-Faktor-Authentifizierung deaktivieren",
   "Double authentification désactivée.": "Zwei-Faktor-Authentifizierung deaktiviert.",
   "Code à scanner": "Zu scannender Code",
-  "Résumé du matin et alertes sur WhatsApp": "Morgenübersicht und Warnungen per WhatsApp",
   "Réglages enregistrés.": "Einstellungen gespeichert.",
   "Vous êtes désabonné.": "Sie sind abgemeldet.",
   "Vous êtes désabonné : plus aucun message ne sera envoyé.": "Sie sind abgemeldet: Es werden keine Nachrichten mehr gesendet.",
@@ -217,5 +216,19 @@ export default {
   "Secteur d'activité": "Branche",
   "Commerce, restauration, services…": "Handel, Gastronomie, Dienstleistungen …",
   "Décrivez votre activité": "Beschreiben Sie Ihre Tätigkeit",
-  "L'IA s'en sert pour mieux vous conseiller.": "Die KI nutzt dies, um Sie besser zu beraten."
+  "L'IA s'en sert pour mieux vous conseiller.": "Die KI nutzt dies, um Sie besser zu beraten.",
+  "Résumé du matin et alertes": "Morgenübersicht und Warnungen",
+  "Envoyé par e-mail": "Per E-Mail gesendet",
+  "Non envoyé (l'envoi d'e-mails n'est pas activé sur le serveur)": "Nicht gesendet (der E-Mail-Versand ist auf dem Server nicht aktiviert)",
+  "Non envoyé (aucune adresse e-mail)": "Nicht gesendet (keine E-Mail-Adresse)",
+  "Non envoyé (limite d'e-mails du jour atteinte)": "Nicht gesendet (Tageslimit für E-Mails erreicht)",
+  "L'envoi d'e-mails n'est pas encore activé sur ce serveur : le résumé et les alertes ne partiront pas tant que l'administrateur n'a pas configuré le service d'e-mail.": "Der E-Mail-Versand ist auf diesem Server noch nicht aktiviert: Übersicht und Warnungen werden erst gesendet, wenn der Administrator den E-Mail-Dienst eingerichtet hat.",
+  "Où recevoir le résumé et les alertes ?": "Wo möchten Sie Übersicht und Warnungen erhalten?",
+  "E-mail (recommandé)": "E-Mail (empfohlen)",
+  "Adresse e-mail de réception": "E-Mail-Adresse für den Empfang",
+  "Laissez vide pour utiliser l'adresse de votre compte : {email}.": "Leer lassen, um die Adresse Ihres Kontos zu verwenden: {email}.",
+  "Votre compte n'a pas d'adresse e-mail : indiquez celle où recevoir les messages.": "Ihr Konto hat keine E-Mail-Adresse: Geben Sie die Adresse an, an die die Nachrichten gehen sollen.",
+  "Enregistrez d'abord pour tester ce canal.": "Speichern Sie zuerst, um diesen Kanal zu testen.",
+  "Envoyer un test": "Test senden",
+  "J'accepte de recevoir, par e-mail à l'adresse indiquée, le résumé du matin et/ou les alertes urgentes de mon organisation. Je peux me désabonner à tout moment (lien dans chaque e-mail).": "Ich bin damit einverstanden, die Morgenübersicht und/oder dringende Warnungen meiner Organisation per E-Mail an die angegebene Adresse zu erhalten. Ich kann mich jederzeit abmelden (Link in jeder E-Mail)."
 };

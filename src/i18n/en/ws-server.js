@@ -222,5 +222,13 @@ export default {
   "Messenger": "Messenger",
   "WhatsApp": "WhatsApp",
   "Appareil inconnu": "Unknown device",
-  "{browser} sur {os}": "{browser} on {os}"
+  "{browser} sur {os}": "{browser} on {os}",
+  "Adresse e-mail invalide.": "Invalid email address.",
+  "Choisissez e-mail ou WhatsApp.": "Choose email or WhatsApp.",
+  "Indiquez l'adresse e-mail où recevoir le résumé et les alertes.": "Enter the email address where you want to receive the summary and alerts.",
+  "Cochez la case de consentement pour recevoir des e-mails à cette adresse.": "Tick the consent box to receive emails at this address.",
+  "Enregistrez d'abord vos réglages et votre consentement, puis réessayez.": "First save your settings and your consent, then try again.",
+  "Enregistrez d'abord votre adresse e-mail et votre consentement, puis réessayez.": "First save your email address and your consent, then try again.",
+  "L'envoi d'e-mails n'est pas activé sur ce serveur.": "Email sending is not enabled on this server.",
+  "Aucune adresse e-mail pour vous écrire : indiquez-en une dans vos réglages.": "No email address to write to you: enter one in your settings."
 };
