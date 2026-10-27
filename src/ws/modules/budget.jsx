@@ -2,13 +2,17 @@ import { useState } from 'react';
 import { useWs } from '../WsContext.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { Empty, Form, Loading, useLoad } from '../ui.jsx';
+import AnnualTab from '../parts/budget/Annual.jsx';
+import { ApprovalsTab, CashTab } from '../parts/budget/Cash.jsx';
+import { BTN } from '../parts/finance/util.jsx';
 
 /* Sous-application : Budget (entrées, sorties, limites par catégorie, conseils de l'IA). Réservée aux responsables et plus. */
 
 export default function Budget() {
   const t = useT();
-  const { oapi, can, money, dateFr, today, modal, confirm, propose, fail, info } = useWs();
+  const { oapi, can, money, dateFr, today, modal, confirm, propose, fail, info, toast } = useWs();
   const branches = info.branches;
+  const [tab, setTab] = useState('month');
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const st = useLoad(() => oapi('GET', '/budget?month=' + month), [month]);
   const load = st.reload;
@@ -23,6 +27,10 @@ export default function Budget() {
         { k: 'label', label: t('Détail'), value: e.label },
         { k: 'date', label: t('Date'), type: 'date', value: e.date || today() },
       ];
+      if (can('admin') && !e.id) f.push(
+        { k: 'ledger', label: t('Inscrire aussi en comptabilité'), type: 'select', options: [['', t('Non (budget seulement)')], ['yes', t('Oui : une seule saisie pour le budget et la compta')]], hint: t("Évite la double saisie : l'écriture comptable est créée en même temps.") },
+        { k: 'account', label: t('Compte comptable (si inscrit en compta)'), placeholder: '622', hint: t('Charges : classe 6 (ex. 622 loyers). Recettes : classe 7 (ex. 701 ventes).') },
+        { k: 'payment', label: t('Règlement (si inscrit en compta)'), type: 'select', options: [['cash', t('Espèces')], ['bank', t('Banque')], ['mobile', t('Mobile Money')]] });
       if (branches.length && !e.id) f.push({ k: 'branchId', label: t('Antenne'), type: 'select', options: [['', t('Toute l\'organisation')]].concat(branches.map((x) => [String(x.id), x.name])) });
       return (
         <Form
@@ -31,7 +39,8 @@ export default function Budget() {
           onSubmit={(v) => {
             const payload = { kind: v.kind, category: v.category, amount: v.amount, label: v.label, date: v.date };
             if (v.branchId) payload.branchId = v.branchId;
-            return oapi(e.id ? 'PUT' : 'POST', '/budget/entries' + (e.id ? '/' + e.id : ''), payload).then(() => { close(); load(); });
+            if (v.ledger === 'yes') Object.assign(payload, { ledger: true, account: v.account, payment: v.payment });
+            return oapi(e.id ? 'PUT' : 'POST', '/budget/entries' + (e.id ? '/' + e.id : ''), payload).then((r) => { close(); if (r && r.pending) toast(t('Cette dépense atteint le seuil de validation : elle a été soumise à un administrateur.')); load(); });
           }}
         />
       );
@@ -81,7 +90,13 @@ export default function Budget() {
           <button className="btn primary small" type="button" onClick={() => addEntry()}>{t('Ajouter une ligne')}</button>
         </div>
       </div>
-      <div>
+      <div className="ws-tabs" style={{ flexWrap: 'wrap', overflowX: 'visible' }}>
+        {[['month', 'Mois'], ...(can('admin') ? [['annual', 'Budget annuel'], ['cash', 'Trésorerie']] : []), ['approvals', 'Validations']].map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} style={BTN} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
+      </div>
+      {tab === 'annual' ? <AnnualTab /> : null}
+      {tab === 'cash' ? <CashTab /> : null}
+      {tab === 'approvals' ? <ApprovalsTab /> : null}
+      <div hidden={tab !== 'month'}>
         {st.loading ? <Loading /> : null}
         {!st.loading && st.error ? <p className="ws-err" role="alert">{t(st.error.message)}</p> : null}
         {!st.loading && j ? (
