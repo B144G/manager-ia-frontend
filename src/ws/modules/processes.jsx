@@ -1,13 +1,16 @@
 import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
+import { useEffect, useState } from 'react';
 import { Empty, Form, Loading, useLoad } from '../ui.jsx';
 
 /* Sous-application : Fonctionnement (procédures : comment l'activité tourne, étape par étape). */
 
 export default function Processes() {
-  const { oapi, can, modal, confirm, propose, fail } = useWs();
+  const { oapi, can, modal, confirm, propose, fail, toast, dateFr, info } = useWs();
   const t = useT();
+  const [members, setMembers] = useState([]);
+  useEffect(() => { let off = false; oapi('GET', '/members').then((j) => { if (!off) setMembers(j.members); }, () => {}); return () => { off = true; }; }, [oapi]);
   const st = useLoad(() => oapi('GET', '/structure/processes'), []);
   const load = st.reload;
 
@@ -19,15 +22,22 @@ export default function Processes() {
           { k: 'title', label: t('Titre'), required: true, value: p.title },
           { k: 'category', label: t('Catégorie'), value: p.category, placeholder: t('Ventes, Accueil, Stock…') },
           { k: 'steps', label: t('Étapes (une par ligne)'), type: 'textarea', rows: 8, required: true, value: (p.steps || []).join('\n') },
+          { k: 'ownerId', label: t('Propriétaire de la procédure'), type: 'select', options: [['', t('Personne')]].concat(members.map((m) => [String(m.userId), m.name])), value: p.ownerId ? String(p.ownerId) : '' },
+          { k: 'reviewMonths', label: t('Réviser tous les (mois, 0 = jamais)'), value: p.reviewMonths || 0 },
         ]}
         submitText={t('Enregistrer')}
         onSubmit={(v) => {
-          const body = { title: v.title, category: v.category, steps: v.steps.split('\n').map((s) => s.trim()).filter(Boolean) };
+          const body = { title: v.title, category: v.category, steps: v.steps.split('\n').map((s) => s.trim()).filter(Boolean), ownerId: v.ownerId || null, reviewMonths: v.reviewMonths || 0 };
           return oapi(p.id ? 'PUT' : 'POST', '/structure/processes' + (p.id ? '/' + p.id : ''), body).then(() => { close(); load(); });
         }}
       />
     ));
   };
+
+  const versions = (p) => modal(t('Versions de « {title} »', { title: p.title }), () => <Versions id={p.id} />, { wide: true });
+  const reads = (p) => modal(t('Accusés de lecture'), () => <Reads id={p.id} />);
+  const markRead = (p) => oapi('POST', '/structure/processes/' + p.id + '/read', {}).then(() => { toast(t('Lecture enregistrée.')); load(); }).catch(fail);
+  const reviewed = (p) => oapi('POST', '/structure/processes/' + p.id + '/reviewed', {}).then(() => { toast(t('Révision validée.')); load(); }).catch(fail);
 
   const aiDraft = () => {
     modal(t("Procédure rédigée par l'IA"), (close) => (
@@ -77,8 +87,15 @@ export default function Processes() {
             <h2>{cat}</h2>
             {groups[cat].map((p) => (
               <details className="proc" key={p.id}>
-                <summary>{p.title}<small>{' · ' + (p.steps.length > 1 ? t('{n} étapes', { n: p.steps.length }) : t('{n} étape', { n: p.steps.length }))}</small></summary>
+                <summary>{p.title}<small>{' · ' + (p.steps.length > 1 ? t('{n} étapes', { n: p.steps.length }) : t('{n} étape', { n: p.steps.length })) + ' · ' + t('version {v}', { v: p.version })}</small>{p.reviewDue ? <span className="pill bad">{t('À réviser')}</span> : null}{!p.readByMe ? <span className="pill mid">{t('À lire')}</span> : null}</summary>
                 <ol>{p.steps.map((s, i) => <li key={i}>{s}</li>)}</ol>
+                <p className="muted small">{[p.owner && t('Propriétaire : {name}', { name: p.owner }), p.nextReview && t('Prochaine révision : {date}', { date: dateFr(p.nextReview) }), t('{n} lecteur(s)', { n: p.readers })].filter(Boolean).join(' · ')}</p>
+                <div className="row">
+                  {!p.readByMe ? <button className="btn primary small" type="button" style={{ minHeight: 44 }} onClick={() => markRead(p)}>{t('J’ai lu cette version')}</button> : null}
+                  <button className="btn small" type="button" style={{ minHeight: 44 }} onClick={() => versions(p)}>{t('Versions')}</button>
+                  {can('manager') ? <button className="btn small" type="button" style={{ minHeight: 44 }} onClick={() => reads(p)}>{t('Qui a lu ?')}</button> : null}
+                  {p.nextReview && (can('admin') || p.ownerId === info.me.userId) ? <button className="btn small" type="button" style={{ minHeight: 44 }} onClick={() => reviewed(p)}>{t('Révision faite')}</button> : null}
+                </div>
                 {can('admin') ? (
                   <div className="row">
                     <button className="btn small" type="button" onClick={() => edit(p)}>{t('Modifier')}</button>
@@ -92,4 +109,32 @@ export default function Processes() {
       </div>
     </>
   );
+}
+
+function Versions({ id }) {
+  const t = useT();
+  const { oapi, dateFr } = useWs();
+  const st = useLoad(() => oapi('GET', '/structure/processes/' + id + '/versions'), [id]);
+  if (!st.data) return <Loading />;
+  const j = st.data;
+  return (
+    <>
+      <h3>{t('Version {v} (en cours)', { v: j.current.version })}</h3>
+      <ol>{j.current.steps.map((s, i) => <li key={i}>{s}</li>)}</ol>
+      {j.versions.map((v) => (
+        <details key={v.version}>
+          <summary>{t('Version {v}', { v: v.version }) + ' · ' + t('remplacée le {date}', { date: dateFr(v.replacedAt) })}</summary>
+          <ol>{v.steps.map((s, i) => <li key={i}>{s}</li>)}</ol>
+        </details>
+      ))}
+    </>
+  );
+}
+
+function Reads({ id }) {
+  const t = useT();
+  const { oapi, dateFr } = useWs();
+  const st = useLoad(() => oapi('GET', '/structure/processes/' + id + '/reads'), [id]);
+  if (!st.data) return <Loading />;
+  return st.data.items.map((r) => <div className="line" key={r.userId}><b>{r.name}</b><span className={'pill ' + (r.readAt ? '' : 'mid')}>{r.readAt ? t('lu le {date}', { date: dateFr(r.readAt) }) : t('pas encore lu')}</span></div>);
 }

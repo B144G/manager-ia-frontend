@@ -3,6 +3,7 @@ import { getLocale, useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
 import { Empty, Form, Loading, useLoad } from '../ui.jsx';
+import { Audit, Transfer } from '../parts/w3/TeamExtras.jsx';
 
 /* Sous-application : Équipe et antennes (rôles, invitations, extensions de l'organisation). */
 
@@ -27,6 +28,8 @@ export default function Team() {
         <div><TeamBox /></div>
         <div><Branches />{can('admin') ? <Invites ver={iv} /> : null}</div>
       </div>
+      {can('owner') ? <Transfer /> : null}
+      {can('admin') ? <Audit /> : null}
     </>
   );
 }

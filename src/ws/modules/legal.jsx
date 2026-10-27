@@ -5,11 +5,12 @@ import { alertText } from '../parts/legal/alertText.js';
 import { Empty, Loaded, useLoad } from '../ui.jsx';
 import { Contracts, Disputes, Obligations, Privacy } from '../parts/legal/Sections.jsx';
 import Templates from '../parts/legal/Templates.jsx';
+import { Compliance, Registers } from '../parts/legal/Wave3.jsx';
 
 /* Sous-application : Juridique et conformité (responsables et plus). Aide-mémoire d'organisation : ne remplace pas un avocat. */
 
 const KIND = { contract_end: 'Fin de contrat', notice: 'Date limite de préavis', obligation: 'Obligation', dispute_step: 'Étape de dossier' };
-const TABS = [['dash', 'Échéances'], ['contracts', 'Contrats'], ['obligations', 'Obligations'], ['disputes', 'Litiges'], ['privacy', 'Données personnelles'], ['templates', 'Modèles']];
+const TABS = [['dash', 'Échéances'], ['contracts', 'Contrats'], ['obligations', 'Obligations'], ['disputes', 'Litiges'], ['registers', 'Registres'], ['compliance', 'Conformité Cameroun'], ['privacy', 'Données personnelles'], ['templates', 'Modèles']];
 
 export default function Legal() {
   const t = useT();
@@ -32,6 +33,8 @@ export default function Legal() {
       {tab === 'disputes' ? <Disputes onChange={load} /> : null}
       {tab === 'privacy' ? <Privacy onChange={load} /> : null}
       {tab === 'templates' ? <Templates /> : null}
+      {tab === 'registers' ? <Registers /> : null}
+      {tab === 'compliance' ? <Compliance /> : null}
       {tab === 'dash' ? (
         <Loaded state={st}>{(j) => {
           const s = j.summary;

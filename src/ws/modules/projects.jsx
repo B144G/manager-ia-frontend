@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ProjectTrack, TaskDetail, Workload } from '../parts/projects/Extras.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
@@ -95,7 +96,7 @@ export default function Projects() {
     ));
   };
 
-  const actions = { can, newTask, editTask, setStatus, newProject, aiPlan, confirm, fail };
+  const actions = { can, newTask, editTask, setStatus, newProject, aiPlan, confirm, fail, modal };
   return pid ? <ProjectView key={pid} id={pid} back={() => setPid(null)} actions={actions} /> : <ProjectList open={setPid} actions={actions} />;
 }
 
@@ -158,6 +159,7 @@ function ProjectList({ open, actions }) {
           </>
         ) : null}
       </div>
+      {can('manager') ? <Workload /> : null}
     </div>
   );
 }
@@ -166,7 +168,7 @@ function ProjectList({ open, actions }) {
 function ProjectView({ id, back, actions }) {
   const { oapi, dateFr, today } = useWs();
   const t = useT();
-  const { can, newTask, editTask, setStatus, confirm, fail } = actions;
+  const { can, newTask, editTask, setStatus, confirm, fail, modal } = actions;
   const st = useLoad(() => oapi('GET', '/projects/' + id), [id]);
   const again = st.reload;
   const j = st.data;
@@ -206,6 +208,7 @@ function ProjectView({ id, back, actions }) {
                     <div className="row">
                       <button className="btn small" type="button" onClick={() => setStatus(tk, NEXT[tk.status], again)}>{t(NEXT_LABEL[tk.status])}</button>
                       <button className="link" type="button" onClick={() => editTask(tk, again)}>{t('Modifier')}</button>
+                      <button className="link" type="button" onClick={() => modal(tk.title, (close) => <TaskDetail task={tk} tasks={j.tasks} close={close} done={again} />, { wide: true })}>{t('Détails')}</button>
                     </div>
                   </div>
                 );
@@ -214,6 +217,7 @@ function ProjectView({ id, back, actions }) {
           );
         }) : null}
       </div>
+      <ProjectTrack id={id} />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
+import { Vacancies } from '../parts/w3/TeamExtras.jsx';
 import { Empty, Form, Loading, useLoad } from '../ui.jsx';
 
 /* Sous-application : Organisation (fiche de l'organisation, organigramme des postes, complétion par l'IA). */
@@ -117,6 +118,7 @@ export default function Structure() {
           </>
         ) : null}
       </div>
+      <Vacancies />
     </>
   );
 }
