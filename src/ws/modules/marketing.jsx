@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useWs } from '../WsContext.jsx';
+import { Audience, Broadcasts, Promo } from '../parts/w3/MarketingExtras.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { Empty, Form, Loaded, useLoad } from '../ui.jsx';
 
@@ -97,9 +98,12 @@ export default function Marketing() {
         </div>
       </div>
       <div className="ws-tabs">
-        {[['campaigns', 'Campagnes'], ['calendar', 'Calendrier'], ['offers', 'Offres']].map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
+        {[['campaigns', 'Campagnes'], ['calendar', 'Calendrier'], ['offers', 'Offres'], ...(mgr ? [['audience', 'Audience et consentement'], ['broadcasts', 'Envois groupés'], ['promo', 'Codes promo']] : [])].map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
       </div>
-      <Loaded state={st}>{(j) => {
+      {tab === 'audience' ? <Audience /> : null}
+      {tab === 'broadcasts' ? <Broadcasts /> : null}
+      {tab === 'promo' ? <Promo /> : null}
+      {['audience', 'broadcasts', 'promo'].includes(tab) ? null : <Loaded state={st}>{(j) => {
         const s = j.summary;
         return (
           <>
@@ -178,7 +182,7 @@ export default function Marketing() {
           </>
         );
       }}
-      </Loaded>
+      </Loaded>}
     </>
   );
 }

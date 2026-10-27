@@ -3,12 +3,14 @@ import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
 import { Empty, Form, Loaded, Loading, useLoad } from '../ui.jsx';
+import { Kb, Report, Sla } from '../parts/w3/SupportExtras.jsx';
 
 /* Sous-application : Service client (boîte de demandes + réponses, brouillon IA, formulaire public). */
 
 const STAT = { open: 'À traiter', pending: 'En attente', resolved: 'Résolue' };
 const PRIO = { low: 'Basse', normal: 'Normale', high: 'Urgente' };
 const TABS = [['open', 'À traiter'], ['pending', 'En attente'], ['resolved', 'Résolues'], ['all', 'Toutes']];
+const SLA_LABEL = { met: 'Délai tenu', missed: 'Délai manqué', breached: 'Délai dépassé', pending: 'Dans les délais' };
 const CHAN = { manuel: 'Saisie manuelle', whatsapp: 'WhatsApp', messenger: 'Messenger', instagram: 'Instagram', email: 'E-mail', telephone: 'Téléphone' };
 
 export default function Support() {
@@ -19,7 +21,7 @@ export default function Support() {
   const [ver, setVer] = useState(0);
   const [members, setMembers] = useState([]);
   const reload = () => setVer((n) => n + 1);
-  const st = useLoad(() => oapi('GET', '/support' + (filter === 'all' ? '' : '?status=' + filter)), [filter, ver]);
+  const st = useLoad(() => (['kb', 'report', 'sla'].includes(filter) ? Promise.resolve({ tickets: [], counts: {} }) : oapi('GET', '/support' + (filter === 'all' ? '' : '?status=' + filter))), [filter, ver]);
 
   useEffect(() => {
     let off = false;
@@ -74,7 +76,9 @@ export default function Support() {
           const n = tab[0] === 'all' ? '' : ' (' + (j.counts[tab[0]] || 0) + ')';
           return <button type="button" key={tab[0]} className={'tab' + (filter === tab[0] ? ' on' : '')} onClick={() => { setFilter(tab[0]); setSel(null); }}>{t(tab[1]) + n}</button>;
         }) : null}
+        {[['kb', 'Base de connaissances'], ...(can('manager') ? [['report', 'Rapport'], ['sla', 'Délais (SLA)']] : [])].map((tab) => <button type="button" key={tab[0]} className={'tab' + (filter === tab[0] ? ' on' : '')} onClick={() => { setFilter(tab[0]); setSel(null); }}>{t(tab[1])}</button>)}
       </div>
+      {filter === 'kb' ? <Kb /> : filter === 'report' ? <Report /> : filter === 'sla' ? <Sla /> : (
       <div className="tk">
         <div className="tk-list">
           {st.loading && !j ? <Loading /> : null}
@@ -82,7 +86,7 @@ export default function Support() {
           {j && !j.tickets.length ? <Empty text={t('Aucune demande ici.')} /> : null}
           {j ? j.tickets.map((tk) => (
             <button type="button" key={tk.id} className={'tk-item' + (tk.id === sel ? ' on' : '') + (tk.priority === 'high' ? ' hot' : '')} onClick={() => { setSel(tk.id); reload(); }}>
-              <b>{tk.customerName}</b><span>{tk.subject}</span><small>{t(STAT[tk.status]) + ' · ' + (CHAN[tk.channel] ? t(CHAN[tk.channel]) : tk.channel) + ' · ' + dateFr(tk.updatedAt)}</small>
+              <b>{tk.customerName}</b><span>{tk.subject}</span><small>{t(STAT[tk.status]) + ' · ' + (CHAN[tk.channel] ? t(CHAN[tk.channel]) : tk.channel) + ' · ' + dateFr(tk.updatedAt)}{tk.status !== 'resolved' && (tk.slaFirst === 'breached' || tk.slaResolve === 'breached') ? <span className="pill bad">{t('Délai dépassé')}</span> : null}</small>
             </button>
           )) : null}
         </div>
@@ -90,6 +94,7 @@ export default function Support() {
           {sel ? <Detail key={sel} id={sel} ver={ver} members={members} onChange={reload} onDeleted={() => { setSel(null); reload(); }} /> : <Empty text={t('Choisissez une demande.')} />}
         </div>
       </div>
+      )}
     </>
   );
 }
@@ -111,13 +116,14 @@ function Detail({ id, ver, members, onChange, onDeleted }) {
 }
 
 function Ticket({ id, j, members, onChange, onDeleted }) {
-  const { oapi, can, confirm, propose, toast, fail, dateFr } = useWs();
+  const { oapi, can, confirm, propose, toast, fail, dateFr, copy } = useWs();
   const t = useT();
   const tk = j.ticket;
   const [status, setStatus] = useState(tk.status);
   const [prio, setPrio] = useState(tk.priority);
   const [who, setWho] = useState(tk.assigneeId ? String(tk.assigneeId) : '');
   const [reply, setReply] = useState('');
+  const [sendOut, setSendOut] = useState(Boolean(tk.customerContact));
   const [busy, setBusy] = useState(false);
   const replyRef = useRef(null);
 
@@ -127,7 +133,7 @@ function Ticket({ id, j, members, onChange, onDeleted }) {
   const send = () => {
     if (!reply.trim()) return;
     setBusy(true);
-    oapi('POST', '/support/' + id + '/messages', { content: reply }).then(() => { toast(t('Réponse enregistrée. Envoyez-la aussi au client sur son canal.')); onChange(); }).catch((e) => { setBusy(false); fail(e); });
+    oapi('POST', '/support/' + id + '/messages', { content: reply, send: sendOut }).then((r) => { const d = r.delivery; toast(d ? (d.status === 'sent' ? t('Réponse envoyée au client.') : t('Réponse enregistrée, mais non envoyée : {why}', { why: tsrv(d.error) })) : t('Réponse enregistrée. Envoyez-la aussi au client sur son canal.'), Boolean(d && d.status !== 'sent')); onChange(); }).catch((e) => { setBusy(false); fail(e); });
   };
   const draft = () => {
     propose('ticket-reply', { ticketId: id }, {
@@ -169,7 +175,11 @@ function Ticket({ id, j, members, onChange, onDeleted }) {
           </div>
         ))}
       </div>
+      <p className="muted small">{[tk.firstDueAt && t('1re réponse avant le {d} : {s}', { d: dateFr(tk.firstDueAt), s: t(SLA_LABEL[tk.slaFirst]) }), tk.dueAt && t('Résolution avant le {d} : {s}', { d: dateFr(tk.dueAt), s: t(SLA_LABEL[tk.slaResolve]) }), tk.csat ? t('Satisfaction : {n} / 5', { n: tk.csat }) : ''].filter(Boolean).join(' · ')}</p>
+      {j.customer ? <p className="muted small">{t('Fiche client : {name}', { name: j.customer.name })}</p> : null}
+      {tk.csatLink ? <p className="muted small">{t('Lien de satisfaction :')} <button className="link" type="button" style={{ minHeight: 44 }} onClick={() => copy(tk.csatLink, t('Lien copié.'))}>{t('Copier le lien')}</button></p> : null}
       <textarea rows={4} placeholder={t('Votre réponse au client…')} aria-label={t('Votre réponse')} ref={replyRef} value={reply} onChange={(e) => setReply(e.target.value)} />
+      <label style={{ display: 'flex', gap: 8, minHeight: 44, alignItems: 'center' }}><input type="checkbox" checked={sendOut} onChange={(e) => setSendOut(e.target.checked)} style={{ width: 24, height: 24 }} />{t('Envoyer aussi au client (e-mail ou WhatsApp selon son contact)')}</label>
       <div className="row">
         <button className="btn primary small" type="button" disabled={busy} onClick={send}>{t('Enregistrer la réponse')}</button>
         <button className="btn signal small" type="button" onClick={draft}>{t("Brouillon par l'IA")}</button>

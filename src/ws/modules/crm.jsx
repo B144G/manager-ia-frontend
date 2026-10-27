@@ -135,6 +135,10 @@ export default function Crm() {
     const stt = DST[d.status] || ['', ''];
     const a = [];
     if (d.status === 'draft') a.push([t('Marquer envoyé'), () => setDoc(d, { status: 'sent' })]);
+    if (d.status === 'draft' && ['quote', 'invoice'].includes(d.kind)) {
+      if (d.promoCode) a.push([t('Retirer le code promo {code}', { code: d.promoCode }), () => { oapi('DELETE', '/marketing/promo/apply/' + d.id).then(load).catch(fail); }]);
+      else a.push([t('Code promo'), () => modal(t('Code promo : {number}', { number: d.number }), (close) => <Form fields={[{ k: 'code', label: t('Code'), required: true }]} submitText={t('Appliquer')} onSubmit={(f) => oapi('POST', '/marketing/promo/apply', { documentId: d.id, code: f.code }).then((r) => { close(); toast(t('Remise appliquée : {amount}', { amount: money(r.discount) })); load(); })} />)]);
+    }
     if (d.kind === 'invoice' && d.status === 'sent') a.push([t('Paiement reçu'), () => pay(d)]);
     if (d.overdue) a.push([t("Relancer avec l'IA"), () => remind(d)]);
     if (d.kind === 'quote' && d.status === 'sent') { a.push([t('Accepté'), () => setDoc(d, { status: 'accepted' })]); a.push([t('Refusé'), () => setDoc(d, { status: 'refused' })]); }
