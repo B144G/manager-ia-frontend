@@ -3,6 +3,7 @@ import { useWs } from '../WsContext.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { Empty, Form, Loaded, useLoad } from '../ui.jsx';
 import { Carriers, Rounds, Zones } from '../parts/logistics/Lists.jsx';
+import { DeliveryItems, Fleet } from '../parts/logistics/Fleet.jsx';
 
 /* Sous-application : Logistique (livraisons, suivi, preuves, transporteurs, zones, tournées, retards, prévenir le client par WhatsApp). */
 
@@ -85,7 +86,7 @@ export default function Logistics() {
         <div className="row">{tab === 'deliveries' ? <button className="btn primary small" type="button" onClick={() => edit()}>{t('Nouvelle livraison')}</button> : null}</div>
       </div>
       <div className="ws-tabs">
-        {[['deliveries', 'Livraisons'], ['rounds', 'Tournées'], ['carriers', 'Transporteurs'], ['zones', 'Zones']].map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
+        {[['deliveries', 'Livraisons'], ['rounds', 'Tournées'], ['fleet', 'Parc'], ['carriers', 'Transporteurs'], ['zones', 'Zones']].map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
       </div>
       <Loaded state={st}>{(j) => {
         const s = j.summary;
@@ -98,6 +99,7 @@ export default function Logistics() {
               <div className="stat"><b>{money(s.monthCost)}</b><span>{t('frais de livraison du mois')}</span></div>
             </div>
             {tab === 'rounds' ? <Rounds deliveries={j.deliveries} onChange={load} /> : null}
+            {tab === 'fleet' ? <Fleet /> : null}
             {tab === 'carriers' ? <Carriers /> : null}
             {tab === 'zones' ? <Zones /> : null}
             {tab === 'deliveries' ? (
@@ -115,6 +117,7 @@ export default function Logistics() {
                     <span className="row">
                       <button className="link" type="button" onClick={() => setStatus(d)}>{t('État')}</button>
                       <button className="link" type="button" onClick={() => notify(d)}>{t('Prévenir le client')}</button>
+                      <button className="link" type="button" onClick={() => modal(t('Articles du stock : {name}', { name: d.customerName }), (close) => <DeliveryItems delivery={d} close={close} done={load} />)}>{t('Articles du stock')}</button>
                       <button className="link" type="button" onClick={() => history(d)}>{t('Historique')}</button>
                       <button className="link" type="button" onClick={() => edit(d)}>{t('Modifier')}</button>
                       {can('manager') ? <button className="link" type="button" onClick={() => confirm(t('Supprimer cette livraison pour {name} ?', { name: d.customerName }), () => { oapi('DELETE', '/logistics/deliveries/' + d.id).then(load).catch(fail); })}>{t('Supprimer')}</button> : null}

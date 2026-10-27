@@ -91,12 +91,14 @@ export function Rounds({ deliveries, onChange }) {
   const { oapi, can, dateFr, today, modal, confirm, fail } = useWs();
   const st = useLoad(() => oapi('GET', '/logistics/rounds'), []);
   const reload = () => { st.reload(); onChange(); };
-  const create = () => oapi('GET', '/logistics/carriers').then((cj) => modal(t('Nouvelle tournée'), (close) => (
+  const create = () => Promise.all([oapi('GET', '/logistics/carriers'), oapi('GET', '/logistics/fleet')]).then(([cj, fj]) => modal(t('Nouvelle tournée'), (close) => (
     <Form
       submitText={t("Créer la tournée")}
       fields={[
         { k: 'name', label: t('Nom'), required: true, placeholder: t('Tournée du matin') }, { k: 'date', label: t('Jour'), type: 'date', required: true, value: today() },
         { k: 'carrierId', label: t('Livreur'), type: 'select', options: [['', t('Non choisi')]].concat(cj.carriers.filter((c) => c.active).map((c) => [String(c.id), c.name])) },
+        { k: 'vehicleId', label: t('Véhicule'), type: 'select', options: [['', t('Non choisi')]].concat(fj.vehicles.filter((x) => x.status === 'active').map((x) => [String(x.id), x.plate + (x.label ? ' · ' + x.label : '')])), hint: t('Un véhicule ou un chauffeur ne peut avoir qu’une tournée par jour.') },
+        { k: 'driverId', label: t('Chauffeur'), type: 'select', options: [['', t('Non choisi')]].concat(fj.drivers.filter((x) => x.active).map((x) => [String(x.id), x.name])) },
         { k: 'note', label: t('Note') },
       ]}
       onSubmit={(v) => oapi('POST', '/logistics/rounds', v).then(() => { close(); reload(); })}
@@ -120,7 +122,7 @@ export function Rounds({ deliveries, onChange }) {
           {j.rounds.map((r) => (
             <div className="ws-card" key={r.id}>
               <div className="line">
-                <span><b>{r.name}</b><small>{' ' + dateFr(r.date) + (r.carrier ? ' · ' + r.carrier : '')}</small></span>
+                <span><b>{r.name}</b><small>{' ' + dateFr(r.date) + (r.carrier ? ' · ' + r.carrier : '') + (r.vehicle ? ' · ' + r.vehicle : '') + (r.driver ? ' · ' + r.driver : '')}</small></span>
                 <span className="row">
                   <button className="link" type="button" onClick={() => add(r)}>{t('Ajouter une livraison')}</button>
                   {can('manager') ? <button className="link" type="button" onClick={() => confirm(t('Supprimer la tournée « {name} » ? Les livraisons restent.', { name: r.name }), () => { oapi('DELETE', '/logistics/rounds/' + r.id).then(reload).catch(fail); })}>{t('Supprimer')}</button> : null}

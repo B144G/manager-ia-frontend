@@ -10,6 +10,7 @@ const Reset = lazy(() => import('./pages/Reset.jsx'));
 const ContactForm = lazy(() => import('./pages/ContactForm.jsx'));
 const PublicChat = lazy(() => import('./pages/PublicChat.jsx'));
 const Workspace = lazy(() => import('./ws/Workspace.jsx'));
+const InvoicePrint = lazy(() => import('./pages/InvoicePrint.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
 const Privacy = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Privacy })));
 const Terms = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Terms })));
@@ -42,6 +43,7 @@ export default function App() {
         <Route element={<StyleLayout group="ws" body="ws" />}>
           <Route path="/app/*" element={<Workspace />} />
         </Route>
+        <Route path="/imprimer/:orgId/:docId" element={<InvoicePrint />} />
         <Route element={<StyleLayout group="chat" body="" />}>
           <Route path="/chat" element={<PublicChat />} />
         </Route>
