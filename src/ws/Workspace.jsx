@@ -28,7 +28,7 @@ function Gate() {
 }
 
 const Center = ({ children }) => (
-  <div className="ws-center"><Link className="logo" to="/">MANAGER<b>-IA</b></Link>{children}</div>
+  <div className="ws-center"><Link className="logo" to="/">Brij<b>-IA</b></Link>{children}</div>
 );
 
 /** Premier pas : créer son organisation ou rejoindre celle d'un collègue avec un code. */
@@ -120,7 +120,7 @@ function Shell() {
     <div className={'ws-shell' + (navOpen ? ' nav-open' : '')} ref={shell}>
       <div className="ws-scrim" onClick={() => setNavOpen(false)} aria-hidden="true" />
       <aside className="ws-side" id="ws-side" aria-label={t('Menu principal')}>
-        <div className="ws-side-h"><Link className="logo" to="/">MANAGER<b>-IA</b></Link><button type="button" className="ws-close" aria-label={t('Fermer le menu')} onClick={() => setNavOpen(false)}>×</button></div>
+        <div className="ws-side-h"><Link className="logo" to="/">Brij<b>-IA</b></Link><button type="button" className="ws-close" aria-label={t('Fermer le menu')} onClick={() => setNavOpen(false)}>×</button></div>
         <div className="ws-org">
           <span className="av">{initialsOf(info.org.name)}</span>
           <div>
