@@ -1,4 +1,4 @@
-/* Service worker de MANAGER-IA : garde les fichiers du site (styles, scripts, images) pour un démarrage rapide et affiche une page claire
+/* Service worker de Brij-IA : garde les fichiers du site (styles, scripts, images) pour un démarrage rapide et affiche une page claire
    quand il n'y a pas de connexion. Il ne garde JAMAIS de données de l'entreprise : aucune requête vers l'API n'est interceptée ni mise en cache.
    Règles de sécurité : il ne doit jamais empêcher le site de s'ouvrir.
    - pages : RÉSEAU D'ABORD (toujours la version la plus récente) ; la page « hors connexion » n'apparaît que si le réseau est réellement coupé ;

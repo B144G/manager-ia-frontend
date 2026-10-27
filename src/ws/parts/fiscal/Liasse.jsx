@@ -15,7 +15,7 @@ function issueText(t, i) {
   if (i.code === 'entry-unbalanced' && (m = /^(\d+) /.exec(x))) return t('{n} écriture(s) déséquilibrée(s) : corrigez-les par une écriture inverse puis une nouvelle écriture.', { n: m[1] });
   if (i.code === 'no-account' && (m = /: (\d+) compte/.exec(x))) return t("Des lignes d'écriture utilisent un compte absent du plan comptable (ou vide) : {n} compte(s).", { n: m[1] });
   if (i.code === 'bilan' && (m = /actif ([^ ]+(?: [^ ]+)*?) contre passif ([^)]*)\)/.exec(x))) return t("Le bilan n'est pas équilibré (actif {assets} contre passif {liabilities}).", { assets: num(m[1]), liabilities: num(m[2]) });
-  if (i.code === 'carry-result' && (m = /affiche ([^ ]+) de résultat/.exec(x))) return t("Le bilan cumule les écritures depuis l'ouverture et affiche {amount} de résultat des exercices précédents non affecté. MANAGER-IA ne passe pas l'écriture d'affectation du résultat (réserves, report à nouveau, dividendes) : elle se décide en assemblée et se saisit en écriture diverse dans la Comptabilité.", { amount: num(m[1]) });
+  if (i.code === 'carry-result' && (m = /affiche ([^ ]+) de résultat/.exec(x))) return t("Le bilan cumule les écritures depuis l'ouverture et affiche {amount} de résultat des exercices précédents non affecté. Brij-IA ne passe pas l'écriture d'affectation du résultat (réserves, report à nouveau, dividendes) : elle se décide en assemblée et se saisit en écriture diverse dans la Comptabilité.", { amount: num(m[1]) });
   return t(x);
 }
 
@@ -64,7 +64,7 @@ export default function Liasse({ year, setYear }) {
   if (st.loading && !st.data) return <Loading />;
   if (st.error) return <p className="ws-err" role="alert">{t(st.error.message)}</p>;
   const l = st.data;
-  const head = [[t('Document de travail préparé par MANAGER-IA, à faire valider par un expert-comptable avant tout dépôt officiel')], [info.org.name + ' · ' + t('exercice {year}', { year })], []];
+  const head = [[t('Document de travail préparé par Brij-IA, à faire valider par un expert-comptable avant tout dépôt officiel')], [info.org.name + ' · ' + t('exercice {year}', { year })], []];
   const csvBilan = () => downloadCsv('bilan-' + year + '.csv', head.concat([[t('Poste'), t('Montant')], [t('ACTIF'), '']], l.bilan.actif.map((x) => [t(x.label), x.amount]), [[t('Total actif'), l.bilan.totalActif], [t('PASSIF'), '']], l.bilan.passif.map((x) => [t(x.label), x.amount]), [[t('Total passif'), l.bilan.totalPassif]]));
   const csvRes = () => downloadCsv('compte-de-resultat-' + year + '.csv', head.concat([[t('Compte'), t('Libellé'), t('Montant')], ['', t('PRODUITS'), '']], l.resultat.produits.map((x) => [x.account, t(x.label), x.amount]), [['', t('Total des produits'), l.resultat.totalProduits], ['', t('CHARGES'), '']], l.resultat.charges.map((x) => [x.account, t(x.label), x.amount]), [['', t('Total des charges'), l.resultat.totalCharges], ['', t("Résultat de l'exercice"), l.resultat.resultat]]));
   const csvSig = () => downloadCsv('soldes-intermediaires-' + year + '.csv', head.concat([[t('Solde'), t('Montant')]], l.sig.lines.map((x) => [t(x.label), x.amount])));

@@ -16,7 +16,7 @@ export default function InstallPrompt() {
   return (
     <div id="pwa-install" role="region" aria-label={t("Installer l'application")}
       style={{ position: 'fixed', left: 12, right: 12, bottom: 12, zIndex: 60, background: '#0b1322', color: '#fff', borderRadius: 14, padding: '12px 14px', display: 'flex', gap: 10, alignItems: 'center', boxShadow: '0 8px 30px rgba(0,0,0,.35)', maxWidth: 460, margin: '0 auto' }}>
-      <span style={{ flex: 1 }}>{t("Installez MANAGER-IA sur votre écran d'accueil pour y accéder en un clic.")}</span>
+      <span style={{ flex: 1 }}>{t("Installez Brij-IA sur votre écran d'accueil pour y accéder en un clic.")}</span>
       <button type="button" className="btn primary small" onClick={() => { evt.prompt(); setEvt(null); }}>{t('Installer')}</button>
       <button type="button" className="btn small" onClick={no}>{t('Plus tard')}</button>
     </div>

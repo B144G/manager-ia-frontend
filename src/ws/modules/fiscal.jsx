@@ -35,7 +35,7 @@ export default function Fiscal() {
           <div className="stat"><b>{k.soon}</b><span>{t('échéance(s) sous 7 jours')}</span></div>
         </div>
       ) : null}
-      <p className="ws-card small" role="note"><b>{t('Document de travail préparé par MANAGER-IA, à faire valider par un expert-comptable avant tout dépôt officiel.')}</b></p>
+      <p className="ws-card small" role="note"><b>{t('Document de travail préparé par Brij-IA, à faire valider par un expert-comptable avant tout dépôt officiel.')}</b></p>
       <div className="ws-tabs" style={{ flexWrap: 'wrap', overflowX: 'visible' }}>
         {TABS.map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} style={BTN} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
       </div>

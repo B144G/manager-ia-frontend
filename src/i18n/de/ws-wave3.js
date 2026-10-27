@@ -21,7 +21,7 @@ export default {
   "Reçu de paiement {number}": "Zahlungsbeleg {number}",
   "Offre": "Angebot",
   "{plan} ({days} jours)": "{plan} ({days} Tage)",
-  "Reçu de paiement d'abonnement MANAGER-IA. Document de travail : il ne tient pas lieu de facture fiscale.": "Zahlungsbeleg für das MANAGER-IA-Abonnement. Arbeitsdokument: Es ersetzt keine Steuerrechnung.",
+  "Reçu de paiement d'abonnement Brij-IA. Document de travail : il ne tient pas lieu de facture fiscale.": "Zahlungsbeleg für das Brij-IA-Abonnement. Arbeitsdokument: Es ersetzt keine Steuerrechnung.",
   "Reçu à imprimer": "Beleg zum Drucken",
   "Retirer le code promo {code}": "Aktionscode {code} entfernen",
   "Code promo": "Aktionscode",

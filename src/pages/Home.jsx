@@ -63,8 +63,8 @@ export default function Home() {
       <Footer />
       <SiteAssistant />
       {video ? (
-        <Lightbox label={t("Vidéo de présentation de MANAGER-IA")} onClose={() => setVideo(false)}>
-          <video controls autoPlay playsInline poster="/video/poster.jpg" aria-label={t("Vidéo de présentation de MANAGER-IA")}><source src="/video/manager-ia.mp4" type="video/mp4" /></video>
+        <Lightbox label={t("Vidéo de présentation de Brij-IA")} onClose={() => setVideo(false)}>
+          <video controls autoPlay playsInline poster="/video/poster.jpg" aria-label={t("Vidéo de présentation de Brij-IA")}><source src="/video/manager-ia.mp4" type="video/mp4" /></video>
         </Lightbox>
       ) : null}
       {zoom ? <Lightbox label={zoom.alt} onClose={() => setZoom(null)}><div className="s-zoom"><img src={zoom.src} alt={zoom.alt} /></div></Lightbox> : null}

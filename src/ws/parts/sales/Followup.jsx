@@ -26,7 +26,7 @@ export function Followup({ admin }) {
         {w.templates.map((tp) => (
           <div className="line" key={tp.id}>
             <span><b>{tp.name}</b><small>{' ' + (w.purposes[tp.purpose] ? t(w.purposes[tp.purpose].label) : tp.purpose) + ' · ' + tp.language + ' · ' + t('{n} variable(s)', { n: tp.params }) + (tp.preview ? ' · ' + tp.preview : '')}</small></span>
-            {admin ? <button className="link" type="button" onClick={() => confirm(t('Supprimer le modèle « {name} » de MANAGER-IA ? (Il reste dans Meta.)', { name: tp.name }), () => oapi('DELETE', '/sales/wa/templates/' + tp.id).then(reload).catch(fail))}>{t('Supprimer')}</button> : null}
+            {admin ? <button className="link" type="button" onClick={() => confirm(t('Supprimer le modèle « {name} » de Brij-IA ? (Il reste dans Meta.)', { name: tp.name }), () => oapi('DELETE', '/sales/wa/templates/' + tp.id).then(reload).catch(fail))}>{t('Supprimer')}</button> : null}
           </div>
         ))}
         {admin ? <div className="row" style={{ marginTop: 8 }}><button className="btn small" type="button" onClick={() => ws.modal(t('Ajouter un modèle WhatsApp'), (close) => <AddTemplate w={w} close={close} done={reload} />)}>{t('Ajouter un modèle')}</button></div> : null}
@@ -49,7 +49,7 @@ export function Followup({ admin }) {
       {admin ? (
         <div className="ws-card">
           <h2>{t('Relances automatiques')}</h2>
-          <p>{w.autoFollowup ? t('Activées : chaque heure, MANAGER-IA relance les prospects silencieux et rappelle les factures échues (20 messages au plus par passage).') : t('Désactivées : vous envoyez les relances vous-même avec les boutons ci-dessus.')}</p>
+          <p>{w.autoFollowup ? t('Activées : chaque heure, Brij-IA relance les prospects silencieux et rappelle les factures échues (20 messages au plus par passage).') : t('Désactivées : vous envoyez les relances vous-même avec les boutons ci-dessus.')}</p>
           <button className="btn small" type="button" onClick={() => oapi('PUT', '/sales/wa/auto', { enabled: !w.autoFollowup }).then(reload).catch(fail)}>{w.autoFollowup ? t('Désactiver') : t('Activer')}</button>
           <p className="muted small">{t('Envoyés sur 24 h : {sent} sur {cap} autorisés. Personnes désabonnées (STOP) : {optouts}. Les messages par modèle sont facturés par Meta selon son tarif.', { sent: w.sentToday, cap: w.dayCap, optouts: w.optouts })}</p>
         </div>

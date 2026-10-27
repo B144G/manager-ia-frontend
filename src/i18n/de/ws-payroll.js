@@ -123,7 +123,7 @@ export default {
   "Bulletin validé, paiement à venir.": "Lohnabrechnung freigegeben, Zahlung steht aus.",
   "Brouillon : non validé.": "Entwurf: nicht freigegeben.",
   "Bulletin rouvert {n} fois. Dernier motif : {reason}": "Lohnabrechnung {n}-mal wieder geöffnet. Letzter Grund: {reason}",
-  "Document de travail préparé avec MANAGER-IA. Les taux de retenues et de charges sont ceux paramétrés par votre entreprise : à vérifier auprès de votre administration ou d'un expert avant toute utilisation officielle.": "Arbeitsdokument, erstellt mit MANAGER-IA. Die Abzugs- und Beitragssätze sind die von Ihrem Unternehmen eingestellten: Vor jeder offiziellen Verwendung bei Ihrer Behörde oder einem Experten prüfen lassen.",
+  "Document de travail préparé avec Brij-IA. Les taux de retenues et de charges sont ceux paramétrés par votre entreprise : à vérifier auprès de votre administration ou d'un expert avant toute utilisation officielle.": "Arbeitsdokument, erstellt mit Brij-IA. Die Abzugs- und Beitragssätze sind die von Ihrem Unternehmen eingestellten: Vor jeder offiziellen Verwendung bei Ihrer Behörde oder einem Experten prüfen lassen.",
   "Majoration": "Zuschlag",
   "Salaire de base ({cur})": "Grundgehalt ({cur})",
   "Primes ({cur})": "Prämien ({cur})",

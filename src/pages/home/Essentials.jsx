@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Showcase from './Showcase.jsx';
 import { useT } from '../../lib/i18n.jsx';
 
-/** Une seule section : ce que fait MANAGER-IA, ce qu'il contient, et pourquoi on peut lui faire confiance. */
+/** Une seule section : ce que fait Brij-IA, ce qu'il contient, et pourquoi on peut lui faire confiance. */
 export default function Essentials() {
   const t = useT();
   return (

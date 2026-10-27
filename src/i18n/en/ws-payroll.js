@@ -123,7 +123,7 @@ export default {
   "Bulletin validé, paiement à venir.": "Payslip validated, payment pending.",
   "Brouillon : non validé.": "Draft: not validated.",
   "Bulletin rouvert {n} fois. Dernier motif : {reason}": "Payslip reopened {n} time(s). Last reason: {reason}",
-  "Document de travail préparé avec MANAGER-IA. Les taux de retenues et de charges sont ceux paramétrés par votre entreprise : à vérifier auprès de votre administration ou d'un expert avant toute utilisation officielle.": "Working document prepared with MANAGER-IA. The deduction and contribution rates are those configured by your company: to be verified with your administration or an expert before any official use.",
+  "Document de travail préparé avec Brij-IA. Les taux de retenues et de charges sont ceux paramétrés par votre entreprise : à vérifier auprès de votre administration ou d'un expert avant toute utilisation officielle.": "Working document prepared with Brij-IA. The deduction and contribution rates are those configured by your company: to be verified with your administration or an expert before any official use.",
   "Majoration": "Premium",
   "Salaire de base ({cur})": "Base salary ({cur})",
   "Primes ({cur})": "Bonuses ({cur})",

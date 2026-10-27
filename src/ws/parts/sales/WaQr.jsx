@@ -62,7 +62,7 @@ export function WaQrCard({ onChange }) {
             <>
               <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', minHeight: 44, padding: '6px 0' }}>
                 <input type="checkbox" checked={ok} onChange={(e) => setOk(e.target.checked)} style={{ width: 22, height: 22, flex: '0 0 auto' }} />
-                <span>{t('Je confirme vouloir connecter ce numéro WhatsApp à MANAGER-IA')}</span>
+                <span>{t('Je confirme vouloir connecter ce numéro WhatsApp à Brij-IA')}</span>
               </label>
               <div className="row"><button className="btn primary small" type="button" style={BTN} disabled={!ok || busy} onClick={start}>{busy ? t('Un instant…') : t('Afficher le QR code')}</button></div>
             </>

@@ -63,13 +63,13 @@ export default function Showcase() {
       </div>
       <div className="s-railwrap">
         <button type="button" className="s-arr prev" aria-label={t("Blocs précédents")} disabled={pos.atStart} onClick={() => go(-1)}><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg></button>
-        <div className="s-rail2" ref={rail} tabIndex={0} role="region" aria-label={t("Sous-applications de MANAGER-IA")} onScroll={update} onKeyDown={onKey}
+        <div className="s-rail2" ref={rail} tabIndex={0} role="region" aria-label={t("Sous-applications de Brij-IA")} onScroll={update} onKeyDown={onKey}
           onPointerDown={(e) => { if (e.pointerType !== 'mouse') return; drag.current = { down: true, moved: false, sx: e.clientX, sl: rail.current.scrollLeft }; }}
           onClickCapture={(e) => { if (drag.current.moved) { e.preventDefault(); e.stopPropagation(); drag.current.moved = false; } }}>
           {list.map((m) => (
             <article className="s-mod" key={m.id}>
               <div className="pic" data-zoom="" tabIndex={0} role="button" aria-label={t('Agrandir : {title}', { title: t(m.title) })}>
-                <img src={`/assets/mods/${m.id}.jpg`} alt={t('Écran « {title} » de MANAGER-IA (données d\'exemple)', { title: t(m.title) })} width="800" height="520" loading="lazy" draggable="false" onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }} />
+                <img src={`/assets/mods/${m.id}.jpg`} alt={t('Écran « {title} » de Brij-IA (données d\'exemple)', { title: t(m.title) })} width="800" height="520" loading="lazy" draggable="false" onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }} />
                 <span className="tg">{t(m.group)}</span>
               </div>
               <div className="tx">

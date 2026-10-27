@@ -1,4 +1,4 @@
-# Composants communs des aperçus (maquettes d'application MANAGER-IA). Génère du SVG propre, sans image externe ni police à charger.
+# Composants communs des aperçus (maquettes d'application Brij-IA). Génère du SVG propre, sans image externe ni police à charger.
 import html
 
 W, H = 960, 630
@@ -146,7 +146,7 @@ def frame(title, active, body, extra_defs='', crumb='Boutique Awa', badge=None):
         side.append(icon(k, 24, yy - 3, 16, '#ffffff' if on else C['muted']))
         side.append(t(48, yy + 10, lb, 12, '#ffffff' if on else C['muted'], 700 if on else 500))
     top = (
-        rect(206, 18, 360, 34, 17, '#ffffff0d', C['line']) + icon('ai', 220, 27, 16, C['blue']) + t(244, 40, "Demandez à MANAGER-IA : « Quels sont les problèmes urgents ? »", 11, C['dim']) +
+        rect(206, 18, 360, 34, 17, '#ffffff0d', C['line']) + icon('ai', 220, 27, 16, C['blue']) + t(244, 40, "Demandez à Brij-IA : « Quels sont les problèmes urgents ? »", 11, C['dim']) +
         icon('bell', 884, 27, 17, C['muted']) + '<circle cx="898" cy="29" r="4" fill="#ff6b6b"/>' + avatar(928, 36, 'AT', C['amber'], 15)
     )
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" font-family="{FONT}" role="img">

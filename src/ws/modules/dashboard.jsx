@@ -77,7 +77,7 @@ export default function Dashboard() {
 
   const alertsCard = (
     <section className="dc">
-      <div className="ch"><h2>{t('Alertes de MANAGER-IA')}</h2><button className="link" type="button" onClick={() => go('alerts')}>{t('Voir tout')}</button></div>
+      <div className="ch"><h2>{t('Alertes de Brij-IA')}</h2><button className="link" type="button" onClick={() => go('alerts')}>{t('Voir tout')}</button></div>
       {!al.length ? <Empty text={t('Aucune alerte : tout va bien.')} /> : null}
       {al.slice(0, 4).map((a, i) => (
         <button type="button" className={'al ' + a.level} key={i + ':' + a.title} onClick={() => go(a.module)}>
@@ -95,7 +95,7 @@ export default function Dashboard() {
       <div>
         <div className="g2">
           <section className="brief">
-            <div className="brief-h"><Icon name="ai" /><b>{t('Point de situation de MANAGER-IA')}</b><small>{t("Aujourd'hui, {time}", { time: now.toLocaleTimeString(getLocale(), { hour: '2-digit', minute: '2-digit' }) })}</small></div>
+            <div className="brief-h"><Icon name="ai" /><b>{t('Point de situation de Brij-IA')}</b><small>{t("Aujourd'hui, {time}", { time: now.toLocaleTimeString(getLocale(), { hour: '2-digit', minute: '2-digit' }) })}</small></div>
             <ul className="prio">
               {!important.length ? <li className="ok">{t('Aucune alerte importante : tout est sous contrôle.')}</li> : null}
               {important.slice(0, 3).map((a, i) => <li className={a.level} key={i + ':' + a.title}>{tsrv(a.title) + ' : ' + tsrv(a.text)}</li>)}

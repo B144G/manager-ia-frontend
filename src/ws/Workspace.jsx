@@ -170,7 +170,7 @@ function AskBar({ onAsk }) {
   return (
     <form className="ws-ask" onSubmit={(ev) => { ev.preventDefault(); const q = ref.current.value.trim(); if (q) { ref.current.value = ''; onAsk(q); } }}>
       <Icon name="ai" />
-      <input ref={ref} type="text" placeholder={window.innerWidth < 640 ? t('Demandez à MANAGER-IA…') : t("Demandez à MANAGER-IA : « Quels sont les problèmes urgents aujourd'hui ? »")} aria-label={t('Demandez à MANAGER-IA')} autoComplete="off" />
+      <input ref={ref} type="text" placeholder={window.innerWidth < 640 ? t('Demandez à Brij-IA…') : t("Demandez à Brij-IA : « Quels sont les problèmes urgents aujourd'hui ? »")} aria-label={t('Demandez à Brij-IA')} autoComplete="off" />
     </form>
   );
 }

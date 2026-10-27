@@ -123,7 +123,7 @@ export default {
   "Bulletin validé, paiement à venir.": "Nómina validada, pago pendiente.",
   "Brouillon : non validé.": "Borrador: no validada.",
   "Bulletin rouvert {n} fois. Dernier motif : {reason}": "Nómina reabierta {n} vez/veces. Último motivo: {reason}",
-  "Document de travail préparé avec MANAGER-IA. Les taux de retenues et de charges sont ceux paramétrés par votre entreprise : à vérifier auprès de votre administration ou d'un expert avant toute utilisation officielle.": "Documento de trabajo preparado con MANAGER-IA. Las tasas de retenciones y cotizaciones son las configuradas por su empresa: a verificar con su administración o con un experto antes de cualquier uso oficial.",
+  "Document de travail préparé avec Brij-IA. Les taux de retenues et de charges sont ceux paramétrés par votre entreprise : à vérifier auprès de votre administration ou d'un expert avant toute utilisation officielle.": "Documento de trabajo preparado con Brij-IA. Las tasas de retenciones y cotizaciones son las configuradas por su empresa: a verificar con su administración o con un experto antes de cualquier uso oficial.",
   "Majoration": "Recargo",
   "Salaire de base ({cur})": "Salario base ({cur})",
   "Primes ({cur})": "Primas ({cur})",

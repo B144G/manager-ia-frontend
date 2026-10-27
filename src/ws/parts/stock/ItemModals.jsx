@@ -92,7 +92,7 @@ export function ItemForm({ item, close, done }) {
     f.push({ k: 'expiry', label: t('Péremption du lot de départ'), type: 'date' });
     f.push({ k: 'serials', label: t('Numéros de série de départ (un par ligne)'), type: 'textarea', rows: 2 });
   }
-  f.push({ k: 'minQuantity', label: t("Seuil d'alerte"), value: it.minQuantity || '0', hint: t("Sous cette quantité, MANAGER-IA vous alerte et propose de commander. 0 = pas d'alerte.") });
+  f.push({ k: 'minQuantity', label: t("Seuil d'alerte"), value: it.minQuantity || '0', hint: t("Sous cette quantité, Brij-IA vous alerte et propose de commander. 0 = pas d'alerte.") });
   f.push({ k: 'maxQuantity', label: t('Stock maximum'), value: it.maxQuantity || '0', hint: t('Au-dessus, une alerte de surstock apparaît. 0 = pas de maximum.') });
   f.push({ k: 'unitCost', label: t("Coût d'achat habituel ({currency})", { currency: info.org.currency }), value: it.unitCost || '' });
   if (branches.length && !it.id) f.push({ k: 'branchId', label: t('Antenne'), type: 'select', options: [['', t("Toute l'organisation")]].concat(branches.map((x) => [String(x.id), x.name])) });

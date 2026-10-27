@@ -1,6 +1,6 @@
 {
-  "name": "MANAGER-IA",
-  "short_name": "MANAGER-IA",
+  "name": "Brij-IA",
+  "short_name": "Brij-IA",
   "description": "L'agent IA qui gère votre activité avec vous : stock, clients, ventes, équipe, comptabilité.",
   "lang": "fr",
   "start_url": "/app",

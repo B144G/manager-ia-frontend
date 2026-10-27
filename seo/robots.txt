@@ -5,4 +5,4 @@ Disallow: /chat
 Disallow: /form
 Disallow: /reinitialiser
 
-Sitemap: https://manager-ia-frontend.vercel.app/sitemap.xml
+Sitemap: %SITE_URL%/sitemap.xml

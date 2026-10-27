@@ -6,7 +6,7 @@ import { useWs } from '../WsContext.jsx';
 import { Empty, Form, Loading, useLoad } from '../ui.jsx';
 import { CsvTools, Deliveries } from '../parts/w3/DataExtras.jsx';
 
-/* Sous-application : Intégrations (clés d'API et webhooks) pour relier MANAGER-IA à Zapier, Make, n8n ou votre site. Administrateurs. */
+/* Sous-application : Intégrations (clés d'API et webhooks) pour relier Brij-IA à Zapier, Make, n8n ou votre site. Administrateurs. */
 
 const base = API_BASE || window.location.origin;
 
@@ -75,7 +75,7 @@ export default function Integrations() {
 
   return (
     <>
-      <div className="ws-head"><div><h1>{t('Intégrations')}</h1><p className="muted">{t('Reliez MANAGER-IA à vos autres outils : Zapier, Make, n8n, votre site web…')}</p></div></div>
+      <div className="ws-head"><div><h1>{t('Intégrations')}</h1><p className="muted">{t('Reliez Brij-IA à vos autres outils : Zapier, Make, n8n, votre site web…')}</p></div></div>
       <div>
         {st.loading ? <Loading /> : null}
         {!st.loading && st.error ? <p className="ws-err" role="alert">{tsrv(st.error.message)}</p> : null}
@@ -95,8 +95,8 @@ export default function Integrations() {
             </div>
 
             <div className="ws-card">
-              <h2>{t('Webhooks (MANAGER-IA vous prévient)')}</h2>
-              <p className="muted small">{t("Quand un événement arrive, MANAGER-IA envoie un message à l'adresse que vous indiquez. Avec Zapier ou Make, choisissez le déclencheur « Webhook » (Catch Hook) et collez son adresse ici.")}</p>
+              <h2>{t('Webhooks (Brij-IA vous prévient)')}</h2>
+              <p className="muted small">{t("Quand un événement arrive, Brij-IA envoie un message à l'adresse que vous indiquez. Avec Zapier ou Make, choisissez le déclencheur « Webhook » (Catch Hook) et collez son adresse ici.")}</p>
               {!d.webhooks.length ? <Empty text={t('Aucun webhook.')} /> : null}
               {d.webhooks.map((w) => (
                 <div className="line" style={{ display: 'block' }} key={w.id}>

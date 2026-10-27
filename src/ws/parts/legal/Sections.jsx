@@ -14,7 +14,7 @@ const OB_KINDS = [['license', 'Licence'], ['authorization', 'Autorisation'], ['i
 const D_KINDS = [['dispute', 'Litige'], ['incident', 'Incident'], ['claim', 'Réclamation'], ['inspection', 'Contrôle / sanction']];
 const D_STATUS = [['open', 'Ouvert'], ['in_progress', 'En cours'], ['closed', 'Clos']];
 
-/** Exemples d'obligations ou de lignes du registre : fournis par MANAGER-IA ou créés par l'organisation (onglet Modèles). */
+/** Exemples d'obligations ou de lignes du registre : fournis par Brij-IA ou créés par l'organisation (onglet Modèles). */
 function usePresets(kind) {
   const { oapi } = useWs();
   const st = useLoad(() => oapi('GET', '/legal/templates'), []);
@@ -166,7 +166,7 @@ export function Privacy({ onChange }) {
       fields={(p) => [
         { k: 'dataKind', label: t('Donnée collectée'), required: true, value: p && p.dataKind, placeholder: t('Nom et téléphone des clients') },
         { k: 'people', label: t('Personnes concernées'), value: p && p.people, placeholder: t('Clients, employés…') },
-        { k: 'storedWhere', label: t('Où elle est conservée'), value: p && p.storedWhere, placeholder: t('MANAGER-IA, carnet papier, téléphone…') },
+        { k: 'storedWhere', label: t('Où elle est conservée'), value: p && p.storedWhere, placeholder: t('Brij-IA, carnet papier, téléphone…') },
         { k: 'purpose', label: t('Pourquoi'), value: p && p.purpose, placeholder: t('Livrer, facturer…') },
         { k: 'retention', label: t('Durée de conservation'), value: p && p.retention, placeholder: t('3 ans après le dernier achat') },
         { k: 'sharedWith', label: t('Partagée avec'), value: p && p.sharedWith, placeholder: t('Livreur, comptable…') },

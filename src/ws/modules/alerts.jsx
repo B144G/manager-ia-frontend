@@ -1,4 +1,4 @@
-/* Sous-application : Alertes (toutes les alertes calculées par MANAGER-IA, avec l'action associée). */
+/* Sous-application : Alertes (toutes les alertes calculées par Brij-IA, avec l'action associée). */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT } from '../../lib/i18n.jsx';
@@ -27,14 +27,14 @@ export default function Alerts() {
   return (
     <>
       <div className="ws-head">
-        <div><h1>{t('Alertes')}</h1><p className="muted">{t('Ce que MANAGER-IA a repéré dans votre organisation, de la plus urgente à la moins urgente.')}</p></div>
+        <div><h1>{t('Alertes')}</h1><p className="muted">{t('Ce que Brij-IA a repéré dans votre organisation, de la plus urgente à la moins urgente.')}</p></div>
         <button className="btn signal small" type="button" disabled={busy} onClick={briefing}>{t("Analyse détaillée par l'IA")}</button>
       </div>
       <p className="ai-out dc" style={{ padding: '14px 18px', marginBottom: 14 }}>{out}</p>
       <div>
         <Loaded state={st}>{(j) => (
           !j.alerts.length
-            ? <div className="dc"><Empty text={t('Aucune alerte : tout va bien. MANAGER-IA continue de surveiller.')} /></div>
+            ? <div className="dc"><Empty text={t('Aucune alerte : tout va bien. Brij-IA continue de surveiller.')} /></div>
             : j.alerts.map((a, i) => (
               <div className={'alrow ' + a.level} key={i + ':' + a.title}>
                 <div className="alt">

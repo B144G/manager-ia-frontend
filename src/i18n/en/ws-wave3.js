@@ -21,7 +21,7 @@ export default {
   "Reçu de paiement {number}": "Payment receipt {number}",
   "Offre": "Offer",
   "{plan} ({days} jours)": "{plan} ({days} days)",
-  "Reçu de paiement d'abonnement MANAGER-IA. Document de travail : il ne tient pas lieu de facture fiscale.": "MANAGER-IA subscription payment receipt. Working document: it is not a tax invoice.",
+  "Reçu de paiement d'abonnement Brij-IA. Document de travail : il ne tient pas lieu de facture fiscale.": "Brij-IA subscription payment receipt. Working document: it is not a tax invoice.",
   "Reçu à imprimer": "Receipt to print",
   "Retirer le code promo {code}": "Remove promo code {code}",
   "Code promo": "Promo code",

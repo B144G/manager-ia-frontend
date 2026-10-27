@@ -75,7 +75,7 @@ export default function InvoicePrint() {
       ) : null}
       {p.org.payInfo ? <p className="small"><b>{t('Règlement')}</b><br />{p.org.payInfo.split('\n').map((l, i) => <span key={i}>{l}<br /></span>)}</p> : null}
       {p.org.footer ? <p className="small">{p.org.footer.split('\n').map((l, i) => <span key={i}>{l}<br /></span>)}</p> : null}
-      <div className="wd">{t("Document de travail généré par MANAGER-IA : à faire valider par votre expert-comptable avant tout usage légal ou fiscal.")}</div>
+      <div className="wd">{t("Document de travail généré par Brij-IA : à faire valider par votre expert-comptable avant tout usage légal ou fiscal.")}</div>
     </div>
   );
 }

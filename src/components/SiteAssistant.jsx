@@ -19,7 +19,7 @@ function fallback(q) {
 export default function SiteAssistant() {
   const t = useT();
   const [open, setOpen] = useState(false);
-  const [msgs, setMsgs] = useState([{ role: 'assistant', init: true, content: "Bonjour ! Je suis l'assistant de MANAGER-IA. Je peux vous expliquer le site, vous aider à créer votre compte et à prendre en main votre tableau de bord. Que voulez-vous savoir ?" }]);
+  const [msgs, setMsgs] = useState([{ role: 'assistant', init: true, content: "Bonjour ! Je suis l'assistant de Brij-IA. Je peux vous expliquer le site, vous aider à créer votre compte et à prendre en main votre tableau de bord. Que voulez-vous savoir ?" }]);
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const log = useRef(null);
@@ -40,9 +40,9 @@ export default function SiteAssistant() {
   return (
     <>
       <button id="sa-btn" type="button" aria-expanded={open} onClick={() => setOpen(!open)}>{t('Assistant IA')}</button>
-      <div id="sa" role="dialog" aria-label={t("Assistant MANAGER-IA")} hidden={!open}>
+      <div id="sa" role="dialog" aria-label={t("Assistant Brij-IA")} hidden={!open}>
         <header>
-          <div><b>{t('Assistant MANAGER-IA')}</b><small>{t('Je vous guide sur le site')}</small></div>
+          <div><b>{t('Assistant Brij-IA')}</b><small>{t('Je vous guide sur le site')}</small></div>
           <button className="x" type="button" aria-label={t("Fermer l'assistant")} onClick={() => setOpen(false)}>×</button>
         </header>
         <div id="sa-log" aria-live="polite" ref={log}>{msgs.map((m, i) => <div key={i} className={'m ' + (m.role === 'user' ? 'u' : 'a')}>{m.init ? t(m.content) : m.content}</div>)}</div>

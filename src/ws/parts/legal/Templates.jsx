@@ -4,7 +4,7 @@ import { useT } from '../../../lib/i18n.jsx';
 import { Empty, Form, Loaded, useLoad } from '../../ui.jsx';
 import { Act, Btn } from './Act.jsx';
 
-/* Juridique : bibliothèque de modèles. Les modèles fournis par MANAGER-IA ne se modifient pas (on les duplique) ; ceux de l'organisation se gèrent librement.
+/* Juridique : bibliothèque de modèles. Les modèles fournis par Brij-IA ne se modifient pas (on les duplique) ; ceux de l'organisation se gèrent librement.
    Informatifs : à faire relire par un professionnel du droit. Texte brut uniquement (jamais de HTML). */
 
 const MENTION = 'Modèle informatif à faire relire par un professionnel du droit.';
@@ -99,7 +99,7 @@ export default function Templates() {
     <div className="ws-card">
       <div className="ws-head"><h2>{t('Modèles')}</h2><Btn className="btn primary small" onClick={() => edit(null)}>{t('Nouveau modèle')}</Btn></div>
       <p className="ws-err">{t('Modèle informatif à faire relire par un professionnel du droit.')}</p>
-      <p className="muted small">{t("Les modèles « fournis par MANAGER-IA » ne se modifient pas : dupliquez-les pour en faire votre version. Les lois changent d'un pays à l'autre : adaptez chaque texte à votre situation. Les modèles d'obligations et du registre se retrouvent comme exemples dans les onglets Obligations et Données personnelles.")}</p>
+      <p className="muted small">{t("Les modèles « fournis par Brij-IA » ne se modifient pas : dupliquez-les pour en faire votre version. Les lois changent d'un pays à l'autre : adaptez chaque texte à votre situation. Les modèles d'obligations et du registre se retrouvent comme exemples dans les onglets Obligations et Données personnelles.")}</p>
       <div className="row" style={{ flexWrap: 'wrap', marginBottom: 12 }}>
         {KINDS.map((k) => <Btn key={k[0]} className={'btn small' + (kind === k[0] ? ' primary' : '')} onClick={() => setKind(k[0])}>{t(k[1])}</Btn>)}
       </div>
@@ -111,7 +111,7 @@ export default function Templates() {
             {list.map((x) => (
               <div className="line" key={x.id} style={{ flexWrap: 'wrap' }}>
                 <span style={{ flex: '1 1 220px' }}>
-                  <b>{x.title}</b> {x.builtin ? <span className="pill">{t('Fourni par MANAGER-IA')}</span> : <span className="pill good">{t('Le vôtre')}</span>}
+                  <b>{x.title}</b> {x.builtin ? <span className="pill">{t('Fourni par Brij-IA')}</span> : <span className="pill good">{t('Le vôtre')}</span>}
                   {x.kind === 'document' ? <><br /><small>{t('{n} champ(s) à compléter', { n: x.fields.length })}</small></> : null}
                 </span>
                 <span className="row" style={{ flexWrap: 'wrap' }}>

@@ -37,7 +37,7 @@ export default function Receipt() {
         <tr><td>{t('Date de paiement')}</td><td>{new Date(r.paidAt).toLocaleDateString(getLocale())}</td></tr>
         <tr><td>{t('Montant')}</td><td><b>{r.amountXAF.toLocaleString(getLocale()).replace(/[  ]/g, ' ') + ' FCFA'}</b></td></tr>
       </tbody></table>
-      <p className="small">{t("Reçu de paiement d'abonnement MANAGER-IA. Document de travail : il ne tient pas lieu de facture fiscale.")}</p>
+      <p className="small">{t("Reçu de paiement d'abonnement Brij-IA. Document de travail : il ne tient pas lieu de facture fiscale.")}</p>
     </div>
   );
 }

@@ -53,7 +53,7 @@ function Body({ j, reload, oapi, toast, fail, dateFr }) {
 
   return (
     <>
-      <p className="muted small">{t("Recevez chaque matin un court point (impayés, stock, tâches en retard, échéances, conversations en attente) et, si vous le souhaitez, une alerte quand quelque chose d'urgent arrive. Le message est préparé par MANAGER-IA, sans IA.")}</p>
+      <p className="muted small">{t("Recevez chaque matin un court point (impayés, stock, tâches en retard, échéances, conversations en attente) et, si vous le souhaitez, une alerte quand quelque chose d'urgent arrive. Le message est préparé par Brij-IA, sans IA.")}</p>
       {!j.connected ? <p className="ws-err">{t("WhatsApp n'est pas encore connecté pour cette organisation (module « Assistant commercial »). Sans connexion, les messages partiront par e-mail si votre adresse est connue.")}</p> : null}
 
       <form className="ws-form" onSubmit={save}>
@@ -83,7 +83,7 @@ function Body({ j, reload, oapi, toast, fail, dateFr }) {
       ) : <p className="muted small">{t('Aucun envoi pour le moment.')}</p>}
       <details>
         <summary>{t('Pourquoi un message peut ne pas arriver sur WhatsApp ?')}</summary>
-        <p className="small">{t("WhatsApp n'autorise un message libre que si vous avez écrit au numéro WhatsApp de l'entreprise dans les dernières 24 heures. Sinon, Meta refuse le message : il faut alors un modèle de message approuvé par Meta (renseignez son nom ci-dessus). En attendant, MANAGER-IA vous envoie le même message par e-mail si une adresse est enregistrée sur votre compte. Astuce : écrivez « Bonjour » au numéro de l'entreprise chaque matin pour garder la fenêtre ouverte.")}</p>
+        <p className="small">{t("WhatsApp n'autorise un message libre que si vous avez écrit au numéro WhatsApp de l'entreprise dans les dernières 24 heures. Sinon, Meta refuse le message : il faut alors un modèle de message approuvé par Meta (renseignez son nom ci-dessus). En attendant, Brij-IA vous envoie le même message par e-mail si une adresse est enregistrée sur votre compte. Astuce : écrivez « Bonjour » au numéro de l'entreprise chaque matin pour garder la fenêtre ouverte.")}</p>
       </details>
 
       <h3 style={{ marginTop: 18 }}>{t('Journal des envois')}</h3>

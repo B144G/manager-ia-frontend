@@ -56,7 +56,7 @@ export default {
   'pièce, kg, litre, carton…': 'pieza, kg, litro, caja…',
   'Quantité en stock': 'Cantidad en stock',
   'Seuil d\'alerte': 'Umbral de alerta',
-  'Sous cette quantité, MANAGER-IA vous alerte et propose de commander. 0 = pas d\'alerte.': 'Por debajo de esta cantidad, MANAGER-IA le avisa y propone hacer un pedido. 0 = sin alerta.',
+  'Sous cette quantité, Brij-IA vous alerte et propose de commander. 0 = pas d\'alerte.': 'Por debajo de esta cantidad, Brij-IA le avisa y propone hacer un pedido. 0 = sin alerta.',
   'Coût d\'achat habituel ({currency})': 'Coste de compra habitual ({currency})',
   'Ajoutez d\'abord un fournisseur (bouton « Fournisseurs »).': 'Añada primero un proveedor (botón «Proveedores»).',
   '{name} : prix unitaire ({currency})': '{name}: precio unitario ({currency})',

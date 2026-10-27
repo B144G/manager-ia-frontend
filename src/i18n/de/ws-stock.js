@@ -56,7 +56,7 @@ export default {
   'pièce, kg, litre, carton…': 'Stück, kg, Liter, Karton …',
   'Quantité en stock': 'Lagermenge',
   'Seuil d\'alerte': 'Warnschwelle',
-  'Sous cette quantité, MANAGER-IA vous alerte et propose de commander. 0 = pas d\'alerte.': 'Unterhalb dieser Menge warnt MANAGER-IA Sie und schlägt eine Bestellung vor. 0 = keine Warnung.',
+  'Sous cette quantité, Brij-IA vous alerte et propose de commander. 0 = pas d\'alerte.': 'Unterhalb dieser Menge warnt Brij-IA Sie und schlägt eine Bestellung vor. 0 = keine Warnung.',
   'Coût d\'achat habituel ({currency})': 'Üblicher Einkaufspreis ({currency})',
   'Ajoutez d\'abord un fournisseur (bouton « Fournisseurs »).': 'Fügen Sie zuerst einen Lieferanten hinzu (Schaltfläche „Lieferanten“).',
   '{name} : prix unitaire ({currency})': '{name}: Einzelpreis ({currency})',

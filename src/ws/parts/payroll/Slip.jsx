@@ -42,7 +42,7 @@ function Bulletin({ s, orgName }) {
       <p>{s.status === 'paid' ? t('Payé le {date} ({method}).', { date: dateFr(s.paidDate), method: t(s.payMethodLabel || '') }) : s.status === 'validated' ? t('Bulletin validé, paiement à venir.') : t('Brouillon : non validé.')}</p>
       {s.reopenedCount ? <p className="muted">{t('Bulletin rouvert {n} fois. Dernier motif : {reason}', { n: s.reopenedCount, reason: s.reopenReason })}</p> : null}
       {s.engine === 'cm' ? <p className="note">{t('Barème Cameroun, version {version} : barème à faire valider par un expert-comptable ou le CNPS/DGI avant usage officiel.', { version: s.modelVersion })}</p> : null}
-      <p className="note">{t("Document de travail préparé avec MANAGER-IA. Les taux de retenues et de charges sont ceux paramétrés par votre entreprise : à vérifier auprès de votre administration ou d'un expert avant toute utilisation officielle.")}</p>
+      <p className="note">{t("Document de travail préparé avec Brij-IA. Les taux de retenues et de charges sont ceux paramétrés par votre entreprise : à vérifier auprès de votre administration ou d'un expert avant toute utilisation officielle.")}</p>
     </>
   );
 }

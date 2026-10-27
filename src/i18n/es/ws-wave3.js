@@ -21,7 +21,7 @@ export default {
   "Reçu de paiement {number}": "Recibo de pago {number}",
   "Offre": "Oferta",
   "{plan} ({days} jours)": "{plan} ({days} días)",
-  "Reçu de paiement d'abonnement MANAGER-IA. Document de travail : il ne tient pas lieu de facture fiscale.": "Recibo de pago de la suscripción a MANAGER-IA. Documento de trabajo: no sustituye una factura fiscal.",
+  "Reçu de paiement d'abonnement Brij-IA. Document de travail : il ne tient pas lieu de facture fiscale.": "Recibo de pago de la suscripción a Brij-IA. Documento de trabajo: no sustituye una factura fiscal.",
   "Reçu à imprimer": "Recibo para imprimir",
   "Retirer le code promo {code}": "Quitar el código promocional {code}",
   "Code promo": "Código promocional",

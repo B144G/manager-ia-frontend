@@ -46,7 +46,7 @@ export default function Vat() {
               {v.missing.map((m, i) => <p className="small muted" key={i}>{'• ' + missingText(t, m)}</p>)}
             </div>
           ) : null}
-          <p className="muted small">{t(v.notice) + ' ' + t('Document de travail préparé par MANAGER-IA, à faire valider par un expert-comptable avant tout dépôt officiel.')}</p>
+          <p className="muted small">{t(v.notice) + ' ' + t('Document de travail préparé par Brij-IA, à faire valider par un expert-comptable avant tout dépôt officiel.')}</p>
         </>
       ) : null}
     </div>

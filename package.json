@@ -1,7 +1,7 @@
 {
   "name": "manager-ia-frontend",
   "version": "2.0.0",
-  "description": "Site et espace de travail MANAGER-IA : application React (Vite), hébergeable sur Vercel. Le serveur (API) est dans le dépôt manager-ia-backend (Render + PostgreSQL Neon).",
+  "description": "Site et espace de travail Brij-IA : application React (Vite), hébergeable sur Vercel. Le serveur (API) est dans le dépôt manager-ia-backend (Render + PostgreSQL Neon).",
   "private": true,
   "license": "UNLICENSED",
   "type": "module",

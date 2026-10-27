@@ -289,7 +289,7 @@ def ventes():
 
 # ───────────────────────── 12. Assistant IA intégré
 def assistant():
-    b = [head('Assistant MANAGER-IA', 'Posez une question, il connaît votre entreprise')]
+    b = [head('Assistant Brij-IA', 'Posez une question, il connaît votre entreprise')]
     b.append(card(X0, 128, CW, 468))
     b.append(rect(X0 + CW - 360, 146, 342, 46, 16, '#2563eb') + t(X0 + CW - 344, 166, 'Quelles factures dois-je relancer', 12, '#fff', 500) + t(X0 + CW - 344, 182, 'en priorité cette semaine ?', 12, '#fff', 500))
     b.append(avatar(X0 + 34, 224, 'IA', C['blue'], 16))
@@ -346,7 +346,7 @@ def canaux():
         b.append(f'<path d="M{X0+12+nw} {ys[k]} C{X0+12+nw+60} {ys[k]} {cx-120} {cy} {cx-66} {cy}" fill="none" stroke="{col}" stroke-opacity=".5" stroke-width="1.8" stroke-dasharray="5 6"/>')
     for k, (n, col, sub) in enumerate(right):
         b.append(f'<path d="M{X0+CW-12-nw} {ys[k]} C{X0+CW-12-nw-60} {ys[k]} {cx+120} {cy} {cx+66} {cy}" fill="none" stroke="{col}" stroke-opacity=".5" stroke-width="1.8" stroke-dasharray="5 6"/>')
-    b.append(f'<circle cx="{cx}" cy="{cy}" r="66" fill="url(#gBtn)"/>' + icon('ai', cx - 20, cy - 34, 40, '#fff', 1.7) + t(cx, cy + 34, 'MANAGER-IA', 11, '#fff', 800, 'middle', extra='letter-spacing="1"'))
+    b.append(f'<circle cx="{cx}" cy="{cy}" r="66" fill="url(#gBtn)"/>' + icon('ai', cx - 20, cy - 34, 40, '#fff', 1.7) + t(cx, cy + 34, 'Brij-IA', 11, '#fff', 800, 'middle', extra='letter-spacing="1"'))
     for side, items, x in (('l', left, X0 + 12), ('r', right, X0 + CW - 12 - nw)):
         for k, (n, col, sub) in enumerate(items):
             y = ys[k]
@@ -360,7 +360,7 @@ def canaux():
     return ''.join(b)
 
 
-SCREENS = [('gestion', 'dash', "Tableau de bord MANAGER-IA : demandes, projets, solde, graphique et point de situation de l'IA", dash),
+SCREENS = [('gestion', 'dash', "Tableau de bord Brij-IA : demandes, projets, solde, graphique et point de situation de l'IA", dash),
            ('support', 'support', "Boîte de demandes clients avec un brouillon de réponse rédigé par l'IA", support),
            ('projets', 'projets', 'Tableau de tâches à faire, en cours et terminées avec avancement', projets),
            ('budget', 'budget', 'Budget avec entrées, sorties, solde et dépenses par catégorie', budget),

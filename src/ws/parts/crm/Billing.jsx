@@ -30,7 +30,7 @@ export function PayForm({ d, close, done }) {
         ]}
         onSubmit={(v) => oapi('POST', '/crm/documents/' + d.id + '/payments', v).then(() => { close(); done(); })}
       />
-      <p className="muted small">{t("Le suivi Mobile Money est manuel : MANAGER-IA ne déclenche pas de demande de paiement sur le téléphone du client et ne vérifie pas la transaction chez l'opérateur.")}</p>
+      <p className="muted small">{t("Le suivi Mobile Money est manuel : Brij-IA ne déclenche pas de demande de paiement sur le téléphone du client et ne vérifie pas la transaction chez l'opérateur.")}</p>
     </>
   );
 }
