@@ -4,6 +4,10 @@ import { tr, useT } from '../../../lib/i18n.jsx';
 import { Empty, Form, Loading, useLoad } from '../../ui.jsx';
 import { Pill, useOrgUrl } from './util.jsx';
 
+/** Paliers de quantité : « 10:8000, 50:7000 » <-> [{ min, price }]. */
+const tiersToText = (a) => (a || []).map((x) => x.min + ':' + x.price).join(', ');
+const textToTiers = (s) => String(s || '').split(/[,;\n]/).map((x) => x.trim()).filter(Boolean).map((x) => { const p = x.split(':'); return { min: (p[0] || '').trim(), price: (p[1] || '').trim() }; });
+
 /** Onglet « Catalogue ». onChange = recharger tout le module (statistiques comprises). */
 export function Catalog({ onChange }) {
   const t = useT();
@@ -26,7 +30,7 @@ export function Catalog({ onChange }) {
           <span>
             <b>{it.name}</b>
             {it.active ? null : <Pill t={['Masqué', '']} />}
-            <small>{' ' + money(it.price) + (it.unit ? ' / ' + it.unit : '') + (it.description ? ' · ' + it.description : '')}</small>
+            <small>{' ' + money(it.price) + (it.unit ? ' / ' + it.unit : '') + (it.negotiable ? ' · ' + t('négociable jusqu\'à {price}', { price: money(it.floor) }) : ' · ' + t('prix ferme')) + (it.tiers && it.tiers.length ? ' · ' + t('{n} palier(s) de quantité', { n: it.tiers.length }) : '') + (it.description ? ' · ' + it.description : '')}</small>
           </span>
           <span className="row">
             <button className="link" type="button" onClick={() => oapi('PUT', '/sales/catalog/' + it.id, { active: !it.active }).then(onChange).catch(fail)}>{it.active ? t('Masquer') : t('Afficher')}</button>
@@ -50,9 +54,12 @@ function editItem(ws, it, onChange) {
         { k: 'name', label: t('Nom'), required: true, value: cur.name, placeholder: t('Robe wax Aïcha') },
         { k: 'price', label: t('Prix ({currency})', { currency: ws.info.org.currency }), required: true, value: cur.price },
         { k: 'unit', label: t('Unité (facultatif)'), value: cur.unit, placeholder: t('pièce, kg, heure…') },
+        { k: 'floorPrice', label: t('Prix plancher (vide = non négociable)'), value: cur.floorPrice || '', hint: t("Le plus bas prix que l'assistant et vos vendeurs peuvent accorder. Seul un administrateur peut passer dessous, avec un motif.") },
+        { k: 'maxDiscount', label: t('Remise maximale en % (facultatif)'), value: cur.maxDiscount || '', hint: t('Le plancher retenu est le plus strict des deux réglages.') },
+        { k: 'tiers', label: t('Paliers de quantité (facultatif)'), value: tiersToText(cur.tiers), placeholder: '10:8000, 50:7000', hint: t('Format : quantité minimale : prix unitaire, séparés par des virgules.') },
         { k: 'description', label: t('Description courte'), value: cur.description, placeholder: t('Tailles, couleurs, délai…') },
       ]}
-      onSubmit={(v) => ws.oapi(cur.id ? 'PUT' : 'POST', '/sales/catalog' + (cur.id ? '/' + cur.id : ''), v).then(() => { close(); onChange(); })}
+      onSubmit={(v) => ws.oapi(cur.id ? 'PUT' : 'POST', '/sales/catalog' + (cur.id ? '/' + cur.id : ''), { ...v, tiers: textToTiers(v.tiers) }).then(() => { close(); onChange(); })}
     />
   ));
 }

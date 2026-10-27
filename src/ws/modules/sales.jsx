@@ -6,7 +6,9 @@ import { Appts } from '../parts/sales/Appts.jsx';
 import { Campaigns, Catalog } from '../parts/sales/Catalog.jsx';
 import { Whatsapp, ShareLink } from '../parts/sales/Channels.jsx';
 import { Chats, MineView } from '../parts/sales/Chats.jsx';
-import { Followup } from '../parts/sales/Followup.jsx';
+import { Negotiation, NegoLog } from '../parts/sales/Negotiation.jsx';
+import { Relances } from '../parts/sales/Relances.jsx';
+import { Relay } from '../parts/sales/Relay.jsx';
 import { OST, Pill } from '../parts/sales/util.jsx';
 
 /* Assistant commercial : l'IA répond aux prospects (web, WhatsApp), les enregistre et prend les commandes. */
@@ -20,7 +22,7 @@ function SalesAdmin() {
   const ws = useWs();
   const { oapi, can, money, modal } = ws;
   const admin = can('admin');
-  const [tab, setTab] = useState('orders');
+  const [tab, setTab] = useState(() => { const q = new URLSearchParams(window.location.search).get('tab'); return ['followup', 'negotiation'].includes(q) ? q : 'orders'; });
   const [chatFilter, setChatFilter] = useState('all');
   const [apptFilter, setApptFilter] = useState('open');
   const [ver, setVer] = useState(0);
@@ -30,14 +32,16 @@ function SalesAdmin() {
   const pick = (k) => { setTab(k); load(); };
   const data = st.data;
 
-  const tabs = [['orders', t('Commandes')], ['chats', t('Conversations')], ['catalog', t('Catalogue')], ['appts', t('Rendez-vous') + (data && data.stats && data.stats.appointments ? ' (' + data.stats.appointments + ')' : '')], ['campaigns', t('Campagnes')], ['followup', t('Relances')]].concat(admin ? [['whatsapp', t('Canaux')]] : []);
+  const tabs = [['orders', t('Commandes')], ['chats', t('Conversations')], ['catalog', t('Catalogue')], ['appts', t('Rendez-vous') + (data && data.stats && data.stats.appointments ? ' (' + data.stats.appointments + ')' : '')], ['campaigns', t('Campagnes')], ['negotiation', t('Négociation')], ['followup', t('Relances')]].concat(admin ? [['whatsapp', t('Canaux')], ['relay', t('Relais')]] : []);
 
   let area;
   if (tab === 'orders') area = <Orders onChange={load} />;
   else if (tab === 'chats') area = <Chats filter={chatFilter} setFilter={setChatFilter} onChange={load} />;
   else if (tab === 'catalog') area = <Catalog onChange={load} />;
   else if (tab === 'whatsapp') area = <Whatsapp onChange={load} />;
-  else if (tab === 'followup') area = <Followup admin={admin} />;
+  else if (tab === 'followup') area = <Relances admin={admin} />;
+  else if (tab === 'negotiation') area = <Negotiation admin={admin} />;
+  else if (tab === 'relay') area = <Relay />;
   else if (tab === 'appts') area = <Appts admin={admin} filter={apptFilter} setFilter={setApptFilter} onChange={load} />;
   else area = <Campaigns />;
 
@@ -82,7 +86,7 @@ function SalesAdmin() {
 
 function Orders({ onChange }) {
   const t = useT();
-  const { oapi, money, copy, confirm, toast, fail } = useWs();
+  const { oapi, money, copy, confirm, toast, fail, modal } = useWs();
   const st = useLoad(() => oapi('GET', '/sales/orders'), []);
   if (st.loading && !st.data) return <Loading />;
   if (st.error) return <p className="ws-err" role="alert">{t(st.error.message)}</p>;
@@ -96,7 +100,7 @@ function Orders({ onChange }) {
         {st.data.orders.map((o) => (
           <div className="line" key={o.id}>
             <span>
-              <b>{o.number + ' · ' + o.customer}</b>{' '}<Pill t={OST[o.status] || ['', '']} />
+              <b>{o.number + ' · ' + o.customer}</b>{' '}<Pill t={OST[o.status] || ['', '']} />{o.negotiated ? <>{' '}<span className="pill mid">{t('Négociée −{pct} %', { pct: o.discountPct })}</span></> : null}{o.approval === 'needed' ? <>{' '}<Pill t={['À valider par un responsable (Décisions)', 'bad']} /></> : null}{o.approval === 'rejected' ? <>{' '}<Pill t={['Remise refusée', 'bad']} /></> : null}{o.negotiated ? <>{' '}<Pill t={['Négociée −' + o.discountPct + ' %', 'mid']} /></> : null}{o.approval === 'needed' ? <>{' '}<Pill t={['À valider par un responsable (Décisions)', 'bad']} /></> : null}{o.approval === 'rejected' ? <>{' '}<Pill t={['Remise refusée', 'bad']} /></> : null}
               <small>{' ' + o.lines.map((l) => l.label + ' × ' + l.quantity).join(', ') + ' · ' + money(o.total) + (o.phone ? ' · ' + o.phone : '') + (o.note ? ' · ' + o.note : '')}</small>
             </span>
             <span className="row">
@@ -104,6 +108,7 @@ function Orders({ onChange }) {
               {o.status === 'pending' ? <button className="link" type="button" onClick={() => confirm(t('Refuser la commande {number} ?', { number: o.number }), () => setStatus(o, 'cancelled'))}>{t('Refuser')}</button> : null}
               {o.status === 'confirmed' ? <button className="link" type="button" onClick={() => oapi('POST', '/sales/orders/' + o.id + '/invoice', {}).then(() => { toast(t('Facture créée (voir Clients et ventes).')); onChange(); }).catch(fail)}>{t('Créer la facture')}</button> : null}
               {o.phone ? <button className="link" type="button" onClick={() => copy(o.phone, t('Numéro copié.'))}>{t('Copier le numéro')}</button> : null}
+              {o.negotiation && o.negotiation.length ? <button className="link" type="button" onClick={() => modal(t('Négociation : {number}', { number: o.number }), () => <NegoLog entries={o.negotiation} />)}>{t('Négociation')}</button> : null}
             </span>
           </div>
         ))}

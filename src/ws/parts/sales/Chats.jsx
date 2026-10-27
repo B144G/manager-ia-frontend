@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useWs } from '../../WsContext.jsx';
 import { tr, useT } from '../../../lib/i18n.jsx';
 import { Empty, Loading, useLoad } from '../../ui.jsx';
+import { NegoLog } from './Negotiation.jsx';
 import { CHANNELS, Pill, TEMP, useOrgUrl } from './util.jsx';
 
 const APPT_ST = { pending: 'à confirmer', confirmed: 'confirmé', cancelled: 'annulé', done: 'terminé' };
@@ -83,6 +84,7 @@ function ChatBody({ j, prefix, x, team, canAssign, done }) {
           <button className="btn small" type="button" onClick={() => oapi('PUT', '/sales/chats/' + x.id + '/assign', { userId: assignee ? Number(assignee) : null }).then(() => { toast(assignee ? t('Conversation attribuée : la personne est prévenue.') : t('Conversation libérée.')); done(); }).catch(fail)}>{t('Enregistrer')}</button>
         </div>
       ) : null}
+      <NegoLog entries={j.negotiation} />
       {j.messages.map((m, i) => {
         const att = /^\[(image|document) #(\d+)\]\s*([\s\S]*)$/.exec(m.content);
         const who = m.role === 'user' ? '' : m.role === 'staff' ? t('Vous : ') : t('Assistant : ');

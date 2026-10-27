@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useWs } from '../WsContext.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { Empty, Form, Loading, useLoad } from '../ui.jsx';
@@ -6,6 +7,7 @@ import { DST, Pill, docText } from '../parts/crm/common.jsx';
 import MailForm from '../parts/crm/MailForm.jsx';
 import MailTab from '../parts/crm/MailTab.jsx';
 import { ReminderView, SalesProposalView, Sheet } from '../parts/crm/Views.jsx';
+import { PriceHelper } from '../parts/crm/Prices.jsx';
 import { CreditForm, InvoiceSettings, PayForm, PaymentsList, parseLines } from '../parts/crm/Billing.jsx';
 
 /* Clients et ventes (fiches clients, devis, factures, paiements reçus, relances avec l'IA). */
@@ -13,6 +15,7 @@ export default function Crm() {
   const t = useT();
   const { oapi, info, can, money, dateFr, toast, fail, modal, confirm, copy, propose, orgId } = useWs();
   const mgr = can('manager');
+  const navigate = useNavigate();
   const [tab, setTab] = useState('customers');
   const tabRef = useRef(tab);
   tabRef.current = tab;
@@ -89,6 +92,8 @@ export default function Crm() {
     modal(kind === 'quote' ? t('Nouveau devis') : t('Nouvelle facture'), (close) => {
       if (!list.length) return <Empty text={t("Ajoutez d'abord un client.")} />;
       return (
+        <>
+        <PriceHelper customers={list} />
         <Form
           submitText={t("Créer (brouillon)")}
           fields={[
@@ -97,12 +102,13 @@ export default function Crm() {
             { k: 'pricesIncl', label: t('Les prix saisis sont'), type: 'select', options: [['true', t('TTC (TVA incluse)')], ['false', t('HT (la TVA sera ajoutée)')]] },
             { k: 'vatRate', label: t('Taux de TVA (%)'), value: String(info.org.vatRate === undefined ? 19.25 : info.org.vatRate), hint: t('0 pour une vente exonérée. Modifiable dans « Mentions et TVA ».') },
             { k: 'due', label: kind === 'quote' ? t("Valable jusqu'au (facultatif)") : t('À payer avant le'), type: 'date' },
-          ]}
+          ].concat(can('admin') ? [{ k: 'override', label: t('Motif si un prix passe sous le plancher (administrateur)'), hint: t("Un prix sous le plancher d'un article est refusé sans ce motif ; l'exception est tracée.") }] : [])}
           onSubmit={(v) => {
             const lines = parseLines(v.lines);
-            return oapi('POST', '/crm/documents', { kind, customerId: v.customerId, lines, due: v.due || null, pricesIncl: v.pricesIncl === 'true', vatRate: String(v.vatRate).replace(',', '.') }).then(() => { close(); setTab(kind); load(); });
+            return oapi('POST', '/crm/documents', { kind, customerId: v.customerId, lines, due: v.due || null, pricesIncl: v.pricesIncl === 'true', vatRate: String(v.vatRate).replace(',', '.'), priceOverride: v.override ? { reason: v.override } : undefined }).then(() => { close(); setTab(kind); load(); });
           }}
         />
+        </>
       );
     });
   }
@@ -141,6 +147,7 @@ export default function Crm() {
     }
     if (d.kind === 'invoice' && d.status === 'sent') a.push([t('Paiement reçu'), () => pay(d)]);
     if (d.overdue) a.push([t("Relancer avec l'IA"), () => remind(d)]);
+    if (d.overdue) a.push([t('Centre de relances'), () => navigate('/app/' + orgId + '/sales?tab=followup')]);
     if (d.kind === 'quote' && d.status === 'sent') { a.push([t('Accepté'), () => setDoc(d, { status: 'accepted' })]); a.push([t('Refusé'), () => setDoc(d, { status: 'refused' })]); }
     if (d.kind === 'quote' && d.status === 'accepted') a.push([t('Créer la facture'), () => { oapi('POST', '/crm/documents/' + d.id + '/convert', {}).then(() => { setTab('invoice'); load(); }).catch(fail); }]);
     if (d.kind !== 'quote' && d.status !== 'draft') {

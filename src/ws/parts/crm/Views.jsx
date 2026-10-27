@@ -3,6 +3,7 @@ import { useWs } from '../../WsContext.jsx';
 import { useT } from '../../../lib/i18n.jsx';
 import { Empty, useLoad } from '../../ui.jsx';
 import { DST, Pill } from './common.jsx';
+import { ClientPrices } from './Prices.jsx';
 
 /** Message de relance proposé par l'IA (modifiable, à copier ou envoyer par e-mail). */
 export function ReminderView({ p, d, cu, composeMail }) {
@@ -44,7 +45,7 @@ export function SalesProposalView({ p, cu, composeMail }) {
 /** Fiche client : coordonnées, notes, historique. */
 export function Sheet({ cu }) {
   const t = useT();
-  const { oapi, money } = useWs();
+  const { oapi, money, can } = useWs();
   const st = useLoad(() => oapi('GET', '/crm/customers/' + cu.id), []);
   if (st.loading) return <div><p className="ws-empty">{t('Chargement…')}</p></div>;
   if (st.error) return <div>{t(st.error.message)}</div>;
@@ -53,6 +54,7 @@ export function Sheet({ cu }) {
     <div>
       <p className="muted small">{[j.customer.phone, j.customer.email].filter(Boolean).join(' · ') || t('Pas de coordonnées.')}</p>
       {j.customer.notes ? <p>{j.customer.notes}</p> : null}
+      {can('manager') ? <ClientPrices cu={cu} /> : null}
       <h3>{t('Historique')}</h3>
       {!j.documents.length ? <Empty text={t("Aucun devis ni facture.")} /> : null}
       {j.documents.map((d) => (
