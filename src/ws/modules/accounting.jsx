@@ -3,6 +3,10 @@ import { useWs } from '../WsContext.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { Form, Loading, useLoad } from '../ui.jsx';
 import EntryForm from '../parts/accounting/EntryForm.jsx';
+import BankTab from '../parts/accounting/Bank.jsx';
+import ThirdTab from '../parts/accounting/Thirdparty.jsx';
+import AssetsTab from '../parts/accounting/Assets.jsx';
+import ClosingTab from '../parts/accounting/Closing.jsx';
 import { BalanceTab, Home, JournalTab, LedgerBox, ResultsTab, SettingsTab } from '../parts/accounting/Tabs.jsx';
 
 /* Comptabilité (plan OHADA de base, journal, balance, résultat, bilan, TVA). Les écritures ne se modifient pas :
@@ -10,7 +14,7 @@ import { BalanceTab, Home, JournalTab, LedgerBox, ResultsTab, SettingsTab } from
 
 export default function Accounting() {
   const t = useT();
-  const TABS = [['home', t('Aperçu')], ['journal', t('Journal')], ['balance', t('Balance')], ['results', t('Résultat et bilan')], ['settings', t('Réglages')]];
+  const TABS = [['home', t('Aperçu')], ['journal', t('Journal')], ['balance', t('Balance')], ['results', t('Résultat et bilan')], ['bank', t('Rapprochement')], ['third', t('Tiers et dettes')], ['assets', t('Immobilisations')], ['closing', t('Clôture')], ['settings', t('Réglages')]];
   const { oapi, modal, toast, fail } = useWs();
   const [tab, setTab] = useState('home');
   const [year, setYear] = useState(String(new Date().getFullYear()));
@@ -48,7 +52,8 @@ export default function Accounting() {
   }
 
   let content = null;
-  if (st.loading) content = <Loading />;
+  const OWN = { bank: BankTab, third: ThirdTab, assets: AssetsTab, closing: ClosingTab }; // onglets de la vague 2 : ils chargent leurs propres données
+  if (OWN[tab]) { const Own = OWN[tab]; content = <Own />; } else if (st.loading) content = <Loading />;
   else if (st.error) content = <p className="ws-err" role="alert">{t(st.error.message)}</p>;
   else if (o) {
     if (tab === 'home') content = <Home o={o} JN={JN} onReverse={reverse} reload={st.reload} />;
