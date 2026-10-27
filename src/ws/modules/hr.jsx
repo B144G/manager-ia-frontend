@@ -6,6 +6,7 @@ import { Empty, Loaded, useLoad } from '../ui.jsx';
 import { EmployeeForm, LeaveForm } from '../parts/hr/Forms.jsx';
 import Leaves from '../parts/hr/Leaves.jsx';
 import Plan from '../parts/hr/Plan.jsx';
+import { Attendance, Balances, Contracts, Dossier, Recruit, Reviews } from '../parts/hr/Wave3.jsx';
 
 export default function Hr() {
   const t = useT();
@@ -32,7 +33,7 @@ export default function Hr() {
         </div>
       </div>
       <div className="ws-tabs">
-        {st.data ? [['staff', t('Employés')], ['leaves', t('Congés') + (pending ? ' (' + pending + ')' : '')], ['plan', t('Planning')]].map((x) => (
+        {st.data ? [['staff', t('Employés')], ['leaves', t('Congés') + (pending ? ' (' + pending + ')' : '')], ['plan', t('Planning')], ['balances', t('Soldes')], ['dossier', t('Dossiers')], ['contracts', t('Contrats')], ['attendance', t('Pointage')], ['recruit', t('Recrutement')], ['reviews', t('Évaluations')]].map((x) => (
           <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} onClick={() => setTab(x[0])}>{x[1]}</button>
         )) : null}
       </div>
@@ -40,6 +41,12 @@ export default function Hr() {
         <Loaded state={st}>{(j) => {
           if (tab === 'leaves') return <Leaves ver={ver} load={load} />;
           if (tab === 'plan') return <Plan week={week} setWeek={setWeek} ver={ver} />;
+          if (tab === 'balances') return <Balances ver={ver} />;
+          if (tab === 'dossier') return <Dossier employees={j.employees} />;
+          if (tab === 'contracts') return <Contracts employees={j.employees} />;
+          if (tab === 'attendance') return <Attendance employees={j.employees} />;
+          if (tab === 'recruit') return <Recruit />;
+          if (tab === 'reviews') return <Reviews employees={j.employees} />;
           const s = j.summary;
           return (
             <>
