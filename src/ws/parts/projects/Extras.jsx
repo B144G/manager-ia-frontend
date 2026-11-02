@@ -29,13 +29,15 @@ export function ProjectTrack({ id }) {
                 <div className="stat"><b>{j.cost.remaining === null ? '—' : money(j.cost.remaining)}</b><span>{t('reste')}</span></div>
                 <div className="stat"><b>{j.time.hours + ' h'}</b><span>{t('temps passé') + (j.time.estimatedHours ? ' / ' + j.time.estimatedHours + ' h' : '')}</span></div>
               </div>
-              {j.cost.overBudget ? <p className="small late">{t('Le coût dépasse le budget.')}</p> : null}
+              {j.cost.usedPct !== null ? <div className={'meter' + (j.cost.overBudget ? ' over' : '')} aria-label={t('{n} % du budget', { n: j.cost.usedPct })}><i style={{ width: Math.min(j.cost.usedPct, 100) + '%' }} /></div> : null}
+              {j.cost.usedPct !== null ? <p className={'small' + (j.cost.overBudget ? ' late' : '')}>{j.cost.overBudget ? t('Budget dépassé : {n} % consommés.', { n: j.cost.usedPct }) : t('{n} % du budget consommé.', { n: j.cost.usedPct })}{j.cost.alertPct ? ' ' + t('Les responsables sont prévenus à {n} % et au dépassement.', { n: j.cost.alertPct }) : ' ' + t('Les responsables sont prévenus au dépassement.')}</p> : null}
+              {j.cost.bySource && (j.cost.bySource.purchase || j.cost.bySource.stock) ? <p className="muted small">{t('Dont achats reçus : {a} · matières prises en stock : {s} · saisies à la main : {m}', { a: money(j.cost.bySource.purchase || 0), s: money(j.cost.bySource.stock || 0), m: money(j.cost.bySource.manual || 0) })}</p> : null}
               <p className="muted small">{t('Le temps est valorisé au coût horaire réglé dans les réglages du projet ({rate} par heure).', { rate: money(j.cost.hourlyCost) })}</p>
               <div className="row">
                 <button className="btn small" type="button" style={BTN} onClick={() => budget(j.cost.budget)}>{t('Fixer le budget')}</button>
                 <button className="btn small" type="button" style={BTN} onClick={addCost}>{t('Ajouter une dépense')}</button>
               </div>
-              {costs.data ? costs.data.items.map((c) => <div className="line" key={c.id}><span>{c.label}<br /><small className="muted">{dateFr(c.date)}</small></span><span className="row"><b>{money(c.amount)}</b><button className="link" type="button" style={BTN} onClick={() => oapi('DELETE', '/projects/costs/' + c.id).then(again).catch(fail)}>{t('Supprimer')}</button></span></div>) : null}
+              {costs.data ? costs.data.items.map((c) => <div className="line" key={c.id}><span>{c.label}<br /><small className="muted">{dateFr(c.date) + (c.source === 'purchase' ? ' · ' + t('achat reçu') : c.source === 'stock' ? ' · ' + t('sortie de stock') : '')}</small></span><span className="row"><b>{money(c.amount)}</b><button className="link" type="button" style={BTN} onClick={() => oapi('DELETE', '/projects/costs/' + c.id).then(again).catch(fail)}>{t('Supprimer')}</button></span></div>) : null}
             </>
           ) : <p className="muted small">{t('Temps passé : {n} h', { n: j.time.hours })}</p>}
           <h3>{t('Jalons')}</h3>
@@ -53,7 +55,7 @@ export function ProjectTrack({ id }) {
         </div>
       )}
       </Loaded>
-      {can('manager') ? <SettingsCard path="/projects" canEdit={can('admin')} title={t('Réglages des projets')} keys={[['project_hourly_cost', t('Coût horaire moyen'), t('Sert à valoriser le temps passé')]]} /> : null}
+      {can('manager') ? <SettingsCard path="/projects" canEdit={can('admin')} title={t('Réglages des projets')} keys={[['project_hourly_cost', t('Coût horaire moyen'), t('Sert à valoriser le temps passé')], ['project_budget_alert_pct', t('Alerte de budget à (%)'), t('Les responsables sont prévenus à ce pourcentage du budget, puis au dépassement. 0 = seulement au dépassement.')], ['project_auto_shift', t('Décalage automatique des tâches (1 = oui, 0 = non)'), t('Si une tâche prend du retard, celles qui en dépendent sont décalées toutes seules et les personnes concernées sont prévenues.')]]} /> : null}
     </>
   );
 }
@@ -85,10 +87,11 @@ export function TaskDetail({ task, tasks, close, done }) {
           <h3>{t('Planification')}</h3>
           <Form
             fields={[{ k: 'estimateHours', label: t('Estimation (heures)'), value: task.estimateHours || '' },
+              { k: 'startDate', label: t('Début (facultatif)'), type: 'date', value: task.start || '' },
               { k: 'dependsOn', label: t('Dépend de la tâche'), type: 'select', options: [['', t('Aucune')]].concat(tasks.filter((x) => x.id !== task.id).map((x) => [String(x.id), x.title])), value: task.dependsOn ? String(task.dependsOn) : '' },
               { k: 'recurrence', label: t('Répétition'), type: 'select', options: FREQ.map((o) => [o[0], t(o[1])]), value: task.recurrence || '' }]}
             submitText={t('Enregistrer')}
-            onSubmit={(f) => oapi('PUT', '/projects/tasks/' + task.id + '/plan', { estimateHours: f.estimateHours, dependsOn: f.dependsOn || null, recurrence: f.recurrence }).then(() => { close(); done(); })}
+            onSubmit={(f) => oapi('PUT', '/projects/tasks/' + task.id + '/plan', { estimateHours: f.estimateHours, startDate: f.startDate || null, dependsOn: f.dependsOn || null, recurrence: f.recurrence }).then(() => { close(); done(); })}
           />
         </>
       ) : null}

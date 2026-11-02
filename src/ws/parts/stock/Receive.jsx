@@ -1,6 +1,6 @@
 import { useWs } from '../../WsContext.jsx';
 import { useT } from '../../../lib/i18n.jsx';
-import { Form } from '../../ui.jsx';
+import { Form, Loading, useLoad } from '../../ui.jsx';
 import { qty } from './common.js';
 
 /** Réception (totale ou partielle) d'une commande : lot, péremption, numéros de série, prix réellement facturé. */
@@ -31,6 +31,22 @@ export function PromiseForm({ order, close, done }) {
       fields={[{ k: 'promisedDate', label: t('Date de livraison promise par le fournisseur'), type: 'date', value: order.promisedDate }]}
       submitText={t('Enregistrer')}
       onSubmit={(v) => oapi('PUT', '/stock/orders/' + order.id, { promisedDate: v.promisedDate || null }).then(() => { close(); done(); })}
+    />
+  );
+}
+
+/** Rattache une commande à un projet : les réceptions (même déjà faites) deviennent des coûts du projet. */
+export function OrderProjectForm({ order, close, done }) {
+  const t = useT();
+  const { oapi } = useWs();
+  const prj = useLoad(() => oapi('GET', '/projects'), []);
+  if (prj.loading && !prj.data) return <Loading />;
+  const list = prj.data ? prj.data.projects.filter((p) => p.status !== 'done' || p.id === order.projectId) : [];
+  return (
+    <Form
+      fields={[{ k: 'projectId', label: t('Projet'), type: 'select', options: [['', t('Aucun')]].concat(list.map((p) => [String(p.id), p.name])), value: order.projectId ? String(order.projectId) : '', hint: t("Le coût de cette commande est ajouté au projet à chaque réception.") }]}
+      submitText={t('Enregistrer')}
+      onSubmit={(v) => oapi('PUT', '/stock/orders/' + order.id, { projectId: v.projectId || null }).then(() => { close(); done(); })}
     />
   );
 }

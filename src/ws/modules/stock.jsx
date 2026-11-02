@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Empty, Form, Loaded, useLoad } from '../ui.jsx';
 import Counts from '../parts/stock/Counts.jsx';
 import SupplierStats from '../parts/stock/SupplierStats.jsx';
-import { PromiseForm, ReceiveForm } from '../parts/stock/Receive.jsx';
+import { OrderProjectForm, PromiseForm, ReceiveForm } from '../parts/stock/Receive.jsx';
 import Pill from '../parts/stock/Pill.jsx';
 import Reorder from '../parts/stock/Reorder.jsx';
 import Suppliers from '../parts/stock/Suppliers.jsx';
@@ -25,6 +25,7 @@ export default function Stock() {
   const history = (it) => modal(t('Historique : {name}', { name: it.name }), () => <History item={it} />);
   const editItem = (it) => modal(it && it.id ? t("Modifier l'article") : t('Nouvel article'), (close) => <ItemForm item={it} close={close} done={load} />);
   const lots = (it) => modal(t('Lots et numéros : {name}', { name: it.name }), () => <Lots item={it} />);
+  const orderProject = (od) => modal(t('Projet de cette commande'), (close) => <OrderProjectForm order={od} close={close} done={load} />);
   const receiveOrder = (od) => modal(t('Réception : {name}', { name: od.item }), (close) => <ReceiveForm order={od} close={close} done={() => { if (refreshBadges) refreshBadges(); load(); }} />);
   const promise = (od) => modal(t('Date promise : {name}', { name: od.item }), (close) => <PromiseForm order={od} close={close} done={load} />);
   const lookup = () => modal(t('Chercher par code-barres ou SKU'), (close) => (
@@ -133,13 +134,14 @@ export default function Stock() {
                   <div className="line" key={od.id}>
                     <span>
                       <b>{od.item + ' × ' + qty(od.quantity)}</b>{' '}<Pill t={ORDER[od.status]} />
-                      <small>{' ' + (od.supplier || t('fournisseur à choisir')) + (od.unitPrice ? ' · ' + money(od.total) : '') + ' · ' + dateFr(od.at) + (od.promisedDate ? ' · ' + t('promise le {date}', { date: dateFr(od.promisedDate) }) : '') + (od.status === 'partial' ? ' · ' + t('reçu {n} sur {m}', { n: qty(od.receivedQty), m: qty(od.quantity) }) : '')}</small>{od.late ? <span className="pill bad">{t('En retard')}</span> : null}
+                      <small>{' ' + (od.supplier || t('fournisseur à choisir')) + (od.unitPrice ? ' · ' + money(od.total) : '') + ' · ' + dateFr(od.at) + (od.promisedDate ? ' · ' + t('promise le {date}', { date: dateFr(od.promisedDate) }) : '') + (od.project ? ' · ' + t('projet : {name}', { name: od.project }) : '') + (od.status === 'partial' ? ' · ' + t('reçu {n} sur {m}', { n: qty(od.receivedQty), m: qty(od.quantity) }) : '')}</small>{od.late ? <span className="pill bad">{t('En retard')}</span> : null}
                     </span>
                     {mgr ? (
                       <span className="row">
                         {od.status === 'pending' ? <button className="link" type="button" onClick={() => setStatus(od, 'ordered')}>{t('Valider')}</button> : null}
                         {od.status === 'ordered' || od.status === 'partial' ? <button className="link" type="button" onClick={() => receiveOrder(od)}>{t('Enregistrer une réception')}</button> : null}
                         {od.status === 'ordered' || od.status === 'partial' ? <button className="link" type="button" onClick={() => promise(od)}>{t('Date promise')}</button> : null}
+                        {od.status !== 'cancelled' ? <button className="link" type="button" onClick={() => orderProject(od)}>{t('Projet')}</button> : null}
                         {od.status === 'pending' || od.status === 'ordered' || od.status === 'partial' ? <button className="link" type="button" onClick={() => confirm(t('Annuler cette commande ?'), () => setStatus(od, 'cancelled'))}>{t('Annuler')}</button> : null}
                       </span>
                     ) : null}

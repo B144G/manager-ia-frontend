@@ -93,3 +93,21 @@ a{color:inherit}
 .punl li{display:grid;gap:2px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
 .punl li.ok{border-color:rgba(22,163,74,.5)}.punl li span,.punl li small{font-size:13px;opacity:.8}
 @media (max-width:600px){.pbtn{width:100%}}
+
+/* Projets · planning (frise) */
+.gantt{overflow-x:auto;border:1px solid var(--border,#e5e7eb);border-radius:12px;padding:8px 0;margin:8px 0;background:var(--surface,#fff)}
+.gantt-in{position:relative;min-width:100%}
+.g-row{display:flex;align-items:center;height:30px}
+.g-head{height:24px;color:var(--muted,#6b7280);font-size:11px}
+.g-name{flex:0 0 190px;width:190px;padding:0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.g-name small{color:var(--muted,#6b7280)}
+.g-track{position:relative;display:block;height:30px;background-image:linear-gradient(to right,var(--border,#e5e7eb) 1px,transparent 1px);background-size:154px 100%}
+.g-head .g-track{background:none}
+.g-head i{position:absolute;top:4px;font-style:normal}
+.g-bar{position:absolute;top:7px;height:16px;border-radius:6px;background:var(--accent,#2563eb);opacity:.9}
+.g-bar.todo{background:#94a3b8}.g-bar.doing{background:#2563eb}.g-bar.done{background:#16a34a;opacity:.55}.g-bar.late{background:#dc2626}
+.g-bar.shift{opacity:.45}
+.g-bar.ghost{background:transparent;border:2px dashed #f59e0b;opacity:1;box-sizing:border-box}
+.g-line{position:absolute;top:0;bottom:0;width:2px;pointer-events:none}
+.g-line.today{background:#16a34a}.g-line.due{background:#dc2626}
+@media (max-width:640px){.g-name{flex-basis:120px;width:120px}}

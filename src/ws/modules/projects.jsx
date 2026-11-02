@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ProjectTrack, TaskDetail, Workload } from '../parts/projects/Extras.jsx';
+import { Insight, Planning } from '../parts/projects/Planning.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
@@ -217,6 +218,8 @@ function ProjectView({ id, back, actions }) {
           );
         }) : null}
       </div>
+      <Planning id={id} rev={j} />
+      {can('manager') ? <Insight id={id} rev={j} /> : null}
       <ProjectTrack id={id} />
     </div>
   );
