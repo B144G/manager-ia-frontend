@@ -5,7 +5,7 @@
    - fichiers (scripts, styles, images) : réseau d'abord avec cache de secours (jamais l'inverse : un vieux fichier en cache ne bloque pas une mise à jour) ;
    - toute erreur du cache est ignorée : en cas de doute, on laisse le navigateur faire sa requête normale ;
    - changer CACHE_VERSION supprime les anciens caches à l'activation. */
-var CACHE_VERSION = 3;
+var CACHE_VERSION = 4;
 var CACHE = "mia-shell-v" + CACHE_VERSION;
 var SHELL = ["/offline.html", "/favicon.svg", "/assets/icons/icon-192.png"];
 
