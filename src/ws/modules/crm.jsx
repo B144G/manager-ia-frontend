@@ -8,6 +8,8 @@ import MailForm from '../parts/crm/MailForm.jsx';
 import MailTab from '../parts/crm/MailTab.jsx';
 import { ReminderView, SalesProposalView, Sheet } from '../parts/crm/Views.jsx';
 import { PriceHelper } from '../parts/crm/Prices.jsx';
+import { ShareDialog } from '../parts/share/Share.jsx';
+import { saveFile } from '../parts/w3/common.jsx';
 import { CreditForm, InvoiceSettings, PayForm, PaymentsList, parseLines } from '../parts/crm/Billing.jsx';
 
 /* Clients et ventes (fiches clients, devis, factures, paiements reçus, relances avec l'IA). */
@@ -152,6 +154,8 @@ export default function Crm() {
     if (d.kind === 'quote' && d.status === 'accepted') a.push([t('Créer la facture'), () => { oapi('POST', '/crm/documents/' + d.id + '/convert', {}).then(() => { setTab('invoice'); load(); }).catch(fail); }]);
     if (d.kind !== 'quote' && d.status !== 'draft') {
       a.push([t('Imprimer / PDF'), () => printDoc(d)]);
+      a.push([t('Télécharger le PDF'), () => saveFile('/orgs/' + orgId + '/share/pdf/invoice/' + d.id, d.number + '.pdf', fail)]);
+      a.push([t("Partager à l'équipe"), () => modal(t('Partager « {title} »', { title: d.number }), (close) => <ShareDialog kind="invoice" sourceId={d.id} close={close} />, { wide: true })]);
       a.push([t('Facture par e-mail'), () => emailDoc(d)]);
       a.push([t('WhatsApp'), () => whatsapp(d)]);
     }

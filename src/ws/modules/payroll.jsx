@@ -6,6 +6,8 @@ import Settings from '../parts/payroll/Settings.jsx';
 import { SlipModal } from '../parts/payroll/Slip.jsx';
 import { CmTab, CmWarning, ExportsTab, SettlementsTab } from '../parts/payroll/Cameroon.jsx';
 import SlipForm from '../parts/payroll/SlipForm.jsx';
+import { SendSlips } from '../parts/share/Share.jsx';
+import { saveFile } from '../parts/w3/common.jsx';
 import { BTN, INP, TAP, downloadCsv, incompleteText, monthLabel } from '../parts/finance/util.jsx';
 
 /* Paie : bulletins du mois (brouillon, validé, payé), lancement en un clic, bulletin imprimable, export CSV, paramètres.
@@ -15,7 +17,7 @@ const ST = { draft: ['Brouillon', 'mid'], validated: ['Validé', 'good'], paid: 
 
 export default function Payroll() {
   const t = useT();
-  const { oapi, modal, confirm, toast, fail, money, today } = useWs();
+  const { oapi, modal, confirm, toast, fail, money, today, orgId } = useWs();
   const [tab, setTab] = useState('slips');
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const st = useLoad(() => oapi('GET', '/payroll?month=' + month), [month]);
@@ -100,13 +102,14 @@ export default function Payroll() {
             <div className={'stat' + (j.pending ? ' bad' : '')}><b>{j.pending}</b><span>{t('bulletin(s) en attente')}</span></div>
           </div>
           <div className="ws-card">
-            <div className="row"><h2 className="grow">{t('Bulletins de {month}', { month: monthLabel(month) })}</h2>{j.slips.length ? <button className="btn small" type="button" style={BTN} onClick={csv}>{t('Exporter en CSV')}</button> : null}</div>
+            <div className="row"><h2 className="grow">{t('Bulletins de {month}', { month: monthLabel(month) })}</h2>{j.slips.length ? <SendSlips month={month} onDone={load} /> : null}{j.slips.length ? <button className="btn small" type="button" style={BTN} onClick={csv}>{t('Exporter en CSV')}</button> : null}</div>
             {!j.slips.length ? <Empty text={t("Aucun bulletin ce mois-ci. Cliquez sur « Lancer la paie du mois » pour créer les brouillons.")} /> : null}
             {j.slips.map((s) => (
               <div className="line" key={s.id} style={{ flexWrap: 'wrap' }}>
                 <span><b>{s.employee}</b>{' '}<span className={'pill ' + ST[s.status][1]}>{t(ST[s.status][0])}</span>{s.accEntryId ? <>{' '}<span className="pill good">{t('Comptabilisé')}</span></> : null}<br /><small style={{ overflowWrap: 'anywhere' }}>{t('Net {net} · coût employeur {cost}', { net: money(s.net), cost: money(s.employerCost) })}{s.overtime ? ' · ' + t('heures sup.') + ' ' + money(s.overtime) : ''}{s.absenceDeduction ? ' · ' + t('absences non payées : {days} j, − {amount}', { days: s.absenceDays, amount: money(s.absenceDeduction) }) : ''}{s.annualBonus ? ' · ' + (s.annualBonusLabel || t('prime annuelle')) + ' ' + money(s.annualBonus) : ''}</small>{s.reopenedCount ? <><br /><small className="muted">{t('Rouvert : {reason}', { reason: s.reopenReason })}</small></> : null}</span>
                 <span className="row" style={{ flexWrap: 'wrap' }}>
                   <button className="link" type="button" style={TAP} onClick={() => view(s)}>{t('Voir / imprimer')}</button>
+                  <button className="link" type="button" style={TAP} onClick={() => saveFile('/orgs/' + orgId + '/share/pdf/payslip/' + s.id, 'bulletin-' + s.month + '-' + s.employee.replace(/[^A-Za-z0-9]+/g, '-') + '.pdf', fail)}>{t('Télécharger le PDF')}</button>
                   {s.status === 'draft' ? <button className="link" type="button" style={TAP} onClick={() => edit(s)}>{t('Modifier')}</button> : null}
                   {s.status === 'draft' ? <button className="link" type="button" style={TAP} onClick={() => validate(s)}>{t('Valider')}</button> : null}
                   {s.status === 'validated' ? <button className="link" type="button" style={TAP} onClick={() => pay(s)}>{t('Payer')}</button> : null}

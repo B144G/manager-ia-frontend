@@ -10,6 +10,7 @@ import { HealthRing, flowChart } from '../parts/dashboard/Charts.jsx';
 import { monthName, ago, when } from '../parts/dashboard/helpers.js';
 import { Circuit, Kpis, Notices } from '../parts/dashboard/Wave3.jsx';
 import Profile from '../parts/dashboard/Profile.jsx';
+import { SharedDocs } from '../parts/share/Share.jsx';
 
 function delta(cur, prev, label) {
   if (!prev) return { text: label, cls: '' };
@@ -94,6 +95,7 @@ export default function Dashboard() {
     <>
       {head}
       <Profile />
+      <SharedDocs />
       <div>
         <div className="g2">
           <section className="brief">

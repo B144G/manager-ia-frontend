@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ProjectTrack, TaskDetail, Workload } from '../parts/projects/Extras.jsx';
 import { Insight, Planning } from '../parts/projects/Planning.jsx';
+import { PdfActions } from '../parts/share/Share.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
@@ -184,6 +185,7 @@ function ProjectView({ id, back, actions }) {
             <div><h1>{p.name}</h1><p className="muted">{(p.description || '') + (p.due ? ' ' + t('Échéance : {date}', { date: dateFr(p.due) }) : '')}</p></div>
             <div className="row">
               <button className="btn primary small" type="button" onClick={() => newTask(p.id, again)}>{t('Ajouter une tâche')}</button>
+              <PdfActions kind="project" sourceId={id} title={p.name} canCosts={can('manager')} />
               {can('manager') ? <button className="btn small" type="button" onClick={() => { oapi('PUT', '/projects/' + id, { status: p.status === 'done' ? 'active' : 'done' }).then(again).catch(fail); }}>{p.status === 'done' ? t('Rouvrir') : t('Marquer terminé')}</button> : null}
               {can('manager') ? <button className="btn small" type="button" onClick={() => confirm(t('Supprimer ce projet et toutes ses tâches ?'), () => { oapi('DELETE', '/projects/' + id).then(back).catch(fail); })}>{t('Supprimer')}</button> : null}
             </div>
