@@ -9,6 +9,7 @@ import { Empty, Form, Icon, Loading } from '../ui.jsx';
 import { HealthRing, flowChart } from '../parts/dashboard/Charts.jsx';
 import { monthName, ago, when } from '../parts/dashboard/helpers.js';
 import { Circuit, Kpis, Notices } from '../parts/dashboard/Wave3.jsx';
+import Profile from '../parts/dashboard/Profile.jsx';
 
 function delta(cur, prev, label) {
   if (!prev) return { text: label, cls: '' };
@@ -92,6 +93,7 @@ export default function Dashboard() {
   return (
     <>
       {head}
+      <Profile />
       <div>
         <div className="g2">
           <section className="brief">

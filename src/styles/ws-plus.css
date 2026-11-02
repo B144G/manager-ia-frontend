@@ -79,3 +79,17 @@ a{color:inherit}
 .ws-lang-side select{flex:1;max-width:none}
 .ws-lang-side select option{color:#0e1a2b}
 @media (min-width:700px){.ws-lang-top{display:inline-flex}.ws-lang-side{display:none}}
+
+/* Profil de l'entreprise : une question à la fois, gros boutons faciles à toucher */
+.pfcard{display:grid;gap:12px;margin-bottom:16px}
+.pfcard .pq{font-size:19px;font-weight:700;margin:4px 0 0}
+.pbar{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#4f46e5,#7c3aed);transition:width .3s}
+.popts{display:flex;flex-wrap:wrap;gap:10px}
+.pbtn{padding:13px 18px;min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);font-weight:600;font-size:15px;color:inherit;text-align:left}
+.pbtn:hover{border-color:#4f46e5}.pbtn.on{border-color:#4f46e5;background:rgba(79,70,229,.1)}.pbtn:disabled{opacity:.6}
+.pfcard.done .popts b{width:100%}
+.punl{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:8px}
+.punl li{display:grid;gap:2px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
+.punl li.ok{border-color:rgba(22,163,74,.5)}.punl li span,.punl li small{font-size:13px;opacity:.8}
+@media (max-width:600px){.pbtn{width:100%}}
