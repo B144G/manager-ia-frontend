@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { trackVisit } from './lib/visit.js';
 import { StyleLayout } from './lib/styles.jsx';
 
 // Chaque groupe de pages ne charge que son code et ses styles.
@@ -8,6 +9,7 @@ const Login = lazy(() => import('./pages/Login.jsx'));
 const Register = lazy(() => import('./pages/Register.jsx'));
 const Reset = lazy(() => import('./pages/Reset.jsx'));
 const ContactForm = lazy(() => import('./pages/ContactForm.jsx'));
+const Essai = lazy(() => import('./pages/Essai.jsx'));
 const PublicChat = lazy(() => import('./pages/PublicChat.jsx'));
 const Workspace = lazy(() => import('./ws/Workspace.jsx'));
 const InvoicePrint = lazy(() => import('./pages/InvoicePrint.jsx'));
@@ -20,6 +22,8 @@ const Terms = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.T
 
 export default function App() {
   // Le programme a démarré : l'écran de secours d'index.html n'a plus lieu d'être.
+  const { pathname } = useLocation();
+  useEffect(() => { trackVisit(pathname); }, [pathname]);
   useEffect(() => { window.__miaStarted = true; const box = document.getElementById('mia-fail'); if (box) box.remove(); }, []);
   return (
     <Suspense fallback={null}>
@@ -42,6 +46,7 @@ export default function App() {
         <Route element={<StyleLayout group="auth" body="site au" />}>
           <Route path="/reinitialiser" element={<Reset />} />
           <Route path="/form" element={<ContactForm />} />
+          <Route path="/essai" element={<Essai />} />
           <Route path="/satisfaction/:token" element={<Csat />} />
         </Route>
         <Route element={<StyleLayout group="ws" body="ws" />}>

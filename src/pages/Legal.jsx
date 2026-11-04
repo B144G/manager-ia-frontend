@@ -64,6 +64,9 @@ export function Privacy() {
       <p>{t("Mots de passe chiffrés, jetons d'accès aux canaux chiffrés, séparation des données de chaque organisation, droits par rôle, double authentification disponible et journal d'audit des actions sensibles. Aucun système n'est infaillible : en cas d'incident touchant vos données, nous vous en informons.")}</p>
       <h2>{t('Cookies et stockage local')}</h2>
       <p>{t("Brij-IA utilise un cookie de session indispensable pour vous maintenir connecté, et le stockage du navigateur pour mémoriser le thème clair ou sombre et accélérer le chargement. Nous n'utilisons pas de cookies publicitaires.")}</p>
+      <h2>{t('Statistiques de visite et demandes de contact')}</h2>
+      <p>{t("Pour savoir combien de personnes lisent nos pages, un compteur anonyme enregistre la page vue, le site d'où vient la visite et le type d'appareil (téléphone ou ordinateur). Il n'enregistre ni adresse IP, ni cookie, ni identifiant : nous ne pouvons pas savoir qui vous êtes. Il respecte le réglage « Ne pas me suivre » de votre navigateur.")}</p>
+      <p>{t("Si vous laissez vos coordonnées dans un formulaire (« Être contacté », contact), nous les utilisons pour vous répondre. Si vous cochez la case prévue et laissez une adresse e-mail, vous recevez au plus trois e-mails de conseils, chacun avec un lien pour vous désinscrire. Pour effacer vos coordonnées, écrivez-nous depuis cette adresse.")}</p>
       <h2>{t('Combien de temps nous conservons les données')}</h2>
       <p>{t('Tant que votre compte est actif. Quand vous supprimez une organisation ou demandez la suppression de votre compte, les données correspondantes sont effacées, sauf celles que la loi nous oblige à conserver (par exemple des journaux de sécurité).')}</p>
       <h2 id="suppression">{t('Vos droits et la suppression de vos données')}</h2>

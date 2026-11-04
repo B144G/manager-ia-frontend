@@ -10,6 +10,7 @@ export default function Final() {
       <p>{t("L'offre Gratuite vous permet de tout découvrir, sans carte bancaire.")}</p>
       <div className="s-cta">
         <Link to="/inscription" className="s-btn big">{t('Créer mon espace gratuit')}</Link>
+        <Link to="/essai" className="s-btn big">{t('Être contacté gratuitement')}</Link>
         <a className="s-btn big" href={`https://wa.me/${SUPPORT_WHATSAPP}`} target="_blank" rel="noopener noreferrer">{t('Une question ? WhatsApp')}</a>
       </div>
     </section>
