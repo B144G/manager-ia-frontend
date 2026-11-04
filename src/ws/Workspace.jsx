@@ -7,6 +7,7 @@ import AccountSecurity from './AccountSecurity.jsx';
 import AIPanel from './AIPanel.jsx';
 import { MODULE_ICONS, hasModule, moduleComponent } from './registry.js';
 import { Empty, Form, Icon, Loading } from './ui.jsx';
+import { GuideButton, GuideProvider } from './guide/GuideContext.jsx';
 import { WsProvider, useWs } from './WsContext.jsx';
 
 /** Espace de travail : connexion vérifiée, choix de l'organisation, menu des sous-applications, assistant IA. */
@@ -117,6 +118,7 @@ function Shell() {
   const members = info.limits.membersUsed;
 
   return (
+    <GuideProvider openNav={setNavOpen}>
     <div className={'ws-shell' + (navOpen ? ' nav-open' : '')} ref={shell}>
       <div className="ws-scrim" onClick={() => setNavOpen(false)} aria-hidden="true" />
       <aside className="ws-side" id="ws-side" aria-label={t('Menu principal')}>
@@ -148,6 +150,7 @@ function Shell() {
           </button>
           <AskBar onAsk={askAI} />
           <span className="grow" />
+          <GuideButton />
           <LangSwitch className="ws-lang ws-lang-top" />
           <Link className="bell" to={`/app/${orgId}/alerts`} aria-label={t('Alertes')}><Icon name="alerts" /><i className="dot" hidden={!bell} /></Link>
           <div className="ws-user" role="button" tabIndex={0} title={t('Sécurité du compte')} style={{ cursor: 'pointer' }} onClick={openSecurity} onKeyDown={(e) => { if (e.key === 'Enter') openSecurity(); }}><span className="av">{initialsOf(user && user.name)}</span><div><b>{user ? user.name : ''}</b><small>{t(info.me.roleLabel)}</small></div></div>
@@ -161,6 +164,7 @@ function Shell() {
       <AIPanel mod={AI_MODULES.has(cur) ? cur : 'general'} />
       <button className="ws-fab" type="button" id="aiBtn" onClick={() => setAiOpen(!aiOpen)}><Icon name="ai" /><span>{t('Assistant IA')}</span></button>
     </div>
+    </GuideProvider>
   );
 }
 
