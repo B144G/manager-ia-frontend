@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout.jsx';
+import { Fa } from '../lib/fa.jsx';
 import SiteAssistant from '../components/SiteAssistant.jsx';
 import { rq } from '../lib/api.js';
 import { useT } from '../lib/i18n.jsx';
@@ -70,7 +71,7 @@ export default function Register() {
               <label className="fld"><span>{verify ? t('Adresse e-mail') : t('E-mail ou téléphone')}</span><input id="contact" autoComplete="username" inputMode="email" required placeholder={verify ? t('vous@exemple.com') : undefined} value={v.contact} onChange={(e) => setV({ ...v, contact: e.target.value })} /></label>
               <label className="fld"><span>{t('Mot de passe')}</span>
                 <span className="au-pass"><input id="pass" type={show ? 'text' : 'password'} autoComplete="new-password" required value={v.pass} onChange={(e) => setV({ ...v, pass: e.target.value })} />
-                  <button type="button" id="eye" aria-label={show ? t('Masquer le mot de passe') : t('Afficher le mot de passe')} aria-pressed={show} onClick={() => setShow(!show)}>{show ? t('Masquer') : t('Afficher')}</button></span>
+                  <button type="button" id="eye" aria-label={show ? t('Masquer le mot de passe') : t('Afficher le mot de passe')} aria-pressed={show} onClick={() => setShow(!show)}><Fa name={show ? 'eye-off' : 'eye'} /><span className="sr-only">{show ? t('Masquer') : t('Afficher')}</span></button></span>
                 <small>{t('8 caractères minimum, évitez les mots de passe faciles')}</small>
               </label>
               <p className="hm-err" id="err" role="alert">{err ? serverMsg(t, err) : ''}</p>

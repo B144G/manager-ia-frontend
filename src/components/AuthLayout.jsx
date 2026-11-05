@@ -1,20 +1,17 @@
 import Logo from './Logo.jsx';
 import LangSwitch from './LangSwitch.jsx';
-import { useT } from '../lib/i18n.jsx';
+import { Fa } from '../lib/fa.jsx';
 
-/** Page d'identification : colonne d'argumentaire à gauche (grands écrans), carte au centre. */
-export default function AuthLayout({ pitch, bullets, image = true, children }) {
-  const t = useT();
+/** Page d'identification : un message en haut, puis le formulaire. Rien d'autre (pas de colonne de présentation). */
+export default function AuthLayout({ pitch, children }) {
   return (
-    <div className="au-grid">
-      <aside className="au-side" aria-hidden="false">
+    <div className="au-shell">
+      <header className="au-top">
         <Logo />
-        <div className="au-pitch"><h2>{pitch}</h2><ul>{bullets.map((b) => <li key={b}>{b}</li>)}</ul></div>
-        {image ? <img src="/assets/img/gestion.svg" alt={t("Aperçu du tableau de bord Brij-IA")} width="640" height="420" /> : null}
-      </aside>
+        <LangSwitch />
+      </header>
       <main className="au-main">
-        <div style={{ position: 'absolute', top: 10, right: 12, zIndex: 3 }}><LangSwitch /></div>
-        <Logo className="au-logo" />
+        <div className="au-msg" role="note"><Fa name="magic" /><p>{pitch}</p></div>
         {children}
       </main>
     </div>

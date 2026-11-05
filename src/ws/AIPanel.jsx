@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { SUGGEST } from './registry.js';
 import NoteBox from './parts/memory/NoteBox.jsx';
-import { getLocale, useT } from '../lib/i18n.jsx';
+import Composer from '../components/Composer.jsx';
+import { useT } from '../lib/i18n.jsx';
 import { useWs } from './WsContext.jsx';
 
 /** Panneau de l'assistant IA (colonne de droite) : une discussion par sous-application. */
@@ -12,21 +13,21 @@ export default function AIPanel({ mod }) {
   const [remaining, setRemaining] = useState(null);
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
-  const [rec, setRec] = useState(false);
+  const [files, setFiles] = useState([]);
   const log = useRef(null);
-  const recog = useRef(null);
   const def = info.modules.find((m) => m.id === mod);
-  const SR = typeof window !== 'undefined' ? window.SpeechRecognition || window.webkitSpeechRecognition : null;
 
   const scroll = () => { if (log.current) log.current.scrollTop = log.current.scrollHeight; };
   useEffect(scroll, [msgs]);
 
   const go = (v) => {
-    const q = (v ?? text).trim();
+    const typed = (v ?? text).trim();
+    const att = v === undefined ? files : [];
+    const q = typed || (att.length ? t('Regarde ce que je te joins.') : '');
     if (!q || busy) return;
-    setBusy(true); setText('');
-    setMsgs((l) => [...l, { role: 'user', content: q }, { role: 'assistant', content: t("L'IA réfléchit…"), wait: true }]);
-    oapi('POST', '/ai/chat', { module: mod, message: q }).then((j) => {
+    setBusy(true); setText(''); setFiles([]);
+    setMsgs((l) => [...l, { role: 'user', content: att.length ? q + '\n📎 ' + att.map((f) => f.name).join(', ') : q }, { role: 'assistant', content: t("L'IA réfléchit…"), wait: true }]);
+    oapi('POST', '/ai/chat', { module: mod, message: q, attachments: att.map((f) => ({ name: f.name, mime: f.mime, data: f.data })) }).then((j) => {
       setMsgs((l) => [...l.slice(0, -1), { role: 'assistant', content: j.text }]);
       setRemaining(j.remaining);
     }, (e) => {
@@ -56,16 +57,6 @@ export default function AIPanel({ mod }) {
   const canNote = msgs.some((m) => m.role === 'user') && info.modules.some((m) => m.id === 'memory');
   const note = () => modal(t('Noter ceci dans la mémoire'), (close) => <NoteBox mod={mod} fallback={lastAnswer ? lastAnswer.content : ''} close={close} />, { wide: true });
 
-  // Dictée vocale (navigateurs qui la proposent : Chrome, Edge, Safari récents)
-  const dictate = () => {
-    if (!SR) return;
-    if (recog.current) { recog.current.stop(); return; }
-    const r = new SR(); r.lang = getLocale(); r.interimResults = false; recog.current = r; setRec(true);
-    r.onresult = (e) => { let txt = ''; for (let i = e.resultIndex; i < e.results.length; i++) txt += e.results[i][0].transcript; setText((x) => (x + ' ' + txt).trim()); };
-    r.onend = r.onerror = () => { recog.current = null; setRec(false); };
-    r.start();
-  };
-
   return (
     <div className="ws-ai" id="ws-ai" hidden={!aiOpen}>
       <div className="ai-h">
@@ -77,14 +68,13 @@ export default function AIPanel({ mod }) {
       </div>
       <div className="ai-chips">{(SUGGEST[mod] || SUGGEST.general).map((q) => <button key={q} type="button" className="chip" onClick={() => go(t(q))}>{t(q)}</button>)}</div>
       <div className="ai-in">
-        <textarea rows={2} placeholder={t("Posez votre question ou demandez de l'aide…")} aria-label={t("Message pour l'IA")} value={text} onChange={(e) => setText(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); go(); } }} />
-        <div className="row">
-          <button className="btn primary small" type="button" disabled={busy} onClick={() => go()}>{t('Envoyer')}</button>
-          {SR ? <button className="btn small" type="button" title={t('Dicter votre message à la voix')} onClick={dictate}>{rec ? t('Écoute… (toucher pour arrêter)') : t('Parler')}</button> : null}
-          {canNote ? <button className="btn small" type="button" title={t("Enregistrer un résumé de cette discussion dans la mémoire de l'entreprise")} onClick={note}>{t('Noter ceci')}</button> : null}
-          <button className="btn small" type="button" onClick={() => oapi('DELETE', '/ai/history?module=' + mod).then(() => setMsgs([{ role: 'assistant', content: t('Discussion effacée.') }]), fail)}>{t('Effacer')}</button>
-        </div>
+        <Composer value={text} onChange={setText} onSend={() => go()} busy={busy} files={files} setFiles={setFiles}
+          placeholder={t("Posez votre question ou demandez de l'aide…")} label={t("Message pour l'IA")}>
+          <div className="row">
+            {canNote ? <button className="btn small" type="button" title={t("Enregistrer un résumé de cette discussion dans la mémoire de l'entreprise")} onClick={note}>{t('Noter ceci')}</button> : null}
+            <button className="btn small" type="button" onClick={() => oapi('DELETE', '/ai/history?module=' + mod).then(() => setMsgs([{ role: 'assistant', content: t('Discussion effacée.') }]), fail)}>{t('Effacer')}</button>
+          </div>
+        </Composer>
         <p className="ai-info">{remaining === null ? '' : t('{n} message(s) IA restant(s) avant le renouvellement', { n: remaining })}</p>
       </div>
     </div>

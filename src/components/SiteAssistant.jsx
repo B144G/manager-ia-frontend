@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import Composer from './Composer.jsx';
 import { rq, SUPPORT_WHATSAPP } from '../lib/api.js';
 import { tr, useT } from '../lib/i18n.jsx';
 
@@ -23,9 +24,7 @@ export default function SiteAssistant() {
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const log = useRef(null);
-  const input = useRef(null);
   useEffect(() => { if (log.current) log.current.scrollTop = log.current.scrollHeight; }, [msgs]);
-  useEffect(() => { if (open && input.current) input.current.focus(); }, [open]);
 
   function ask(q0) {
     const q = (q0 ?? text).trim();
@@ -47,10 +46,7 @@ export default function SiteAssistant() {
         </header>
         <div id="sa-log" aria-live="polite" ref={log}>{msgs.map((m, i) => <div key={i} className={'m ' + (m.role === 'user' ? 'u' : 'a')}>{m.init ? t(m.content) : m.content}</div>)}</div>
         <div id="sa-chips">{['Comment commencer ?', "Que fait l'agent IA ?", 'Quels sont les prix ?'].map((q) => <button key={q} type="button" onClick={() => ask(t(q))}>{t(q)}</button>)}</div>
-        <form onSubmit={(e) => { e.preventDefault(); ask(); }}>
-          <input ref={input} type="text" placeholder={t("Posez votre question…")} aria-label={t("Votre question")} autoComplete="off" value={text} onChange={(e) => setText(e.target.value)} />
-          <button className="btn primary small" type="submit">{t('Envoyer')}</button>
-        </form>
+        <div style={{ padding: '0 12px 12px' }}><Composer rows={1} allowFiles={false} value={text} onChange={setText} onSend={() => ask()} busy={busy} files={[]} setFiles={() => {}} placeholder={t('Posez votre question…')} label={t('Votre question')} /></div>
       </div>
     </>
   );

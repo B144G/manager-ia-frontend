@@ -41,3 +41,4 @@
 .gd-none{margin:12px 8px;color:var(--muted,#4a5a70);font-size:.92rem}
 @media (max-width:639px){.gd-btn b{display:none}.gd-btn{padding:0 8px}.gd-offer{right:12px;bottom:80px}.gd-list{position:fixed;left:12px;right:12px;top:64px;width:auto}}
 @media (prefers-reduced-motion:reduce){.gd-spot,.gd-arrow svg{animation:none}.gd-spot,.gd-pop,.gd-arrow{transition:none}}
+
