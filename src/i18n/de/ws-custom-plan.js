@@ -32,7 +32,7 @@ export default {
   "Votre offre actuelle est active : un forfait sur mesure sera possible à la fin de l'abonnement.": "Ihr aktuelles Angebot ist aktiv: Ein individuelles Paket ist am Ende des Abonnements möglich.",
   "Renouveler ce forfait": "Dieses Paket verlängern",
   "Payer ce forfait": "Dieses Paket bezahlen",
-  "Un budget plus petit ou une durée différente ? Le forfait sur mesure s'adapte à la somme que vous choisissez, dès 10 000 FCFA, pour une semaine, un mois ou un an.": "Ein kleineres Budget oder eine andere Laufzeit? Das individuelle Paket passt sich dem Betrag an, den Sie wählen, ab 10.000 FCFA, für eine Woche, einen Monat oder ein Jahr.",
+  "Un budget plus petit ou une durée différente ? Le forfait sur mesure s'adapte à la somme que vous choisissez, dès 10 000 FCFA, pour une semaine, un mois, six mois ou un an.": "Ein kleineres Budget oder eine andere Laufzeit? Das individuelle Paket passt sich dem Betrag an, den Sie wählen, ab 10.000 FCFA, für eine Woche, einen Monat, sechs Monate oder ein Jahr.",
   "Définir votre forfait": "Ihr Paket festlegen",
   "Choisissez la somme et le temps d'utilisation : les accès s'adaptent à ce que vous payez. Le minimum est de {min} par mois.": "Wählen Sie Betrag und Nutzungsdauer: Die Zugänge passen sich an das an, was Sie zahlen. Das Minimum beträgt {min} pro Monat.",
   "Votre forfait (somme en FCFA)": "Ihr Paket (Betrag in FCFA)",
@@ -49,4 +49,6 @@ export default {
   "Fonctions incluses": "Enthaltene Funktionen",
   "forfait plus élevé": "höheres Paket",
   "Renseignez un forfait valide pour voir ici les accès et les disponibilités.": "Geben Sie ein gültiges Paket ein, um hier Zugang und Verfügbarkeit zu sehen.",
+  "Six mois": "Sechs Monate",
+  "6 mois": "6 Monate",
 };

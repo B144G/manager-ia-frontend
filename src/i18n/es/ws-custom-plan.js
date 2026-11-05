@@ -32,7 +32,7 @@ export default {
   "Votre offre actuelle est active : un forfait sur mesure sera possible à la fin de l'abonnement.": "Su oferta actual está activa: un plan a medida será posible al final de la suscripción.",
   "Renouveler ce forfait": "Renovar este plan",
   "Payer ce forfait": "Pagar este plan",
-  "Un budget plus petit ou une durée différente ? Le forfait sur mesure s'adapte à la somme que vous choisissez, dès 10 000 FCFA, pour une semaine, un mois ou un an.": "¿Un presupuesto menor o una duración distinta? El plan a medida se adapta a la cantidad que usted elija, desde 10 000 FCFA, para una semana, un mes o un año.",
+  "Un budget plus petit ou une durée différente ? Le forfait sur mesure s'adapte à la somme que vous choisissez, dès 10 000 FCFA, pour une semaine, un mois, six mois ou un an.": "¿Un presupuesto menor o una duración distinta? El plan a medida se adapta a la cantidad que usted elija, desde 10 000 FCFA, para una semana, un mes, seis meses o un año.",
   "Définir votre forfait": "Defina su plan",
   "Choisissez la somme et le temps d'utilisation : les accès s'adaptent à ce que vous payez. Le minimum est de {min} par mois.": "Elija la cantidad y el tiempo de uso: los accesos se adaptan a lo que paga. El mínimo es de {min} al mes.",
   "Votre forfait (somme en FCFA)": "Su plan (cantidad en FCFA)",
@@ -49,4 +49,6 @@ export default {
   "Fonctions incluses": "Funciones incluidas",
   "forfait plus élevé": "plan superior",
   "Renseignez un forfait valide pour voir ici les accès et les disponibilités.": "Indique un plan válido para ver aquí los accesos y la disponibilidad.",
+  "Six mois": "Seis meses",
+  "6 mois": "6 meses",
 };

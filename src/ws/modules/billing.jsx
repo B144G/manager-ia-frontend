@@ -16,7 +16,7 @@ export default function Billing() {
   // Nom d'une offre : « Sur mesure|15000|7 » devient « Sur mesure (15 000 FCFA / semaine) » dans la langue affichée
   const planName = (key, label) => {
     const m = /^Sur mesure\|(\d+)\|(\d+)$/.exec(String(key || ''));
-    return m ? t('Sur mesure ({price} / {duration})', { price: money(Number(m[1])), duration: ({ 7: t('semaine'), 365: t('an') })[Number(m[2])] || t('mois') }) : t(label || key);
+    return m ? t('Sur mesure ({price} / {duration})', { price: money(Number(m[1])), duration: ({ 7: t('semaine'), 183: t('6 mois'), 365: t('an') })[Number(m[2])] || t('mois') }) : t(label || key);
   };
   const st = useLoad(() => rq('GET', '/api/billing'), []);
   const [tab, setTab] = useState('plans');

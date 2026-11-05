@@ -32,7 +32,7 @@ export default {
   "Votre offre actuelle est active : un forfait sur mesure sera possible à la fin de l'abonnement.": "Your current plan is active: a custom plan will be possible at the end of the subscription.",
   "Renouveler ce forfait": "Renew this plan",
   "Payer ce forfait": "Pay for this plan",
-  "Un budget plus petit ou une durée différente ? Le forfait sur mesure s'adapte à la somme que vous choisissez, dès 10 000 FCFA, pour une semaine, un mois ou un an.": "A smaller budget or a different duration? The custom plan adapts to the amount you choose, from 10,000 FCFA, for a week, a month or a year.",
+  "Un budget plus petit ou une durée différente ? Le forfait sur mesure s'adapte à la somme que vous choisissez, dès 10 000 FCFA, pour une semaine, un mois, six mois ou un an.": "A smaller budget or a different duration? The custom plan adapts to the amount you choose, from 10,000 FCFA, for a week, a month, six months or a year.",
   "Définir votre forfait": "Define your plan",
   "Choisissez la somme et le temps d'utilisation : les accès s'adaptent à ce que vous payez. Le minimum est de {min} par mois.": "Choose the amount and the usage time: the access adapts to what you pay. The minimum is {min} per month.",
   "Votre forfait (somme en FCFA)": "Your plan (amount in FCFA)",
@@ -49,4 +49,6 @@ export default {
   "Fonctions incluses": "Included features",
   "forfait plus élevé": "higher plan",
   "Renseignez un forfait valide pour voir ici les accès et les disponibilités.": "Enter a valid plan to see the access and availability here.",
+  "Six mois": "Six months",
+  "6 mois": "6 months",
 };

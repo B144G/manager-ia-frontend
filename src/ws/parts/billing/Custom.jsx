@@ -5,7 +5,7 @@ import { useWs } from '../../WsContext.jsx';
 
 /* Forfait sur mesure : deux champs (le forfait en FCFA, le temps d'utilisation) et, à côté, le bloc « Accès et disponibilités » qui se met à jour en direct.
    Les contrôles de somme sont refaits ici pour afficher des messages traduits ; le serveur reste seul juge (il recalcule tout au paiement). */
-const PRESETS = { week: [2500, 5000, 10000, 20000], month: [10000, 15000, 25000, 50000], year: [120000, 200000, 400000, 600000] };
+const PRESETS = { week: [2500, 5000, 10000, 20000], month: [10000, 15000, 25000, 50000], semester: [60000, 100000, 200000, 300000], year: [120000, 200000, 400000, 600000] };
 
 export default function CustomPlan({ b, onPay }) {
   const t = useT();
@@ -16,8 +16,8 @@ export default function CustomPlan({ b, onPay }) {
   const [quote, setQuote] = useState(null);
   const per = info.periods.find((x) => x.id === period);
   const amount = Number(String(raw).replace(/\D/g, ''));
-  const names = { week: t('Une semaine'), month: t('Un mois'), year: t('Un an') };
-  const short = { week: t('semaine'), month: t('mois'), year: t('an') };
+  const names = { week: t('Une semaine'), month: t('Un mois'), semester: t('Six mois'), year: t('Un an') };
+  const short = { week: t('semaine'), month: t('mois'), semester: t('6 mois'), year: t('an') };
 
   let problem = '';
   if (!amount) problem = t('Indiquez une somme en FCFA.');
