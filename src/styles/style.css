@@ -8,9 +8,9 @@ img{max-width:100%}
   --bg:#eef1f5; --surface:#ffffff; --surface2:#e2e8f0; --fg:#0e1a2b; --muted:#4a5a70;
   --line:#cdd6e2; --accent:#1d4ed8; --accent-fg:#ffffff; --signal:#f2a900; --signal-fg:#2b1d00;
   --ok:#0f7a4d; --pink:#d6336c; --wa:#128c4a; --wa-fg:#ffffff; --warn-bg:#fff4d6;
-  --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
-  --f-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --f-display:"Plus Jakarta Sans Variable","Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"Inter Variable","Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0b1322; --surface:#121c30; --surface2:#1b2842; --fg:#e8eef8; --muted:#9fb0c8;

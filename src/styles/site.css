@@ -8,7 +8,7 @@
   --soft:color-mix(in srgb,var(--p) 8%,transparent);--soft2:color-mix(in srgb,var(--p) 14%,transparent);
   --sh1:0 1px 2px rgba(11,16,32,.05),0 8px 24px -12px rgba(11,16,32,.12);--sh2:0 30px 80px -40px rgba(30,27,120,.45);
   --r1:14px;--r2:22px;--r3:32px;
-  --f-h:"Plus Jakarta Sans","Inter",system-ui,-apple-system,"Segoe UI",sans-serif;--f-b:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-h:"Plus Jakarta Sans Variable","Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--f-b:"Inter Variable","Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --fg:var(--ink);--accent:var(--p);--accent-fg:var(--pfg);--surface:var(--card);--surface2:var(--bg2);--signal:var(--gold);--ok:#12b76a;
   color-scheme:light}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070b16;--bg2:#0b1120;--card:#0f1628;--ink:#eef1fa;--muted:#9aa6c0;--line:#1c2640;--p:#818cf8;--p2:#a78bfa;--pfg:#0b1020;--soft:color-mix(in srgb,var(--p) 12%,transparent);--soft2:color-mix(in srgb,var(--p) 20%,transparent);--sh1:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);--sh2:0 30px 80px -40px rgba(99,102,241,.55);color-scheme:dark}}

@@ -16,7 +16,7 @@ export default function Billing() {
   // Nom d'une offre : « Sur mesure|15000|7 » devient « Sur mesure (15 000 FCFA / semaine) » dans la langue affichée
   const planName = (key, label) => {
     const m = /^Sur mesure\|(\d+)\|(\d+)$/.exec(String(key || ''));
-    return m ? t('Sur mesure ({price} / {duration})', { price: money(Number(m[1])), duration: ({ 7: t('semaine'), 183: t('6 mois'), 365: t('an') })[Number(m[2])] || t('mois') }) : t(label || key);
+    return m ? t('Sur mesure ({price} / {duration})', { price: money(Number(m[1])), duration: ({ 7: t('semaine'), 91: t('trimestre'), 183: t('semestre'), 365: t('an') })[Number(m[2])] || t('mois') }) : t(label || key);
   };
   const st = useLoad(() => rq('GET', '/api/billing'), []);
   const [tab, setTab] = useState('plans');
@@ -79,16 +79,21 @@ export default function Billing() {
 
         {tab === 'plans' ? (
         <div className="ws-card">
-          <h2>{t('Choisir ou renouveler une offre')}</h2>
+          <h2>{t('Offre Illimité : choisissez la durée')}</h2>
+          <p className="muted">{t("Organisations, personnes et antennes sans limite pratique, toutes les fonctions. Plus la durée est longue, plus le prix par mois baisse. Vous pouvez prolonger à tout moment : les jours s'ajoutent.")}</p>
           <div className="kpis">
             {b.plans.map((p) => {
               const l = p.limits;
+              const months = p.days / 30;
+              const names = { week: t('Une semaine'), month: t('Un mois'), quarter: t('Un trimestre'), semester: t('Un semestre'), year: t('Un an') };
+              const perMonth = Math.round(p.priceXAF / months / 500) * 500;
               return (
                 <div className={'stat' + (p.current ? ' good' : '')} key={p.id}>
-                  <b>{t(p.name)}</b>
-                  <span>{t('{price} / {days} jours', { price: money(p.priceXAF), days: b.durationDays })}</span>
-                  <small>{(l.orgs > 1 ? t('{ai} messages IA · {members} personnes · {orgs} organisations', { ai: l.aiMonth, members: l.members, orgs: l.orgs }) : t('{ai} messages IA · {members} personnes · {orgs} organisation', { ai: l.aiMonth, members: l.members, orgs: l.orgs }))}</small>
-                  <button className={'btn small' + (p.current ? '' : ' primary')} type="button" disabled={!p.available} title={p.reason ? tsrv(p.reason) : undefined} onClick={() => pay(p, b)}>{p.current ? t('Renouveler') : t('Choisir')}</button>
+                  <b>{t('Illimité') + ' · ' + (names[p.period] || p.period)}</b>
+                  <span>{money(p.priceXAF) + ' / ' + t('{n} jours', { n: p.days })}</span>
+                  {p.period === 'week' || p.period === 'month' ? null : <small>{t('soit {price} par mois', { price: money(perMonth) })}</small>}
+                  <small>{t('{ai} messages IA par mois', { ai: l.aiMonth })}</small>
+                  <button className={'btn small' + (p.current ? '' : ' primary')} type="button" disabled={!p.available} title={p.reason ? tsrv(p.reason) : undefined} onClick={() => pay({ id: p.id, name: t('Illimité') + ' · ' + (names[p.period] || p.period), priceXAF: p.priceXAF, days: p.days, current: p.current }, b)}>{p.current ? t('Prolonger') : t('Choisir')}</button>
                   {!p.available ? <small className="muted">{t('Disponible à la fin de votre abonnement.')}</small> : null}
                 </div>
               );

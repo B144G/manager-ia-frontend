@@ -1,6 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import '@fontsource-variable/inter';
+import '@fontsource-variable/plus-jakarta-sans';
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import './lib/fa.jsx';
 import App from './App.jsx';
 import { loadTheme } from './lib/theme.js';
 import { initViewport } from './lib/viewport.js';
