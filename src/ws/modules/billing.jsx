@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
 import { Empty, Form, Loaded, useLoad } from '../ui.jsx';
 import Instructions from '../parts/billing/Instructions.jsx';
+import CustomPlan from '../parts/billing/Custom.jsx';
 
 /* Abonnement (offre actuelle, quotas, choix d'une offre, paiement MTN / Orange, historique). Réservée au propriétaire. */
 const ST = { pending: ['En attente', 'mid'], awaiting_validation: ['À valider', 'mid'], paid: ['Payé', 'good'], failed: ['Échoué', 'bad'] };
@@ -12,7 +13,13 @@ const fr = (dateFr, iso) => (iso ? dateFr(String(iso).slice(0, 10)) : '');
 export default function Billing() {
   const { rq, money, dateFr, modal } = useWs();
   const t = useT();
+  // Nom d'une offre : « Sur mesure|15000|7 » devient « Sur mesure (15 000 FCFA / semaine) » dans la langue affichée
+  const planName = (key, label) => {
+    const m = /^Sur mesure\|(\d+)\|(\d+)$/.exec(String(key || ''));
+    return m ? t('Sur mesure ({price} / {duration})', { price: money(Number(m[1])), duration: ({ 7: t('semaine'), 365: t('an') })[Number(m[2])] || t('mois') }) : t(label || key);
+  };
   const st = useLoad(() => rq('GET', '/api/billing'), []);
+  const [tab, setTab] = useState('plans');
   const aliveRef = useRef(true);
   useEffect(() => { aliveRef.current = true; return () => { aliveRef.current = false; }; }, []);
 
@@ -20,17 +27,18 @@ export default function Billing() {
     modal(t('Finalisez votre paiement'), (close) => <Instructions r={r} close={close} onDone={st.reload} aliveRef={aliveRef} />, { onclose: st.reload });
   }
 
+  // p = une offre habituelle { id, name, priceXAF, current } ou un forfait sur mesure { custom: { amount, period }, name, priceXAF, days, current }
   function pay(p, b) {
     modal(p.current ? t('Renouveler {plan}', { plan: t(p.name) }) : t('Passer à {plan}', { plan: t(p.name) }), (close) => (
       <>
-        <p>{t('{price} pour {days} jours.', { price: money(p.priceXAF), days: b.durationDays })}</p>
+        <p>{t('{price} pour {days} jours.', { price: money(p.priceXAF), days: p.days || b.durationDays })}</p>
         <Form
           submitText={t('Payer')}
           fields={[
             { k: 'operator', label: t('Opérateur'), type: 'select', options: [['mtn', 'MTN Mobile Money'], ['orange', 'Orange Money']] },
             { k: 'phone', label: t('Numéro qui paie (ex. 6XXXXXXXX)'), required: true },
           ]}
-          onSubmit={(v) => rq('POST', '/api/payments/initiate', { plan: p.id, operator: v.operator, phone: v.phone }).then((r) => { close(); instructions(r); })}
+          onSubmit={(v) => rq('POST', '/api/payments/initiate', Object.assign({ operator: v.operator, phone: v.phone }, p.custom ? { custom: p.custom } : { plan: p.id })).then((r) => { close(); instructions(r); })}
         />
       </>
     ));
@@ -41,7 +49,7 @@ export default function Billing() {
     return (
       <>
         <div className="ws-card">
-          <h2>{t('Offre actuelle : {plan}', { plan: t(b.plan) })}</h2>
+          <h2>{t('Offre actuelle : {plan}', { plan: planName(b.plan, b.plan) })}</h2>
           <p>{paid ? (b.daysLeft > 1 ? t("Active jusqu'au {date} ({n} jours restants).", { date: fr(dateFr, b.expiresAt), n: b.daysLeft }) : t("Active jusqu'au {date} ({n} jour restant).", { date: fr(dateFr, b.expiresAt), n: b.daysLeft })) : t('Offre gratuite : essayez Brij-IA, puis passez à une offre payante quand vous êtes prêt.')}</p>
           {paid && b.daysLeft <= 7 ? <p className="pill mid">{t('Votre abonnement se termine bientôt : renouvelez pour ne pas perdre vos quotas.')}</p> : null}
           {paid ? <p className="muted small">{t("Le changement d'offre n'est possible qu'à la fin de l'abonnement. Vous pouvez renouveler votre offre à tout moment : les jours s'ajoutent.")}</p> : null}
@@ -62,6 +70,14 @@ export default function Billing() {
           </div>
         ) : null}
 
+        <div className="ws-tabs">
+          <button type="button" className={'tab' + (tab === 'plans' ? ' on' : '')} onClick={() => setTab('plans')}>{t('Nos offres')}</button>
+          <button type="button" className={'tab' + (tab === 'custom' ? ' on' : '')} onClick={() => setTab('custom')}>{t('Sur mesure')}</button>
+        </div>
+
+        {tab === 'custom' ? <CustomPlan b={b} onPay={(p) => pay(p, b)} /> : null}
+
+        {tab === 'plans' ? (
         <div className="ws-card">
           <h2>{t('Choisir ou renouveler une offre')}</h2>
           <div className="kpis">
@@ -79,6 +95,7 @@ export default function Billing() {
             })}
           </div>
         </div>
+        ) : null}
 
         <div className="ws-card">
           <h2>{t('Historique des paiements')}</h2>
@@ -87,7 +104,7 @@ export default function Billing() {
             const stt = ST[p.status] || [p.status, 'mid'];
             return (
               <div className="line" key={p.reference || i}>
-                <span><b>{t(p.plan) + ' · ' + money(p.amountXAF)}</b><small>{' ' + fr(dateFr, p.createdAt) + ' · ' + (p.operator === 'orange' ? 'Orange Money' : 'MTN Mobile Money') + ' · ' + t('réf. {ref}', { ref: p.reference })}</small></span>
+                <span><b>{planName(p.planKey, p.plan) + ' · ' + money(p.amountXAF)}</b><small>{' ' + fr(dateFr, p.createdAt) + ' · ' + (p.operator === 'orange' ? 'Orange Money' : 'MTN Mobile Money') + ' · ' + t('réf. {ref}', { ref: p.reference })}</small></span>
                 <span className="row">{p.status === 'paid' ? <a className="link" style={{ minHeight: 44, display: 'inline-flex', alignItems: 'center' }} href={'/recu/' + encodeURIComponent(p.reference)} target="_blank" rel="noopener noreferrer">{t('Reçu à imprimer')}</a> : null}<span className={'pill ' + stt[1]}>{t(stt[0])}</span></span>
               </div>
             );
