@@ -92,7 +92,7 @@ export default function Billing() {
                   <b>{t('Illimité') + ' · ' + (names[p.period] || p.period)}</b>
                   <span>{money(p.priceXAF) + ' / ' + t('{n} jours', { n: p.days })}</span>
                   {p.period === 'week' || p.period === 'month' ? null : <small>{t('soit {price} par mois', { price: money(perMonth) })}</small>}
-                  <small>{t('{ai} messages IA par mois', { ai: l.aiMonth })}</small>
+                  <small>{p.period === 'week' ? t('Messages IA') + ' : ' + t('{n} sur la semaine', { n: l.aiMonth }) : t('{ai} messages IA par mois', { ai: l.aiMonth })}</small>
                   <button className={'btn small' + (p.current ? '' : ' primary')} type="button" disabled={!p.available} title={p.reason ? tsrv(p.reason) : undefined} onClick={() => pay({ id: p.id, name: t('Illimité') + ' · ' + (names[p.period] || p.period), priceXAF: p.priceXAF, days: p.days, current: p.current }, b)}>{p.current ? t('Prolonger') : t('Choisir')}</button>
                   {!p.available ? <small className="muted">{t('Disponible à la fin de votre abonnement.')}</small> : null}
                 </div>
