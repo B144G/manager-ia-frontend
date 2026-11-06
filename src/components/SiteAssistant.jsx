@@ -1,3 +1,4 @@
+import { Dots, Typed } from './AIText.jsx';
 import { useEffect, useRef, useState } from 'react';
 import Composer from './Composer.jsx';
 import { rq, SUPPORT_WHATSAPP } from '../lib/api.js';
@@ -31,8 +32,8 @@ export default function SiteAssistant() {
     if (!q || busy) return;
     setText(''); setBusy(true);
     const history = [...msgs, { role: 'user', content: q }];
-    setMsgs([...history, { role: 'assistant', content: '…', wait: true }]);
-    const done = (txt) => { setMsgs([...history, { role: 'assistant', content: txt }]); setBusy(false); };
+    setMsgs([...history, { role: 'assistant', content: '', wait: true }]);
+    const done = (txt) => { setMsgs([...history, { role: 'assistant', content: txt, fresh: true }]); setBusy(false); };
     rq('POST', '/api/assistant', { messages: history.filter((m) => !m.wait && !m.init).slice(-12).map((m) => ({ role: m.role, content: m.content })) }).then((j) => done(j.text), () => done(fallback(q)));
   }
 
@@ -44,7 +45,7 @@ export default function SiteAssistant() {
           <div><b>{t('Assistant Brij-IA')}</b><small>{t('Je vous guide sur le site')}</small></div>
           <button className="x" type="button" aria-label={t("Fermer l'assistant")} onClick={() => setOpen(false)}>×</button>
         </header>
-        <div id="sa-log" aria-live="polite" ref={log}>{msgs.map((m, i) => <div key={i} className={'m ' + (m.role === 'user' ? 'u' : 'a')}>{m.init ? t(m.content) : m.content}</div>)}</div>
+        <div id="sa-log" aria-live="polite" ref={log}>{msgs.map((m, i) => <div key={i} className={'m ' + (m.role === 'user' ? 'u' : 'a')}>{m.wait ? <Dots /> : m.init ? t(m.content) : m.fresh ? <Typed text={m.content} /> : m.content}</div>)}</div>
         <div id="sa-chips">{['Comment commencer ?', "Que fait l'agent IA ?", 'Quels sont les prix ?'].map((q) => <button key={q} type="button" onClick={() => ask(t(q))}>{t(q)}</button>)}</div>
         <div style={{ padding: '0 12px 12px' }}><Composer rows={1} allowFiles={false} value={text} onChange={setText} onSend={() => ask()} busy={busy} files={[]} setFiles={() => {}} placeholder={t('Posez votre question…')} label={t('Votre question')} /></div>
       </div>

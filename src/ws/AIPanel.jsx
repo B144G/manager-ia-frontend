@@ -1,3 +1,4 @@
+import { Dots, Typed } from '../components/AIText.jsx';
 import { useEffect, useRef, useState } from 'react';
 import { SUGGEST } from './registry.js';
 import NoteBox from './parts/memory/NoteBox.jsx';
@@ -26,9 +27,9 @@ export default function AIPanel({ mod }) {
     const q = typed || (att.length ? t('Regarde ce que je te joins.') : '');
     if (!q || busy) return;
     setBusy(true); setText(''); setFiles([]);
-    setMsgs((l) => [...l, { role: 'user', content: att.length ? q + '\n📎 ' + att.map((f) => f.name).join(', ') : q }, { role: 'assistant', content: t("L'IA réfléchit…"), wait: true }]);
+    setMsgs((l) => [...l, { role: 'user', content: att.length ? q + '\n📎 ' + att.map((f) => f.name).join(', ') : q }, { role: 'assistant', content: '', wait: true }]);
     oapi('POST', '/ai/chat', { module: mod, message: q, attachments: att.map((f) => ({ name: f.name, mime: f.mime, data: f.data })) }).then((j) => {
-      setMsgs((l) => [...l.slice(0, -1), { role: 'assistant', content: j.text }]);
+      setMsgs((l) => [...l.slice(0, -1), { role: 'assistant', content: j.text, fresh: true }]);
       setRemaining(j.remaining);
     }, (e) => {
       setMsgs((l) => [...l.slice(0, -1), { role: 'assistant', content: t(e.message), err: true }]);
@@ -64,7 +65,7 @@ export default function AIPanel({ mod }) {
         <button className="x" type="button" aria-label={t("Fermer l'assistant")} onClick={() => setAiOpen(false)}>×</button>
       </div>
       <div className="ai-log" aria-live="polite" ref={log}>
-        {msgs.map((m, i) => <div key={i} className={'bub ' + m.role + (m.wait ? ' wait' : '') + (m.err ? ' err' : '')}>{m.content}</div>)}
+        {msgs.map((m, i) => <div key={i} className={'bub ' + m.role + (m.wait ? ' wait' : '') + (m.err ? ' err' : '')}>{m.wait ? <Dots /> : m.fresh ? <Typed text={m.content} /> : m.content}</div>)}
       </div>
       <div className="ai-chips">{(SUGGEST[mod] || SUGGEST.general).map((q) => <button key={q} type="button" className="chip" onClick={() => go(t(q))}>{t(q)}</button>)}</div>
       <div className="ai-in">
