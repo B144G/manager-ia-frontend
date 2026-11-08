@@ -11,6 +11,7 @@ export default function Hero({ onPlay }) {
       <p className="lead">{t('Brij-IA répond à vos clients sur WhatsApp, suit votre stock, vos factures, votre équipe et votre comptabilité.')} <b>{t('Elle propose, vous validez.')}</b></p>
       <div className="s-cta">
         <Link to="/inscription" className="s-btn pri big">{t('Essayer gratuitement')}</Link>
+        <Link to="/connexion" className="s-btn big">{t('Se connecter')}</Link>
         <button className="s-btn big" type="button" id="playBtn" onClick={onPlay}><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor" stroke="none" /></svg>{t('Voir la vidéo (2 min 30)')}</button>
       </div>
       <ul className="s-trust"><li>{t('Gratuit pour commencer')}</li><li>{t('Paiement MTN et Orange Money')}</li><li>{t('En français, avec support sur WhatsApp')}</li></ul>
