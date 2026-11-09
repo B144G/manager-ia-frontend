@@ -61,5 +61,7 @@ export default {
   "Vous pouvez arrêter d'utiliser le service et supprimer votre organisation à tout moment. Nous pouvons suspendre un compte en cas d'abus ou de non-respect de ces conditions.": "Puede dejar de utilizar el servicio y eliminar su organización en cualquier momento. Podemos suspender una cuenta en caso de abuso o de incumplimiento de estas condiciones.",
   "Droit applicable": "Derecho aplicable",
   "Ces conditions sont régies par le droit camerounais. Contact : {mail}.": "Estas condiciones se rigen por el derecho camerunés. Contacto: {mail}.",
-  "Voir la politique de confidentialité": "Ver la política de privacidad"
+  "Voir la politique de confidentialité": "Ver la política de privacidad",
+  "{b} : date de dernière connexion, types d'événements de votre compte (inscription, connexion, paiement, changement d'offre…) avec leur date, et notes internes de l'équipe, pour gérer les comptes, vous assister et repérer les abus. Jamais le contenu de vos messages ni les données de votre organisation.": "{b}: fecha del último acceso, tipos de eventos de su cuenta (registro, acceso, pago, cambio de plan…) con su fecha, y notas internas del equipo, para gestionar las cuentas, asistirle y detectar abusos. Nunca el contenido de sus mensajes ni los datos de su organización.",
+  "La gestion de votre compte": "La gestión de su cuenta",
 };

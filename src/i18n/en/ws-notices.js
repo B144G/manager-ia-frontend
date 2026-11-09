@@ -1,0 +1,20 @@
+// Traductions : messages de l'administration affichés dans l'application (paiement validé ou refusé, compte suspendu ou réactivé).
+export default {
+  "Messages importants": "Important messages",
+  "Paiement validé": "Payment confirmed",
+  "Votre paiement {ref} est validé : votre offre {plan} est active jusqu'au {date}.": "Your payment {ref} is confirmed: your {plan} plan is active until {date}.",
+  "Paiement refusé": "Payment declined",
+  "Votre paiement {ref} n'a pas pu être validé. Motif : {reason}": "Your payment {ref} could not be confirmed. Reason: {reason}",
+  "Paiement non abouti": "Payment not completed",
+  "Votre paiement {ref} n'a pas abouti (refusé ou annulé sur le téléphone). Aucune somme n'est due : vous pouvez réessayer depuis « Abonnement ».": "Your payment {ref} did not go through (declined or cancelled on the phone). Nothing is owed: you can try again from “Subscription”.",
+  "Compte suspendu": "Account suspended",
+  "Votre compte est suspendu. Motif : {reason}. Contactez le support pour le réactiver.": "Your account is suspended. Reason: {reason}. Contact support to reactivate it.",
+  "Compte réactivé": "Account reactivated",
+  "Votre compte est de nouveau actif.": "Your account is active again.",
+  "Voir mon abonnement": "View my subscription",
+  "C'est noté": "Got it",
+  "Tout marquer comme lu": "Mark all as read",
+  "Refusé": "Declined",
+  "Motif du refus : {reason}": "Reason for refusal: {reason}",
+  "Compte suspendu, contactez le support.": "Account suspended, please contact support.",
+};

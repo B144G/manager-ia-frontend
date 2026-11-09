@@ -4,7 +4,7 @@ import Logo from '../components/Logo.jsx';
 import LangSwitch from '../components/LangSwitch.jsx';
 import { getLocale, useT } from '../lib/i18n.jsx';
 
-const UPDATED_ISO = [2026, 9, 23]; // 23 octobre 2026
+const UPDATED_ISO = [2026, 10, 9]; // 9 novembre 2026
 
 /** Remplace les {jetons} d'un texte traduit par des éléments (liens, gras) : l'ordre des mots reste libre selon la langue. */
 function rich(text, nodes) {
@@ -50,6 +50,7 @@ export function Privacy() {
         <li>{rich(t('{b} que vous saisissez ou importez : clients, devis, factures, stock, équipe, comptabilité, projets, contrats, notes, etc. Vous en restez responsable.'), { b: <b>{t('Les données de votre organisation')}</b> })}</li>
         <li>{rich(t("{b} reçus par WhatsApp ou la page de discussion : texte, messages vocaux transcrits, photos et documents, ainsi que le numéro ou l'identifiant de l'expéditeur. Ils servent à répondre à ces personnes et à enregistrer leur demande ou leur commande."), { b: <b>{t('Les messages de vos clients')}</b> })}</li>
         <li>{rich(t('{b} : adresse IP, appareil et journal des actions sensibles, pour la sécurité du service.'), { b: <b>{t('Des données techniques')}</b> })}</li>
+        <li>{rich(t("{b} : date de dernière connexion, types d'événements de votre compte (inscription, connexion, paiement, changement d'offre…) avec leur date, et notes internes de l'équipe, pour gérer les comptes, vous assister et repérer les abus. Jamais le contenu de vos messages ni les données de votre organisation."), { b: <b>{t('La gestion de votre compte')}</b> })}</li>
       </ul>
       <h2>{t('À quoi elles servent')}</h2>
       <p>{t("À fournir le service (gestion, réponses aux clients, notifications), à le sécuriser (détection d'abus, journal d'audit), et à vous contacter au sujet de votre compte. Nous ne vendons pas vos données et nous ne les utilisons pas pour de la publicité.")}</p>

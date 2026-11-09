@@ -106,10 +106,10 @@ export default function Billing() {
           <h2>{t('Historique des paiements')}</h2>
           {!b.history.length ? <Empty text={t('Aucun paiement pour le moment.')} /> : null}
           {b.history.map((p, i) => {
-            const stt = ST[p.status] || [p.status, 'mid'];
+            const stt = p.status === 'failed' && p.rejectReason ? ['Refusé', 'bad'] : ST[p.status] || [p.status, 'mid'];
             return (
               <div className="line" key={p.reference || i}>
-                <span><b>{planName(p.planKey, p.plan) + ' · ' + money(p.amountXAF)}</b><small>{' ' + fr(dateFr, p.createdAt) + ' · ' + (p.operator === 'orange' ? 'Orange Money' : 'MTN Mobile Money') + ' · ' + t('réf. {ref}', { ref: p.reference })}</small></span>
+                <span><b>{planName(p.planKey, p.plan) + ' · ' + money(p.amountXAF)}</b><small>{' ' + fr(dateFr, p.createdAt) + ' · ' + (p.operator === 'orange' ? 'Orange Money' : 'MTN Mobile Money') + ' · ' + t('réf. {ref}', { ref: p.reference })}</small>{p.status === 'failed' && p.rejectReason ? <small className="ws-err">{t('Motif du refus : {reason}', { reason: p.rejectReason })}</small> : null}</span>
                 <span className="row">{p.status === 'paid' ? <a className="link" style={{ minHeight: 44, display: 'inline-flex', alignItems: 'center' }} href={'/recu/' + encodeURIComponent(p.reference)} target="_blank" rel="noopener noreferrer">{t('Reçu à imprimer')}</a> : null}<span className={'pill ' + stt[1]}>{t(stt[0])}</span></span>
               </div>
             );

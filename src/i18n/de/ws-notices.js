@@ -1,0 +1,20 @@
+// Traductions : messages de l'administration affichés dans l'application (paiement validé ou refusé, compte suspendu ou réactivé).
+export default {
+  "Messages importants": "Wichtige Nachrichten",
+  "Paiement validé": "Zahlung bestätigt",
+  "Votre paiement {ref} est validé : votre offre {plan} est active jusqu'au {date}.": "Ihre Zahlung {ref} ist bestätigt: Ihr Tarif {plan} ist bis zum {date} aktiv.",
+  "Paiement refusé": "Zahlung abgelehnt",
+  "Votre paiement {ref} n'a pas pu être validé. Motif : {reason}": "Ihre Zahlung {ref} konnte nicht bestätigt werden. Grund: {reason}",
+  "Paiement non abouti": "Zahlung nicht abgeschlossen",
+  "Votre paiement {ref} n'a pas abouti (refusé ou annulé sur le téléphone). Aucune somme n'est due : vous pouvez réessayer depuis « Abonnement ».": "Ihre Zahlung {ref} ist nicht zustande gekommen (am Telefon abgelehnt oder abgebrochen). Es ist nichts geschuldet: Sie können es unter „Abonnement“ erneut versuchen.",
+  "Compte suspendu": "Konto gesperrt",
+  "Votre compte est suspendu. Motif : {reason}. Contactez le support pour le réactiver.": "Ihr Konto ist gesperrt. Grund: {reason}. Wenden Sie sich an den Support, um es zu reaktivieren.",
+  "Compte réactivé": "Konto reaktiviert",
+  "Votre compte est de nouveau actif.": "Ihr Konto ist wieder aktiv.",
+  "Voir mon abonnement": "Mein Abonnement ansehen",
+  "C'est noté": "Verstanden",
+  "Tout marquer comme lu": "Alle als gelesen markieren",
+  "Refusé": "Abgelehnt",
+  "Motif du refus : {reason}": "Grund der Ablehnung: {reason}",
+  "Compte suspendu, contactez le support.": "Konto gesperrt, bitte wenden Sie sich an den Support.",
+};

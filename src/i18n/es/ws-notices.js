@@ -1,0 +1,20 @@
+// Traductions : messages de l'administration affichés dans l'application (paiement validé ou refusé, compte suspendu ou réactivé).
+export default {
+  "Messages importants": "Mensajes importantes",
+  "Paiement validé": "Pago confirmado",
+  "Votre paiement {ref} est validé : votre offre {plan} est active jusqu'au {date}.": "Su pago {ref} está confirmado: su plan {plan} está activo hasta el {date}.",
+  "Paiement refusé": "Pago rechazado",
+  "Votre paiement {ref} n'a pas pu être validé. Motif : {reason}": "No se pudo confirmar su pago {ref}. Motivo: {reason}",
+  "Paiement non abouti": "Pago no completado",
+  "Votre paiement {ref} n'a pas abouti (refusé ou annulé sur le téléphone). Aucune somme n'est due : vous pouvez réessayer depuis « Abonnement ».": "Su pago {ref} no se completó (rechazado o cancelado en el teléfono). No se debe nada: puede intentarlo de nuevo desde «Suscripción».",
+  "Compte suspendu": "Cuenta suspendida",
+  "Votre compte est suspendu. Motif : {reason}. Contactez le support pour le réactiver.": "Su cuenta está suspendida. Motivo: {reason}. Contacte con el soporte para reactivarla.",
+  "Compte réactivé": "Cuenta reactivada",
+  "Votre compte est de nouveau actif.": "Su cuenta vuelve a estar activa.",
+  "Voir mon abonnement": "Ver mi suscripción",
+  "C'est noté": "Entendido",
+  "Tout marquer comme lu": "Marcar todo como leído",
+  "Refusé": "Rechazado",
+  "Motif du refus : {reason}": "Motivo del rechazo: {reason}",
+  "Compte suspendu, contactez le support.": "Cuenta suspendida, contacte con el soporte.",
+};

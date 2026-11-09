@@ -111,3 +111,11 @@ a{color:inherit}
 .g-line{position:absolute;top:0;bottom:0;width:2px;pointer-events:none}
 .g-line.today{background:#16a34a}.g-line.due{background:#dc2626}
 @media (max-width:640px){.g-name{flex-basis:120px;width:120px}}
+
+/* Messages de l'administration (paiement validé / refusé, compte…) */
+.un-bar{display:grid;gap:8px;padding:10px 16px 0}
+.un-item{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 16px;border-radius:14px;border:1px solid color-mix(in srgb,var(--pink) 35%,transparent);background:color-mix(in srgb,var(--pink) 9%,var(--bg))}
+.un-item.good{border-color:color-mix(in srgb,var(--ok) 40%,transparent);background:color-mix(in srgb,var(--ok) 11%,var(--bg))}
+.un-t{display:grid;gap:2px;min-width:0;flex:1 1 260px}.un-t b{font-size:15px}.un-t span{font-size:14px;overflow-wrap:anywhere}
+.un-a{display:flex;gap:8px;flex-wrap:wrap}.un-a .btn{min-height:44px;display:inline-flex;align-items:center}
+.un-all{justify-self:end;min-height:44px}

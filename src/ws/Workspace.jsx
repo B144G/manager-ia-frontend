@@ -5,6 +5,7 @@ import LangSwitch from '../components/LangSwitch.jsx';
 import { useT } from '../lib/i18n.jsx';
 import AccountSecurity from './AccountSecurity.jsx';
 import AIPanel from './AIPanel.jsx';
+import UserNotices from './UserNotices.jsx';
 import { MODULE_ICONS, hasModule, moduleComponent } from './registry.js';
 import { Empty, Form, Icon, Loading } from './ui.jsx';
 import { GuideButton, GuideProvider } from './guide/GuideContext.jsx';
@@ -40,6 +41,7 @@ function Onboarding() {
   return (
     <Center>
       <div className="ws-card">
+        <UserNotices orgId={null} />
         <h1>{user ? t('Bienvenue, {name}', { name: firstName() }) : t('Bienvenue')}</h1>
         <p className="muted">{t("Créez votre organisation (entreprise, boutique, association, équipe…) ou rejoignez celle d'un collègue avec un code d'invitation.")}</p>
         <div className="ws-cols">
@@ -155,6 +157,7 @@ function Shell() {
           <Link className="bell" to={`/app/${orgId}/alerts`} aria-label={t('Alertes')}><Icon name="alerts" /><i className="dot" hidden={!bell} /></Link>
           <div className="ws-user" role="button" tabIndex={0} title={t('Sécurité du compte')} style={{ cursor: 'pointer' }} onClick={openSecurity} onKeyDown={(e) => { if (e.key === 'Enter') openSecurity(); }}><span className="av">{initialsOf(user && user.name)}</span><div><b>{user ? user.name : ''}</b><small>{t(info.me.roleLabel)}</small></div></div>
         </header>
+        <UserNotices orgId={orgId} />
         <main className="ws-main" id="ws-main" ref={main}>
           <div className="ws-mod" key={`${orgId}-${cur}-${refreshKey}`}>
             <Suspense fallback={<Loading />}><ModBoundary><Mod /></ModBoundary></Suspense>
