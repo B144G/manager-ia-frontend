@@ -8,6 +8,7 @@ export const ICONS = {
   crm: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6',
   hr: 'M3 5h18v14H3zM8 11a2 2 0 100-4 2 2 0 000 4zM5 16a3 3 0 016 0M14 9h5M14 13h4',
   sales: 'M4 5h16v11H9l-5 4zM9 9l2 2 4-4',
+  aifollow: 'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 100 6 3 3 0 000-6z',
   structure: 'M12 3v5M5 14v-3h14v3M5 14v4M12 14v4M19 14v4M9 3h6v5H9zM2 18h6v3H2zM9 18h6v3H9zM16 18h6v3h-6z',
   processes: 'M4 6h16M4 12h10M4 18h7M17 15l2 2 3-4',
   team: 'M16 11a4 4 0 10-8 0M4 21a8 8 0 0116 0M20 8a3 3 0 010 6',

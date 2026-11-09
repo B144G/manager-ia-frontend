@@ -4,13 +4,16 @@ import { tr, useT } from '../../../lib/i18n.jsx';
 import { Empty, Loading, useLoad } from '../../ui.jsx';
 import { NegoLog } from './Negotiation.jsx';
 import { CHANNELS, Pill, TEMP, useOrgUrl } from './util.jsx';
+import { AiStateBar, DraftCard } from '../aifollow/AiState.jsx';
+import { Thread, useLiveThread } from '../aifollow/Thread.jsx';
+import { CHANNEL_LABEL } from '../aifollow/util.jsx';
 
 const APPT_ST = { pending: 'à confirmer', confirmed: 'confirmé', cancelled: 'annulé', done: 'terminé' };
 const FILTERS = [['all', 'Toutes'], ['free', 'Non attribuées'], ['mine', 'Les miennes'], ['hot', 'Chaudes']];
 
 const lastTextOf = (x) => (x.lastText ? ' · « ' + x.lastText.slice(0, 70) + (x.lastText.length > 70 ? '…' : '') + ' »' : '');
 
-/** Lecture d'une conversation dans une fenêtre. prefix = "/sales" (équipe) ou "/sales-mine" (mes conversations). */
+/** Lecture d'une conversation dans une fenêtre. prefix = "/sales" (équipe) ou "/sales-mine" (mes conversations). x.threads : autres fils du même contact (facultatif). */
 export function openChat(ws, prefix, x, team, canAssign, after) {
   ws.modal(x.customer ? tr('Conversation avec {name}', { name: x.customer }) : x.contact ? tr('Conversation avec {name}', { name: '+' + x.contact }) : tr('Conversation'),
     (close) => <ChatReader prefix={prefix} x={x} team={team} canAssign={canAssign} after={after} close={close} />, { wide: true });
@@ -19,11 +22,18 @@ export function openChat(ws, prefix, x, team, canAssign, after) {
 function ChatReader({ prefix, x, team, canAssign, after, close }) {
   const t = useT();
   const { oapi } = useWs();
-  const st = useLoad(() => oapi('GET', prefix + '/chats/' + x.id), []);
+  const [id, setId] = useState(x.id);
+  const st = useLoad(() => oapi('GET', prefix + '/chats/' + id), [id]);
   const done = () => { close(); after(); };
+  const threads = x.threads || [];
   return (
     <div>
-      {st.error ? t(st.error.message) : !st.data ? <Loading /> : <ChatBody j={st.data} prefix={prefix} x={x} team={team} canAssign={canAssign} done={done} />}
+      {threads.length > 1 ? (
+        <div className="af-thr" role="tablist" aria-label={t('Fils de conversation de ce contact')}>
+          {threads.map((th) => <button key={th.id} type="button" role="tab" aria-selected={th.id === id} className={'btn small' + (th.id === id ? ' primary' : '')} onClick={() => setId(th.id)}>{t(CHANNEL_LABEL[th.channel] || th.channel)}</button>)}
+        </div>
+      ) : null}
+      {st.error ? t(st.error.message) : !st.data ? <Loading /> : <ChatBody key={id} j={st.data} prefix={prefix} x={{ ...x, id }} team={team} canAssign={canAssign} done={done} />}
     </div>
   );
 }
@@ -38,18 +48,36 @@ function ChatBody({ j, prefix, x, team, canAssign, done }) {
   const [err, setErr] = useState('');
   const [sending, setSending] = useState(false);
   const [assignee, setAssignee] = useState(j.assigneeId ? String(j.assigneeId) : '');
+  const live = useLiveThread(prefix, x.id, j);
   const bf = j.brief, cu = (bf && bf.customer) || {};
   const cust = [cu.name, cu.phone, cu.email, cu.address].filter(Boolean).join(' · ');
+  const person = live.person || j.person || {};
+  const label = person.label || x.customer || (x.contact ? '+' + x.contact : t('Visiteur'));
+  const canAct = prefix === '/sales';
+  const target = person.customerId ? { customerId: person.customerId } : { chatId: x.id };
+  const handoff = live.status === 'handoff';
+  const setStatus = (status, msg) => oapi('PUT', prefix + '/chats/' + x.id + '/status', { status }).then(() => { toast(msg); live.refresh(); }).catch(fail);
 
   function send() {
     setSending(true); setErr('');
     oapi('POST', prefix + '/chats/' + x.id + '/reply', { text: reply })
-      .then(() => { toast(t("Message envoyé. L'IA ne répond plus à cette personne.")); done(); })
+      .then(() => { toast(t("Message envoyé. L'IA ne répond plus à cette personne.")); setReply(''); setSending(false); live.refresh(); })
       .catch((e) => { setErr(t(e.message)); setSending(false); });
   }
 
   return (
     <>
+      <div className="th-head">
+        <b>{label}</b>
+        {j.channel !== 'web' ? <Pill t={[CHANNELS[j.channel] || j.channel, 'good']} /> : <Pill t={['Site', '']} />}
+        {handoff && !live.assigneeId ? <Pill t={['À reprendre', 'bad']} /> : null}
+        {live.assigneeId ? <Pill t={['Attribuée', '']} /> : null}
+        {person.stage === 'prospect' ? <Pill t={['Prospect', 'mid']} /> : person.stage === 'client' ? <Pill t={['Client', 'good']} /> : null}
+        <span className={'th-live' + (live.online ? '' : ' off')}>{live.online ? t('En direct') : t('Connexion perdue, nouvel essai…')}</span>
+      </div>
+      {j.contact ? <p className="muted small" style={{ margin: '0 0 6px' }}>{t('Canal : {channel} · destinataire : {to}', { channel: t(CHANNEL_LABEL[j.channel] || j.channel), to: '+' + j.contact })}</p> : null}
+      <AiStateBar live={live} target={target} label={label} canAct={canAct} onChange={live.refresh} />
+      {live.drafts.map((d) => <DraftCard key={d.id} d={d} canAct={canAct} web={j.channel === 'web'} after={live.refresh} />)}
       {j.campaign ? <p className="muted small">{t('Campagne : {name}', { name: j.campaign })}</p> : null}
       {j.summary ? <div className="ws-card" style={{ background: 'var(--pale,#f1f5fd)', margin: '8px 0' }}><b>{t('Fiche prospect')}</b><p style={{ whiteSpace: 'pre-line', margin: '6px 0 0' }}>{j.summary}</p></div> : null}
       {j.appointments && j.appointments.length ? (
@@ -67,11 +95,11 @@ function ChatBody({ j, prefix, x, team, canAssign, done }) {
           {bf.draftReply ? <p className="small" style={{ background: 'var(--surface2)', borderRadius: 10, padding: '8px 10px', margin: '6px 0' }}>{t('Réponse proposée : « {text} »', { text: bf.draftReply })}</p> : null}
           <div className="row">
             {bf.draftReply && j.channel !== 'web' ? <button className="btn small" type="button" onClick={() => { setReply(bf.draftReply); if (taRef.current) taRef.current.focus(); }}>{t('Utiliser comme réponse')}</button> : null}
-            <button className="btn small" type="button" onClick={() => oapi('POST', prefix + '/chats/' + x.id + '/apply-brief', {}).then((r) => toast(r.done.length ? t('Fiche client complétée : {list}.', { list: r.done.join(', ') }) : t('La fiche client était déjà à jour.'))).catch(fail)}>{t('Appliquer à la fiche client')}</button>
+            <button className="btn small" type="button" onClick={() => oapi('POST', prefix + '/chats/' + x.id + '/apply-brief', {}).then((r) => toast(r.done.length ? t('Fiche client complétée : {list}.', { list: r.done.join(', ') }) : t('La fiche client était déjà à jour.'))).catch(fail)}>{t('Compléter la fiche client')}</button>
             {prefix === '/sales' ? <button className="btn small" type="button" onClick={() => oapi('POST', '/sales/chats/' + x.id + '/brief', {}).then(() => { toast(t('Dossier mis à jour.')); done(); }).catch(fail)}>{t('Mettre à jour le dossier')}</button> : null}
           </div>
         </div>
-      ) : j.status === 'handoff' && prefix === '/sales' ? (
+      ) : handoff && prefix === '/sales' ? (
         <div className="row" style={{ margin: '8px 0' }}><button className="btn small" type="button" onClick={() => oapi('POST', '/sales/chats/' + x.id + '/brief', {}).then(() => { toast(t('Dossier prêt.')); done(); }).catch(fail)}>{t("Préparer le dossier avec l'IA")}</button></div>
       ) : null}
       {canAssign ? (
@@ -81,44 +109,29 @@ function ChatBody({ j, prefix, x, team, canAssign, done }) {
             <option value="">{t('Non attribuée')}</option>
             {(team || []).map((m) => <option key={m.userId} value={String(m.userId)}>{m.name + (m.title ? ' (' + m.title + ')' : '')}</option>)}
           </select>
-          <button className="btn small" type="button" onClick={() => oapi('PUT', '/sales/chats/' + x.id + '/assign', { userId: assignee ? Number(assignee) : null }).then(() => { toast(assignee ? t('Conversation attribuée : la personne est prévenue.') : t('Conversation libérée.')); done(); }).catch(fail)}>{t('Enregistrer')}</button>
+          <button className="btn small" type="button" onClick={() => oapi('PUT', '/sales/chats/' + x.id + '/assign', { userId: assignee ? Number(assignee) : null }).then(() => { toast(assignee ? t('Conversation attribuée : la personne est prévenue.') : t('Conversation libérée.')); done(); }).catch(fail)}>{t('Valider')}</button>
         </div>
       ) : null}
       <NegoLog entries={j.negotiation} />
-      {j.messages.map((m, i) => {
-        const att = /^\[(image|document) #(\d+)\]\s*([\s\S]*)$/.exec(m.content);
-        const who = m.role === 'user' ? '' : m.role === 'staff' ? t('Vous : ') : t('Assistant : ');
-        const cls = 'bub ' + (m.role === 'user' ? 'user' : 'assistant');
-        if (!att) return <div key={i} className={cls}>{who + m.content}</div>;
-        const url = urlOf(prefix + '/chats/' + x.id + '/media/' + att[2]);
-        return (
-          <div key={i} className={cls}>
-            {who}
-            {att[1] === 'image'
-              ? <a href={url} target="_blank" rel="noopener"><img src={url} alt={t("Photo envoyée par le client")} style={{ display: 'block', maxWidth: 240, maxHeight: 240, borderRadius: 8, margin: '4px 0' }} /></a>
-              : <a href={url} target="_blank" rel="noopener">{t('Ouvrir le document (PDF) envoyé par le client')}</a>}
-            {att[3] ? <span>{att[3]}</span> : null}
-          </div>
-        );
-      })}
+      <Thread live={live} label={label} contactTo={j.contact ? '+' + j.contact : ''} urlOf={urlOf} prefix={prefix} chatId={x.id} />
       {j.channel !== 'web' ? (
         <>
-          <div style={{ marginTop: 14 }}>
+          <div className="th-reply" style={{ marginTop: 14 }}>
             <textarea ref={taRef} rows={3} placeholder={t("Votre réponse au client…")} aria-label={t("Votre réponse")} maxLength={1000} value={reply} onChange={(e) => setReply(e.target.value)} />
             <p className="ws-err" role="alert">{err}</p>
             <div className="row" style={{ marginTop: 8 }}>
-              <button className="btn primary small" type="button" disabled={sending} onClick={send}>{t('Envoyer le message')}</button>
-              {j.status === 'handoff' ? <button className="btn small" type="button" onClick={() => oapi('PUT', prefix + '/chats/' + x.id + '/status', { status: 'open' }).then(() => { toast(t("L'IA répondra de nouveau à cette personne.")); done(); }).catch(fail)}>{t("Rendre à l'IA")}</button> : null}
+              <button className="btn primary small" type="button" disabled={sending || !reply.trim()} onClick={send}>{t('Envoyer le message')}</button>
+              {handoff ? <button className="btn small" type="button" onClick={() => setStatus('open', t("L'IA répondra de nouveau à cette personne."))}>{t("Rendre à l'IA")}</button> : <button className="btn small" type="button" onClick={() => setStatus('handoff', t("Vous avez repris la main : l'IA se tait."))}>{t('Reprendre la main')}</button>}
               {prefix === '/sales-mine' ? <button className="btn small" type="button" onClick={() => oapi('POST', prefix + '/chats/' + x.id + '/release', {}).then(() => { toast(t("Conversation rendue à l'équipe.")); done(); }).catch(fail)}>{t("Rendre à l'équipe")}</button> : null}
             </div>
           </div>
           <div className="row" style={{ marginTop: 8 }}>
-            {j.channel === 'whatsapp' ? <button className="btn small" type="button" onClick={() => sendTemplateTo(ws, x, done)}>{t('Envoyer un modèle (plus de 24 h)')}</button> : null}
-            {j.channel === 'web' || prefix !== '/sales' ? null : <button className="btn small" type="button" onClick={() => sendMediaTo(ws, x, done)}>{t('Envoyer une photo ou une vidéo')}</button>}
+            {j.channel === 'whatsapp' ? <button className="btn small" type="button" onClick={() => sendTemplateTo(ws, x, live.refresh)}>{t('Envoyer un modèle (plus de 24 h)')}</button> : null}
+            {j.channel === 'web' || prefix !== '/sales' ? null : <button className="btn small" type="button" onClick={() => sendMediaTo(ws, x, live.refresh)}>{t('Envoyer une photo ou une vidéo')}</button>}
           </div>
           <p className="muted small">{t("Quand vous répondez, l'IA se tait pour cette personne. Meta n'autorise l'écriture libre que dans les 24 h qui suivent son dernier message.")}</p>
         </>
-      ) : null}
+      ) : <p className="muted small">{t("Cette personne écrit depuis le site : vous ne pouvez pas lui répondre d'ici. Si elle a laissé son numéro, contactez-la par téléphone.")}</p>}
     </>
   );
 }

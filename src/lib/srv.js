@@ -29,6 +29,8 @@ pl('conversation attend', 'conversations attendent', ' un conseiller', ' un cons
 pl('rendez-vous attend', 'rendez-vous attendent', ' votre confirmation', ' votre confirmation');
 pl('demande de congé attend', 'demandes de congé attendent', ' une réponse', ' une réponse');
 pl('décision attend', 'décisions attendent', ' votre validation', ' votre validation');
+rule(/^Nouveau message de (.+) : l'IA est exclue pour ce contact, répondez-lui vous-même \(Suivi de l'IA\)\.$/, "Nouveau message de {name} : l'IA est exclue pour ce contact, répondez-lui vous-même (Suivi de l'IA).", ['name']);
+rule(/^Réponse à valider pour (.+) : l'IA a préparé un brouillon \(Suivi de l'IA\)\.$/, "Réponse à valider pour {name} : l'IA a préparé un brouillon (Suivi de l'IA).", ['name']);
 rule(/^Projet « (.+) »$/, 'Projet « {name} »', ['name']);
 rule(/^Budget · (.+)$/, 'Budget · {name}', ['name']);
 rule(/^(\d+) % au-dessus de la limite \((.+) pour (.+)\)$/, '{pct} % au-dessus de la limite ({spent} pour {limit})', ['pct', 'spent', 'limit']);

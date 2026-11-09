@@ -195,6 +195,19 @@ export function buildGuides(t, { admin, mods }) {
     ] });
   }
 
+  if (has('aifollow')) {
+    const G = t('Clients et ventes');
+    add({ id: 'aifollow', group: G, title: t("Suivre l'IA et l'exclure pour un client"), keys: 'ia exclure exclusion client conversation message brouillon valider suivi whatsapp répondre', steps: [
+      open('aifollow', t("Ouvrez le Suivi de l'IA"), t("Tous vos clients au même endroit, avec ce que l'IA a le droit de faire pour chacun.")),
+      { at: css('.af-states'), optional: true, title: t("L'état de l'IA"), text: t("Choisissez un état pour ne voir que les clients concernés : IA active, exclus, exclusion partielle, en attente d'un conseiller, réponse à valider.") },
+      { at: css('.af-table'), optional: true, title: t('Le tableau des clients'), text: t("Pour chaque personne : le canal, ce qu'elle a commandé, ce qu'elle doit encore payer et son dernier message. Les personnes sans fiche ont un bouton pour la créer.") },
+      { at: btn('Exclure'), optional: true, title: t("Exclure l'IA pour un contact"), text: t("Choisissez 24 heures, 7 jours ou sans limite : l'IA ne répond plus à cette personne, ses messages arrivent et vous lui répondez à la main.") },
+      { at: btn('Exclusion partielle'), optional: true, title: t('Une exclusion partielle'), text: t("Cochez seulement ce que l'IA n'a pas le droit de faire : prix, commande, rendez-vous, relances, ou réponse sans votre accord.") },
+      { at: btn('Regarder les messages'), optional: true, title: t('Lire la conversation'), text: t("Les messages s'affichent comme dans WhatsApp et se mettent à jour tout seuls. Vous pouvez répondre ou reprendre la main.") },
+      { at: tab('Journal'), optional: true, title: t('Le journal'), text: t("Qui a exclu ou validé quoi, quand et pour combien de temps.") },
+    ] });
+  }
+
   if (has('logistics')) {
     const G = t('Stock et production');
     add({ id: 'logistics-delivery', group: G, title: t('Organiser une livraison'), keys: 'logistique livraison tournée livreur transporteur véhicule', steps: [

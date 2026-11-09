@@ -1,9 +1,9 @@
 import { config, library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faArrowLeft, faArrowRight, faArrowUp, faBars, faBolt, faBoxesStacked, faCamera, faChartLine, faCheck, faChevronDown, faCircleCheck, faCircleInfo, faCircleNotch, faClock,
+  faArrowLeft, faArrowRight, faArrowUp, faBan, faBars, faBolt, faBoxesStacked, faCamera, faChartLine, faCheck, faChevronDown, faCircleCheck, faCircleInfo, faCircleNotch, faClock,
   faComments, faEnvelope, faEye, faEyeSlash, faFile, faFileLines, faFilePdf, faFilm, faGlobe, faImage, faLock, faMicrophone, faPaperclip, faPaperPlane, faPhone, faPlus,
-  faRotateRight, faShieldHalved, faStop, faTriangleExclamation, faUser, faWandMagicSparkles, faXmark,
+  faRobot, faRotateRight, faShieldHalved, faStop, faTriangleExclamation, faUser, faUserPlus, faWandMagicSparkles, faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { faFacebookF, faTiktok, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
@@ -17,6 +17,7 @@ const ICONS = {
   check: faCheck, down: faChevronDown, ok: faCircleCheck, info: faCircleInfo, spinner: faCircleNotch, clock: faClock, chat: faComments, mail: faEnvelope, eye: faEye, 'eye-off': faEyeSlash,
   file: faFile, doc: faFileLines, pdf: faFilePdf, video: faFilm, globe: faGlobe, image: faImage, lock: faLock, mic: faMicrophone, clip: faPaperclip, send: faPaperPlane, phone: faPhone,
   plus: faPlus, retry: faRotateRight, shield: faShieldHalved, stop: faStop, warn: faTriangleExclamation, user: faUser, magic: faWandMagicSparkles, close: faXmark,
+  ban: faBan, robot: faRobot, 'user-plus': faUserPlus,
   facebook: faFacebookF, tiktok: faTiktok, whatsapp: faWhatsapp,
 };
 library.add(...Object.values(ICONS));
