@@ -7,6 +7,11 @@ import BankTab from '../parts/accounting/Bank.jsx';
 import ThirdTab from '../parts/accounting/Thirdparty.jsx';
 import AssetsTab from '../parts/accounting/Assets.jsx';
 import ClosingTab from '../parts/accounting/Closing.jsx';
+import AnalyticsTab from '../parts/accounting/Analytics.jsx';
+import RecurringTab from '../parts/accounting/Recurring.jsx';
+import YearEndTab from '../parts/accounting/YearEnd.jsx';
+import AuditTab from '../parts/accounting/Audit.jsx';
+import RatiosTab from '../parts/accounting/Ratios.jsx';
 import { BalanceTab, Home, JournalTab, LedgerBox, ResultsTab, SettingsTab } from '../parts/accounting/Tabs.jsx';
 
 /* Comptabilité (plan OHADA de base, journal, balance, résultat, bilan, TVA). Les écritures ne se modifient pas :
@@ -14,7 +19,7 @@ import { BalanceTab, Home, JournalTab, LedgerBox, ResultsTab, SettingsTab } from
 
 export default function Accounting() {
   const t = useT();
-  const TABS = [['home', t('Aperçu')], ['journal', t('Journal')], ['balance', t('Balance')], ['results', t('Résultat et bilan')], ['bank', t('Rapprochement')], ['third', t('Tiers et dettes')], ['assets', t('Immobilisations')], ['closing', t('Clôture')], ['settings', t('Réglages')]];
+  const TABS = [['home', t('Aperçu')], ['journal', t('Journal')], ['balance', t('Balance')], ['results', t('Résultat et bilan')], ['analytics', t('Analytique')], ['ratios', t('Ratios')], ['audit', t('Contrôles')], ['recurring', t('Récurrentes')], ['yearend', t('Clôture annuelle')], ['bank', t('Rapprochement')], ['third', t('Tiers et dettes')], ['assets', t('Immobilisations')], ['closing', t('Clôture')], ['settings', t('Réglages')]];
   const { oapi, modal, toast, fail } = useWs();
   const [tab, setTab] = useState('home');
   const [year, setYear] = useState(String(new Date().getFullYear()));
@@ -26,6 +31,8 @@ export default function Accounting() {
 
   const getAccounts = () => (accountsRef.current ? Promise.resolve(accountsRef.current) : oapi('GET', '/accounting/accounts').then((j) => { accountsRef.current = j.accounts; return j.accounts; }));
 
+  const getSections = () => oapi('GET', '/accounting/analytics/sections').then((j) => j.sections || []).catch(() => []);
+
   function reverse(e) {
     oapi('POST', '/accounting/entries/' + e.id + '/reverse', {}).then(() => { toast(t('Écriture annulée.')); st.reload(); }).catch(fail);
   }
@@ -34,8 +41,8 @@ export default function Accounting() {
   }
   /* Saisie d'une écriture à la main (ou préremplie par l'IA) */
   function editEntry(pre) {
-    getAccounts().then((accs) => {
-      modal(t('Nouvelle écriture'), (close) => <EntryForm accs={accs} JN={JN} pre={pre} close={close} onSaved={st.reload} />, { wide: true });
+    Promise.all([getAccounts(), getSections()]).then(([accs, sections]) => {
+      modal(t('Nouvelle écriture'), (close) => <EntryForm accs={accs} JN={JN} pre={pre} sections={sections} close={close} onSaved={st.reload} />, { wide: true });
     }).catch(fail);
   }
   /* « J'ai payé le loyer 150 000 en espèces » → l'IA propose, vous relisez et enregistrez */
@@ -52,11 +59,11 @@ export default function Accounting() {
   }
 
   let content = null;
-  const OWN = { bank: BankTab, third: ThirdTab, assets: AssetsTab, closing: ClosingTab }; // onglets de la vague 2 : ils chargent leurs propres données
-  if (OWN[tab]) { const Own = OWN[tab]; content = <Own />; } else if (st.loading) content = <Loading />;
+  const OWN = { bank: BankTab, third: ThirdTab, assets: AssetsTab, closing: ClosingTab, analytics: AnalyticsTab, ratios: RatiosTab, audit: AuditTab, recurring: RecurringTab, yearend: YearEndTab }; // onglets de la vague 2 : ils chargent leurs propres données
+  if (OWN[tab]) { const Own = OWN[tab]; content = <Own year={year} setYear={setYear} />; } else if (st.loading) content = <Loading />;
   else if (st.error) content = <p className="ws-err" role="alert">{t(st.error.message)}</p>;
   else if (o) {
-    if (tab === 'home') content = <Home o={o} JN={JN} onReverse={reverse} reload={st.reload} />;
+    if (tab === 'home') content = <Home o={o} JN={JN} onReverse={reverse} reload={st.reload} year={year} />;
     else if (tab === 'journal') content = <JournalTab year={year} setYear={setYear} JN={JN} journal={journal} setJournal={setJournal} onReverse={reverse} />;
     else if (tab === 'balance') content = <BalanceTab year={year} setYear={setYear} onLedger={ledger} />;
     else if (tab === 'results') content = <ResultsTab year={year} setYear={setYear} />;

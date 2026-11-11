@@ -3,10 +3,12 @@ import { API_BASE } from '../../../lib/api.js';
 import { useWs } from '../../WsContext.jsx';
 import { useT } from '../../../lib/i18n.jsx';
 import { Empty, Form, Loading, useLoad } from '../../ui.jsx';
-import { AmountLine, EntryCard, YearBar } from './common.jsx';
+import { Check } from '../finance/util.jsx';
+import { AmountLine, EntryCard, ExportBar, YearBar } from './common.jsx';
+import InsightsBand from './Insights.jsx';
 
 /* ---------- Aperçu ---------- */
-export function Home({ o, JN, onReverse, reload }) {
+export function Home({ o, JN, onReverse, reload, year }) {
   const t = useT();
   const { oapi, money, toast, fail } = useWs();
   const k = o.kpi;
@@ -19,6 +21,7 @@ export function Home({ o, JN, onReverse, reload }) {
   };
   return (
     <>
+      <InsightsBand year={year} />
       <div className="kpis">
         <div className="stat"><b>{money(k.ventes)}</b><span>{t("ventes de l'année (HT)")}</span></div>
         <div className="stat"><b>{money(k.achats)}</b><span>{t("achats de l'année")}</span></div>
@@ -155,18 +158,54 @@ export function LedgerBox({ account, year }) {
 }
 
 /* ---------- Résultat et bilan ---------- */
+
+/** Tableau N / N-1 : écarts calculés ici à partir des deux années renvoyées par le serveur (`previous` a la même structure que l'année en cours). */
+function Compare({ s, year }) {
+  const t = useT();
+  const { money } = useWs();
+  const p = s.previous;
+  if (!p) return <div className="ws-card"><Empty text={t("Pas de données sur l'année précédente à comparer.")} /></div>;
+  const rows = [
+    [t('Ventes'), s.resultat.ventes, p.resultat.ventes],
+    [t('Achats'), s.resultat.achats, p.resultat.achats],
+    [t('Marge brute'), s.resultat.margeBrute, p.resultat.margeBrute],
+    [t('Résultat'), s.resultat.resultat, p.resultat.resultat],
+    [t('Total actif'), s.bilan.totalActif, p.bilan.totalActif],
+    [t('Total passif'), s.bilan.totalPassif, p.bilan.totalPassif],
+  ];
+  return (
+    <div className="ws-card">
+      <h2>{t('Comparatif {year} / {prev}', { year, prev: Number(year) - 1 })}</h2>
+      {rows.map((x) => {
+        const diff = (x[1] || 0) - (x[2] || 0);
+        const pct = x[2] ? Math.round((diff / Math.abs(x[2])) * 1000) / 10 : null;
+        return (
+          <div className="line" key={x[0]}>
+            <span><b>{x[0]}</b><small>{' ' + money(x[1]) + ' ' + t('contre') + ' ' + money(x[2])}</small></span>
+            <span className="row"><b className={diff >= 0 ? 'ok' : 'late'}>{(diff > 0 ? '+' : '') + money(diff)}</b>{pct === null ? null : <span className={'pill ' + (diff >= 0 ? 'good' : 'bad')}>{(diff > 0 ? '+' : '') + pct + ' %'}</span>}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 export function ResultsTab({ year, setYear }) {
   const t = useT();
   const { oapi, money } = useWs();
-  const st = useLoad(() => Promise.all([oapi('GET', '/accounting/statements?year=' + year), oapi('GET', '/accounting/vat?year=' + year)]), [year]);
-  if (st.loading) return <Loading />;
+  const [compare, setCompare] = useState(false);
+  const st = useLoad(() => Promise.all([oapi('GET', '/accounting/statements?year=' + year + (compare ? '&compare=1' : '')), oapi('GET', '/accounting/vat?year=' + year)]), [year, compare]);
+  if (st.loading && !st.data) return <Loading />;
   if (st.error) return <p className="ws-err" role="alert">{t(st.error.message)}</p>;
   const [s, v] = st.data;
   const r = s.resultat;
   const b = s.bilan;
   return (
     <>
-      <YearBar year={year} setYear={setYear} />
+      <div className="row" style={{ flexWrap: 'wrap', alignItems: 'center' }}>
+        <YearBar year={year} setYear={setYear} />
+        <Check checked={compare} onChange={setCompare} label={t("Comparer avec l'année précédente")} />
+      </div>
+      {compare ? <Compare s={s} year={year} /> : null}
       <div className="ws-card">
         <h2>{t('Compte de résultat {year}', { year })}</h2>
         <p>{t('Ventes {sales} − achats {purchases} = marge brute {margin}', { sales: money(r.ventes), purchases: money(r.achats), margin: money(r.margeBrute) })}</p>
@@ -193,6 +232,7 @@ export function ResultsTab({ year, setYear }) {
         <p>{v.due ? t('TVA à reverser : {amount}', { amount: money(v.due) }) : v.credit ? t('Crédit de TVA : {amount}', { amount: money(v.credit) }) : t('Rien à reverser.')}</p>
         <p className="muted small">{t("Estimation d'après vos écritures. La déclaration officielle se fait auprès de l'administration fiscale.")}</p>
       </div>
+      <ExportBar year={year} />
     </>
   );
 }
