@@ -4,6 +4,7 @@ import { useT } from '../../lib/i18n.jsx';
 import { Form, Loading, useLoad } from '../ui.jsx';
 import ModuleShell from '../ModuleShell.jsx';
 import { ChartScreen, LedgerScreen } from '../parts/accounting/Screens.jsx';
+import StockAccScreen from '../parts/accounting/StockAcc.jsx';
 import { FinancingScreen, LoansScreen, TrailScreen, UnsupportedScreen } from '../parts/accounting/Lot3.jsx';
 import EntryForm from '../parts/accounting/EntryForm.jsx';
 import BankTab from '../parts/accounting/Bank.jsx';
@@ -52,7 +53,8 @@ export default function Accounting() {
       { id: 'fiscal', to: 'fiscal', label: t('Déclarations et calendrier fiscal'), hint: t('Ouvre le module Fiscalité et liasse.') }] },
     { id: 'assets', icon: '🏗️', label: t('Immobilisations et stocks'), items: [
       { id: 'assets', label: t('Immobilisations'), hint: t("Les biens de l'entreprise et leurs amortissements.") },
-      { id: 'stock', to: 'stock', label: t('Stocks'), hint: t('Ouvre le module Stock et achats.') },
+      { id: 'stockacc', label: t('Stocks'), hint: t("Valeur du stock, variation de stock et écriture d'inventaire.") },
+      { id: 'stock', to: 'stock', label: t('Stock et achats'), hint: t('Ouvre le module Stock et achats.') },
       { id: 'production', to: 'production', label: t('Production'), hint: t('Ouvre le module Production.') }] },
     { id: 'control', icon: '🔒', label: t('Clôture et contrôle'), items: [
       { id: 'trail', label: t("Piste d'audit"), hint: t('Qui a passé quelle écriture, quand et pourquoi.') },
@@ -116,6 +118,7 @@ export default function Accounting() {
     else if (tab === 'vat') content = <ResultsTab year={year} setYear={setYear} part="vat" />;
     else if (tab === 'ledger') content = <LedgerScreen year={year} setYear={setYear} />;
     else if (tab === 'nosupport') content = <UnsupportedScreen year={year} setYear={setYear} />;
+    else if (tab === 'stockacc') content = <StockAccScreen />;
     else if (tab === 'trail') content = <TrailScreen year={year} setYear={setYear} />;
     else if (tab === 'financing') content = <FinancingScreen year={year} setYear={setYear} />;
     else if (tab === 'chart') content = <ChartScreen onAccountAdded={() => { accountsRef.current = null; }} />;
