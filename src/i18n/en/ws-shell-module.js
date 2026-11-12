@@ -128,5 +128,9 @@ export default {
   "Total des ressources": "Total resources",
   "Ressources d'avance sur les emplois": "Resources ahead of uses",
   "Emplois non couverts par ces ressources": "Uses not covered by these resources",
-  "Un emploi non couvert est normalement financé par l'activité (bénéfices) ou la trésorerie.": "An uncovered use is normally financed by operations (profits) or cash."
+  "Un emploi non couvert est normalement financé par l'activité (bénéfices) ou la trésorerie.": "An uncovered use is normally financed by operations (profits) or cash.",
+  "Fichier du relevé (CSV, Excel, OFX, MT940, CAMT.053)": "Statement file (CSV, Excel, OFX, MT940, CAMT.053)",
+  "Classeur Excel chargé.": "Excel workbook loaded.",
+  "Format : {f}": "Format: {f}",
+  "Fichier trop volumineux (1,4 Mo au plus).": "File too large (1.4 MB at most)."
 };

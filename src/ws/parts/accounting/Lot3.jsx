@@ -1,7 +1,6 @@
 import { useWs } from '../../WsContext.jsx';
 import { useT } from '../../../lib/i18n.jsx';
 import { Empty, Form, Loading, useLoad } from '../../ui.jsx';
-import { WorkNotice } from '../finance/util.jsx';
 import { YearBar } from './common.jsx';
 
 /* Écrans du lot 3 de la comptabilité : écritures sans justificatif, piste d'audit, emprunts, plan de financement.
@@ -135,7 +134,6 @@ export function LoansScreen() {
   const j = st.data;
   return (
     <>
-      <WorkNotice>{t("Document de travail : le tableau d'amortissement est un calcul d'aide. Reportez-vous au contrat de la banque, à faire valider par un expert-comptable.")}</WorkNotice>
       <div className="ws-card">
         <div className="row"><h2 className="grow">{t('Emprunts')}</h2><button className="btn primary small" type="button" onClick={add}>{t('Nouvel emprunt')}</button></div>
         {st.loading && !j ? <Loading /> : null}
@@ -176,7 +174,6 @@ export function FinancingScreen({ year, setYear }) {
   const tu = uses.reduce((a, x) => a + x[1], 0); const tr = res.reduce((a, x) => a + x[1], 0);
   return (
     <>
-      <WorkNotice>{t("Vue simplifiée d'après vos écritures de l'exercice : à faire valider par un expert-comptable.")}</WorkNotice>
       <div className="ws-card">
         <YearBar year={year} setYear={setYear} />
         <h2>{t('Plan de financement {year}', { year })}</h2>

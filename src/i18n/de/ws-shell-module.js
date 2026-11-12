@@ -128,5 +128,9 @@ export default {
   "Total des ressources": "Summe der Mittelherkunft",
   "Ressources d'avance sur les emplois": "Mittelherkunft über der Verwendung",
   "Emplois non couverts par ces ressources": "Durch diese Mittel nicht gedeckte Verwendung",
-  "Un emploi non couvert est normalement financé par l'activité (bénéfices) ou la trésorerie.": "Eine nicht gedeckte Verwendung wird normalerweise durch das Geschäft (Gewinne) oder die Liquidität finanziert."
+  "Un emploi non couvert est normalement financé par l'activité (bénéfices) ou la trésorerie.": "Eine nicht gedeckte Verwendung wird normalerweise durch das Geschäft (Gewinne) oder die Liquidität finanziert.",
+  "Fichier du relevé (CSV, Excel, OFX, MT940, CAMT.053)": "Kontoauszugsdatei (CSV, Excel, OFX, MT940, CAMT.053)",
+  "Classeur Excel chargé.": "Excel-Arbeitsmappe geladen.",
+  "Format : {f}": "Format: {f}",
+  "Fichier trop volumineux (1,4 Mo au plus).": "Datei zu groß (höchstens 1,4 MB)."
 };

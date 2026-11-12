@@ -128,5 +128,9 @@ export default {
   "Total des ressources": "Total de recursos",
   "Ressources d'avance sur les emplois": "Recursos por encima de los empleos",
   "Emplois non couverts par ces ressources": "Empleos no cubiertos por estos recursos",
-  "Un emploi non couvert est normalement financé par l'activité (bénéfices) ou la trésorerie.": "Un empleo no cubierto se financia normalmente con la actividad (beneficios) o la tesorería."
+  "Un emploi non couvert est normalement financé par l'activité (bénéfices) ou la trésorerie.": "Un empleo no cubierto se financia normalmente con la actividad (beneficios) o la tesorería.",
+  "Fichier du relevé (CSV, Excel, OFX, MT940, CAMT.053)": "Archivo del extracto (CSV, Excel, OFX, MT940, CAMT.053)",
+  "Classeur Excel chargé.": "Libro de Excel cargado.",
+  "Format : {f}": "Formato: {f}",
+  "Fichier trop volumineux (1,4 Mo au plus).": "Archivo demasiado grande (1,4 MB como máximo)."
 };

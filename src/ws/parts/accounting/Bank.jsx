@@ -18,21 +18,39 @@ function ImportBox({ bank, close, done }) {
   const [prev, setPrev] = useState(null);
   const [err, setErr] = useState('');
   const file = useRef(null);
-  const load = (f) => { if (!f) return; const r = new FileReader(); r.onload = () => { setCsv(String(r.result || '')); setPrev(null); }; r.readAsText(f); };
-  const check = () => { setErr(''); oapi('POST', '/accounting/bank/' + bank.id + '/import', { csv, dryRun: true }).then(setPrev).catch((e) => { setPrev(null); setErr(e.message); }); };
-  const go = () => oapi('POST', '/accounting/bank/' + bank.id + '/import', { csv }).then((r) => { toast(t('{n} ligne(s) importée(s), {d} déjà connue(s).', { n: r.imported, d: r.duplicates })); close(); done(); }).catch((e) => setErr(e.message));
+  const [xlsx, setXlsx] = useState(''); // classeur Excel envoyé en base64
+  const body = () => (xlsx ? { xlsxBase64: xlsx } : { csv });
+  const ready = Boolean(xlsx || csv.trim());
+  const load = (f) => {
+    if (!f) return;
+    setErr(''); setPrev(null);
+    if (/\.xlsx$/i.test(f.name)) { // Excel : lu en binaire puis envoyé en base64
+      if (f.size > 1.4e6) { setErr(t('Fichier trop volumineux (1,4 Mo au plus).')); return; }
+      const r = new FileReader();
+      r.onload = () => { const u = new Uint8Array(r.result); let bin = ''; for (let i = 0; i < u.length; i += 8192) bin += String.fromCharCode.apply(null, u.subarray(i, i + 8192)); setXlsx(btoa(bin)); setCsv(''); };
+      r.readAsArrayBuffer(f);
+      return;
+    }
+    const r = new FileReader(); r.onload = () => { setXlsx(''); setCsv(String(r.result || '')); }; r.readAsText(f);
+  };
+  const check = () => { setErr(''); oapi('POST', '/accounting/bank/' + bank.id + '/import', { ...body(), dryRun: true }).then(setPrev).catch((e) => { setPrev(null); setErr(e.message); }); };
+  const go = () => oapi('POST', '/accounting/bank/' + bank.id + '/import', body()).then((r) => { toast(t('{n} ligne(s) importée(s), {d} déjà connue(s).', { n: r.imported, d: r.duplicates })); close(); done(); }).catch((e) => setErr(e.message));
+  const FORMATS = { csv: 'CSV', xlsx: 'Excel', ofx: 'OFX', mt940: 'MT940', camt: 'CAMT.053' };
   const COLS = { date: 'date', label: 'libellé', ref: 'référence', debit: 'débit', credit: 'crédit', amount: 'montant', balance: 'solde' };
   return (
     <div className="ws-form">
-      <label className="fld"><span>{t('Fichier CSV du relevé')}</span><input ref={file} type="file" accept=".csv,.txt,text/csv" style={{ fontSize: 16 }} onChange={(e) => load(e.target.files[0])} /></label>
-      <label className="fld"><span>{t('ou collez le contenu du relevé')}</span><textarea style={{ fontSize: 16 }} rows={6} value={csv} onChange={(e) => { setCsv(e.target.value); setPrev(null); }} /></label>
+      <label className="fld"><span>{t('Fichier du relevé (CSV, Excel, OFX, MT940, CAMT.053)')}</span><input ref={file} type="file" accept=".csv,.txt,.xlsx,.ofx,.qfx,.sta,.mt940,.940,.xml,text/csv" style={{ fontSize: 16 }} onChange={(e) => load(e.target.files[0])} /></label>
+      <label className="fld"><span>{t('ou collez le contenu du relevé')}</span><textarea style={{ fontSize: 16 }} rows={6} value={xlsx ? '' : csv} placeholder={xlsx ? t('Classeur Excel chargé.') : ''} onChange={(e) => { setXlsx(''); setCsv(e.target.value); setPrev(null); }} /></label>
       <p className="ws-err" role="alert">{err}</p>
-      <div className="row"><button className="btn small" type="button" style={BTN} disabled={!csv.trim()} onClick={check}>{t('Vérifier le format')}</button></div>
+      <div className="row"><button className="btn small" type="button" style={BTN} disabled={!ready} onClick={check}>{t('Vérifier le format')}</button></div>
       {prev ? (
         <div className="ws-card small">
           <b>{t('Format détecté')}</b>
+          <p>{t('Format : {f}', { f: FORMATS[prev.detected.format] || prev.detected.format })}</p>
+          {prev.detected.columns ? <>
           <p>{t('Séparateur : {d} · dates : {f} · décimales : {x}', { d: prev.detected.delimiter, f: prev.detected.dateFormat === 'ymd' ? t('année-mois-jour') : prev.detected.dateFormat === 'mdy' ? t('mois/jour/année') : t('jour/mois/année'), x: prev.detected.decimal })}</p>
           <p>{Object.entries(prev.detected.columns).filter(([, v]) => v >= 0).map(([k, v]) => t(COLS[k]) + ' = ' + t('colonne {n}', { n: v + 1 })).join(' · ')}</p>
+          </> : null}
           {prev.detected.ambiguousDate ? <p className="late">{t('Les dates sont ambiguës : lues comme jour/mois/année. Vérifiez.')}</p> : null}
           <p>{t('{n} ligne(s) valide(s), {m} refusée(s).', { n: prev.valid, m: prev.invalid.length })}</p>
           {prev.preview.map((l, i) => <div className="line" key={i}><span>{l.date + ' · ' + l.label}</span><b>{l.amount}</b></div>)}
@@ -129,7 +147,7 @@ export default function BankTab() {
             <div className="row" style={{ flexWrap: 'wrap', marginBottom: 8 }}>
               {j.banks.length ? <select aria-label={t('Compte')} style={{ fontSize: 16, minHeight: 44 }} value={bank.id} onChange={(e) => setSel(Number(e.target.value))}>{j.banks.map((b) => <option key={b.id} value={b.id}>{b.name + ' (' + b.glAccount + ') · ' + t('{n} à pointer', { n: b.unmatched })}</option>)}</select> : null}
               <button className="btn small" type="button" style={BTN} onClick={create}>{t('Ajouter un compte')}</button>
-              {bank ? <button className="btn primary small" type="button" style={BTN} onClick={() => modal(t('Importer un relevé'), (close) => <ImportBox bank={bank} close={close} done={st.reload} />, { wide: true })}>{t('Importer un relevé CSV')}</button> : null}
+              {bank ? <button className="btn primary small" type="button" style={BTN} onClick={() => modal(t('Importer un relevé'), (close) => <ImportBox bank={bank} close={close} done={st.reload} />, { wide: true })}>{t('Importer un relevé')}</button> : null}
               {bank && !bank.lines ? <button className="link" type="button" style={TAP} onClick={() => oapi('DELETE', '/accounting/bank/' + bank.id).then(() => { setSel(null); st.reload(); }).catch(fail)}>{t('Supprimer ce compte')}</button> : null}
             </div>
             {!bank ? <Empty text={t("Ajoutez votre compte bancaire ou Mobile Money, puis importez le relevé (CSV) pour le rapprocher de la comptabilité.")} /> : <Detail key={bank.id + ':' + bank.lines} bank={bank} />}
