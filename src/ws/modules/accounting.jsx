@@ -134,7 +134,7 @@ export default function Accounting() {
         <button className="btn primary small" type="button" onClick={() => editEntry()}>{t('Nouvelle écriture')}</button>
       </>}
     >
-      <p className="muted small">{t("Vos écritures, votre balance, votre résultat et votre TVA. Outil d'aide : à faire valider par un expert-comptable.")}</p>
+      {tab === 'home' ? <p className="muted small">{t("Vos écritures, votre balance, votre résultat et votre TVA. Outil d'aide : à faire valider par un expert-comptable.")}</p> : null}
       <div>{content}</div>
     </ModuleShell>
   );
