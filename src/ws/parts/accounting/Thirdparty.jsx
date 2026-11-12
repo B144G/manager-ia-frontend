@@ -129,15 +129,16 @@ function Payables() {
   );
 }
 
-export default function ThirdTab() {
+export default function ThirdTab({ sub: forced }) { // forced : écran imposé par le menu (aged | payables | lettering) ; sans lui, onglets internes comme avant
   const t = useT();
-  const [sub, setSub] = useState('aged');
+  const [own, setSub] = useState('aged');
+  const sub = forced || own;
   return (
     <>
       <WorkNotice>{t("Documents de travail : à faire valider par un expert-comptable.")}</WorkNotice>
-      <div className="ws-tabs" style={{ flexWrap: 'wrap', overflowX: 'visible' }}>
+      {forced ? null : <div className="ws-tabs" style={{ flexWrap: 'wrap', overflowX: 'visible' }}>
         {[['aged', 'Balance âgée'], ['payables', 'Dettes fournisseurs'], ['lettering', 'Lettrage']].map((x) => <button key={x[0]} type="button" className={'tab' + (sub === x[0] ? ' on' : '')} style={BTN} onClick={() => setSub(x[0])}>{t(x[1])}</button>)}
-      </div>
+      </div>}
       {sub === 'aged' ? <Aged /> : sub === 'payables' ? <Payables /> : <Lettering />}
     </>
   );

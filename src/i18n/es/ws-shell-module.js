@@ -42,5 +42,16 @@ export default {
   "Choisissez un compte pour voir ses mouvements.": "Elija una cuenta para ver sus movimientos.",
   "Rechercher un compte (numéro ou nom)": "Buscar una cuenta (número o nombre)",
   "Aucun compte trouvé.": "No se encontró ninguna cuenta.",
-  "Compte personnalisé": "Cuenta personalizada"
+  "Compte personnalisé": "Cuenta personalizada",
+  "Ce que vos clients vous doivent, classé par ancienneté.": "Lo que sus clientes le deben, clasificado por antigüedad.",
+  "Ce que vous devez à vos fournisseurs et leurs échéances.": "Lo que usted debe a sus proveedores y sus vencimientos.",
+  "Rapprochez les factures et les règlements pour solder les comptes de tiers.": "Concilie facturas y pagos para saldar las cuentas de terceros.",
+  "Banques et rapprochement": "Bancos y conciliación",
+  "Vos comptes bancaires, import des relevés et rapprochement avec les écritures.": "Sus cuentas bancarias, importación de extractos y conciliación con sus asientos.",
+  "Comptage de caisse": "Arqueo de caja",
+  "Comparer l'argent en caisse et la comptabilité, et noter l'écart.": "Compare el efectivo en caja con la contabilidad y anote la diferencia.",
+  "Clôture du mois": "Cierre del mes",
+  "Liste de contrôle du mois, puis clôture et verrouillage de la période.": "Lista de control del mes, luego cierre y bloqueo del período.",
+  "Régularisations": "Regularizaciones",
+  "Provisions, charges constatées d'avance et charges à payer de fin de mois.": "Provisiones, gastos anticipados y gastos devengados de fin de mes."
 };

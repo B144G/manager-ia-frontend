@@ -42,5 +42,16 @@ export default {
   "Choisissez un compte pour voir ses mouvements.": "Wählen Sie ein Konto, um seine Bewegungen zu sehen.",
   "Rechercher un compte (numéro ou nom)": "Konto suchen (Nummer oder Name)",
   "Aucun compte trouvé.": "Kein Konto gefunden.",
-  "Compte personnalisé": "Eigenes Konto"
+  "Compte personnalisé": "Eigenes Konto",
+  "Ce que vos clients vous doivent, classé par ancienneté.": "Was Ihre Kunden Ihnen schulden, nach Alter geordnet.",
+  "Ce que vous devez à vos fournisseurs et leurs échéances.": "Was Sie Ihren Lieferanten schulden und deren Fälligkeiten.",
+  "Rapprochez les factures et les règlements pour solder les comptes de tiers.": "Ordnen Sie Rechnungen und Zahlungen zu, um Partnerkonten auszugleichen.",
+  "Banques et rapprochement": "Banken und Abstimmung",
+  "Vos comptes bancaires, import des relevés et rapprochement avec les écritures.": "Ihre Bankkonten, Import der Kontoauszüge und Abstimmung mit Ihren Buchungen.",
+  "Comptage de caisse": "Kassenzählung",
+  "Comparer l'argent en caisse et la comptabilité, et noter l'écart.": "Bargeld in der Kasse mit der Buchhaltung vergleichen und die Differenz festhalten.",
+  "Clôture du mois": "Monatsabschluss",
+  "Liste de contrôle du mois, puis clôture et verrouillage de la période.": "Checkliste des Monats, dann Abschluss und Sperrung des Zeitraums.",
+  "Régularisations": "Abgrenzungen",
+  "Provisions, charges constatées d'avance et charges à payer de fin de mois.": "Rückstellungen, aktive und passive Rechnungsabgrenzung zum Monatsende."
 };

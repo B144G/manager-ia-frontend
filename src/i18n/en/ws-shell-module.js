@@ -42,5 +42,16 @@ export default {
   "Choisissez un compte pour voir ses mouvements.": "Choose an account to see its movements.",
   "Rechercher un compte (numéro ou nom)": "Search an account (number or name)",
   "Aucun compte trouvé.": "No account found.",
-  "Compte personnalisé": "Custom account"
+  "Compte personnalisé": "Custom account",
+  "Ce que vos clients vous doivent, classé par ancienneté.": "What your customers owe you, sorted by age.",
+  "Ce que vous devez à vos fournisseurs et leurs échéances.": "What you owe your suppliers and their due dates.",
+  "Rapprochez les factures et les règlements pour solder les comptes de tiers.": "Match invoices and payments to clear third-party accounts.",
+  "Banques et rapprochement": "Banks and reconciliation",
+  "Vos comptes bancaires, import des relevés et rapprochement avec les écritures.": "Your bank accounts, statement import and reconciliation with your entries.",
+  "Comptage de caisse": "Cash count",
+  "Comparer l'argent en caisse et la comptabilité, et noter l'écart.": "Compare the cash on hand with the books and record the difference.",
+  "Clôture du mois": "Month-end closing",
+  "Liste de contrôle du mois, puis clôture et verrouillage de la période.": "Month checklist, then closing and locking of the period.",
+  "Régularisations": "Adjusting entries",
+  "Provisions, charges constatées d'avance et charges à payer de fin de mois.": "Month-end provisions, prepaid expenses and accrued expenses."
 };

@@ -37,7 +37,7 @@ function Cash() {
   );
 }
 
-export default function ClosingTab() {
+export default function ClosingTab({ part = 'all' }) { // part : all | month (clôture du mois) | adjust (régularisations) | cash (comptage de caisse)
   const t = useT();
   const { oapi, modal, toast, fail, today, money } = useWs();
   const [month, setMonth] = useState(() => { const d = new Date(); d.setUTCDate(1); d.setUTCMonth(d.getUTCMonth() - 1); return d.toISOString().slice(0, 7); });
@@ -68,7 +68,7 @@ export default function ClosingTab() {
       <Loaded state={st}>
         {(j) => (
           <>
-            <div className="ws-card">
+            {part === 'all' || part === 'month' ? <div className="ws-card">
               <div className="row" style={{ flexWrap: 'wrap' }}>
                 <h2 className="grow">{t('Clôture de {month}', { month: monthLabel(j.month) })}{' '}<span className={'pill ' + (j.status === 'closed' ? 'good' : 'mid')}>{j.status === 'closed' ? t('Clôturé') : t('Ouvert')}</span></h2>
                 {j.status === 'closed' ? <button className="btn small" type="button" style={BTN} onClick={reopen}>{t('Rouvrir')}</button> : <button className="btn primary small" type="button" style={BTN} onClick={() => close(j)}>{t('Clôturer')}</button>}
@@ -80,13 +80,13 @@ export default function ClosingTab() {
                   <span className={'pill ' + PILL[i.status][0]}>{t(PILL[i.status][1])}</span>
                 </div>
               ))}
-            </div>
-            <div className="ws-card">
+            </div> : null}
+            {part === 'all' || part === 'adjust' ? <div className="ws-card">
               <div className="row"><h2 className="grow">{t('Provisions et charges constatées d\'avance')}</h2>{j.status === 'closed' ? null : <button className="btn small" type="button" style={BTN} onClick={adjust}>{t('Ajouter')}</button>}</div>
               {!j.adjustments.length ? <Empty text={t('Aucune écriture de fin de mois.')} /> : null}
               {j.adjustments.map((a) => <div className="line" key={a.id}><span>{t(ADJ[a.kind])}<br /><small className="muted">{a.label}</small></span><b>{money(a.amount)}</b></div>)}
-            </div>
-            <Cash />
+            </div> : null}
+            {part === 'all' || part === 'cash' ? <Cash /> : null}
           </>
         )}
       </Loaded>

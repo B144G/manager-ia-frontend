@@ -30,10 +30,13 @@ export default function Accounting() {
       { id: 'recurring', label: t('Récurrentes'), hint: t('Écritures qui reviennent chaque mois, trimestre ou année.') },
       { id: 'chart', label: t('Plan comptable'), hint: t('Les comptes de votre entreprise, et ajout de vos propres comptes.') }] },
     { id: 'third', icon: '👥', label: t('Tiers et recouvrement'), items: [
-      { id: 'third', label: t('Tiers et dettes'), hint: t('Ce que les clients vous doivent et ce que vous devez.') }] },
+      { id: 'aged', label: t('Balance âgée'), hint: t('Ce que vos clients vous doivent, classé par ancienneté.') },
+      { id: 'payables', label: t('Dettes fournisseurs'), hint: t('Ce que vous devez à vos fournisseurs et leurs échéances.') },
+      { id: 'lettering', label: t('Lettrage'), hint: t('Rapprochez les factures et les règlements pour solder les comptes de tiers.') }] },
     { id: 'bank', icon: '🏦', label: t('Banque et trésorerie'), items: [
-      { id: 'bank', label: t('Rapprochement'), hint: t('Faites correspondre votre relevé de banque et vos écritures.') },
-      { id: 'cash', to: 'budget', label: t('Prévision de trésorerie'), hint: t('Ouvre le module Budget : encaissements et décaissements prévus.') }] },
+      { id: 'bank', label: t('Banques et rapprochement'), hint: t('Vos comptes bancaires, import des relevés et rapprochement avec les écritures.') },
+      { id: 'cashcount', label: t('Comptage de caisse'), hint: t("Comparer l'argent en caisse et la comptabilité, et noter l'écart.") },
+      { id: 'forecast', to: 'budget', label: t('Prévision de trésorerie'), hint: t('Ouvre le module Budget : encaissements et décaissements prévus.') }] },
     { id: 'states', icon: '📈', label: t('États et éditions'), items: [
       { id: 'ledger', label: t('Grand livre'), hint: t("Tous les mouvements d'un compte.") },
       { id: 'balance', label: t('Balance'), hint: t('Le solde de chaque compte.') },
@@ -49,7 +52,8 @@ export default function Accounting() {
       { id: 'production', to: 'production', label: t('Production'), hint: t('Ouvre le module Production.') }] },
     { id: 'control', icon: '🔒', label: t('Clôture et contrôle'), items: [
       { id: 'audit', label: t('Contrôles'), hint: t('Contrôles automatiques de vos écritures.') },
-      { id: 'closing', label: t('Clôture'), hint: t('Clôturer un mois et verrouiller la période.') },
+      { id: 'closing', label: t('Clôture du mois'), hint: t('Liste de contrôle du mois, puis clôture et verrouillage de la période.') },
+      { id: 'adjust', label: t('Régularisations'), hint: t('Provisions, charges constatées d\'avance et charges à payer de fin de mois.') },
       { id: 'yearend', label: t('Clôture annuelle'), hint: t("Résultat de l'année et à-nouveaux.") }] },
     { id: 'params', icon: '⚙️', label: t('Paramètres'), items: [
       { id: 'settings', label: t('Réglages'), hint: t('Taux de TVA, comptes de règlement et période clôturée.') }] },
@@ -94,7 +98,9 @@ export default function Accounting() {
 
   let content = null;
   const OWN = { bank: BankTab, third: ThirdTab, assets: AssetsTab, closing: ClosingTab, analytics: AnalyticsTab, ratios: RatiosTab, audit: AuditTab, recurring: RecurringTab, yearend: YearEndTab }; // onglets de la vague 2 : ils chargent leurs propres données
-  if (OWN[tab]) { const Own = OWN[tab]; content = <Own year={year} setYear={setYear} />; } else if (st.loading) content = <Loading />;
+  const SUB = { aged: <ThirdTab sub="aged" />, payables: <ThirdTab sub="payables" />, lettering: <ThirdTab sub="lettering" />, adjust: <ClosingTab part="adjust" />, cashcount: <ClosingTab part="cash" />, closing: <ClosingTab part="month" /> };
+  if (SUB[tab]) content = SUB[tab];
+  else if (OWN[tab]) { const Own = OWN[tab]; content = <Own year={year} setYear={setYear} />; } else if (st.loading) content = <Loading />;
   else if (st.error) content = <p className="ws-err" role="alert">{t(st.error.message)}</p>;
   else if (o) {
     if (tab === 'home') content = <Home o={o} JN={JN} onReverse={reverse} reload={st.reload} year={year} />;
