@@ -189,7 +189,7 @@ function Compare({ s, year }) {
     </div>
   );
 }
-export function ResultsTab({ year, setYear }) {
+export function ResultsTab({ year, setYear, part = 'all' }) {  // part : all | pl (compte de résultat) | bs (bilan) | vat (TVA)
   const t = useT();
   const { oapi, money } = useWs();
   const [compare, setCompare] = useState(false);
@@ -206,7 +206,7 @@ export function ResultsTab({ year, setYear }) {
         <Check checked={compare} onChange={setCompare} label={t("Comparer avec l'année précédente")} />
       </div>
       {compare ? <Compare s={s} year={year} /> : null}
-      <div className="ws-card">
+      {part === 'all' || part === 'pl' ? <div className="ws-card">
         <h2>{t('Compte de résultat {year}', { year })}</h2>
         <p>{t('Ventes {sales} − achats {purchases} = marge brute {margin}', { sales: money(r.ventes), purchases: money(r.achats), margin: money(r.margeBrute) })}</p>
         {r.produits.map((x) => <AmountLine key={'p' + x.account} x={x} />)}
@@ -214,8 +214,8 @@ export function ResultsTab({ year, setYear }) {
         {r.charges.map((x) => <AmountLine key={'c' + x.account} x={x} />)}
         <div className="line"><b>{t('Total des charges')}</b><b>{money(r.totalCharges)}</b></div>
         <div className="line"><b>{r.resultat >= 0 ? t('Bénéfice') : t('Perte')}</b><b className={r.resultat >= 0 ? 'ok' : ''}>{money(Math.abs(r.resultat))}</b></div>
-      </div>
-      <div className="ws-card">
+      </div> : null}
+      {part === 'all' || part === 'bs' ? <div className="ws-card">
         <h2>{t('Bilan simplifié au 31/12/{year}', { year })}</h2>
         <p className="muted small">{t('Immobilisations {fixed} · stocks {stocks} · créances et tiers {receivables} · trésorerie {cash} · capitaux propres (avec résultat) {equity}', { fixed: money(b.resume.immobilisations), stocks: money(b.resume.stocks), receivables: money(b.resume.creances), cash: money(b.resume.tresorerie), equity: money(b.resume.capitauxPropres) })}</p>
         <h3>{t('Actif')}</h3>
@@ -225,13 +225,13 @@ export function ResultsTab({ year, setYear }) {
         {b.passif.map((x) => <AmountLine key={'f' + x.account} x={x} />)}
         <div className="line"><span><b>{t("Résultat de l'exercice")}</b></span><span>{money(b.resultat)}</span></div>
         <div className="line"><b>{t('Total passif')}</b><b>{money(b.totalPassif) + (b.equilibre ? ' ✓' : ' ✗')}</b></div>
-      </div>
-      <div className="ws-card">
+      </div> : null}
+      {part === 'all' || part === 'vat' ? <div className="ws-card">
         <h2>{t('TVA {year} (taux {rate} %)', { year, rate: v.rate })}</h2>
         <p>{t('TVA collectée : {collected} · TVA récupérable : {deductible}', { collected: money(v.collected), deductible: money(v.deductible) })}</p>
         <p>{v.due ? t('TVA à reverser : {amount}', { amount: money(v.due) }) : v.credit ? t('Crédit de TVA : {amount}', { amount: money(v.credit) }) : t('Rien à reverser.')}</p>
         <p className="muted small">{t("Estimation d'après vos écritures. La déclaration officielle se fait auprès de l'administration fiscale.")}</p>
-      </div>
+      </div> : null}
       <ExportBar year={year} />
     </>
   );

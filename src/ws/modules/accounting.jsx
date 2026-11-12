@@ -3,6 +3,7 @@ import { useWs } from '../WsContext.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { Form, Loading, useLoad } from '../ui.jsx';
 import ModuleShell from '../ModuleShell.jsx';
+import { ChartScreen, LedgerScreen } from '../parts/accounting/Screens.jsx';
 import EntryForm from '../parts/accounting/EntryForm.jsx';
 import BankTab from '../parts/accounting/Bank.jsx';
 import ThirdTab from '../parts/accounting/Thirdparty.jsx';
@@ -21,28 +22,37 @@ import { BalanceTab, Home, JournalTab, LedgerBox, ResultsTab, SettingsTab } from
 export default function Accounting() {
   const t = useT();
   const GROUPS = [
-    { id: 'pilot', label: t('Pilotage'), items: [
+    { id: 'pilot', icon: '📊', label: t('Pilotage'), items: [
       { id: 'home', label: t('Aperçu'), hint: t("Vue d'ensemble de votre comptabilité.") },
       { id: 'ratios', label: t('Ratios'), hint: t('Les indicateurs clés, expliqués simplement.') }] },
-    { id: 'entry', label: t('Saisie et journaux'), items: [
+    { id: 'entry', icon: '✏️', label: t('Saisie et journaux'), items: [
       { id: 'journal', label: t('Journal'), hint: t('Toutes les écritures, par journal.') },
-      { id: 'recurring', label: t('Récurrentes'), hint: t('Écritures qui reviennent chaque mois, trimestre ou année.') }] },
-    { id: 'third', label: t('Tiers et recouvrement'), items: [
+      { id: 'recurring', label: t('Récurrentes'), hint: t('Écritures qui reviennent chaque mois, trimestre ou année.') },
+      { id: 'chart', label: t('Plan comptable'), hint: t('Les comptes de votre entreprise, et ajout de vos propres comptes.') }] },
+    { id: 'third', icon: '👥', label: t('Tiers et recouvrement'), items: [
       { id: 'third', label: t('Tiers et dettes'), hint: t('Ce que les clients vous doivent et ce que vous devez.') }] },
-    { id: 'bank', label: t('Banque et trésorerie'), items: [
-      { id: 'bank', label: t('Rapprochement'), hint: t('Faites correspondre votre relevé de banque et vos écritures.') }] },
-    { id: 'states', label: t('États et éditions'), items: [
+    { id: 'bank', icon: '🏦', label: t('Banque et trésorerie'), items: [
+      { id: 'bank', label: t('Rapprochement'), hint: t('Faites correspondre votre relevé de banque et vos écritures.') },
+      { id: 'cash', to: 'budget', label: t('Prévision de trésorerie'), hint: t('Ouvre le module Budget : encaissements et décaissements prévus.') }] },
+    { id: 'states', icon: '📈', label: t('États et éditions'), items: [
+      { id: 'ledger', label: t('Grand livre'), hint: t("Tous les mouvements d'un compte.") },
       { id: 'balance', label: t('Balance'), hint: t('Le solde de chaque compte.') },
-      { id: 'results', label: t('Résultat et bilan'), hint: t("Compte de résultat, bilan et comparaison avec l'année précédente.") },
+      { id: 'results', label: t('Compte de résultat'), hint: t('Produits, charges et résultat, avec comparaison avec l\'année précédente.') },
+      { id: 'bilan', label: t('Bilan'), hint: t("Ce que l'entreprise possède et ce qu'elle doit.") },
       { id: 'analytics', label: t('Analytique'), hint: t('Résultat par projet, antenne ou activité.') }] },
-    { id: 'assets', label: t('Immobilisations'), items: [
-      { id: 'assets', label: t('Immobilisations'), hint: t("Les biens de l'entreprise et leurs amortissements.") }] },
-    { id: 'control', label: t('Clôture et contrôle'), items: [
+    { id: 'fiscal', icon: '🧾', label: t('Fiscalité et déclarations'), items: [
+      { id: 'vat', label: t('TVA'), hint: t('TVA collectée, récupérable et à reverser.') },
+      { id: 'fiscal', to: 'fiscal', label: t('Déclarations et calendrier fiscal'), hint: t('Ouvre le module Fiscalité et liasse.') }] },
+    { id: 'assets', icon: '🏗️', label: t('Immobilisations et stocks'), items: [
+      { id: 'assets', label: t('Immobilisations'), hint: t("Les biens de l'entreprise et leurs amortissements.") },
+      { id: 'stock', to: 'stock', label: t('Stocks'), hint: t('Ouvre le module Stock et achats.') },
+      { id: 'production', to: 'production', label: t('Production'), hint: t('Ouvre le module Production.') }] },
+    { id: 'control', icon: '🔒', label: t('Clôture et contrôle'), items: [
       { id: 'audit', label: t('Contrôles'), hint: t('Contrôles automatiques de vos écritures.') },
       { id: 'closing', label: t('Clôture'), hint: t('Clôturer un mois et verrouiller la période.') },
       { id: 'yearend', label: t('Clôture annuelle'), hint: t("Résultat de l'année et à-nouveaux.") }] },
-    { id: 'params', label: t('Paramètres'), items: [
-      { id: 'settings', label: t('Réglages'), hint: t('Plan comptable, TVA et paramètres.') }] },
+    { id: 'params', icon: '⚙️', label: t('Paramètres'), items: [
+      { id: 'settings', label: t('Réglages'), hint: t('Taux de TVA, comptes de règlement et période clôturée.') }] },
   ];
   const { oapi, modal, toast, fail } = useWs();
   const [tab, setTab] = useState('home');
@@ -90,12 +100,17 @@ export default function Accounting() {
     if (tab === 'home') content = <Home o={o} JN={JN} onReverse={reverse} reload={st.reload} year={year} />;
     else if (tab === 'journal') content = <JournalTab year={year} setYear={setYear} JN={JN} journal={journal} setJournal={setJournal} onReverse={reverse} />;
     else if (tab === 'balance') content = <BalanceTab year={year} setYear={setYear} onLedger={ledger} />;
-    else if (tab === 'results') content = <ResultsTab year={year} setYear={setYear} />;
+    else if (tab === 'results') content = <ResultsTab year={year} setYear={setYear} part="pl" />;
+    else if (tab === 'bilan') content = <ResultsTab year={year} setYear={setYear} part="bs" />;
+    else if (tab === 'vat') content = <ResultsTab year={year} setYear={setYear} part="vat" />;
+    else if (tab === 'ledger') content = <LedgerScreen year={year} setYear={setYear} />;
+    else if (tab === 'chart') content = <ChartScreen onAccountAdded={() => { accountsRef.current = null; }} />;
     else content = <SettingsTab o={o} reload={st.reload} onAccountAdded={() => { accountsRef.current = null; }} />;
   }
 
   return (
     <ModuleShell
+      quick={<QuickView year={year} tab={tab} />}
       title={t('Comptabilité')}
       groups={GROUPS}
       active={tab}
@@ -108,5 +123,24 @@ export default function Accounting() {
       <p className="muted small">{t("Vos écritures, votre balance, votre résultat et votre TVA. Outil d'aide : à faire valider par un expert-comptable.")}</p>
       <div>{content}</div>
     </ModuleShell>
+  );
+}
+
+/** Vue rapide : chiffre d'affaires, charges et résultat de l'exercice affiché (lecture seule, ne bloque jamais l'écran). */
+function QuickView({ year, tab }) {
+  const t = useT();
+  const { oapi, money } = useWs();
+  const st = useLoad(() => oapi('GET', '/accounting/statements?year=' + year), [year, tab]);
+  const r = st.data && st.data.resultat;
+  if (!r) return null;
+  return (
+    <div className="ws-card msh-quick" aria-label={t('Vue rapide')}>
+      <b>{t('Vue rapide')} · {year}</b>
+      <div className="msh-quick-row">
+        <span>{t("Chiffre d'affaires")}<b className="ok">{money(r.totalProduits)}</b></span>
+        <span>{t('Charges')}<b className="late">{money(r.totalCharges)}</b></span>
+        <span>{r.resultat >= 0 ? t('Bénéfice') : t('Perte')}<b className={r.resultat >= 0 ? 'ok' : 'late'}>{money(Math.abs(r.resultat))}</b></span>
+      </div>
+    </div>
   );
 }

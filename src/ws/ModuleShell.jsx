@@ -1,15 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useT } from '../lib/i18n.jsx';
 import { useWs } from './WsContext.jsx';
 
 /* Cadre commun d'un module : bandeau (entreprise, personne, rôle), menu à gauche en groupes dépliables,
    recherche d'écran (Ctrl K), fil d'Ariane et phrase d'explication. N'affiche que ce qu'on lui donne :
    il ne décide d'aucun droit (les droits restent contrôlés par le serveur).
-   groups : [{ id, label, items: [{ id, label, hint }] }]   active : id de l'écran affiché   onSelect(id) */
+   groups : [{ id, label, icon?, items: [{ id, label, hint, to? }] }]   active : id de l'écran affiché   onSelect(id)
+   Un item avec `to` ouvre un autre module (ex. 'stock') au lieu d'un écran du module. quick : bloc « vue rapide » au-dessus de l'écran. */
 
-export default function ModuleShell({ title, groups, active, onSelect, actions, children }) {
+export default function ModuleShell({ title, groups, active, onSelect, actions, quick, children }) {
   const t = useT();
-  const { info, user } = useWs();
+  const { info, user, orgId } = useWs();
+  const navigate = useNavigate();
   const search = useRef(null);
   const [q, setQ] = useState('');
   const [drawer, setDrawer] = useState(false);
@@ -40,7 +43,11 @@ export default function ModuleShell({ title, groups, active, onSelect, actions, 
   }, [q, flat]);
   const cur = flat.find((i) => i.id === active) || flat[0];
 
-  const pick = (id) => { setQ(''); setDrawer(false); onSelect(id); };
+  const pick = (id) => {
+    setQ(''); setDrawer(false);
+    const it = flat.find((x) => x.id === id);
+    if (it && it.to) navigate(`/app/${orgId}/${it.to}`); else onSelect(id);
+  };
   const toggle = (id) => setOpen((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
 
   const org = info && info.org ? info.org.name : '';
@@ -61,17 +68,17 @@ export default function ModuleShell({ title, groups, active, onSelect, actions, 
           <input ref={search} type="search" className="msh-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('Rechercher un écran…')} aria-label={t('Rechercher un écran…')} />
           {q.trim() ? (
             found.length ? found.map((i) => (
-              <button key={i.id} type="button" className={'msh-item' + (i.id === active ? ' on' : '')} onClick={() => pick(i.id)}>{i.label}<small>{i.group}</small></button>
+              <button key={i.id} type="button" className={'msh-item' + (i.id === active ? ' on' : '')} onClick={() => pick(i.id)}>{i.label}{i.to ? ' ↗' : ''}<small>{i.group}</small></button>
             )) : <p className="muted small msh-none">{t('Aucun écran trouvé.')}</p>
           ) : groups.map((g) => {
             const isOpen = open.has(g.id);
             return (
               <div key={g.id} className="msh-group">
                 <button type="button" className="msh-gh" aria-expanded={isOpen} onClick={() => toggle(g.id)}>
-                  <span>{g.label}</span><span aria-hidden="true" className="msh-caret">{isOpen ? '▾' : '▸'}</span>
+                  <span>{g.icon ? <span aria-hidden="true" className="msh-ico">{g.icon}</span> : null}{g.label}</span><span aria-hidden="true" className="msh-caret">{isOpen ? '▾' : '▸'}</span>
                 </button>
                 {isOpen ? g.items.map((i) => (
-                  <button key={i.id} type="button" className={'msh-item' + (i.id === active ? ' on' : '')} aria-current={i.id === active ? 'page' : undefined} onClick={() => pick(i.id)}>{i.label}</button>
+                  <button key={i.id} type="button" className={'msh-item' + (i.id === active ? ' on' : '')} aria-current={i.id === active ? 'page' : undefined} onClick={() => pick(i.id)}>{i.label}{i.to ? ' ↗' : ''}</button>
                 )) : null}
               </div>
             );
@@ -85,6 +92,7 @@ export default function ModuleShell({ title, groups, active, onSelect, actions, 
             </div>
             {actions ? <div className="row">{actions}</div> : null}
           </div>
+          {quick || null}
           {children}
         </div>
       </div>
