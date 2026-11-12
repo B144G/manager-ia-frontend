@@ -4,6 +4,7 @@ import { useT } from '../../lib/i18n.jsx';
 import { Form, Loading, useLoad } from '../ui.jsx';
 import ModuleShell from '../ModuleShell.jsx';
 import { ChartScreen, LedgerScreen } from '../parts/accounting/Screens.jsx';
+import { FinancingScreen, LoansScreen, TrailScreen, UnsupportedScreen } from '../parts/accounting/Lot3.jsx';
 import EntryForm from '../parts/accounting/EntryForm.jsx';
 import BankTab from '../parts/accounting/Bank.jsx';
 import ThirdTab from '../parts/accounting/Thirdparty.jsx';
@@ -28,6 +29,7 @@ export default function Accounting() {
     { id: 'entry', icon: '✏️', label: t('Saisie et journaux'), items: [
       { id: 'journal', label: t('Journal'), hint: t('Toutes les écritures, par journal.') },
       { id: 'recurring', label: t('Récurrentes'), hint: t('Écritures qui reviennent chaque mois, trimestre ou année.') },
+      { id: 'nosupport', label: t('Sans justificatif'), hint: t('Écritures saisies à la main sans numéro de pièce.') },
       { id: 'chart', label: t('Plan comptable'), hint: t('Les comptes de votre entreprise, et ajout de vos propres comptes.') }] },
     { id: 'third', icon: '👥', label: t('Tiers et recouvrement'), items: [
       { id: 'aged', label: t('Balance âgée'), hint: t('Ce que vos clients vous doivent, classé par ancienneté.') },
@@ -36,6 +38,8 @@ export default function Accounting() {
     { id: 'bank', icon: '🏦', label: t('Banque et trésorerie'), items: [
       { id: 'bank', label: t('Banques et rapprochement'), hint: t('Vos comptes bancaires, import des relevés et rapprochement avec les écritures.') },
       { id: 'cashcount', label: t('Comptage de caisse'), hint: t("Comparer l'argent en caisse et la comptabilité, et noter l'écart.") },
+      { id: 'loans', label: t('Emprunts'), hint: t('Tableau de remboursement, déblocage des fonds et échéances comptabilisées.') },
+      { id: 'financing', label: t('Plan de financement'), hint: t('Investissements et remboursements face aux emprunts et apports de l\'exercice.') },
       { id: 'forecast', to: 'budget', label: t('Prévision de trésorerie'), hint: t('Ouvre le module Budget : encaissements et décaissements prévus.') }] },
     { id: 'states', icon: '📈', label: t('États et éditions'), items: [
       { id: 'ledger', label: t('Grand livre'), hint: t("Tous les mouvements d'un compte.") },
@@ -51,6 +55,7 @@ export default function Accounting() {
       { id: 'stock', to: 'stock', label: t('Stocks'), hint: t('Ouvre le module Stock et achats.') },
       { id: 'production', to: 'production', label: t('Production'), hint: t('Ouvre le module Production.') }] },
     { id: 'control', icon: '🔒', label: t('Clôture et contrôle'), items: [
+      { id: 'trail', label: t("Piste d'audit"), hint: t('Qui a passé quelle écriture, quand et pourquoi.') },
       { id: 'audit', label: t('Contrôles'), hint: t('Contrôles automatiques de vos écritures.') },
       { id: 'closing', label: t('Clôture du mois'), hint: t('Liste de contrôle du mois, puis clôture et verrouillage de la période.') },
       { id: 'adjust', label: t('Régularisations'), hint: t('Provisions, charges constatées d\'avance et charges à payer de fin de mois.') },
@@ -98,7 +103,7 @@ export default function Accounting() {
 
   let content = null;
   const OWN = { bank: BankTab, third: ThirdTab, assets: AssetsTab, closing: ClosingTab, analytics: AnalyticsTab, ratios: RatiosTab, audit: AuditTab, recurring: RecurringTab, yearend: YearEndTab }; // onglets de la vague 2 : ils chargent leurs propres données
-  const SUB = { aged: <ThirdTab sub="aged" />, payables: <ThirdTab sub="payables" />, lettering: <ThirdTab sub="lettering" />, adjust: <ClosingTab part="adjust" />, cashcount: <ClosingTab part="cash" />, closing: <ClosingTab part="month" /> };
+  const SUB = { loans: <LoansScreen />, aged: <ThirdTab sub="aged" />, payables: <ThirdTab sub="payables" />, lettering: <ThirdTab sub="lettering" />, adjust: <ClosingTab part="adjust" />, cashcount: <ClosingTab part="cash" />, closing: <ClosingTab part="month" /> };
   if (SUB[tab]) content = SUB[tab];
   else if (OWN[tab]) { const Own = OWN[tab]; content = <Own year={year} setYear={setYear} />; } else if (st.loading) content = <Loading />;
   else if (st.error) content = <p className="ws-err" role="alert">{t(st.error.message)}</p>;
@@ -110,6 +115,9 @@ export default function Accounting() {
     else if (tab === 'bilan') content = <ResultsTab year={year} setYear={setYear} part="bs" />;
     else if (tab === 'vat') content = <ResultsTab year={year} setYear={setYear} part="vat" />;
     else if (tab === 'ledger') content = <LedgerScreen year={year} setYear={setYear} />;
+    else if (tab === 'nosupport') content = <UnsupportedScreen year={year} setYear={setYear} />;
+    else if (tab === 'trail') content = <TrailScreen year={year} setYear={setYear} />;
+    else if (tab === 'financing') content = <FinancingScreen year={year} setYear={setYear} />;
     else if (tab === 'chart') content = <ChartScreen onAccountAdded={() => { accountsRef.current = null; }} />;
     else content = <SettingsTab o={o} reload={st.reload} onAccountAdded={() => { accountsRef.current = null; }} />;
   }
