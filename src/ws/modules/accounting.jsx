@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useWs } from '../WsContext.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { Form, Loading, useLoad } from '../ui.jsx';
+import ModuleShell from '../ModuleShell.jsx';
 import EntryForm from '../parts/accounting/EntryForm.jsx';
 import BankTab from '../parts/accounting/Bank.jsx';
 import ThirdTab from '../parts/accounting/Thirdparty.jsx';
@@ -19,7 +20,30 @@ import { BalanceTab, Home, JournalTab, LedgerBox, ResultsTab, SettingsTab } from
 
 export default function Accounting() {
   const t = useT();
-  const TABS = [['home', t('Aperçu')], ['journal', t('Journal')], ['balance', t('Balance')], ['results', t('Résultat et bilan')], ['analytics', t('Analytique')], ['ratios', t('Ratios')], ['audit', t('Contrôles')], ['recurring', t('Récurrentes')], ['yearend', t('Clôture annuelle')], ['bank', t('Rapprochement')], ['third', t('Tiers et dettes')], ['assets', t('Immobilisations')], ['closing', t('Clôture')], ['settings', t('Réglages')]];
+  const GROUPS = [
+    { id: 'pilot', label: t('Pilotage'), items: [
+      { id: 'home', label: t('Aperçu'), hint: t("Vue d'ensemble de votre comptabilité.") },
+      { id: 'ratios', label: t('Ratios'), hint: t('Les indicateurs clés, expliqués simplement.') }] },
+    { id: 'entry', label: t('Saisie et journaux'), items: [
+      { id: 'journal', label: t('Journal'), hint: t('Toutes les écritures, par journal.') },
+      { id: 'recurring', label: t('Récurrentes'), hint: t('Écritures qui reviennent chaque mois, trimestre ou année.') }] },
+    { id: 'third', label: t('Tiers et recouvrement'), items: [
+      { id: 'third', label: t('Tiers et dettes'), hint: t('Ce que les clients vous doivent et ce que vous devez.') }] },
+    { id: 'bank', label: t('Banque et trésorerie'), items: [
+      { id: 'bank', label: t('Rapprochement'), hint: t('Faites correspondre votre relevé de banque et vos écritures.') }] },
+    { id: 'states', label: t('États et éditions'), items: [
+      { id: 'balance', label: t('Balance'), hint: t('Le solde de chaque compte.') },
+      { id: 'results', label: t('Résultat et bilan'), hint: t("Compte de résultat, bilan et comparaison avec l'année précédente.") },
+      { id: 'analytics', label: t('Analytique'), hint: t('Résultat par projet, antenne ou activité.') }] },
+    { id: 'assets', label: t('Immobilisations'), items: [
+      { id: 'assets', label: t('Immobilisations'), hint: t("Les biens de l'entreprise et leurs amortissements.") }] },
+    { id: 'control', label: t('Clôture et contrôle'), items: [
+      { id: 'audit', label: t('Contrôles'), hint: t('Contrôles automatiques de vos écritures.') },
+      { id: 'closing', label: t('Clôture'), hint: t('Clôturer un mois et verrouiller la période.') },
+      { id: 'yearend', label: t('Clôture annuelle'), hint: t("Résultat de l'année et à-nouveaux.") }] },
+    { id: 'params', label: t('Paramètres'), items: [
+      { id: 'settings', label: t('Réglages'), hint: t('Plan comptable, TVA et paramètres.') }] },
+  ];
   const { oapi, modal, toast, fail } = useWs();
   const [tab, setTab] = useState('home');
   const [year, setYear] = useState(String(new Date().getFullYear()));
@@ -71,21 +95,18 @@ export default function Accounting() {
   }
 
   return (
-    <>
-      <div className="ws-head">
-        <div>
-          <h1>{t('Comptabilité')}</h1>
-          <p className="muted">{t("Vos écritures, votre balance, votre résultat et votre TVA. Outil d'aide : à faire valider par un expert-comptable.")}</p>
-        </div>
-        <div className="row">
-          <button className="btn small" type="button" onClick={suggest}>{t('Décrire une opération (IA)')}</button>
-          <button className="btn primary small" type="button" onClick={() => editEntry()}>{t('Nouvelle écriture')}</button>
-        </div>
-      </div>
-      <div className="ws-tabs">
-        {TABS.map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} onClick={() => { setTab(x[0]); st.reload(); }}>{x[1]}</button>)}
-      </div>
+    <ModuleShell
+      title={t('Comptabilité')}
+      groups={GROUPS}
+      active={tab}
+      onSelect={(id) => { setTab(id); st.reload(); }}
+      actions={<>
+        <button className="btn small" type="button" onClick={suggest}>{t('Décrire une opération (IA)')}</button>
+        <button className="btn primary small" type="button" onClick={() => editEntry()}>{t('Nouvelle écriture')}</button>
+      </>}
+    >
+      <p className="muted small">{t("Vos écritures, votre balance, votre résultat et votre TVA. Outil d'aide : à faire valider par un expert-comptable.")}</p>
       <div>{content}</div>
-    </>
+    </ModuleShell>
   );
 }

@@ -226,3 +226,26 @@ body.ai-open .ws-fab{display:none}
 .wa-oneclick .row{margin-top:8px}.wa-oneclick .btn{min-height:44px;max-width:100%}.wa-oneclick p{overflow-wrap:anywhere}
 .wa-adv{padding:0}.wa-adv>summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center;padding:0 14px;overflow-wrap:anywhere}.wa-adv[open]>summary{border-bottom:1px solid var(--line)}.wa-adv>*:not(summary){margin:12px}
 .ws-ok{color:var(--ok);font-weight:700}
+
+/* Cadre commun d'un module (bandeau, menu en groupes, fil d'Ariane) */
+.msh-band{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;border-radius:14px;background:var(--fg);color:var(--bg);margin-bottom:14px}
+.msh-org{font-weight:700}.msh-who{display:flex;align-items:center;gap:8px;font-weight:600}
+.msh-who small{padding:2px 10px;border-radius:999px;border:1px solid currentColor;font-weight:600;opacity:.85}
+.msh-body{display:grid;grid-template-columns:250px minmax(0,1fr);gap:16px;align-items:start}
+.msh-nav{display:grid;gap:4px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface);position:sticky;top:12px;max-height:calc(100vh - 40px);overflow:auto}
+.msh-search{min-height:40px;margin-bottom:6px}
+.msh-gh{display:flex;justify-content:space-between;align-items:center;width:100%;padding:9px 10px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-weight:700;font-size:12px;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-align:left}
+.msh-gh:hover{background:var(--bg)}
+.msh-item{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;padding:9px 12px 9px 18px;border:0;border-radius:10px;background:transparent;color:var(--fg);font:inherit;cursor:pointer;text-align:left;min-height:40px}
+.msh-item small{color:var(--muted);font-size:12px}
+.msh-item:hover{background:var(--bg)}.msh-item.on{background:var(--fg);color:var(--bg);font-weight:700}.msh-item.on small{color:inherit;opacity:.8}
+.msh-none{padding:8px 10px}
+.msh-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.msh-crumb{font-size:14px;color:var(--muted)}.msh-crumb b{color:var(--fg)}.msh-hint{margin:4px 0 0}
+.msh-burger{display:none}
+@media (max-width:900px){
+  .msh-body{grid-template-columns:minmax(0,1fr)}
+  .msh-burger{display:inline-flex;justify-self:start}
+  .msh-nav{display:none;position:static;max-height:none}
+  .msh-open .msh-nav{display:grid}
+}

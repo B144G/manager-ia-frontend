@@ -1,0 +1,26 @@
+// Traductions : cadre commun des modules (menu en groupes, recherche d'écran) et menu de la Comptabilité.
+export default {
+  "Afficher le menu": "Show menu",
+  "Menu du module": "Module menu",
+  "Rechercher un écran…": "Search a screen…",
+  "Aucun écran trouvé.": "No screen found.",
+  "Vue d'ensemble de votre comptabilité.": "Overview of your accounting.",
+  "Les indicateurs clés, expliqués simplement.": "Key indicators, explained simply.",
+  "Saisie et journaux": "Entries and journals",
+  "Toutes les écritures, par journal.": "All entries, by journal.",
+  "Écritures qui reviennent chaque mois, trimestre ou année.": "Entries that come back every month, quarter or year.",
+  "Tiers et recouvrement": "Third parties and collections",
+  "Ce que les clients vous doivent et ce que vous devez.": "What customers owe you and what you owe.",
+  "Banque et trésorerie": "Bank and cash",
+  "Faites correspondre votre relevé de banque et vos écritures.": "Match your bank statement with your entries.",
+  "États et éditions": "Statements and reports",
+  "Le solde de chaque compte.": "The balance of each account.",
+  "Compte de résultat, bilan et comparaison avec l'année précédente.": "Income statement, balance sheet and comparison with the previous year.",
+  "Résultat par projet, antenne ou activité.": "Result by project, branch or activity.",
+  "Les biens de l'entreprise et leurs amortissements.": "The company's assets and their depreciation.",
+  "Clôture et contrôle": "Closing and controls",
+  "Contrôles automatiques de vos écritures.": "Automatic checks of your entries.",
+  "Clôturer un mois et verrouiller la période.": "Close a month and lock the period.",
+  "Résultat de l'année et à-nouveaux.": "The year's result and opening balances.",
+  "Plan comptable, TVA et paramètres.": "Chart of accounts, VAT and settings."
+};

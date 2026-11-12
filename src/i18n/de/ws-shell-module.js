@@ -1,0 +1,26 @@
+// Traductions : cadre commun des modules (menu en groupes, recherche d'écran) et menu de la Comptabilité.
+export default {
+  "Afficher le menu": "Menü anzeigen",
+  "Menu du module": "Modulmenü",
+  "Rechercher un écran…": "Bildschirm suchen…",
+  "Aucun écran trouvé.": "Kein Bildschirm gefunden.",
+  "Vue d'ensemble de votre comptabilité.": "Überblick über Ihre Buchhaltung.",
+  "Les indicateurs clés, expliqués simplement.": "Wichtige Kennzahlen, einfach erklärt.",
+  "Saisie et journaux": "Buchungen und Journale",
+  "Toutes les écritures, par journal.": "Alle Buchungen, nach Journal.",
+  "Écritures qui reviennent chaque mois, trimestre ou année.": "Buchungen, die jeden Monat, jedes Quartal oder Jahr wiederkehren.",
+  "Tiers et recouvrement": "Geschäftspartner und Forderungsmanagement",
+  "Ce que les clients vous doivent et ce que vous devez.": "Was Kunden Ihnen schulden und was Sie schulden.",
+  "Banque et trésorerie": "Bank und Liquidität",
+  "Faites correspondre votre relevé de banque et vos écritures.": "Gleichen Sie Ihren Kontoauszug mit Ihren Buchungen ab.",
+  "États et éditions": "Abschlüsse und Berichte",
+  "Le solde de chaque compte.": "Der Saldo jedes Kontos.",
+  "Compte de résultat, bilan et comparaison avec l'année précédente.": "Gewinn- und Verlustrechnung, Bilanz und Vergleich mit dem Vorjahr.",
+  "Résultat par projet, antenne ou activité.": "Ergebnis nach Projekt, Filiale oder Tätigkeit.",
+  "Les biens de l'entreprise et leurs amortissements.": "Das Anlagevermögen des Unternehmens und seine Abschreibungen.",
+  "Clôture et contrôle": "Abschluss und Kontrollen",
+  "Contrôles automatiques de vos écritures.": "Automatische Prüfungen Ihrer Buchungen.",
+  "Clôturer un mois et verrouiller la période.": "Einen Monat abschließen und den Zeitraum sperren.",
+  "Résultat de l'année et à-nouveaux.": "Das Jahresergebnis und die Eröffnungssalden.",
+  "Plan comptable, TVA et paramètres.": "Kontenplan, Mehrwertsteuer und Einstellungen."
+};

@@ -1,0 +1,26 @@
+// Traductions : cadre commun des modules (menu en groupes, recherche d'écran) et menu de la Comptabilité.
+export default {
+  "Afficher le menu": "Mostrar el menú",
+  "Menu du module": "Menú del módulo",
+  "Rechercher un écran…": "Buscar una pantalla…",
+  "Aucun écran trouvé.": "No se encontró ninguna pantalla.",
+  "Vue d'ensemble de votre comptabilité.": "Resumen de su contabilidad.",
+  "Les indicateurs clés, expliqués simplement.": "Los indicadores clave, explicados con sencillez.",
+  "Saisie et journaux": "Asientos y diarios",
+  "Toutes les écritures, par journal.": "Todos los asientos, por diario.",
+  "Écritures qui reviennent chaque mois, trimestre ou année.": "Asientos que se repiten cada mes, trimestre o año.",
+  "Tiers et recouvrement": "Terceros y cobros",
+  "Ce que les clients vous doivent et ce que vous devez.": "Lo que los clientes le deben y lo que usted debe.",
+  "Banque et trésorerie": "Banco y tesorería",
+  "Faites correspondre votre relevé de banque et vos écritures.": "Concilie su extracto bancario con sus asientos.",
+  "États et éditions": "Estados e informes",
+  "Le solde de chaque compte.": "El saldo de cada cuenta.",
+  "Compte de résultat, bilan et comparaison avec l'année précédente.": "Cuenta de resultados, balance y comparación con el año anterior.",
+  "Résultat par projet, antenne ou activité.": "Resultado por proyecto, sucursal o actividad.",
+  "Les biens de l'entreprise et leurs amortissements.": "Los bienes de la empresa y sus amortizaciones.",
+  "Clôture et contrôle": "Cierre y controles",
+  "Contrôles automatiques de vos écritures.": "Controles automáticos de sus asientos.",
+  "Clôturer un mois et verrouiller la période.": "Cerrar un mes y bloquear el período.",
+  "Résultat de l'année et à-nouveaux.": "El resultado del año y los saldos de apertura.",
+  "Plan comptable, TVA et paramètres.": "Plan contable, IVA y ajustes."
+};
