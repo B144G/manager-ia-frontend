@@ -4,7 +4,7 @@ import { hasAnalyticsConsent } from './consent.js';
 /* Compteur de visites anonyme : une page vue = un compteur de plus côté serveur (page, origine, type d'appareil).
    Uniquement si la mesure d'audience est acceptée dans le bandeau de cookies. Aucun cookie, aucun identifiant, aucune adresse enregistrée. Le signal « Ne pas me suivre » du navigateur est respecté.
    Seules les pages publiques sont comptées (jamais l'espace de travail). */
-const COUNTED = new Set(['/', '/confidentialite', '/conditions', '/connexion', '/inscription', '/essai']);
+const COUNTED = new Set(['/', '/confidentialite', '/conditions', '/cookies', '/mentions-legales', '/connexion', '/inscription', '/essai']);
 
 export function trackVisit(pathname) {
   try {

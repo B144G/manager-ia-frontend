@@ -15,8 +15,12 @@ export const LEGAL_PAGES = [
   { slug: 'conditions', title: "Conditions d'utilisation" },
   { slug: 'cookies', title: 'Cookies' },
   { slug: 'mentions-legales', title: 'Mentions légales' },
-  { slug: 'sous-traitants', title: 'Sous-traitants' },
-  { slug: 'securite', title: 'Sécurité' },
+  { slug: 'registre-traitements', title: 'Registre des traitements' },
+  { slug: 'accord-sous-traitance', title: 'Accord de sous-traitance' },
+  { slug: 'sous-traitants', title: 'Sous-traitants et transferts' },
+  { slug: 'violation-donnees', title: 'Violation de données' },
+  { slug: 'securite', title: 'Politique de sécurité' },
+  { slug: 'continuite', title: 'Continuité et sauvegarde' },
 ];
 /** Vrai si au moins un texte de cette page est publié (sinon l'ancienne page ou la page « introuvable » prend le relais). */
 export const hasLegalContent = (slug) => Boolean(FILES[`./content/fr/${slug}.md`] || FILES[`./content/en/${slug}.md`]);
@@ -63,6 +67,10 @@ export default function LegalCenter({ slug, legacy: Legacy }) {
           </nav>
         ) : null}
         {state.loading ? null : <Markdown blocks={body} />}
+        <nav aria-label={t('Tous les documents')} style={{ marginTop: 32 }}>
+          <h2>{t('Tous les documents')}</h2>
+          <ul>{LEGAL_PAGES.map((p) => <li key={p.slug}>{p.slug === slug ? <b>{t(p.title)}</b> : <Link to={'/' + p.slug}>{t(p.title)}</Link>}</li>)}</ul>
+        </nav>
       </div></main>
       <footer className="s-foot"><div className="s-wrap">
         <div><Logo footer /></div>

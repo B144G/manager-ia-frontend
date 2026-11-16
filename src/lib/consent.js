@@ -14,7 +14,7 @@ const CHANGE_EVENT = 'brij:cookies-change';
 export function readConsent() {
   try {
     const c = JSON.parse(localStorage.getItem(KEY) || 'null');
-    if (c && c.v === COOKIES_VERSION && typeof c.analytics === 'boolean') return c;
+    if (c && c.v === COOKIES_VERSION && typeof c.analytics === 'boolean' && Date.now() - Date.parse(c.at) < 365 * 864e5) return c; // validité : 12 mois, comme annoncé dans la politique de cookies
   } catch { /* stockage indisponible ou illisible : comme s'il n'y avait aucun choix */ }
   return null;
 }

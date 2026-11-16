@@ -31,7 +31,7 @@ export default function CookieBanner() {
     <div ref={box} tabIndex={-1} role="region" aria-label={t('Cookies et mesure d\'audience')} style={BOX} id="cookie-banner">
       <b style={{ display: 'block', fontSize: 17, marginBottom: 4 }}>{t('Vos choix sur les cookies')}</b>
       {view === 'main' ? (
-        <p style={{ margin: '0 0 12px' }}>{t("Nous utilisons uniquement ce qui est nécessaire au fonctionnement du site. Avec votre accord, nous comptons aussi les visites de façon anonyme pour améliorer le site. Vous pouvez changer d'avis à tout moment.")} <Link to="/confidentialite" style={{ color: '#fff', textDecoration: 'underline' }}>{t('En savoir plus')}</Link></p>
+        <p style={{ margin: '0 0 12px' }}>{t("Nous utilisons uniquement ce qui est nécessaire au fonctionnement du site. Avec votre accord, nous comptons aussi les visites de façon anonyme pour améliorer le site. Vous pouvez changer d'avis à tout moment.")} <Link to="/cookies" style={{ color: '#fff', textDecoration: 'underline' }}>{t('En savoir plus')}</Link></p>
       ) : (
         <div style={{ margin: '4px 0 12px' }}>
           <label style={ROW}>

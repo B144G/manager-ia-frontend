@@ -39,8 +39,12 @@ export default function App() {
           <Route path="/conditions" element={<LegalCenter slug="conditions" legacy={Terms} />} />
           <Route path="/cookies" element={<LegalCenter slug="cookies" />} />
           <Route path="/mentions-legales" element={<LegalCenter slug="mentions-legales" />} />
+          <Route path="/registre-traitements" element={<LegalCenter slug="registre-traitements" />} />
+          <Route path="/accord-sous-traitance" element={<LegalCenter slug="accord-sous-traitance" />} />
           <Route path="/sous-traitants" element={<LegalCenter slug="sous-traitants" />} />
+          <Route path="/violation-donnees" element={<LegalCenter slug="violation-donnees" />} />
           <Route path="/securite" element={<LegalCenter slug="securite" />} />
+          <Route path="/continuite" element={<LegalCenter slug="continuite" />} />
           <Route path="/index.html" element={<Navigate to="/" replace />} />
           <Route path="*" element={<NotFound />} />
         </Route>
