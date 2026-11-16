@@ -66,11 +66,11 @@ details.proc ol{margin:10px 0;padding-left:22px}
 .ringbox{position:relative;width:120px;height:120px;flex:none}
 .ring-bg{stroke:var(--surface2)}.ring.good{stroke:var(--ok)}.ring.mid{stroke:var(--signal)}.ring.bad{stroke:var(--pink)}
 .rv{position:absolute;inset:0;display:grid;place-content:center;text-align:center}.rv b{font:800 30px/1 var(--f-display)}.rv small{color:var(--muted);font-size:11px}
-.pill.good{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}.pill.mid{background:color-mix(in srgb,var(--signal) 24%,transparent);color:#a86a00}.pill.bad{background:color-mix(in srgb,var(--pink) 18%,transparent);color:var(--pink)}
+.pill.good{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok-text)}.pill.mid{background:color-mix(in srgb,var(--signal) 24%,transparent);color:var(--warn-text)}.pill.bad{background:color-mix(in srgb,var(--pink) 18%,transparent);color:var(--pink)}
 .health p{margin-top:8px}
 .kpis4{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:18px}
 .kpi small{color:var(--muted);font-weight:600;font-size:13px}.kpi b{font:800 clamp(22px,2.4vw,28px)/1.15 var(--f-display);overflow-wrap:break-word}.kpi .sub{font-size:13px;font-weight:600;color:var(--muted)}
-.kpi.blue{border-left-color:var(--accent)}.kpi.green{border-left-color:var(--ok)}.kpi.green .sub{color:var(--ok)}.kpi.red{border-left-color:var(--pink)}.kpi.red .sub{color:var(--pink)}.kpi.amber{border-left-color:var(--signal)}.kpi.amber .sub{color:#a86a00}
+.kpi.blue{border-left-color:var(--accent)}.kpi.green{border-left-color:var(--ok)}.kpi.green .sub{color:var(--ok-text)}.kpi.red{border-left-color:var(--pink)}.kpi.red .sub{color:var(--pink)}.kpi.amber{border-left-color:var(--signal)}.kpi.amber .sub{color:var(--warn-text)}
 .chart{width:100%;height:auto}.chart .grid{stroke:var(--line)}.chart .ax{fill:var(--muted);font-size:12px}.chart .b-in{fill:var(--accent)}.chart .b-out{fill:color-mix(in srgb,var(--accent) 38%,var(--surface))}
 .legend{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;font-weight:600;margin-bottom:6px}.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}.legend .li{background:var(--accent)}.legend .lo{background:color-mix(in srgb,var(--accent) 38%,var(--surface));margin-left:12px}
 .al{display:grid;gap:2px;width:100%;text-align:left;padding:12px 14px;margin-bottom:10px;border:0;border-left:5px solid var(--accent);border-radius:12px;background:var(--bg);cursor:pointer}
@@ -92,13 +92,13 @@ details.proc ol{margin:10px 0;padding-left:22px}
 .brief{min-height:190px}
 .brief .row{margin-top:2px}
 .hside{display:grid;gap:10px;align-content:center;flex:1;min-width:160px}.hside p{margin:0;font-size:14px}
-.kpi small{font-size:14px}.kpi .sub.up{color:var(--ok)}.kpi .sub.down{color:var(--pink)}.kpi .sub.warn{color:#a86a00}
+.kpi small{font-size:14px}.kpi .sub.up{color:var(--ok-text)}.kpi .sub.down{color:var(--pink)}.kpi .sub.warn{color:var(--warn-text)}
 .al{position:relative}.al em{position:absolute;right:14px;top:12px;font-style:normal;font-size:11px;color:var(--muted)}
 .row.nowrap{flex-wrap:nowrap}
 .dec .dt b{font-size:14px}
 .meter.ok i{background:var(--ok)}.meter.amber i{background:var(--signal)}.meter.blue i{background:var(--accent)}
 .box.red{border-color:var(--pink)}.box.amber{border-color:var(--signal)}.box.blue{border-color:var(--accent)}
-.tkl small.red{color:var(--pink);font-weight:700}.tkl small.amber{color:#a86a00;font-weight:700}.tkl small.blue{color:var(--accent);font-weight:700}
+.tkl small.red{color:var(--pink);font-weight:700}.tkl small.amber{color:var(--warn-text);font-weight:700}.tkl small.blue{color:var(--accent);font-weight:700}
 .link.soft{margin-top:6px;color:var(--muted);text-decoration:none;font-weight:600}.link.soft:hover{color:var(--accent)}
 
 /* ===== Téléphone : tableau de bord et sous-applications ===== */
@@ -142,7 +142,7 @@ details.proc ol{margin:10px 0;padding-left:22px}
 .wa-b{padding:8px 0 2px 40px;display:grid;gap:6px}.wa-b p{margin:0}
 .wa-oneclick .row{margin-top:8px}.wa-oneclick .btn{min-height:44px;max-width:100%}.wa-oneclick p{overflow-wrap:anywhere}
 .wa-adv{padding:0}.wa-adv>summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center;padding:0 14px;overflow-wrap:anywhere}.wa-adv[open]>summary{border-bottom:1px solid var(--line)}.wa-adv>*:not(summary){margin:12px}
-.ws-ok{color:var(--ok);font-weight:700}
+.ws-ok{color:var(--ok-text);font-weight:700}
 
 /* Cadre commun d'un module (bandeau, menu en groupes, fil d'Ariane) */
 /* Cadre de module : téléphone (le contenu apparaît plus vite, cibles de 44 px) */
@@ -201,7 +201,7 @@ details.proc ol{margin:10px 0;padding-left:22px}
 .lib-card-b{display:grid;justify-items:center;gap:6px;padding:16px 12px 8px;text-align:center}
 .lib-badge{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:color-mix(in srgb,currentColor 12%,transparent)}
 .lib-count{margin:0}.lib-count b{font:800 22px/1 var(--f-display)}
-.lib-prot{margin:0;display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:14px}.lib-prot.open{color:var(--ok);font-weight:700}
+.lib-prot{margin:0;display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:14px}.lib-prot.open{color:var(--ok-text);font-weight:700}
 .lib-card-f{margin-top:auto;display:flex;gap:8px;justify-content:space-between;align-items:center;padding:8px 12px 14px;flex-wrap:wrap}
 .lib-enter{min-height:44px;padding:8px 14px;border-radius:10px;border:0;background:none;color:var(--accent);font-weight:800;font-size:15px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .lib-enter:hover{filter:brightness(1.15)}
@@ -240,7 +240,7 @@ details.proc ol{margin:10px 0;padding-left:22px}
 .lib-actions{margin-bottom:12px}
 .lib-versions{list-style:none;margin:0 0 12px;padding:0}
 .lib-versions li{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 0;border-top:1px solid var(--line)}
-.lib-versions li>span:first-child{min-width:0;overflow-wrap:anywhere}.lib-versions em{color:var(--ok);font-style:normal}
+.lib-versions li>span:first-child{min-width:0;overflow-wrap:anywhere}.lib-versions em{color:var(--ok-text);font-style:normal}
 .lib-newv{display:grid;gap:8px;justify-items:start}.lib-newv .fld{width:100%}
 .lib-perm{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 10px;min-width:0}
 .lib-perm legend{font-weight:800;padding:0 6px}

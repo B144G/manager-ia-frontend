@@ -44,6 +44,7 @@
   /* --- États (fond, texte AA sur fond blanc, bordure) --- */
   --ok:#12b76a;    --ok-text:#067647;    --ok-soft:#e6f6ee;
   --warn:#f79009;  --warn-text:#9a4a00;  --warn-soft:#fff3d9;
+  --on-danger:#ffffff;
   --danger:#d92d20;--danger-text:#b42318;--danger-soft:#fdeceb;
   --info:#2e90fa;  --info-text:#175cd3;  --info-soft:#e8f1fe;
 
@@ -67,7 +68,7 @@
   --border:#26324d; --border-strong:#36456a;
   --text:#e9eef8; --text-2:#c4cee3; --muted:#9fadc7;
   --nav-bg:#070c18; --nav-bg-2:#111a30; --nav-line:#1a2542;
-  --ok:#34d399; --ok-text:#4ade9c; --ok-soft:#10301f;
+  --on-danger:#2a0807; --ok:#34d399; --ok-text:#4ade9c; --ok-soft:#10301f;
   --warn:#fbbf24; --warn-text:#fbbf24; --warn-soft:#34280c;
   --danger:#f87171; --danger-text:#ff8e8a; --danger-soft:#3a1618;
   --info:#60a5fa; --info-text:#7db8ff; --info-soft:#13284a;
@@ -83,7 +84,7 @@
   --border:#26324d; --border-strong:#36456a;
   --text:#e9eef8; --text-2:#c4cee3; --muted:#9fadc7;
   --nav-bg:#070c18; --nav-bg-2:#111a30; --nav-line:#1a2542;
-  --ok:#34d399; --ok-text:#4ade9c; --ok-soft:#10301f;
+  --on-danger:#2a0807; --ok:#34d399; --ok-text:#4ade9c; --ok-soft:#10301f;
   --warn:#fbbf24; --warn-text:#fbbf24; --warn-soft:#34280c;
   --danger:#f87171; --danger-text:#ff8e8a; --danger-soft:#3a1618;
   --info:#60a5fa; --info-text:#7db8ff; --info-soft:#13284a;
@@ -97,7 +98,7 @@
 /* Densité : confortable (défaut) ou compacte (tableaux plus serrés, comme un ERP de saisie). */
 :root[data-density="compact"]{--ctl-h:32px;--ctl-h-sm:26px;--ctl-h-lg:40px;--row-h:34px;--pad-card:14px;--gap:12px;--fs-base:14px}
 /* Écran tactile : cibles de 44 px minimum, quelle que soit la densité. */
-@media (pointer:coarse){:root,:root[data-density="compact"]{--ctl-h:var(--touch);--ctl-h-sm:var(--touch);--ctl-h-lg:48px;--row-h:var(--touch)}}
+@media (pointer:coarse),(max-width:1099px){:root,:root[data-density="compact"]{--ctl-h:var(--touch);--ctl-h-sm:var(--touch);--ctl-h-lg:48px;--row-h:var(--touch)}}
 
 /* --- Anciens noms (alias) : les écrans existants continuent de fonctionner et suivent les thèmes --- */
 :root{

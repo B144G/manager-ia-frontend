@@ -16,7 +16,7 @@ body.ai-open.nav-mini .app{grid-template-columns:var(--side-w-mini) minmax(0,1fr
 .app-side{position:sticky;top:0;height:100vh;height:100dvh;overflow:auto;display:flex;flex-direction:column;gap:var(--sp-3);padding:var(--sp-4) var(--sp-3);background:var(--nav-bg);color:var(--nav-text);border-right:1px solid var(--nav-line)}
 .app-side-h{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-2);padding:0 var(--sp-2)}
 .app-logo{display:flex;align-items:center;gap:var(--sp-3);min-width:0;color:#fff;text-decoration:none;font-weight:var(--fw-bold);font-size:var(--fs-xl);letter-spacing:-.02em}
-.app-logo b{color:var(--accent)}
+.app-logo b{color:var(--brand-dk)}
 .app-logo-img{width:32px;height:32px;border-radius:var(--radius-md);object-fit:contain;flex:none;background:rgba(255,255,255,.06)}
 .app-logo-t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ws-org{display:flex;gap:var(--sp-3);align-items:center;padding:var(--sp-3);border-radius:var(--radius-lg);background:var(--nav-bg-2);border:1px solid var(--nav-line)}
@@ -37,7 +37,7 @@ body.ai-open.nav-mini .app{grid-template-columns:var(--side-w-mini) minmax(0,1fr
 .app-li>a.on{background:var(--nav-active);color:var(--nav-on-active);font-weight:var(--fw-semibold)}
 .app-li>a.on .ui-ico{color:inherit}
 .nl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nbadge{min-width:22px;padding:1px 7px;border-radius:99px;background:var(--danger);color:#fff;font-size:var(--fs-xs);font-weight:var(--fw-bold);text-align:center}
+.nbadge{min-width:22px;padding:1px 7px;border-radius:99px;background:#d92d20;color:#fff;font-size:var(--fs-xs);font-weight:var(--fw-bold);text-align:center}
 .app-li:has(a[href$="/alerts"]) .nbadge{background:var(--warn);color:#2b1d00}
 .app-star{position:absolute;right:4px;width:32px;height:32px;display:grid;place-items:center;border:0;border-radius:var(--radius-sm);background:transparent;color:var(--nav-muted);opacity:0;cursor:pointer;font-size:12px}
 .app-li:hover .app-star,.app-star:focus-visible,.app-star.on{opacity:1}
@@ -93,7 +93,7 @@ body.ai-open .ws-fab{display:none}
 .app-foot nav{display:flex;gap:var(--sp-5);flex-wrap:wrap}
 .app-foot a{color:var(--muted);text-decoration:none;min-height:var(--touch);display:inline-flex;align-items:center}
 .app-foot a:hover{color:var(--accent);text-decoration:underline}
-@media (pointer:fine){.app-foot a{min-height:0}}
+@media (pointer:fine) and (min-width:1100px){.app-foot a{min-height:0}}
 .app-foot-r{margin-left:auto;display:inline-flex;align-items:center;gap:var(--sp-2)}
 
 /* ---------- Recherche d'écran (Ctrl K) ---------- */

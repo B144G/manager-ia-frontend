@@ -74,7 +74,7 @@ function Annual({ a, kind, cash, pending, goTab, money, t }) {
       <div className="bd-flags" aria-live="polite">
         {!a.hasPlan ? <Alert tone="info" title={t("Pas encore de budget annuel pour {y}", { y: a.year })}><Button size="sm" variant="soft" onClick={() => goTab('annual')}>{t('Saisir le budget annuel')}</Button></Alert> : null}
         {over.length ? <Alert tone="danger" title={t('{n} ligne(s) dépassent leur budget', { n: over.length })}>{over.slice(0, 4).map((l) => l.category).join(', ')}{over.length > 4 ? '…' : ''}</Alert> : null}
-        {cs && cs.alert ? <Alert tone="danger" title={t('Trésorerie négative prévue')}>{t('Solde estimé à {amount} fin {month}.', { amount: money(cs.alert.closing), month: M[Number(cs.alert.month.slice(5, 7)) - 1] })} <Button size="sm" variant="ghost" onClick={() => goTab('cash')}>{t('Voir le détail')}</Button></Alert> : null}
+        {cs && cs.alert ? <Alert tone="danger" title={t('Trésorerie négative prévue')}>{t('Solde estimé à {amount} fin {month}.', { amount: money(cs.alert.closing), month: M[Number(cs.alert.month.slice(5, 7)) - 1].replace(/\.$/, '') })} <Button size="sm" variant="ghost" onClick={() => goTab('cash')}>{t('Voir le détail')}</Button></Alert> : null}
         {pending ? <Alert tone="warn" title={t('{n} dépense(s) attendent votre validation', { n: pending })}><Button size="sm" variant="ghost" onClick={() => goTab('approvals')}>{t('Valider')}</Button></Alert> : null}
         {a.commitments && a.commitments.total > 0 ? <Alert tone="info" title={t('Engagements en cours : {amount}', { amount: money(a.commitments.total) })}>{t('Commandes et dettes fournisseurs pas encore payées.')}</Alert> : null}
       </div>
@@ -82,7 +82,7 @@ function Annual({ a, kind, cash, pending, goTab, money, t }) {
         <Stat icon="trend-up" label={t('Recettes réalisées')} value={money(T.incomeRealized)} sub={incPct === null ? t('pas de prévision') : t('{n} % du prévu ({amount})', { n: incPct, amount: money(T.incomePlanned) })} subTone={incPct !== null && incPct >= 100 ? 'up' : undefined} tone="ok" />
         <Stat icon="trend-down" label={t('Dépenses réalisées')} value={money(T.expenseRealized)} sub={expPct === null ? t('pas de prévision') : t('{n} % du prévu ({amount})', { n: expPct, amount: money(T.expensePlanned) })} subTone={expPct !== null && expPct > 100 ? 'down' : undefined} tone={expPct > 100 ? 'danger' : 'warn'} />
         <Stat icon="scale-balanced" label={t('Résultat')} value={money(result)} sub={result >= 0 ? t('excédent') : t('déficit')} subTone={result >= 0 ? 'up' : 'down'} tone={result >= 0 ? 'ok' : 'danger'} />
-        {cs ? <Stat icon="bank" label={t("Trésorerie aujourd'hui")} value={money(cs.opening)} sub={cs.alert ? t('négative en {m}', { m: M[Number(cs.alert.month.slice(5, 7)) - 1] }) : t('stable sur 6 mois')} subTone={cs.alert ? 'down' : 'up'} tone={cs.alert ? 'danger' : 'ok'} /> : null}
+        {cs ? <Stat icon="bank" label={t("Trésorerie aujourd'hui")} value={money(cs.opening)} sub={cs.alert ? t('négative en {m}', { m: M[Number(cs.alert.month.slice(5, 7)) - 1].replace(/\.$/, '') }) : t('stable sur 6 mois')} subTone={cs.alert ? 'down' : 'up'} tone={cs.alert ? 'danger' : 'ok'} /> : null}
       </div>
       <div className="pd-grid two">
         <ChartFrame title={kind === 'expense' ? t('Dépenses cumulées : prévu et réalisé') : t('Recettes cumulées : prévu et réalisé')} subtitle={t('Le réalisé vient de la comptabilité')} height={280}
