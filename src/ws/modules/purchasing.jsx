@@ -3,7 +3,7 @@ import { useWs } from '../WsContext.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import ModuleShell from '../ModuleShell.jsx';
 import Requests from '../parts/purchasing/Requests.jsx';
-import Orders, { Receipts } from '../parts/purchasing/Orders.jsx';
+import Orders, { Inspections, Receipts } from '../parts/purchasing/Orders.jsx';
 import Invoices from '../parts/purchasing/Invoices.jsx';
 import Rfqs from '../parts/purchasing/Rfqs.jsx';
 import Suppliers from '../parts/purchasing/Suppliers.jsx';
@@ -29,6 +29,7 @@ export default function Purchasing() {
     ...(mgr ? [
       { id: 'buy', icon: '🛒', label: t('Commandes et réceptions'), items: [
         { id: 'orders', label: t('Bons de commande'), hint: t('Commandes aux fournisseurs, envoi et suivi des livraisons.') },
+        { id: 'inspections', label: t('Contrôle qualité'), hint: t('Marchandises en quarantaine à libérer ou à refuser.') },
         { id: 'receipts', label: t('Réceptions'), hint: t('Bons de réception : quantités reçues, refusées, lots et péremptions.') }] },
       { id: 'pay', icon: '🧾', label: t('Factures et paiements'), items: [
         { id: 'invoices', label: t('Factures fournisseurs'), hint: t('Rapprochement à trois, validation pour paiement et règlement.') }] },
@@ -47,6 +48,7 @@ export default function Purchasing() {
   else if (tab === 'requests') content = <Requests openOrder={openOrder} />;
   else if (tab === 'rfqs' && mgr) content = <Rfqs openOrder={openOrder} />;
   else if (tab === 'orders' && mgr) content = <Orders focus={orderFocus} onFocused={() => setOrderFocus(null)} goInvoice={openInvoice} />;
+  else if (tab === 'inspections' && mgr) content = <Inspections />;
   else if (tab === 'receipts' && mgr) content = <Receipts />;
   else if (tab === 'invoices' && mgr) content = <Invoices focus={invoiceFocus} onFocused={() => setInvoiceFocus(null)} />;
   else if (tab === 'suppliers' && mgr) content = <Suppliers />;

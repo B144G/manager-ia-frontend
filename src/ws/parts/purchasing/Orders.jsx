@@ -134,12 +134,12 @@ function ReceiveForm({ o, close, onDone }) {
   const t = useT();
   const { oapi, today } = useWs();
   const open = o.lines.filter((l) => l.remainingQty > 0 || l.receivedQty === 0);
-  const f = useFormState({ receiptDate: today(), deliveryNote: '', note: '', rows: Object.fromEntries(open.map((l) => [l.id, { recv: String(l.remainingQty), rej: '', reason: '', lot: '', expiry: '', serials: '', loc: '' }])) });
+  const f = useFormState({ receiptDate: today(), deliveryNote: '', note: '', rows: Object.fromEntries(open.map((l) => [l.id, { recv: String(l.remainingQty), rej: '', reason: '', lot: '', expiry: '', serials: '', loc: '', qc: false }])) });
   const locs = useLoad(() => oapi('GET', '/stock/wms/locations').then((j) => j.locations || []).catch(() => []), []);
   const set = (id, k, v) => f.setV((s) => ({ ...s, rows: { ...s.rows, [id]: { ...s.rows[id], [k]: v } } }));
   return (
     <form className="ws-form" noValidate onSubmit={(e) => { e.preventDefault(); f.run(async () => {
-      const lines = open.map((l) => { const r = f.v.rows[l.id]; return { orderLineId: l.id, receivedQty: num(r.recv), rejectedQty: num(r.rej), reason: r.reason, lotNo: r.lot, expiry: r.expiry || undefined, serials: r.serials, locationId: r.loc ? Number(r.loc) : undefined }; });
+      const lines = open.map((l) => { const r = f.v.rows[l.id]; return { orderLineId: l.id, receivedQty: num(r.recv), rejectedQty: num(r.rej), reason: r.reason, lotNo: r.lot, expiry: r.expiry || undefined, serials: r.serials, locationId: r.loc && !r.qc ? Number(r.loc) : undefined, inspection: r.qc || undefined }; });
       const res = await oapi('POST', '/purchasing/orders/' + o.id + '/receipts', { receiptDate: f.v.receiptDate, deliveryNote: f.v.deliveryNote, note: f.v.note, lines });
       close(); onDone(res);
     }); }}>
@@ -157,6 +157,7 @@ function ReceiveForm({ o, close, onDone }) {
             <Field label={t('Quantité refusée')}><input type="text" inputMode="decimal" value={r.rej} onChange={(e) => set(l.id, 'rej', e.target.value)} /></Field>
             {num(r.rej) > 0 ? <Field label={t('Motif du refus')} wide><input type="text" value={r.reason} maxLength={200} onChange={(e) => set(l.id, 'reason', e.target.value)} /></Field> : null}
             {l.itemId && (locs.data || []).length ? <Field label={t("Emplacement de réception")} hint={t('Vide : rangement automatique selon les règles du stock.')} wide><select value={r.loc} onChange={(e) => set(l.id, 'loc', e.target.value)}><option value="">{t('Rangement automatique')}</option>{locs.data.map((x) => <option key={x.id} value={x.id}>{x.code || x.name}</option>)}</select></Field> : null}
+            {l.itemId && (locs.data || []).length && l.tracking !== 'serial' ? <label className="pur-check pur-wide"><input type="checkbox" checked={r.qc} onChange={(e) => set(l.id, 'qc', e.target.checked)} /> {t("Contrôle qualité à l'entrée (mise en quarantaine)")}</label> : null}
             {l.itemId && l.tracking === 'lot' ? <><Field label={t('Numéro de lot')}><input type="text" value={r.lot} maxLength={40} onChange={(e) => set(l.id, 'lot', e.target.value)} /></Field><Field label={t('Péremption')}><input type="date" value={r.expiry} onChange={(e) => set(l.id, 'expiry', e.target.value)} /></Field></> : null}
             {l.itemId && l.tracking === 'serial' ? <Field label={t('Numéros de série (un par ligne ou séparés par des virgules)')} wide><textarea rows={2} value={r.serials} onChange={(e) => set(l.id, 'serials', e.target.value)} /></Field> : null}
           </div>
@@ -194,5 +195,44 @@ export function Receipts() {
         <div className="line" key={r.id}><span><b>{r.number}</b> · {r.orderNumber} · {r.supplier}<br /><small>{dateFr(r.date)} · {r.lines.length} {t('ligne(s)')}</small></span><button className="btn small" type="button" onClick={() => show(r)}>{t('Ouvrir')}</button></div>
       )) : null}
     </div>
+  );
+}
+
+/** Contrôles qualité en attente : la marchandise est en quarantaine ; on la libère vers un rayonnage ou on la refuse (retour fournisseur). */
+export function Inspections() {
+  const t = useT();
+  const { oapi, dateFr, modal, toast } = useWs();
+  const st = useLoad(() => oapi('GET', '/purchasing/inspections'), []);
+  const j = st.data;
+  const locs = useLoad(() => oapi('GET', '/stock/wms/locations').then((x) => (x.locations || []).filter((l) => ['storage', 'picking', 'reception'].includes(l.kind))).catch(() => []), []);
+  const check = (x) => modal(t('Contrôle de {name}', { name: x.description }), (close) => <InspectForm x={x} locations={locs.data || []} close={close} onDone={() => { toast(t('Contrôle enregistré.')); st.reload(); }} />);
+  return (
+    <div className="ws-card">
+      <h2>{t('Contrôle qualité')}</h2>
+      <p className="muted small">{t("Les marchandises reçues avec contrôle attendent en quarantaine, non disponibles. Libérez la quantité acceptée vers un rayonnage ; la quantité refusée repart chez le fournisseur.")}</p>
+      {st.loading && !j ? <Loading /> : null}
+      {st.error ? <Failed e={st.error} /> : null}
+      {j && !j.inspections.length ? <Empty text={t('Aucun contrôle en attente.')} /> : null}
+      {j ? j.inspections.map((x) => (
+        <div className="line" key={x.receiptLineId}><span><b>{x.description}</b><br /><small>{x.receipt} · {x.order} · {x.supplier} · {dateFr(x.date)}{x.lotNo ? ' · ' + t('lot {no}', { no: x.lotNo }) : ''}</small></span><span className="row"><b>{x.pending} {x.unit}</b><button className="btn small" type="button" onClick={() => check(x)}>{t('Contrôler')}</button></span></div>
+      )) : null}
+    </div>
+  );
+}
+
+function InspectForm({ x, locations, close, onDone }) {
+  const t = useT();
+  const { oapi } = useWs();
+  const f = useFormState({ acc: String(x.pending), rej: '', reason: '', to: '' });
+  return (
+    <form className="ws-form" noValidate onSubmit={(e) => { e.preventDefault(); f.run(async () => { await oapi('POST', '/purchasing/inspections', { lines: [{ receiptLineId: x.receiptLineId, acceptedQty: num(f.v.acc), rejectedQty: num(f.v.rej), reason: f.v.reason, toLocationId: f.v.to ? Number(f.v.to) : undefined }] }); close(); onDone(); }); }}>
+      <p className="muted small">{t('En attente de contrôle : {n} {u}', { n: x.pending, u: x.unit })}</p>
+      <Field label={t('Quantité acceptée')}><input type="text" inputMode="decimal" value={f.v.acc} onChange={f.set('acc')} /></Field>
+      <Field label={t('Libérer vers')}><select value={f.v.to} onChange={f.set('to')}><option value="">{t('Premier rayonnage disponible')}</option>{locations.map((l) => <option key={l.id} value={l.id}>{l.code || l.name}</option>)}</select></Field>
+      <Field label={t('Quantité refusée (retour fournisseur)')}><input type="text" inputMode="decimal" value={f.v.rej} onChange={f.set('rej')} /></Field>
+      {num(f.v.rej) > 0 ? <Field label={t('Motif du refus')}><input type="text" maxLength={200} value={f.v.reason} onChange={f.set('reason')} /></Field> : null}
+      <p className="ws-err" role="alert">{f.err}</p>
+      <div className="row"><button className="btn primary" type="submit" disabled={f.busy}>{t('Enregistrer le contrôle')}</button></div>
+    </form>
   );
 }
