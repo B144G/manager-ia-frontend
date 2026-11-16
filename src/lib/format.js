@@ -7,3 +7,6 @@ export const dateFr = (d) => { if (!d) return ''; const p = String(d).slice(0, 1
 export const today = () => new Date().toISOString().slice(0, 10);
 /** Montant avec espaces insécables classiques (toutes les polices savent les afficher). */
 export const formatMoney = (n, currency = 'FCFA') => `${Number(n || 0).toLocaleString(getLocale()).replace(/[\u202f\u00a0]/g, '\u00a0')}\u00a0${currency}`;
+
+/** Nom court du mois (0 à 11) dans la langue de l'interface. */
+export const monthShort = (lang, i) => new Intl.DateTimeFormat(lang || 'fr', { month: 'short', timeZone: 'UTC' }).format(new Date(Date.UTC(2026, i, 1)));

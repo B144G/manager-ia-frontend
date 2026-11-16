@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useT } from '../../../lib/i18n.jsx';
+import { useLang, useT } from '../../../lib/i18n.jsx';
+import { monthShort } from '../../../lib/format.js';
 import { useWs } from '../../WsContext.jsx';
 import { Alert, Badge, Card, EmptyState, Icon, Loaded, Segmented, useLoad } from '../../ui.jsx';
 
@@ -12,7 +13,6 @@ export const iso = (n) => new Date(n * DAY).toISOString().slice(0, 10);
 const ZOOM = { day: 30, week: 12, month: 4 };
 const ROW = 38, LEFT = 248, HEAD = 52, CAP = 40; // hauteur de ligne, largeur de la colonne des noms, hauteur de l'en-tête, capacité hebdomadaire (h)
 const PROG = { done: 1, doing: 0.5, todo: 0 };
-const MONTHS = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
 
 export default function Gantt({ id, rev, tasks: all, onOpen, ids }) {
   const t = useT();
@@ -25,6 +25,8 @@ export default function Gantt({ id, rev, tasks: all, onOpen, ids }) {
 }
 
 function Chart({ j, zoom, setZoom, onOpen, ids, t, dateFr }) {
+  const lang = useLang();
+  const MONTHS = Array.from({ length: 12 }, (_, i) => monthShort(lang, i));
   const px = ZOOM[zoom];
   const box = useRef(null);
   const [cw, setCw] = useState(0);
