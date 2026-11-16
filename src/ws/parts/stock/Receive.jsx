@@ -8,17 +8,21 @@ export function ReceiveForm({ order, close, done }) {
   const t = useT();
   const { oapi, info } = useWs();
   const lot = order.tracking === 'lot'; const ser = order.tracking === 'serial';
+  const locs = useLoad(() => oapi('GET', '/stock/wms/locations'), []);
+  const locList = locs.data ? locs.data.locations.filter((l) => l.active && l.usable) : [];
   const f = [];
+  if (locs.loading && !locs.data) return <Loading />;
   if (ser) f.push({ k: 'serials', label: t('Numéros de série ou VIN reçus (un par ligne)'), type: 'textarea', rows: 4, required: true });
   else f.push({ k: 'quantity', label: t('Quantité reçue ({unit})', { unit: order.unit }), required: true, value: order.remaining, hint: t('Reste à recevoir : {n} {unit}. Une quantité plus petite enregistre une réception partielle.', { n: qty(order.remaining), unit: order.unit }) });
   if (lot) { f.push({ k: 'lotNo', label: t('Numéro de lot'), required: true }); f.push({ k: 'expiry', label: t('Date de péremption (facultatif)'), type: 'date' }); }
   f.push({ k: 'unitPrice', label: t('Prix unitaire facturé ({currency}, facultatif)', { currency: info.org.currency }), value: order.unitPrice || '' });
+  if (locList.length > 1) f.push({ k: 'locationId', label: t('Ranger dans'), type: 'select', options: [['', t('Automatique (règles de rangement)')]].concat(locList.map((l) => [String(l.id), l.code + ' (' + l.warehouse + ')'])) });
   f.push({ k: 'note', label: t('Note (bon de livraison…)') });
   return (
     <Form
       fields={f}
       submitText={t('Enregistrer la réception')}
-      onSubmit={(v) => oapi('POST', '/stock/orders/' + order.id + '/receive', { quantity: v.quantity, lotNo: v.lotNo, expiry: v.expiry || undefined, serials: v.serials, unitPrice: v.unitPrice, note: v.note }).then(() => { close(); done(); })}
+      onSubmit={(v) => oapi('POST', '/stock/orders/' + order.id + '/receive', { quantity: v.quantity, lotNo: v.lotNo, expiry: v.expiry || undefined, serials: v.serials, unitPrice: v.unitPrice, note: v.note, locationId: v.locationId ? Number(v.locationId) : undefined }).then(() => { close(); done(); })}
     />
   );
 }

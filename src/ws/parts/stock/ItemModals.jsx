@@ -9,22 +9,25 @@ export function MoveForm({ item, kind, close, done }) {
   const { oapi, can, info } = useWs();
   const lot = item.tracking === 'lot'; const ser = item.tracking === 'serial';
   const prj = useLoad(() => (kind === 'out' ? oapi('GET', '/projects') : Promise.resolve({ projects: [] })), [kind]);
+  const locs = useLoad(() => oapi('GET', '/stock/wms/locations'), []);
+  const locList = locs.data ? locs.data.locations.filter((l) => l.active && l.kind !== 'transit') : [];
   const f = [];
   if (ser) f.push({ k: 'serials', label: kind === 'in' ? t('Numéros de série ou VIN (un par ligne)') : t('Numéros de série ou VIN sortis (un par ligne)'), type: 'textarea', rows: 4, required: true, hint: t('La quantité est le nombre de numéros.') });
   else f.push({ k: 'quantity', label: t('Quantité ({unit})', { unit: item.unit }), required: true, placeholder: '10', hint: t('En stock : {n} {unit}', { n: qty(item.quantity), unit: item.unit }) });
   if (lot && kind === 'in') { f.push({ k: 'lotNo', label: t('Numéro de lot'), required: true }); f.push({ k: 'expiry', label: t('Date de péremption (facultatif)'), type: 'date' }); }
   if (kind === 'in' && can('manager')) f.push({ k: 'unitCost', label: t("Coût d'achat unitaire ({currency}, facultatif)", { currency: info.org.currency }), hint: t('Sert à calculer le coût moyen pondéré du stock.') });
+  if (locList.length > 1) f.push({ k: 'locationId', label: kind === 'in' ? t('Ranger dans') : t('Prendre dans'), type: 'select', options: [['', kind === 'in' ? t('Automatique (règles de rangement)') : t('Automatique (emplacements disponibles)')]].concat(locList.filter((l) => kind === 'in' || l.usable).map((l) => [String(l.id), l.code + ' (' + l.warehouse + ')'])) });
   f.push({ k: 'reason', label: t('Motif'), placeholder: kind === 'in' ? t('Livraison, retour…') : t('Vente, perte, usage…') });
   const open = prj.data ? prj.data.projects.filter((p) => p.status !== 'done') : [];
   if (kind === 'out' && open.length) f.push({ k: 'projectId', label: t('Pour un projet (facultatif)'), type: 'select', options: [['', t('Aucun')]].concat(open.map((p) => [String(p.id), p.name])), hint: t('Le coût de la matière est ajouté au projet.') });
-  if (kind === 'out' && prj.loading && !prj.data) return <Loading />;
+  if ((kind === 'out' && prj.loading && !prj.data) || (locs.loading && !locs.data)) return <Loading />;
   return (
     <>
       {lot && kind === 'out' ? <p className="muted small">{item.pickRule === 'fifo' ? t('La sortie prend automatiquement le lot reçu en premier (FIFO).') : t('La sortie prend automatiquement le lot qui périme en premier (FEFO). Les lots périmés sont ignorés.')}</p> : null}
     <Form
       fields={f}
       submitText={t("Enregistrer")}
-      onSubmit={(v) => oapi('POST', '/stock/items/' + item.id + '/move', { kind, quantity: v.quantity, reason: v.reason, lotNo: v.lotNo, expiry: v.expiry || undefined, serials: v.serials, unitCost: v.unitCost, projectId: v.projectId || undefined }).then(() => { close(); done(); })}
+      onSubmit={(v) => oapi('POST', '/stock/items/' + item.id + '/move', { kind, quantity: v.quantity, reason: v.reason, lotNo: v.lotNo, expiry: v.expiry || undefined, serials: v.serials, unitCost: v.unitCost, projectId: v.projectId || undefined, locationId: v.locationId ? Number(v.locationId) : undefined }).then(() => { close(); done(); })}
     />
     </>
   );
