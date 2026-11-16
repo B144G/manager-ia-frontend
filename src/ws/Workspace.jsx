@@ -1,14 +1,18 @@
-import { Component, Suspense, useEffect, useRef, useState } from 'react';
+import { Component, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import InstallPrompt from '../components/InstallPrompt.jsx';
-import LangSwitch from '../components/LangSwitch.jsx';
 import { useT } from '../lib/i18n.jsx';
 import AccountSecurity from './AccountSecurity.jsx';
 import AIPanel from './AIPanel.jsx';
 import UserNotices from './UserNotices.jsx';
-import { MODULE_ICONS, hasModule, moduleComponent } from './registry.js';
+import { hasModule, moduleComponent } from './registry.js';
 import { Empty, Form, Icon, Loading } from './ui.jsx';
-import { GuideButton, GuideProvider } from './guide/GuideContext.jsx';
+import { GuideProvider } from './guide/GuideContext.jsx';
+import { setActiveOrg, setPrefs, usePrefs } from '../lib/prefs.js';
+import { BottomNav, Footer, Sidebar, TopBar } from './shell/Frame.jsx';
+import Palette from './shell/Palette.jsx';
+import Personalize, { sortMods } from './shell/Personalize.jsx';
+import { bindPalette } from './shell/screens.js';
 import { WsProvider, useWs } from './WsContext.jsx';
 
 /** Espace de travail : connexion vérifiée, choix de l'organisation, menu des sous-applications, assistant IA. */
@@ -69,18 +73,30 @@ function Onboarding() {
 // Sous-applications qui ont leur propre discussion avec l'IA (le serveur les connaît) ; les autres (comptabilité, abonnement, intégrations) utilisent la discussion générale.
 const AI_MODULES = new Set(['support', 'projects', 'budget', 'stock', 'crm', 'hr', 'sales', 'structure', 'processes', 'team', 'alerts']);
 
-/** Coque : menu, barre du haut, module affiché, panneau de l'IA. */
+/** Cadre unique : barre latérale, en-tête (fil d'Ariane, recherche, outils), module affiché, pied de page, barre basse (téléphone), assistant IA. */
 function Shell() {
   const ws = useWs();
   const t = useT();
+  const p = usePrefs();
   const { user, orgs, orgId, info, dash, route, aiOpen, setAiOpen, askAI, logout, loadOrg, refreshKey, refreshBadges, setOrgs, modal } = ws;
   const openSecurity = () => modal(t('Sécurité du compte'), () => <AccountSecurity />, { wide: true });
-  const shell = useRef(null);
   const main = useRef(null);
-  const mods = info.modules.filter((m) => hasModule(m.id));
+  const mods = sortMods(info.modules.filter((m) => hasModule(m.id)), p.order);
   let cur = route ? route.mod : 'dashboard';
   if (!mods.some((m) => m.id === cur)) cur = 'dashboard';
   const Mod = moduleComponent(cur);
+  const curMod = mods.find((m) => m.id === cur);
+  const canBrand = ws.can('admin');
+
+  useEffect(() => { setActiveOrg(orgId); }, [orgId]);
+  const personalize = useCallback(() => modal(t("Personnaliser l'affichage"), () => <Personalize mods={mods} orgId={orgId} orgName={info.org.name} canBrand={canBrand} />, { wide: true }), [modal, t, mods, orgId, info.org.name, canBrand]);
+  const [palette, setPalette] = useState(false);
+  useEffect(() => { bindPalette(() => setPalette(true)); return () => bindPalette(() => {}); }, []);
+  useEffect(() => { // Ctrl K / Cmd K : recherche d'écran, partout dans l'application
+    const onKey = (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setPalette((v) => !v); } };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   // Menu : barre latérale fixe sur grand écran (≥ 1100 px), tiroir qui glisse depuis la gauche sur tablette et téléphone.
   const [navOpen, setNavOpen] = useState(false);
@@ -94,6 +110,7 @@ function Shell() {
   }, [navOpen]);
   useEffect(() => { const big = () => { if (window.innerWidth >= 1100) setNavOpen(false); }; window.addEventListener('resize', big); return () => window.removeEventListener('resize', big); }, []);
   useEffect(() => { document.body.classList.toggle('ai-open', aiOpen); return () => document.body.classList.remove('ai-open'); }, [aiOpen]);
+  useEffect(() => { document.body.classList.toggle('nav-mini', p.navMini); return () => document.body.classList.remove('nav-mini'); }, [p.navMini]);
   useEffect(() => { if (main.current) main.current.scrollTop = 0; window.scrollTo(0, 0); }, [cur, orgId]);
   useEffect(() => { refreshBadges(); }, [cur, refreshKey, refreshBadges]);
   useEffect(() => { // petite mise à jour des organisations (ex. nouvelle organisation créée)
@@ -105,80 +122,32 @@ function Shell() {
   const alerts = dash ? dash.alerts.filter((a) => a.level !== 'info').length : 0;
   const bell = dash ? dash.alerts.filter((a) => a.level === 'high').length : 0;
   const badgeOf = (id) => (id === 'support' ? tickets : id === 'alerts' ? alerts : 0);
-  const initialsOf = ws.initials;
-
-  const link = (m) => {
-    const n = badgeOf(m.id);
-    return (
-      <Link key={m.id} to={`/app/${orgId}/${m.id}`} className={m.id === cur ? 'on' : ''} aria-current={m.id === cur ? 'page' : undefined}>
-        <Icon name={MODULE_ICONS[m.id] || m.id} /><span className="nl">{t(m.title)}</span>
-        <span className="nbadge" hidden={!n}>{n}</span>
-      </Link>
-    );
-  };
-  const mainMods = mods.filter((m) => m.id !== 'alerts'), alertMod = mods.filter((m) => m.id === 'alerts');
-  const members = info.limits.membersUsed;
+  const onOrg = (e) => { const v = e.target.value; if (v === 'new') ws.setOnboarding({ code: '' }); else loadOrg(Number(v), 'dashboard'); };
 
   return (
     <GuideProvider openNav={setNavOpen}>
-    <div className={'ws-shell' + (navOpen ? ' nav-open' : '')} ref={shell}>
+    <div className={'ws-shell app' + (navOpen ? ' nav-open' : '')}>
+      <a className="skip-link" href="#ws-main">{t('Aller au contenu')}</a>
       <div className="ws-scrim" onClick={() => setNavOpen(false)} aria-hidden="true" />
-      <aside className="ws-side" id="ws-side" aria-label={t('Menu principal')}>
-        <div className="ws-side-h"><Link className="logo" to="/">Brij<b>-IA</b></Link><button type="button" className="ws-close" aria-label={t('Fermer le menu')} onClick={() => setNavOpen(false)}>×</button></div>
-        <div className="ws-org">
-          <span className="av">{initialsOf(info.org.name)}</span>
-          <div>
-            <select className="org-sel" aria-label={t('Organisation')} value={orgId} onChange={(e) => { const v = e.target.value; if (v === 'new') ws.setOnboarding({ code: '' }); else loadOrg(Number(v), 'dashboard'); }}>
-              {orgs.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
-              <option value="new">{t('+ Nouvelle organisation / rejoindre')}</option>
-            </select>
-            <small>{(info.org.sector ? info.org.sector + ' · ' : '') + (members > 1 ? t('{n} personnes', { n: members }) : t('{n} personne', { n: members }))}</small>
-          </div>
-        </div>
-        <LangSwitch className="ws-lang ws-lang-side" />
-        <div className="ws-label">{t('MON ESPACE')}</div>
-        <nav className="ws-nav" aria-label={t('Sous-applications')}>{mainMods.map(link)}{alertMod.length ? <><hr />{alertMod.map(link)}</> : null}</nav>
-        <div className="ws-me">
-          <span className="av gold">{initialsOf(user && user.name)}</span>
-          <div><b>{user ? user.name : ''}</b><small>{t(info.me.roleLabel)}</small></div>
-          <button type="button" className="out" title={t('Sécurité du compte')} aria-label={t('Sécurité du compte')} onClick={openSecurity}><Icon name="shield" /></button>
-          <button type="button" className="out" title={t('Me déconnecter')} aria-label={t('Me déconnecter')} onClick={logout}><Icon name="out" /></button>
-        </div>
-      </aside>
-      <div className="ws-col">
-        <header className="ws-top2">
-          <button type="button" className="ws-burger" aria-label={t('Ouvrir le menu')} aria-expanded={navOpen} aria-controls="ws-side" onClick={() => setNavOpen(!navOpen)}>
-            <svg viewBox="0 0 24 24" className="ic" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
-          </button>
-          <AskBar onAsk={askAI} />
-          <span className="grow" />
-          <GuideButton />
-          <LangSwitch className="ws-lang ws-lang-top" />
-          <Link className="bell" to={`/app/${orgId}/alerts`} aria-label={t('Alertes')}><Icon name="alerts" /><i className="dot" hidden={!bell} /></Link>
-          <div className="ws-user" role="button" tabIndex={0} title={t('Sécurité du compte')} style={{ cursor: 'pointer' }} onClick={openSecurity} onKeyDown={(e) => { if (e.key === 'Enter') openSecurity(); }}><span className="av">{initialsOf(user && user.name)}</span><div><b>{user ? user.name : ''}</b><small>{t(info.me.roleLabel)}</small></div></div>
-        </header>
+      <Sidebar mods={mods} cur={cur} orgId={orgId} orgs={orgs} info={info} user={user} badgeOf={badgeOf} initials={ws.initials} onOrg={onOrg} onClose={() => setNavOpen(false)}
+        onSecurity={openSecurity} onLogout={logout} onPersonalize={personalize} mini={p.navMini} onMini={() => setPrefs({ navMini: !p.navMini })} members={info.limits.membersUsed} />
+      <div className="ws-col app-col">
+        <TopBar orgName={info.org.name} modTitle={curMod ? t(curMod.title) : ''} navOpen={navOpen} onNav={() => setNavOpen(!navOpen)} onAsk={askAI} orgId={orgId} bell={bell} user={user}
+          role={t(info.me.roleLabel)} initials={ws.initials} onSecurity={openSecurity} onPersonalize={personalize} />
         <UserNotices orgId={orgId} />
-        <main className="ws-main" id="ws-main" ref={main}>
+        <main className="ws-main" id="ws-main" ref={main} tabIndex={-1}>
           <div className="ws-mod" key={`${orgId}-${cur}-${refreshKey}`}>
             <Suspense fallback={<Loading />}><ModBoundary><Mod /></ModBoundary></Suspense>
           </div>
         </main>
+        <Footer orgId={orgId} />
       </div>
       <AIPanel mod={AI_MODULES.has(cur) ? cur : 'general'} />
-      <button className="ws-fab" type="button" id="aiBtn" onClick={() => setAiOpen(!aiOpen)}><Icon name="ai" /><span>{t('Assistant IA')}</span></button>
+      <button className="ws-fab" id="aiBtn" type="button" onClick={() => setAiOpen(!aiOpen)}><Icon name="ai" /><span>{t('Assistant IA')}</span></button>
+      <BottomNav mods={mods} cur={cur} orgId={orgId} onMenu={() => setNavOpen(true)} onAi={() => setAiOpen(!aiOpen)} alerts={bell} />
+      {palette ? <Palette mods={mods} orgId={orgId} onClose={() => setPalette(false)} onPersonalize={personalize} onAsk={askAI} /> : null}
     </div>
     </GuideProvider>
-  );
-}
-
-function AskBar({ onAsk }) {
-  const t = useT();
-  const ref = useRef(null);
-  return (
-    <form className="ws-ask" onSubmit={(ev) => { ev.preventDefault(); const q = ref.current.value.trim(); if (q) { ref.current.value = ''; onAsk(q); } }}>
-      <Icon name="ai" />
-      <input ref={ref} type="text" placeholder={window.innerWidth < 640 ? t('Demandez à Brij-IA…') : t("Demandez à Brij-IA : « Quels sont les problèmes urgents aujourd'hui ? »")} aria-label={t('Demandez à Brij-IA')} autoComplete="off" />
-    </form>
   );
 }
 

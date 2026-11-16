@@ -31,7 +31,7 @@ export function buildGuides(t, { admin, mods }) {
     { at: css('.org-sel'), nav: true, optional: true, title: t('Votre organisation'), text: t("Ici, vous changez d'organisation ou vous en créez une nouvelle. Tout ce que vous voyez appartient à l'organisation choisie.") },
     { at: css('.ws-ask'), title: t("Demandez à l'IA"), text: t("Écrivez une question en français : « Quelles factures relancer ? », « Qu'est-ce qui manque en stock ? ». L'IA lit vos données et vous répond.") },
     { at: css('.bell'), title: t('Les alertes'), text: t("La cloche signale ce qui est urgent : factures en retard, stock bas, tâches en retard. Un point rouge veut dire « à voir maintenant ».") },
-    { at: css('#aiBtn'), title: t("L'assistant IA"), text: t("Ce bouton ouvre la discussion avec l'assistant. Il connaît la sous-application ouverte et peut préparer des actions que vous validez vous-même.") },
+    { at: css('#aiBtn, .ws-fab-b'), title: t("L'assistant IA"), text: t("Ce bouton ouvre la discussion avec l'assistant. Il connaît la sous-application ouverte et peut préparer des actions que vous validez vous-même.") },
     { at: css('.ws-user'), title: t('Votre compte'), text: t('Cliquez ici pour sécuriser votre compte : mot de passe, double vérification, appareils connectés.') },
     { at: css('#guideBtn'), title: t('Je reste à votre disposition'), text: t('Ce bouton « Guide » contient un guide pas à pas pour chaque tâche : créer une facture, ajouter un article, lancer la paie… Choisissez, et les flèches vous montrent quoi faire.') },
   ] });
