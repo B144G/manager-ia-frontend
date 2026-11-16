@@ -134,11 +134,12 @@ function ReceiveForm({ o, close, onDone }) {
   const t = useT();
   const { oapi, today } = useWs();
   const open = o.lines.filter((l) => l.remainingQty > 0 || l.receivedQty === 0);
-  const f = useFormState({ receiptDate: today(), deliveryNote: '', note: '', rows: Object.fromEntries(open.map((l) => [l.id, { recv: String(l.remainingQty), rej: '', reason: '', lot: '', expiry: '', serials: '' }])) });
+  const f = useFormState({ receiptDate: today(), deliveryNote: '', note: '', rows: Object.fromEntries(open.map((l) => [l.id, { recv: String(l.remainingQty), rej: '', reason: '', lot: '', expiry: '', serials: '', loc: '' }])) });
+  const locs = useLoad(() => oapi('GET', '/stock/wms/locations').then((j) => j.locations || []).catch(() => []), []);
   const set = (id, k, v) => f.setV((s) => ({ ...s, rows: { ...s.rows, [id]: { ...s.rows[id], [k]: v } } }));
   return (
     <form className="ws-form" noValidate onSubmit={(e) => { e.preventDefault(); f.run(async () => {
-      const lines = open.map((l) => { const r = f.v.rows[l.id]; return { orderLineId: l.id, receivedQty: num(r.recv), rejectedQty: num(r.rej), reason: r.reason, lotNo: r.lot, expiry: r.expiry || undefined, serials: r.serials }; });
+      const lines = open.map((l) => { const r = f.v.rows[l.id]; return { orderLineId: l.id, receivedQty: num(r.recv), rejectedQty: num(r.rej), reason: r.reason, lotNo: r.lot, expiry: r.expiry || undefined, serials: r.serials, locationId: r.loc ? Number(r.loc) : undefined }; });
       const res = await oapi('POST', '/purchasing/orders/' + o.id + '/receipts', { receiptDate: f.v.receiptDate, deliveryNote: f.v.deliveryNote, note: f.v.note, lines });
       close(); onDone(res);
     }); }}>
@@ -155,6 +156,7 @@ function ReceiveForm({ o, close, onDone }) {
             <Field label={t('Quantité acceptée')}><input type="text" inputMode="decimal" value={r.recv} onChange={(e) => set(l.id, 'recv', e.target.value)} /></Field>
             <Field label={t('Quantité refusée')}><input type="text" inputMode="decimal" value={r.rej} onChange={(e) => set(l.id, 'rej', e.target.value)} /></Field>
             {num(r.rej) > 0 ? <Field label={t('Motif du refus')} wide><input type="text" value={r.reason} maxLength={200} onChange={(e) => set(l.id, 'reason', e.target.value)} /></Field> : null}
+            {l.itemId && (locs.data || []).length ? <Field label={t("Emplacement de réception")} hint={t('Vide : rangement automatique selon les règles du stock.')} wide><select value={r.loc} onChange={(e) => set(l.id, 'loc', e.target.value)}><option value="">{t('Rangement automatique')}</option>{locs.data.map((x) => <option key={x.id} value={x.id}>{x.code || x.name}</option>)}</select></Field> : null}
             {l.itemId && l.tracking === 'lot' ? <><Field label={t('Numéro de lot')}><input type="text" value={r.lot} maxLength={40} onChange={(e) => set(l.id, 'lot', e.target.value)} /></Field><Field label={t('Péremption')}><input type="date" value={r.expiry} onChange={(e) => set(l.id, 'expiry', e.target.value)} /></Field></> : null}
             {l.itemId && l.tracking === 'serial' ? <Field label={t('Numéros de série (un par ligne ou séparés par des virgules)')} wide><textarea rows={2} value={r.serials} onChange={(e) => set(l.id, 'serials', e.target.value)} /></Field> : null}
           </div>

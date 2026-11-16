@@ -368,4 +368,7 @@ export default {
   "meilleur prix : {name}": "best price: {name}",
   "à commander : {n} {u}": "to order: {n} {u}",
   "Créer une demande avec ces articles": "Create a request with these items",
+  "Emplacement de réception": "Receiving location",
+  "Vide : rangement automatique selon les règles du stock.": "Empty: automatic put-away according to the stock rules.",
+  "Rangement automatique": "Automatic put-away",
 };

@@ -368,4 +368,7 @@ export default {
   "meilleur prix : {name}": "bester Preis: {name}",
   "à commander : {n} {u}": "zu bestellen: {n} {u}",
   "Créer une demande avec ces articles": "Anforderung mit diesen Artikeln erstellen",
+  "Emplacement de réception": "Wareneingangsplatz",
+  "Vide : rangement automatique selon les règles du stock.": "Leer: automatische Einlagerung nach den Lagerregeln.",
+  "Rangement automatique": "Automatische Einlagerung",
 };

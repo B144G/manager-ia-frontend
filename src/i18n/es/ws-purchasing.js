@@ -368,4 +368,7 @@ export default {
   "meilleur prix : {name}": "mejor precio: {name}",
   "à commander : {n} {u}": "por pedir: {n} {u}",
   "Créer une demande avec ces articles": "Crear una solicitud con estos artículos",
+  "Emplacement de réception": "Ubicación de recepción",
+  "Vide : rangement automatique selon les règles du stock.": "Vacío: ubicación automática según las reglas de stock.",
+  "Rangement automatique": "Ubicación automática",
 };
