@@ -264,3 +264,49 @@ body.ai-open .ws-fab{display:none}
   .msh-quick-row span{font-size:12px;min-width:0}.msh-quick-row b{font-size:15px;white-space:nowrap}
   .msh-item,.msh-gh{min-height:44px}
 }
+
+/* Stock : entrepôt (WMS) — classes préfixées « wms- » */
+.wms-toolbar{margin-bottom:12px;gap:8px}
+.wms-kpis{margin-bottom:12px}
+.wms-seg{margin-bottom:12px}
+.wms-lines{display:grid;gap:10px;margin:6px 0}
+.wms-lrow{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.wms-l-item{flex:2 1 220px;min-width:0}.wms-l-qty{flex:1 1 110px;min-width:0}
+.wms-lrow .fld{min-width:0}.wms-lrow select,.wms-lrow input{max-width:100%;width:100%;min-width:0}
+.wms-foot{display:grid;gap:8px;margin-top:10px}
+.wms-check{align-items:flex-start;gap:10px;cursor:pointer}.wms-check input{width:22px;height:22px;flex:none;margin-top:2px}
+.wms-spark{width:120px;height:30px;color:var(--fg);flex:none}
+.wms-pickline{display:grid;gap:8px;padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--surface)}
+.wms-pickline.next{border-color:var(--fg);box-shadow:0 0 0 2px color-mix(in srgb,var(--fg) 18%,transparent)}
+.wms-pickline.done{opacity:.65}
+.wms-where{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.wms-loc{font:800 22px/1.1 var(--f-display);overflow-wrap:anywhere}
+.wms-what{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}.wms-what b{overflow-wrap:anywhere}
+.wms-do{display:grid;gap:8px}
+.wms-run .btn,.wms-scan .btn{min-height:44px}
+.wms-scan-box{display:grid;gap:8px;margin-bottom:8px}
+.wms-scan-row{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}.wms-scan-row .fld{flex:1 1 200px;min-width:0}
+.wms-scan-row input{width:100%;min-height:44px}
+.wms-cam{display:grid;gap:8px}.wms-cam video{width:100%;max-height:60vh;border-radius:12px;background:#000;object-fit:cover}
+.wms-modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.wms-mode{display:grid;justify-items:center;gap:4px;min-height:64px;padding:8px 4px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font:inherit;font-weight:700;cursor:pointer;overflow-wrap:anywhere}
+.wms-mode.on{background:var(--fg);color:var(--bg)}
+.wms-mode span{font-size:22px}
+.wms-card-title{overflow-wrap:anywhere}
+.wms-kpis .stat span,.msh-main .line b,.msh-main .line small{overflow-wrap:anywhere;min-width:0}
+.msh-main .line>span{min-width:0;flex:1 1 220px}
+@media (max-width:640px){
+  .ws-tabs.wms-seg{flex-wrap:wrap;overflow:visible;scroll-snap-type:none}.ws-tabs.wms-seg .tab{white-space:normal;flex:1 1 auto;text-align:center}
+  .wms-toolbar .btn{flex:1 1 auto;min-height:44px}
+  .wms-seg .tab,.wms-lrow .link,.msh-main .line .link{min-height:44px;display:inline-flex;align-items:center}
+  .wms-lrow{padding:8px}.wms-l-item,.wms-l-qty{flex:1 1 100%}
+  .wms-modes{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wms-loc{font-size:26px}
+  .msh-main .line .btn.small,.msh-main .row .btn.small{min-height:44px}
+  .wms-spark{width:90px}
+  .msh-main .ws-form select,.msh-main .ws-form input,.msh-main .ws-form textarea{min-height:44px}
+}
+/* Fenêtres : un champ à longues options (liste d'articles…) ne doit jamais élargir la fenêtre */
+.ws-box-b .ws-form{grid-template-columns:minmax(0,1fr)}
+.ws-box-b .fld{min-width:0}
+.ws-box-b .fld select,.ws-box-b .fld input,.ws-box-b .fld textarea{max-width:100%;min-width:0;box-sizing:border-box}
