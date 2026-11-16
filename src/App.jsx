@@ -19,6 +19,7 @@ const Receipt = lazy(() => import('./pages/Receipt.jsx'));
 const Csat = lazy(() => import('./pages/Csat.jsx'));
 const PrivacyCenter = lazy(() => import('./privacy/PrivacyCenter.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
+const LegalCenter = lazy(() => import('./legal/LegalCenter.jsx'));
 const Privacy = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Privacy })));
 const Terms = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Terms })));
 
@@ -34,8 +35,12 @@ export default function App() {
       <Routes>
         <Route element={<StyleLayout group="site" body="site" />}>
           <Route path="/" element={<Home />} />
-          <Route path="/confidentialite" element={<Privacy />} />
-          <Route path="/conditions" element={<Terms />} />
+          <Route path="/confidentialite" element={<LegalCenter slug="confidentialite" legacy={Privacy} />} />
+          <Route path="/conditions" element={<LegalCenter slug="conditions" legacy={Terms} />} />
+          <Route path="/cookies" element={<LegalCenter slug="cookies" />} />
+          <Route path="/mentions-legales" element={<LegalCenter slug="mentions-legales" />} />
+          <Route path="/sous-traitants" element={<LegalCenter slug="sous-traitants" />} />
+          <Route path="/securite" element={<LegalCenter slug="securite" />} />
           <Route path="/index.html" element={<Navigate to="/" replace />} />
           <Route path="*" element={<NotFound />} />
         </Route>
