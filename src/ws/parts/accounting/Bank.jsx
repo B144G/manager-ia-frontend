@@ -39,8 +39,8 @@ function ImportBox({ bank, close, done }) {
   const COLS = { date: 'date', label: 'libellé', ref: 'référence', debit: 'débit', credit: 'crédit', amount: 'montant', balance: 'solde' };
   return (
     <div className="ws-form">
-      <label className="fld"><span>{t('Fichier du relevé (CSV, Excel, OFX, MT940, CAMT.053)')}</span><input ref={file} type="file" accept=".csv,.txt,.xlsx,.ofx,.qfx,.sta,.mt940,.940,.xml,text/csv" style={{ fontSize: 16 }} onChange={(e) => load(e.target.files[0])} /></label>
-      <label className="fld"><span>{t('ou collez le contenu du relevé')}</span><textarea style={{ fontSize: 16 }} rows={6} value={xlsx ? '' : csv} placeholder={xlsx ? t('Classeur Excel chargé.') : ''} onChange={(e) => { setXlsx(''); setCsv(e.target.value); setPrev(null); }} /></label>
+      <label className="fld"><span>{t('Fichier du relevé (CSV, Excel, OFX, MT940, CAMT.053)')}</span><input ref={file} type="file" accept=".csv,.txt,.xlsx,.ofx,.qfx,.sta,.mt940,.940,.xml,text/csv" onChange={(e) => load(e.target.files[0])} /></label>
+      <label className="fld"><span>{t('ou collez le contenu du relevé')}</span><textarea rows={6} value={xlsx ? '' : csv} placeholder={xlsx ? t('Classeur Excel chargé.') : ''} onChange={(e) => { setXlsx(''); setCsv(e.target.value); setPrev(null); }} /></label>
       <p className="ws-err" role="alert">{err}</p>
       <div className="row"><button className="btn small" type="button" style={BTN} disabled={!ready} onClick={check}>{t('Vérifier le format')}</button></div>
       {prev ? (
@@ -145,7 +145,7 @@ export default function BankTab() {
           <>
             <WorkNotice>{t("Document de travail : le rapprochement ne modifie pas vos écritures. À faire valider par un expert-comptable.")}</WorkNotice>
             <div className="row" style={{ flexWrap: 'wrap', marginBottom: 8 }}>
-              {j.banks.length ? <select aria-label={t('Compte')} style={{ fontSize: 16, minHeight: 44 }} value={bank.id} onChange={(e) => setSel(Number(e.target.value))}>{j.banks.map((b) => <option key={b.id} value={b.id}>{b.name + ' (' + b.glAccount + ') · ' + t('{n} à pointer', { n: b.unmatched })}</option>)}</select> : null}
+              {j.banks.length ? <select aria-label={t('Compte')} value={bank.id} onChange={(e) => setSel(Number(e.target.value))}>{j.banks.map((b) => <option key={b.id} value={b.id}>{b.name + ' (' + b.glAccount + ') · ' + t('{n} à pointer', { n: b.unmatched })}</option>)}</select> : null}
               <button className="btn small" type="button" style={BTN} onClick={create}>{t('Ajouter un compte')}</button>
               {bank ? <button className="btn primary small" type="button" style={BTN} onClick={() => modal(t('Importer un relevé'), (close) => <ImportBox bank={bank} close={close} done={st.reload} />, { wide: true })}>{t('Importer un relevé')}</button> : null}
               {bank && !bank.lines ? <button className="link" type="button" style={TAP} onClick={() => oapi('DELETE', '/accounting/bank/' + bank.id).then(() => { setSel(null); st.reload(); }).catch(fail)}>{t('Supprimer ce compte')}</button> : null}

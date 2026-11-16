@@ -129,10 +129,10 @@ function NewPick({ close, done }) {
     <form className="ws-form" noValidate onSubmit={submit}>
       <Seg tabs={[['doc', t('Depuis une commande')], ['free', t('Liste libre')]]} value={mode} onChange={setMode} />
       {mode === 'doc'
-        ? <label className="fld"><span>{t('Commande, devis ou facture')}</span><select style={{ fontSize: 16 }} value={v.documentId} onChange={(e) => setV({ ...v, documentId: e.target.value })}><option value="">{t('Choisir…')}</option>{list.map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select></label>
-        : <><LinesEditor items={items.items} rows={rows} setRows={setRows} /><label className="fld"><span>{t('Pour quoi ?')}</span><input type="text" style={{ fontSize: 16 }} value={v.label} onChange={(e) => setV({ ...v, label: e.target.value })} placeholder={t('Atelier, chantier…')} /></label></>}
-      <label className="fld"><span>{t('Priorité')}</span><select style={{ fontSize: 16 }} value={v.priority} onChange={(e) => setV({ ...v, priority: e.target.value })}><option value="1">{t('Urgente')}</option><option value="2">{t('Normale')}</option><option value="3">{t('Basse')}</option></select></label>
-      <label className="fld"><span>{t('Confiée à (facultatif)')}</span><select style={{ fontSize: 16 }} value={v.assignedTo} onChange={(e) => setV({ ...v, assignedTo: e.target.value })}><option value="">{t('Personne en particulier')}</option>{(mem.data ? mem.data.members : []).map((m) => <option key={m.userId} value={m.userId}>{m.name}</option>)}</select></label>
+        ? <label className="fld"><span>{t('Commande, devis ou facture')}</span><select value={v.documentId} onChange={(e) => setV({ ...v, documentId: e.target.value })}><option value="">{t('Choisir…')}</option>{list.map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select></label>
+        : <><LinesEditor items={items.items} rows={rows} setRows={setRows} /><label className="fld"><span>{t('Pour quoi ?')}</span><input type="text" value={v.label} onChange={(e) => setV({ ...v, label: e.target.value })} placeholder={t('Atelier, chantier…')} /></label></>}
+      <label className="fld"><span>{t('Priorité')}</span><select value={v.priority} onChange={(e) => setV({ ...v, priority: e.target.value })}><option value="1">{t('Urgente')}</option><option value="2">{t('Normale')}</option><option value="3">{t('Basse')}</option></select></label>
+      <label className="fld"><span>{t('Confiée à (facultatif)')}</span><select value={v.assignedTo} onChange={(e) => setV({ ...v, assignedTo: e.target.value })}><option value="">{t('Personne en particulier')}</option>{(mem.data ? mem.data.members : []).map((m) => <option key={m.userId} value={m.userId}>{m.name}</option>)}</select></label>
       <p className="muted small">{t('Créer la liste met le stock de côté : personne ne peut le prendre pendant la préparation.')}</p>
       <FormFoot busy={busy} err={err} text={t('Créer la liste')} />
     </form>

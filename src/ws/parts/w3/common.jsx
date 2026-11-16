@@ -7,7 +7,7 @@ import { Empty, Form, Loaded, useLoad } from '../../ui.jsx';
 
 /* Éléments communs de la vague 3 : liste + formulaire générique (Crud), réglages, pièces jointes chiffrées, téléchargement de fichiers. */
 
-export const BTN = { minHeight: 44 };
+export const BTN = {}; // ancien style en ligne : la taille des boutons vient maintenant de ui.css
 
 /** Enregistre sur l'appareil un fichier lu avec la session (CSV, pièce jointe). */
 export async function saveFile(path, name, fail) {
@@ -99,7 +99,7 @@ export function SettingsCard({ path, keys, canEdit, title, intro }) {
           <>
             {keys.map(([k, label, hint]) => (
               <label className="fld" key={k}><span>{label}</span>
-                <input style={{ fontSize: 16 }} inputMode="decimal" disabled={!canEdit} value={cur[k]} onChange={(e) => setVals({ ...cur, [k]: e.target.value })} />{hint ? <small>{hint}</small> : null}
+                <input inputMode="decimal" disabled={!canEdit} value={cur[k]} onChange={(e) => setVals({ ...cur, [k]: e.target.value })} />{hint ? <small>{hint}</small> : null}
               </label>
             ))}
             {canEdit ? <button className="btn primary small" type="button" style={BTN} onClick={() => oapi('PUT', path + '/settings', cur).then((r) => { setVals(r.settings); toast(t('Enregistré.')); }).catch(fail)}>{t('Enregistrer')}</button> : <p className="muted small">{t('Réservé aux administrateurs.')}</p>}
@@ -137,7 +137,7 @@ export function FilesBox({ listPath, filePath, canDelete = true }) {
   return (
     <div>
       <p className="muted small">{t('PDF, JPEG, PNG ou WebP, 2 Mo au plus, 10 fichiers au plus. Les fichiers sont chiffrés sur le serveur.')}</p>
-      <input ref={input} type="file" accept="application/pdf,image/jpeg,image/png,image/webp" onChange={upload} aria-label={t('Ajouter un fichier')} style={{ fontSize: 16 }} />
+      <input ref={input} type="file" accept="application/pdf,image/jpeg,image/png,image/webp" onChange={upload} aria-label={t('Ajouter un fichier')} />
       <p className="muted small" role="status">{msg}</p>
       <Loaded state={st}>{(j) => (
         <>

@@ -37,9 +37,9 @@ function Filler({ model }) {
       <p className="ws-err">{t('Modèle informatif à faire relire par un professionnel du droit.')}</p>
       {!model.fields.length ? <p className="muted small">{t("Ce modèle n'a aucun champ à compléter : modifiez directement le texte ci-dessous.")}</p> : null}
       <div className="ws-form">
-        {model.fields.map((f) => <label className="fld" key={f.key}><span>{f.label}</span><input style={{ fontSize: 16 }} value={vals[f.key] || ''} autoComplete="off" onChange={(e) => setVal(f.key, e.target.value)} /></label>)}
+        {model.fields.map((f) => <label className="fld" key={f.key}><span>{f.label}</span><input value={vals[f.key] || ''} autoComplete="off" onChange={(e) => setVal(f.key, e.target.value)} /></label>)}
       </div>
-      <label className="fld"><span>{t('Aperçu du document (modifiable)')}</span><textarea style={{ fontSize: 16 }} rows={14} value={text} onChange={(e) => setText(e.target.value)} /></label>
+      <label className="fld"><span>{t('Aperçu du document (modifiable)')}</span><textarea rows={14} value={text} onChange={(e) => setText(e.target.value)} /></label>
       <div className="row" style={{ marginTop: 12, flexWrap: 'wrap' }}>
         <Btn className="btn primary" onClick={() => copy(text, t('Texte copié.'))}>{t('Copier le texte')}</Btn>
         <Btn onClick={print}>{t('Imprimer')}</Btn>

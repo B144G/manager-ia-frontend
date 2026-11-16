@@ -177,7 +177,7 @@ function Ticket({ id, j, members, onChange, onDeleted }) {
       </div>
       <p className="muted small">{[tk.firstDueAt && t('1re réponse avant le {d} : {s}', { d: dateFr(tk.firstDueAt), s: t(SLA_LABEL[tk.slaFirst]) }), tk.dueAt && t('Résolution avant le {d} : {s}', { d: dateFr(tk.dueAt), s: t(SLA_LABEL[tk.slaResolve]) }), tk.csat ? t('Satisfaction : {n} / 5', { n: tk.csat }) : ''].filter(Boolean).join(' · ')}</p>
       {j.customer ? <p className="muted small">{t('Fiche client : {name}', { name: j.customer.name })}</p> : null}
-      {tk.csatLink ? <p className="muted small">{t('Lien de satisfaction :')} <button className="link" type="button" style={{ minHeight: 44 }} onClick={() => copy(tk.csatLink, t('Lien copié.'))}>{t('Copier le lien')}</button></p> : null}
+      {tk.csatLink ? <p className="muted small">{t('Lien de satisfaction :')} <button className="link" type="button" onClick={() => copy(tk.csatLink, t('Lien copié.'))}>{t('Copier le lien')}</button></p> : null}
       <textarea rows={4} placeholder={t('Votre réponse au client…')} aria-label={t('Votre réponse')} ref={replyRef} value={reply} onChange={(e) => setReply(e.target.value)} />
       <label style={{ display: 'flex', gap: 8, minHeight: 44, alignItems: 'center' }}><input type="checkbox" checked={sendOut} onChange={(e) => setSendOut(e.target.checked)} style={{ width: 24, height: 24 }} />{t('Envoyer aussi au client (e-mail ou WhatsApp selon son contact)')}</label>
       <div className="row">

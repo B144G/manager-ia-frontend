@@ -85,7 +85,7 @@ export function ShareDialog({ kind, sourceId, close, canCosts }) {
       </Loaded>
       {canCosts ? <Check checked={includeCosts} onChange={() => setIncludeCosts((v) => !v)} label={t('Inclure le budget et les coûts')} hint={t('réservé aux responsables : à cocher seulement si les destinataires peuvent les voir')} /> : null}
       <label className="fld"><span>{t('Message (facultatif)')}</span>
-        <textarea rows={2} maxLength={500} value={message} onChange={(e) => setMessage(e.target.value)} style={{ fontSize: 16 }} /></label>
+        <textarea rows={2} maxLength={500} value={message} onChange={(e) => setMessage(e.target.value)} /></label>
       {prev ? <p className="small"><b>{t('{n} personne(s) recevront ce document : {names}', { n: prev.count, names: prev.names.slice(0, 8).join(', ') + (prev.count > 8 ? '…' : '') })}</b></p> : null}
       {prev && prev.noAccount.length ? <p className="small late">{t("Sans compte Brij-IA, ils ne le recevront pas : {names}.", { names: prev.noAccount.map((x) => x.name).join(', ') })}</p> : null}
       <div className="row">

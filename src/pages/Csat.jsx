@@ -33,7 +33,7 @@ export default function Csat() {
             <div className="row" role="radiogroup" aria-label={t('Note')} style={{ justifyContent: 'flex-start', flexWrap: 'wrap' }}>
               {[1, 2, 3, 4, 5].map((n) => <button key={n} type="button" role="radio" aria-checked={score === n} className={'btn' + (score === n ? ' primary' : '')} style={{ minHeight: 48, minWidth: 48 }} onClick={() => setScore(n)}>{n}</button>)}
             </div>
-            <label className="fld"><span>{t('Un commentaire (facultatif)')}</span><textarea rows={3} style={{ fontSize: 16 }} value={comment} onChange={(e) => setComment(e.target.value)} /></label>
+            <label className="fld"><span>{t('Un commentaire (facultatif)')}</span><textarea rows={3} value={comment} onChange={(e) => setComment(e.target.value)} /></label>
             <p className="hm-err" role="alert">{err ? tsrv(err) : ''}</p>
             <button className="s-btn pri big au-go" type="submit">{t('Envoyer mon avis')}</button>
           </form>

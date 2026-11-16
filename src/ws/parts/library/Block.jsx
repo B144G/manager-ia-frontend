@@ -100,11 +100,11 @@ export default function BlockView({ L, block }) {
               <button className="btn small" type="submit">{t('Chercher')}</button>
               {applied || tag ? <button className="btn small" type="button" onClick={() => { setQ(''); setApplied(''); setTag(''); }}>{t('Effacer')}</button> : null}
             </form>
-            <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label={t('Trier par')} style={{ fontSize: 16 }}>
+            <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label={t('Trier par')}>
               <option value="name">{t('Nom')}</option><option value="date">{t('Date')}</option><option value="size">{t('Taille')}</option>
             </select>
             {j.tags.length ? (
-              <select value={tag} onChange={(e) => setTag(e.target.value)} aria-label={t('Étiquette')} style={{ fontSize: 16 }}>
+              <select value={tag} onChange={(e) => setTag(e.target.value)} aria-label={t('Étiquette')}>
                 <option value="">{t('Toutes les étiquettes')}</option>{j.tags.map((x) => <option key={x} value={x}>{x}</option>)}
               </select>
             ) : null}

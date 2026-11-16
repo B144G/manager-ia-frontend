@@ -22,7 +22,7 @@ export default function Legal() {
     <>
       <div className="ws-head">
         <div><h1>{t('Juridique et conformité')}</h1><p className="muted">{t('Vos contrats, vos échéances et vos obligations, pour ne rien oublier.')}</p></div>
-        <div className="row"><button className="btn signal small" type="button" style={{ minHeight: 44 }} onClick={() => askAI(t('Quelles sont mes échéances juridiques à venir et que dois-je faire en priorité ?'))}>{t("Demander à l'IA")}</button></div>
+        <div className="row"><button className="btn signal small" type="button" onClick={() => askAI(t('Quelles sont mes échéances juridiques à venir et que dois-je faire en priorité ?'))}>{t("Demander à l'IA")}</button></div>
       </div>
       <p className="muted small">{t("Rappels à 30 et 7 jours avant chaque échéance : ils apparaissent aussi dans Alertes et dans les réponses de l'IA. Aide-mémoire d'organisation : cet outil ne remplace pas un avocat et ne dit jamais qu'un document est « conforme ». Faites relire les textes importants par un professionnel du droit de votre pays.")}</p>
       <div className="ws-tabs">

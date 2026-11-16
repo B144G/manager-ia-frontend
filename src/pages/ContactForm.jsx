@@ -42,7 +42,7 @@ export default function ContactForm() {
             <button className="s-btn pri big au-go" type="submit" id="go" disabled={busy}>{t('Envoyer')}</button>
           </form>
         ) : <p id="ok" className="s-ok">{t('Merci ! Votre message a bien été envoyé. Nous revenons vers vous très vite.')}{sent !== 'ok' ? ' ' + t('Votre référence : {ref}', { ref: sent }) : ''}</p>}
-        {!sent && faq.length ? (<><h2 style={{ fontSize: 16 }}>{t('Questions fréquentes')}</h2>{faq.slice(0, 8).map((q, i) => <details key={i}><summary>{q.question}</summary><p>{q.answer}</p></details>)}</>) : null}
+        {!sent && faq.length ? (<><h2>{t('Questions fréquentes')}</h2>{faq.slice(0, 8).map((q, i) => <details key={i}><summary>{q.question}</summary><p>{q.answer}</p></details>)}</>) : null}
       </div>
     </div>
   );

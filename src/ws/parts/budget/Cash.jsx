@@ -19,7 +19,7 @@ export function CashTab() {
     <>
       <WorkNotice>{t("Prévision de gestion : une estimation à partir des factures, dettes, paie et échéances connues. Ce n'est ni un engagement bancaire ni un conseil financier.")}</WorkNotice>
       <div className="row" style={{ marginBottom: 8, flexWrap: 'wrap' }}>
-        <label className="small">{t('Horizon')}{' '}<select style={{ fontSize: 16, minHeight: 44 }} value={months} onChange={(e) => setMonths(Number(e.target.value))}>{[1, 2, 3, 6, 12].map((n) => <option key={n} value={n}>{t('{n} mois', { n })}</option>)}</select></label>
+        <label className="small">{t('Horizon')}{' '}<select value={months} onChange={(e) => setMonths(Number(e.target.value))}>{[1, 2, 3, 6, 12].map((n) => <option key={n} value={n}>{t('{n} mois', { n })}</option>)}</select></label>
         <label className="small">{t("Taux d'encaissement des factures (%)")}{' '}<input style={{ fontSize: 16, minHeight: 44, width: 80 }} inputMode="numeric" value={rate} onChange={(e) => setRate(e.target.value.replace(/\D/g, '').slice(0, 3))} /></label>
       </div>
       <Loaded state={st}>

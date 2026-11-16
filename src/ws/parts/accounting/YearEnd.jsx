@@ -51,7 +51,7 @@ function CloseBox({ j, cl, onDone }) {
         </>
       ) : null}
       <p className="ws-err" role="alert">{err}</p>
-      <div className="row"><button className="btn primary small" type="button" style={{ minHeight: 44 }} disabled={busy || blocked} onClick={go}>{t("Clôturer l'exercice {year}", { year: j.year })}</button></div>
+      <div className="row"><button className="btn primary small" type="button" disabled={busy || blocked} onClick={go}>{t("Clôturer l'exercice {year}", { year: j.year })}</button></div>
     </div>
   );
 }
@@ -84,8 +84,8 @@ export default function YearEndTab({ year, setYear }) {
                 <div className="row" style={{ flexWrap: 'wrap' }}>
                   <h2 className="grow">{t('Clôture de l\'exercice {year}', { year: j.year })}{' '}<span className={'pill ' + (j.closed ? 'good' : 'mid')}>{j.closed ? t('Clôturé') : t('Ouvert')}</span></h2>
                   {j.closed
-                    ? (can('owner') ? <button className="btn small" type="button" style={{ minHeight: 44 }} onClick={() => reopen(j)}>{t('Rouvrir')}</button> : null)
-                    : <button className="btn primary small" type="button" style={{ minHeight: 44 }} onClick={() => close(j)}>{t('Clôturer l\'exercice')}</button>}
+                    ? (can('owner') ? <button className="btn small" type="button" onClick={() => reopen(j)}>{t('Rouvrir')}</button> : null)
+                    : <button className="btn primary small" type="button" onClick={() => close(j)}>{t('Clôturer l\'exercice')}</button>}
                 </div>
                 <p>{(j.resultat >= 0 ? t('Bénéfice de l\'exercice : {amount}', { amount: money(j.resultat) }) : t('Perte de l\'exercice : {amount}', { amount: money(Math.abs(j.resultat)) }))}</p>
                 {j.closed ? <p className="muted small">{t('Verrouillé jusqu\'au {date}. Aucune écriture ne peut plus être passée jusque-là.', { date: j.lockedUntil ? dateFr(j.lockedUntil) : '31/12/' + j.year })}{can('owner') ? '' : ' ' + t('Seul le propriétaire peut rouvrir un exercice clôturé.')}</p> : <p className="muted small">{t("Au 31/12, les comptes de charges et de produits sont soldés vers le résultat, et les soldes du bilan sont reportés au 01/01 de l'année suivante (à-nouveaux).")}</p>}

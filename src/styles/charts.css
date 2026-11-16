@@ -94,6 +94,6 @@ button.gt-name{border-top:0;border-left:0;border-bottom:0;font:inherit;font-size
 
 .ws-main .stat b,.ws-main .ui-stat .val,.ws-main .kpi b{overflow-wrap:break-word}
 @media (max-width:1500px){.app-top .ws-user div{display:none}}
-.app-crumb{max-width:40%}
+.app-crumb{max-width:46%}
 .ws-main .kpis .stat b,.ws-main .kpis4 .kpi b{font-size:var(--fs-xl)}
 .ws-head input[type=month],.ui-page-h input[type=month],.ws-head .row input{width:auto;min-width:150px}

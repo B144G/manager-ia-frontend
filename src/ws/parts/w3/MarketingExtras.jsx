@@ -29,9 +29,9 @@ export function Audience() {
       <div className="ws-card">
         <h2>{t('Segment de clients')}</h2>
         <div className="ws-form">
-          <label className="fld"><span>{t('Statut')}</span><select style={{ fontSize: 16 }} value={f.stage} onChange={(e) => setF({ ...f, stage: e.target.value })}><option value="">{t('Tous')}</option><option value="client">{t('Clients')}</option><option value="prospect">{t('Prospects')}</option></select></label>
-          <label className="fld"><span>{t('Sans achat depuis (jours)')}</span><input style={{ fontSize: 16 }} inputMode="numeric" value={f.inactiveDays} onChange={(e) => setF({ ...f, inactiveDays: e.target.value })} /></label>
-          <label className="fld"><span>{t('Total facturé au moins')}</span><input style={{ fontSize: 16 }} inputMode="numeric" value={f.minInvoiced} onChange={(e) => setF({ ...f, minInvoiced: e.target.value })} /></label>
+          <label className="fld"><span>{t('Statut')}</span><select value={f.stage} onChange={(e) => setF({ ...f, stage: e.target.value })}><option value="">{t('Tous')}</option><option value="client">{t('Clients')}</option><option value="prospect">{t('Prospects')}</option></select></label>
+          <label className="fld"><span>{t('Sans achat depuis (jours)')}</span><input inputMode="numeric" value={f.inactiveDays} onChange={(e) => setF({ ...f, inactiveDays: e.target.value })} /></label>
+          <label className="fld"><span>{t('Total facturé au moins')}</span><input inputMode="numeric" value={f.minInvoiced} onChange={(e) => setF({ ...f, minInvoiced: e.target.value })} /></label>
           {[['hasEmail', t('Avec adresse e-mail')], ['hasPhone', t('Avec téléphone')], ['consentOnly', t('Avec consentement seulement')]].map(([k, l]) => <label key={k} style={{ display: 'flex', gap: 8, minHeight: 44, alignItems: 'center' }}><input type="checkbox" checked={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.checked })} style={{ width: 24, height: 24 }} />{l}</label>)}
         </div>
         <div className="row"><button className="btn small" type="button" style={BTN} onClick={preview}>{t('Voir le résultat')}</button><button className="btn small" type="button" style={BTN} onClick={saveSeg}>{t('Enregistrer ce segment')}</button><button className="btn primary small" type="button" style={BTN} onClick={() => modal(t('Envoi groupé'), (close) => <Broadcast filter={filter} close={close} done={() => setV((n) => n + 1)} />, { wide: true })}>{t('Préparer un envoi')}</button></div>
@@ -56,7 +56,7 @@ export function Audience() {
 function NameForm({ label, onSave }) {
   const t = useT();
   const [v, setV] = useState('');
-  return <div className="ws-form"><label className="fld"><span>{label}</span><input style={{ fontSize: 16 }} value={v} onChange={(e) => setV(e.target.value)} /></label><button className="btn primary" type="button" disabled={!v.trim()} onClick={() => onSave(v)}>{t('Enregistrer')}</button></div>;
+  return <div className="ws-form"><label className="fld"><span>{label}</span><input value={v} onChange={(e) => setV(e.target.value)} /></label><button className="btn primary" type="button" disabled={!v.trim()} onClick={() => onSave(v)}>{t('Enregistrer')}</button></div>;
 }
 
 function Broadcast({ filter, close, done }) {
@@ -72,12 +72,12 @@ function Broadcast({ filter, close, done }) {
   const send = () => { setBusy(true); oapi('POST', '/marketing/broadcasts', body()).then((r) => { toast(t('{n} message(s) envoyé(s).', { n: r.sent })); close(); done(); }).catch((e) => { setBusy(false); fail(e); }); };
   return (
     <div className="ws-form">
-      <label className="fld"><span>{t("Nom de l'envoi")}</span><input style={{ fontSize: 16 }} value={b.name} onChange={(e) => setB({ ...b, name: e.target.value })} /></label>
-      <label className="fld"><span>{t('Canal')}</span><select style={{ fontSize: 16 }} value={b.channel} onChange={(e) => setB({ ...b, channel: e.target.value })}><option value="email">{t('E-mail')}</option><option value="whatsapp">{t('WhatsApp (modèle approuvé)')}</option></select></label>
-      {b.channel === 'email' ? <label className="fld"><span>{t('Objet')}</span><input style={{ fontSize: 16 }} value={b.subject} onChange={(e) => setB({ ...b, subject: e.target.value })} /></label> : (
-        <label className="fld"><span>{t('Modèle WhatsApp')}</span><select style={{ fontSize: 16 }} value={b.templateId} onChange={(e) => setB({ ...b, templateId: e.target.value })}><option value="">{t('Choisir…')}</option>{tpls.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+      <label className="fld"><span>{t("Nom de l'envoi")}</span><input value={b.name} onChange={(e) => setB({ ...b, name: e.target.value })} /></label>
+      <label className="fld"><span>{t('Canal')}</span><select value={b.channel} onChange={(e) => setB({ ...b, channel: e.target.value })}><option value="email">{t('E-mail')}</option><option value="whatsapp">{t('WhatsApp (modèle approuvé)')}</option></select></label>
+      {b.channel === 'email' ? <label className="fld"><span>{t('Objet')}</span><input value={b.subject} onChange={(e) => setB({ ...b, subject: e.target.value })} /></label> : (
+        <label className="fld"><span>{t('Modèle WhatsApp')}</span><select value={b.templateId} onChange={(e) => setB({ ...b, templateId: e.target.value })}><option value="">{t('Choisir…')}</option>{tpls.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
       )}
-      <label className="fld"><span>{t('Message')}</span><textarea rows={5} style={{ fontSize: 16 }} value={b.body} onChange={(e) => setB({ ...b, body: e.target.value })} /><small>{t('{nom} est remplacé par le prénom du client.')}</small></label>
+      <label className="fld"><span>{t('Message')}</span><textarea rows={5} value={b.body} onChange={(e) => setB({ ...b, body: e.target.value })} /><small>{t('{nom} est remplacé par le prénom du client.')}</small></label>
       {plan ? <p className="small">{t('{r} destinataire(s) ; {c} sans consentement, {a} sans adresse, {o} au-delà du quota du jour (reste {q}).', { r: plan.recipients, c: plan.noConsent, a: plan.noAddress, o: plan.overQuota, q: plan.quotaLeft })}</p> : null}
       <div className="row"><button className="btn small" type="button" style={BTN} onClick={preview}>{t('Vérifier les destinataires')}</button><button className="btn primary small" type="button" style={BTN} disabled={busy || !plan || !plan.recipients || !b.name || !b.body} onClick={send}>{t('Envoyer')}</button></div>
       {void tsrv}

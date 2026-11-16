@@ -55,15 +55,12 @@ details.proc ol{margin:10px 0;padding-left:22px}
 .dh{margin-bottom:20px}.dh h1{font-size:clamp(28px,4vw,36px)}.dh p{margin-top:4px}
 .g2,.g3,.g4{display:grid;gap:18px;margin-bottom:18px;align-items:stretch}
 .dc h2{font-size:17px;margin:0}
-.brief{border-radius:18px;padding:22px 24px;background:linear-gradient(135deg,#1d4ed8,#16327f);color:#fff;display:grid;gap:14px;align-content:start}
+.brief{border-radius:18px;padding:22px 24px;background:linear-gradient(135deg,color-mix(in srgb,var(--brand) 88%,#000),color-mix(in srgb,var(--brand) 52%,#000));color:#fff;display:grid;gap:14px;align-content:start}
 .brief-h{display:flex;gap:10px;align-items:center}.brief-h .ic{stroke:#ffd770}.brief-h b{font-size:18px}.brief-h small{margin-left:auto;color:#b9ccf5}
 .prio{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .prio li{position:relative;padding-left:22px;font-size:16px}
 .prio li::before{content:"";position:absolute;left:0;top:.5em;width:11px;height:11px;border-radius:50%;background:#f5b730}
 .prio li.high::before{background:#ff6f9c}.prio li.ok::before{background:#4cd39b}
-.bt{padding:10px 18px;border-radius:999px;border:0;font-weight:700;font-size:14px}
-.bt.white{background:#fff;color:#1d4ed8}.bt.ghost{background:rgba(255,255,255,.18);color:#fff}
-.bt:disabled{opacity:.6}
 .brief .ai-out{color:#fff;margin:0}.brief .ai-out:empty{display:none}
 .health .hrow{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
 .ringbox{position:relative;width:120px;height:120px;flex:none}
@@ -98,8 +95,6 @@ details.proc ol{margin:10px 0;padding-left:22px}
 .kpi small{font-size:14px}.kpi .sub.up{color:var(--ok)}.kpi .sub.down{color:var(--pink)}.kpi .sub.warn{color:#a86a00}
 .al{position:relative}.al em{position:absolute;right:14px;top:12px;font-style:normal;font-size:11px;color:var(--muted)}
 .row.nowrap{flex-wrap:nowrap}
-.dv{padding:8px 18px;border:0;border-radius:999px;background:var(--accent);color:var(--accent-fg);font-weight:700;font-size:13px}
-.dr{padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--muted);font-weight:700;font-size:13px}
 .dec .dt b{font-size:14px}
 .meter.ok i{background:var(--ok)}.meter.amber i{background:var(--signal)}.meter.blue i{background:var(--accent)}
 .box.red{border-color:var(--pink)}.box.amber{border-color:var(--signal)}.box.blue{border-color:var(--accent)}

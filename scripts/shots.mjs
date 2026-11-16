@@ -31,7 +31,7 @@ for (const w of widths.split(',').map(Number)) {
       return { over, small: small.slice(0, 12), smallCount: small.length };
     });
     const file = `${out}/${mod}-${w}${land ? 'L' : ''}-${theme}.png`;
-    await page.screenshot({ path: file, fullPage: false });
+    await page.screenshot({ path: file, fullPage: flags.includes('--full') });
     report.push(`${mod} ${w}${land ? 'L' : ''} ${theme}: débordement ${res.over}px ; cibles <44px : ${res.smallCount}${res.smallCount ? ' ' + JSON.stringify(res.small.slice(0, 5)) : ''}`);
   }
   await page.close();

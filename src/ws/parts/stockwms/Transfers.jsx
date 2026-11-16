@@ -26,10 +26,10 @@ function NewTransfer({ close, done }) {
   };
   return (
     <form className="ws-form" noValidate onSubmit={submit}>
-      <label className="fld"><span>{t('De (entrepôt)')}</span><select style={{ fontSize: 16 }} value={v.from} onChange={(e) => setV({ ...v, from: e.target.value })}><option value="">{t('Choisir…')}</option>{list.map((w) => <option key={w.id} value={w.id}>{w.name}</option>)}</select></label>
-      <label className="fld"><span>{t('Vers (entrepôt)')}</span><select style={{ fontSize: 16 }} value={v.to} onChange={(e) => setV({ ...v, to: e.target.value })}><option value="">{t('Choisir…')}</option>{list.map((w) => <option key={w.id} value={w.id}>{w.name}</option>)}</select></label>
+      <label className="fld"><span>{t('De (entrepôt)')}</span><select value={v.from} onChange={(e) => setV({ ...v, from: e.target.value })}><option value="">{t('Choisir…')}</option>{list.map((w) => <option key={w.id} value={w.id}>{w.name}</option>)}</select></label>
+      <label className="fld"><span>{t('Vers (entrepôt)')}</span><select value={v.to} onChange={(e) => setV({ ...v, to: e.target.value })}><option value="">{t('Choisir…')}</option>{list.map((w) => <option key={w.id} value={w.id}>{w.name}</option>)}</select></label>
       <LinesEditor items={items.items} rows={rows} setRows={setRows} />
-      <label className="fld"><span>{t('Note (facultatif)')}</span><input type="text" style={{ fontSize: 16 }} value={v.note} onChange={(e) => setV({ ...v, note: e.target.value })} /></label>
+      <label className="fld"><span>{t('Note (facultatif)')}</span><input type="text" value={v.note} onChange={(e) => setV({ ...v, note: e.target.value })} /></label>
       <FormFoot busy={busy} err={err} text={t('Envoyer la demande')} />
     </form>
   );
@@ -54,9 +54,9 @@ function ReceiveTransfer({ tr, close, done }) {
         return (
           <div className="wms-lrow" key={l.id}>
             <span className="wms-l-item"><b>{l.name}</b><small>{' ' + t('expédié {n} {unit}', { n: qty(l.shippedQty), unit: l.unit })}</small></span>
-            <label className="fld wms-l-qty"><span>{t('Reçu')}</span><input type="text" inputMode="decimal" style={{ fontSize: 16 }} value={vals[l.id].got} onChange={(e) => set(l.id, 'got', e.target.value)} /></label>
-            {gap ? <label className="fld wms-l-item"><span>{t('Motif de l\'écart')}</span><input type="text" style={{ fontSize: 16 }} value={vals[l.id].reason} onChange={(e) => set(l.id, 'reason', e.target.value)} placeholder={t('Casse, vol, erreur de comptage…')} /></label> : null}
-            {gap && l.tracking === 'serial' ? <label className="fld wms-l-item"><span>{t('Numéros manquants')}</span><input type="text" style={{ fontSize: 16 }} value={vals[l.id].serials} onChange={(e) => set(l.id, 'serials', e.target.value)} /></label> : null}
+            <label className="fld wms-l-qty"><span>{t('Reçu')}</span><input type="text" inputMode="decimal" value={vals[l.id].got} onChange={(e) => set(l.id, 'got', e.target.value)} /></label>
+            {gap ? <label className="fld wms-l-item"><span>{t('Motif de l\'écart')}</span><input type="text" value={vals[l.id].reason} onChange={(e) => set(l.id, 'reason', e.target.value)} placeholder={t('Casse, vol, erreur de comptage…')} /></label> : null}
+            {gap && l.tracking === 'serial' ? <label className="fld wms-l-item"><span>{t('Numéros manquants')}</span><input type="text" value={vals[l.id].serials} onChange={(e) => set(l.id, 'serials', e.target.value)} /></label> : null}
           </div>
         );
       })}
@@ -141,7 +141,7 @@ export function FormReason({ onSubmit, text }) {
   return (
     <form className="ws-form" noValidate onSubmit={(e) => { e.preventDefault(); setErr(''); onSubmit(reason).catch((x) => setErr(x.message)); }}>
       {text ? <p className="muted small">{text}</p> : null}
-      <label className="fld"><span>{t('Motif')}</span><input type="text" style={{ fontSize: 16 }} value={reason} onChange={(e) => setReason(e.target.value)} /></label>
+      <label className="fld"><span>{t('Motif')}</span><input type="text" value={reason} onChange={(e) => setReason(e.target.value)} /></label>
       <FormFoot err={err} text={t('Confirmer')} />
     </form>
   );

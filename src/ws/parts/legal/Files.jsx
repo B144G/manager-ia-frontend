@@ -46,7 +46,7 @@ export function FilesBox({ type, id, onChange }) {
   return (
     <div>
       <p className="muted small">{t('PDF, JPEG, PNG ou WebP, 2 Mo au plus, 10 fichiers au plus. Les fichiers sont chiffrés sur le serveur et réservés aux responsables de votre organisation.')}</p>
-      <input ref={input} type="file" accept="application/pdf,image/jpeg,image/png,image/webp" onChange={upload} aria-label={t("Ajouter un fichier")} style={{ fontSize: 16 }} />
+      <input ref={input} type="file" accept="application/pdf,image/jpeg,image/png,image/webp" onChange={upload} aria-label={t("Ajouter un fichier")} />
       <p className="muted small" role="status">{msg}</p>
       <Loaded state={st}>{(j) => (
         <>

@@ -48,7 +48,7 @@ export default function InsightsBand({ year }) {
             </div>
           ))}
           <div className="row" style={{ marginTop: 8 }}>
-            <button className="btn small" type="button" style={{ minHeight: 44 }} disabled={busy || (ins.source === 'ai')} onClick={askAi}>{busy ? t('Chargement…') : t("Reformuler avec l'IA")}</button>
+            <button className="btn small" type="button" disabled={busy || (ins.source === 'ai')} onClick={askAi}>{busy ? t('Chargement…') : t("Reformuler avec l'IA")}</button>
           </div>
         </>
       ) : null}

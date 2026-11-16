@@ -27,7 +27,7 @@ export function UnlockForm({ L, block, close, onDone }) {
       <p>{t('Ce bloc est protégé. Pour y entrer, saisissez le mot de passe de votre compte : il sert uniquement à vérifier que c’est bien vous.')}</p>
       <label className="fld" htmlFor="lib_pw">
         <span>{t('Votre mot de passe')}</span>
-        <input id="lib_pw" name="lib-unlock" type="password" autoComplete="current-password" style={{ fontSize: 16 }} value={pw} aria-invalid={err ? 'true' : 'false'} aria-describedby="lib_pw_err" onChange={(e) => setPw(e.target.value)} />
+        <input id="lib_pw" name="lib-unlock" type="password" autoComplete="current-password" value={pw} aria-invalid={err ? 'true' : 'false'} aria-describedby="lib_pw_err" onChange={(e) => setPw(e.target.value)} />
       </label>
       <p id="lib_pw_err" className="ws-err" role="alert">{err}</p>
       <div className="row">

@@ -89,7 +89,7 @@ export function Circuit() {
             {cur.map((r, i) => (
               <div className="row" key={i} style={{ flexWrap: 'wrap', justifyContent: 'flex-start' }}>
                 <input aria-label={t('À partir de (montant)')} style={{ fontSize: 16, width: 150 }} disabled={!can('admin')} value={r.minAmount} onChange={(e) => setDraft(cur.map((x, k) => (k === i ? { ...x, minAmount: e.target.value } : x)))} />
-                <select aria-label={t('Niveau')} style={{ fontSize: 16 }} disabled={!can('admin')} value={r.role} onChange={(e) => setDraft(cur.map((x, k) => (k === i ? { ...x, role: e.target.value } : x)))}>{LV.map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select>
+                <select aria-label={t('Niveau')} disabled={!can('admin')} value={r.role} onChange={(e) => setDraft(cur.map((x, k) => (k === i ? { ...x, role: e.target.value } : x)))}>{LV.map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select>
                 {can('admin') ? <button className="link" type="button" style={BTN} onClick={() => setDraft(cur.filter((_, k) => k !== i))}>{t('Retirer')}</button> : null}
               </div>
             ))}

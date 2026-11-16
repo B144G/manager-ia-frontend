@@ -93,7 +93,7 @@ function Moves() {
   return (
     <>
       <div className="row wms-toolbar">
-        <label className="fld" style={{ maxWidth: 200 }}><span>{t('Depuis le')}</span><input type="date" style={{ fontSize: 16 }} value={from} onChange={(e) => setFrom(e.target.value)} /></label>
+        <label className="fld" style={{ maxWidth: 200 }}><span>{t('Depuis le')}</span><input type="date" value={from} onChange={(e) => setFrom(e.target.value)} /></label>
         <CsvButton path={'/reports/moves' + q} name="journal-mouvements" />
       </div>
       <Seg tabs={[['', t('Tout')], ['in', t('Entrées')], ['out', t('Sorties')], ['internal', t('Déplacements')]]} value={kind} onChange={setKind} />

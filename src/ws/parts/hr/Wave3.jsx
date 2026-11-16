@@ -81,7 +81,7 @@ export function Dossier({ employees }) {
       <h2>{t('Dossier du personnel')}</h2>
       <p className="muted small">{t('Données personnelles : accès réservé aux administrateurs, chaque consultation et modification est journalisée.')}</p>
       <label className="fld"><span>{t('Employé')}</span>
-        <select style={{ fontSize: 16 }} value={id} onChange={(e) => { setId(e.target.value); setV((n) => n + 1); }}><option value="">{t('Choisir…')}</option>{empOptions(employees).map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select>
+        <select value={id} onChange={(e) => { setId(e.target.value); setV((n) => n + 1); }}><option value="">{t('Choisir…')}</option>{empOptions(employees).map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select>
       </label>
       {id ? <Sheet key={id + ':' + v} id={id} oapi={oapi} toast={toast} /> : null}
     </div>

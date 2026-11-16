@@ -132,7 +132,7 @@ function Shell() {
       <Sidebar mods={mods} cur={cur} orgId={orgId} orgs={orgs} info={info} user={user} badgeOf={badgeOf} initials={ws.initials} onOrg={onOrg} onClose={() => setNavOpen(false)}
         onSecurity={openSecurity} onLogout={logout} onPersonalize={personalize} mini={p.navMini} onMini={() => setPrefs({ navMini: !p.navMini })} members={info.limits.membersUsed} />
       <div className="ws-col app-col">
-        <TopBar orgName={info.org.name} modTitle={curMod ? t(curMod.title) : ''} navOpen={navOpen} onNav={() => setNavOpen(!navOpen)} onAsk={askAI} orgId={orgId} bell={bell} user={user}
+        <TopBar modTitle={curMod ? t(curMod.title) : ''} navOpen={navOpen} onNav={() => setNavOpen(!navOpen)} onAsk={askAI} orgId={orgId} bell={bell} user={user}
           role={t(info.me.roleLabel)} initials={ws.initials} onSecurity={openSecurity} onPersonalize={personalize} />
         <UserNotices orgId={orgId} />
         <main className="ws-main" id="ws-main" ref={main} tabIndex={-1}>

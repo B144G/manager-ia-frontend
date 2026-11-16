@@ -204,3 +204,11 @@ button.stat:hover,button.kpi:hover,a.ui-stat:hover{border-color:var(--border-str
 .av.gold{background:var(--warn);color:#2b1d00}
 .av img{width:100%;height:100%;object-fit:cover}
 .ui-kbd-hint{display:inline-flex;gap:4px}
+
+/* ---------- Anciens boutons du tableau de bord (mêmes jetons que .btn) ---------- */
+.bt,.dv,.dr{display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-2);min-height:var(--ctl-h);padding:0 var(--sp-4);border:1px solid transparent;border-radius:var(--radius-md);font:var(--fw-semibold) var(--fs-md)/1 var(--font);cursor:pointer;transition:background var(--dur-fast)}
+.bt.white{background:#fff;color:#1c1a6b}.bt.white:hover{background:#eef0ff}
+.bt.ghost{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.3)}.bt.ghost:hover{background:rgba(255,255,255,.26)}
+.dv{background:var(--accent);color:var(--on-accent)}.dv:hover{background:var(--accent-hover)}
+.dr{background:var(--surface);color:var(--text);border-color:var(--border-strong)}.dr:hover{background:var(--surface-3)}
+.bt:disabled{opacity:.55;cursor:not-allowed}

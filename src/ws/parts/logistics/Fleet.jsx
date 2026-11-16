@@ -148,10 +148,10 @@ export function DeliveryItems({ delivery, close, done }) {
           {cur.map((x) => <div className="line" key={x.itemId}><span><b>{x.name}</b><small>{' ' + (x.tracking === 'serial' ? String(x.serials).split(/[\n,;]+/).filter(Boolean).join(', ') : x.quantity + ' ' + x.unit)}</small></span>{!locked ? <button className="link" type="button" onClick={() => setRows(cur.filter((y) => y.itemId !== x.itemId))}>{t('Retirer')}</button> : null}</div>)}
           {!locked ? (
             <div className="ws-form">
-              <label className="fld"><span>{t('Article')}</span><select style={{ fontSize: 16 }} value={pick.itemId} onChange={(e) => setPick({ ...pick, itemId: e.target.value })}><option value="">{t('Choisir…')}</option>{s.items.map((x) => <option key={x.id} value={x.id}>{x.name + ' (' + x.quantity + ' ' + x.unit + ')'}</option>)}</select></label>
+              <label className="fld"><span>{t('Article')}</span><select value={pick.itemId} onChange={(e) => setPick({ ...pick, itemId: e.target.value })}><option value="">{t('Choisir…')}</option>{s.items.map((x) => <option key={x.id} value={x.id}>{x.name + ' (' + x.quantity + ' ' + x.unit + ')'}</option>)}</select></label>
               {it && it.tracking === 'serial'
-                ? <label className="fld"><span>{t('Numéros de série ou VIN (un par ligne)')}</span><textarea style={{ fontSize: 16 }} rows={2} value={pick.serials} onChange={(e) => setPick({ ...pick, serials: e.target.value })} /></label>
-                : <label className="fld"><span>{t('Quantité')}</span><input style={{ fontSize: 16 }} value={pick.quantity} onChange={(e) => setPick({ ...pick, quantity: e.target.value })} /></label>}
+                ? <label className="fld"><span>{t('Numéros de série ou VIN (un par ligne)')}</span><textarea rows={2} value={pick.serials} onChange={(e) => setPick({ ...pick, serials: e.target.value })} /></label>
+                : <label className="fld"><span>{t('Quantité')}</span><input value={pick.quantity} onChange={(e) => setPick({ ...pick, quantity: e.target.value })} /></label>}
               <div className="row"><button className="btn small" type="button" disabled={!it} onClick={add}>{t('Ajouter')}</button><button className="btn primary small" type="button" onClick={save}>{t('Enregistrer')}</button></div>
             </div>
           ) : null}

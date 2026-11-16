@@ -84,7 +84,7 @@ export function WaQrCard({ onChange }) {
               ) : (
                 <div>
                   <label className="fld"><span>{t("Votre numéro WhatsApp, avec l'indicatif du pays")}</span>
-                    <input type="tel" inputMode="tel" autoComplete="tel" placeholder="237677112233" aria-label={t("Numéro WhatsApp")} maxLength={24} value={phone} onChange={(e) => setPhone(e.target.value)} style={{ minHeight: 44 }} />
+                    <input type="tel" inputMode="tel" autoComplete="tel" placeholder="237677112233" aria-label={t("Numéro WhatsApp")} maxLength={24} value={phone} onChange={(e) => setPhone(e.target.value)} />
                   </label>
                   <div className="row"><button className="btn primary small" type="button" style={BTN} disabled={busy || phone.replace(/\D/g, '').length < 8} onClick={askCode}>{t('Obtenir le code')}</button></div>
                   {code ? (

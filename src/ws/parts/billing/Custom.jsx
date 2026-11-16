@@ -55,7 +55,7 @@ export default function CustomPlan({ b, onPay }) {
         </div>
 
         <label className="fld" htmlFor="cp_period"><span>{t("Temps d'utilisation")}</span>
-          <select id="cp_period" value={period} onChange={(e) => changePeriod(e.target.value)} style={{ fontSize: 16 }}>
+          <select id="cp_period" value={period} onChange={(e) => changePeriod(e.target.value)}>
             {info.periods.map((x) => <option key={x.id} value={x.id}>{names[x.id] + ' (' + t('{n} jours', { n: x.days }) + ')'}</option>)}
           </select>
         </label>

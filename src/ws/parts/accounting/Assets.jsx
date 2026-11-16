@@ -58,7 +58,7 @@ export default function AssetsTab() {
           <div className="ws-card">
             <div className="row" style={{ flexWrap: 'wrap' }}>
               <h2 className="grow">{t('Dotation aux amortissements')}</h2>
-              <input type="month" style={{ fontSize: 16 }} value={month} aria-label={t('Mois')} onChange={(e) => { if (e.target.value) setMonth(e.target.value); }} />
+              <input type="month" value={month} aria-label={t('Mois')} onChange={(e) => { if (e.target.value) setMonth(e.target.value); }} />
               <button className="btn primary small" type="button" style={BTN} onClick={() => depreciate(false)}>{t('Comptabiliser le mois')}</button>
               <button className="btn small" type="button" style={BTN} onClick={() => depreciate(true)}>{t('Rattraper les mois précédents')}</button>
             </div>

@@ -61,9 +61,9 @@ function Receive() {
         <div className="ws-form">
           <h2>{item.name}</h2>
           {item.tracking === 'serial'
-            ? <label className="fld"><span>{t('Numéros de série (un par ligne)')}</span><textarea rows={3} style={{ fontSize: 16 }} value={v.serials} onChange={(e) => setV({ ...v, serials: e.target.value })} /></label>
-            : <label className="fld"><span>{t('Quantité reçue ({unit})', { unit: item.unit })}</span><input type="text" inputMode="decimal" style={{ fontSize: 16 }} autoFocus value={v.quantity} onChange={(e) => setV({ ...v, quantity: e.target.value })} /></label>}
-          {item.tracking === 'lot' ? <><label className="fld"><span>{t('Numéro de lot')}</span><input type="text" style={{ fontSize: 16 }} value={v.lotNo} onChange={(e) => setV({ ...v, lotNo: e.target.value })} /></label><label className="fld"><span>{t('Péremption (facultatif)')}</span><input type="date" style={{ fontSize: 16 }} value={v.expiry} onChange={(e) => setV({ ...v, expiry: e.target.value })} /></label></> : null}
+            ? <label className="fld"><span>{t('Numéros de série (un par ligne)')}</span><textarea rows={3} value={v.serials} onChange={(e) => setV({ ...v, serials: e.target.value })} /></label>
+            : <label className="fld"><span>{t('Quantité reçue ({unit})', { unit: item.unit })}</span><input type="text" inputMode="decimal" autoFocus value={v.quantity} onChange={(e) => setV({ ...v, quantity: e.target.value })} /></label>}
+          {item.tracking === 'lot' ? <><label className="fld"><span>{t('Numéro de lot')}</span><input type="text" value={v.lotNo} onChange={(e) => setV({ ...v, lotNo: e.target.value })} /></label><label className="fld"><span>{t('Péremption (facultatif)')}</span><input type="date" value={v.expiry} onChange={(e) => setV({ ...v, expiry: e.target.value })} /></label></> : null}
           <Scanner label={t("Scanner l'emplacement (facultatif)")} onCode={place} />
           {v.locCode ? <p className="small ok">{t('Emplacement : {c}', { c: v.locCode })}</p> : <p className="muted small">{t('Sans emplacement, les règles de rangement décident.')}</p>}
           {err ? <p className="ws-err" role="alert">{err}</p> : null}
@@ -135,12 +135,12 @@ function CountSheet({ id, list, setId, fail, toast, done }) {
   return (
     <Loaded state={st}>{({ count: c }) => (
       <div>
-        {list.length > 1 ? <label className="fld"><span>{t('Inventaire')}</span><select style={{ fontSize: 16 }} value={id} onChange={(e) => setId(Number(e.target.value))}>{list.map((x) => <option key={x.id} value={x.id}>{x.code}</option>)}</select></label> : <h2>{c.code}</h2>}
+        {list.length > 1 ? <label className="fld"><span>{t('Inventaire')}</span><select value={id} onChange={(e) => setId(Number(e.target.value))}>{list.map((x) => <option key={x.id} value={x.id}>{x.code}</option>)}</select></label> : <h2>{c.code}</h2>}
         <Kpis list={[{ label: t('comptés'), value: c.counted + ' / ' + c.lines }]} />
         {!cur ? <Scanner label={t("Scanner l'article à compter")} onCode={(code) => find(c, code)} autoFocus /> : (
           <div className="ws-form">
             <h2>{cur.name}</h2>
-            <label className="fld"><span>{t('Quantité comptée ({unit})', { unit: cur.unit })}</span><input type="text" inputMode="decimal" style={{ fontSize: 16 }} autoFocus value={val} onChange={(e) => setVal(e.target.value)} /></label>
+            <label className="fld"><span>{t('Quantité comptée ({unit})', { unit: cur.unit })}</span><input type="text" inputMode="decimal" autoFocus value={val} onChange={(e) => setVal(e.target.value)} /></label>
             <div className="row"><button className="btn primary" type="button" onClick={() => put(c)}>{t('Enregistrer')}</button><button className="btn" type="button" onClick={() => setCur(null)}>{t('Autre article')}</button></div>
           </div>
         )}

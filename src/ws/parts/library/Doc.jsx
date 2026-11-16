@@ -93,7 +93,7 @@ export function DocModal({ L, id, close, onChange }) {
           </ul>
           {p.edit ? (
             <div className="lib-newv">
-              <label className="fld" htmlFor="lib_note"><span>{t('Nouvelle version')}</span><input id="lib_note" value={note} maxLength={200} onChange={(e) => setNote(e.target.value)} placeholder={t('Ce qui a changé (facultatif)')} style={{ fontSize: 16 }} /></label>
+              <label className="fld" htmlFor="lib_note"><span>{t('Nouvelle version')}</span><input id="lib_note" value={note} maxLength={200} onChange={(e) => setNote(e.target.value)} placeholder={t('Ce qui a changé (facultatif)')} /></label>
               <button className="btn small" type="button" disabled={busy} onClick={() => up.current && up.current.click()}>{busy ? t('Envoi…') : t('Choisir le fichier')}</button>
               <input ref={up} type="file" hidden onChange={(e) => { const f = e.target.files && e.target.files[0]; e.target.value = ''; newVersion(f, d); }} />
             </div>

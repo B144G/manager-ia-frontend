@@ -5,8 +5,8 @@ import { API_BASE } from '../../../lib/api.js';
 import { useWs } from '../../WsContext.jsx';
 
 /** Zone tactile d'au moins 44 px (boutons-liens) et champs à 16 px minimum : styles en ligne communs à la Paie et à la Fiscalité. */
-export const TAP = { minHeight: 44, display: 'inline-flex', alignItems: 'center', padding: '0 10px' };
-export const BTN = { minHeight: 44 };
+export const TAP = {};
+export const BTN = {}; // ancien style en ligne : la taille des boutons vient maintenant de ui.css
 export const INP = { fontSize: 16 };
 /** Ligne de champs qui passe à la ligne et reste alignée à gauche (les .row du site alignent à droite quand ils s'enroulent). */
 export const WRAP = { display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'flex-end', justifyContent: 'flex-start' };

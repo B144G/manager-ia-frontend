@@ -33,7 +33,7 @@ export default function EntryForm({ accs, JN, pre, sections, close, onSaved }) {
     <>
       {!pre ? (
         <div className="row" style={{ marginBottom: 8 }}>
-          <button className="btn small" type="button" style={{ minHeight: 44 }} onClick={() => setGuided(true)}>{t('Saisie guidée (modèles : loyer, salaire, vente…)')}</button>
+          <button className="btn small" type="button" onClick={() => setGuided(true)}>{t('Saisie guidée (modèles : loyer, salaire, vente…)')}</button>
         </div>
       ) : null}
       <div className="row">
