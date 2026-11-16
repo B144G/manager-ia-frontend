@@ -1,15 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ProjectTrack, TaskDetail, Workload } from '../parts/projects/Extras.jsx';
-import { Insight, Planning } from '../parts/projects/Planning.jsx';
+import { ProjectDashboard, Portfolio } from '../parts/projects/Dash.jsx';
+import Gantt from '../parts/projects/Gantt.jsx';
+import { ReplanModal, ShiftModal } from '../parts/projects/Planning.jsx';
+import { CalendarView, EMPTY_FILTER, Filters, Kanban, ListView, TS, applyFilter } from '../parts/projects/Views.jsx';
 import { PdfActions } from '../parts/share/Share.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
-import { Empty, Form, Loaded, Loading, useLoad } from '../ui.jsx';
+import { Badge, Button, Card, EmptyState, Form, Loaded, Loading, PageHeader, Tabs, useLoad } from '../ui.jsx';
 
 /* Sous-application : Projets et tâches (liste des projets, tableau des tâches, plan par l'IA). */
 
-const TS = { todo: 'À faire', doing: 'En cours', done: 'Terminé' };
 const PR = { low: 'Basse', normal: 'Normale', high: 'Haute' };
 const NEXT = { todo: 'doing', doing: 'done', done: 'todo' };
 const NEXT_LABEL = { todo: 'Démarrer', doing: 'Terminer', done: 'Rouvrir' };
@@ -102,127 +104,119 @@ export default function Projects() {
   return pid ? <ProjectView key={pid} id={pid} back={() => setPid(null)} actions={actions} /> : <ProjectList open={setPid} actions={actions} />;
 }
 
-/* ----- Liste des projets ----- */
+/* ----- Liste des projets : vue d'ensemble, mes tâches, charge ----- */
 function ProjectList({ open, actions }) {
-  const { oapi, dateFr, today, info, can } = useWs();
+  const { oapi, today, info, can } = useWs();
   const t = useT();
-  const { newTask, setStatus, newProject, aiPlan } = actions;
+  const { newTask, setStatus, newProject, aiPlan, modal } = actions;
   const ps = useLoad(() => oapi('GET', '/projects'), []);
   const ts = useLoad(() => oapi('GET', '/projects/tasks'), []);
   const reload = () => { ps.reload(); ts.reload(); };
+  const [f, setF] = useState(EMPTY_FILTER);
   const mine = ts.data ? ts.data.tasks.filter((tk) => tk.status !== 'done' && (!tk.projectId || tk.assigneeId === info.me.userId)) : null;
+  const shown = mine ? applyFilter(mine, f, today()) : null;
+  const openTask = (tk) => modal(tk.title, (close) => <TaskModal task={tk} tasks={ts.data.tasks} close={close} again={reload} actions={actions} />, { wide: true });
 
   return (
     <div>
-      <div className="ws-head">
-        <div><h1>{t('Projets et tâches')}</h1><p className="muted">{t("Découpez vos objectifs en tâches et suivez l'avancement.")}</p></div>
-        <div className="row">
-          {can('manager') ? <button className="btn signal small" type="button" onClick={aiPlan}>{t("Plan avec l'IA")}</button> : null}
-          {can('manager') ? <button className="btn primary small" type="button" onClick={newProject}>{t('Nouveau projet')}</button> : null}
-          <button className="btn small" type="button" onClick={() => newTask(null, reload)}>{t('Nouvelle tâche')}</button>
-        </div>
-      </div>
-      <div className="ws-grid">
-        <Loaded state={ps}>
-          {(j) => (
-            <>
-              {!j.projects.length ? <Empty text={can('manager') ? t('Aucun projet. Décrivez un objectif à l\'IA (« Plan avec l\'IA ») ou créez un projet.') : t("Aucun projet pour l'instant.")} /> : null}
-              {j.projects.map((p) => {
-                const pct = p.tasks ? Math.round(100 * p.done / p.tasks) : 0;
-                return (
-                  <button type="button" key={p.id} className={'ws-card pcard' + (p.status === 'done' ? ' done' : '')} onClick={() => open(p.id)}>
-                    <b>{p.name}</b>
-                    <small>{t('{done}/{total} tâches', { done: p.done, total: p.tasks }) + (p.overdue ? ' · ' + t('{n} en retard', { n: p.overdue }) : '') + (p.due ? ' · ' + t('pour le {date}', { date: dateFr(p.due) }) : '')}</small>
-                    <div className="meter"><i style={{ width: pct + '%' }} /></div>
-                  </button>
-                );
-              })}
-            </>
-          )}
-        </Loaded>
-      </div>
-      <div className="ws-card">
-        <h2>{t('Tâches sans projet et mes tâches')}</h2>
+      <PageHeader title={t('Projets et tâches')} subtitle={t("Découpez vos objectifs en tâches et suivez l'avancement.")} actions={<>
+        {can('manager') ? <Button variant="soft" size="sm" icon="magic" onClick={aiPlan}>{t("Plan avec l'IA")}</Button> : null}
+        {can('manager') ? <Button variant="primary" size="sm" icon="plus" onClick={newProject}>{t('Nouveau projet')}</Button> : null}
+        <Button size="sm" icon="plus" onClick={() => newTask(null, reload)}>{t('Nouvelle tâche')}</Button>
+      </>} />
+      <Loaded state={ps}>
+        {(j) => (!j.projects.length
+          ? <EmptyState icon="projects" title={t('Aucun projet')}>{can('manager') ? t('Décrivez un objectif à l\'IA (« Plan avec l\'IA ») ou créez un projet.') : t("Aucun projet pour l'instant.")}</EmptyState>
+          : <Portfolio projects={j.projects} open={open} today={today()} />)}
+      </Loaded>
+      <Card title={t('Tâches sans projet et mes tâches')} className="pl-mine">
         {mine ? (
           <>
-            {!mine.length ? <Empty text={t('Rien à afficher.')} /> : null}
-            {mine.slice(0, 20).map((tk) => {
-              const late = tk.due && tk.due < today();
-              return (
-                <div className="line" key={tk.id}>
-                  <span>{tk.title}{tk.project ? <small>{' · ' + tk.project}</small> : null}</span>
-                  <span className="row">
-                    <small className={late ? 'late' : ''}>{tk.due ? dateFr(tk.due) : ''}</small>
-                    <button className="btn small" type="button" onClick={() => setStatus(tk, 'done', reload)}>{t('Terminer')}</button>
-                  </span>
-                </div>
-              );
-            })}
+            <Filters f={f} setF={setF} tasks={mine} viewKey="projects-mine" />
+            <ListView tasks={shown} today={today()} onOpen={openTask} onMove={(tk, s) => setStatus(tk, s, reload)} projectName />
           </>
-        ) : null}
-      </div>
+        ) : <Loading />}
+      </Card>
       {can('manager') ? <Workload /> : null}
     </div>
   );
 }
 
-/* ----- Un projet ----- */
-function ProjectView({ id, back, actions }) {
-  const { oapi, dateFr, today } = useWs();
+/** Fenêtre d'une tâche : actions rapides puis détail (temps, commentaires, planification). */
+function TaskModal({ task, tasks, close, again, actions }) {
   const t = useT();
-  const { can, newTask, editTask, setStatus, confirm, fail, modal } = actions;
+  const { editTask, setStatus, can, modal } = actions;
+  return (
+    <div>
+      <div className="row" style={{ marginBottom: 12 }}>
+        <Badge tone={task.status === 'done' ? 'ok' : task.status === 'doing' ? 'brand' : 'neutral'} dot>{t(TS[task.status])}</Badge>
+        <span className="grow" />
+        <Button size="sm" variant="primary" onClick={() => { setStatus(task, NEXT[task.status], () => { close(); again(); }); }}>{t(NEXT_LABEL[task.status])}</Button>
+        <Button size="sm" icon="edit" onClick={() => { close(); editTask(task, again); }}>{t('Modifier')}</Button>
+        {can('manager') && task.projectId && task.due ? <Button size="sm" icon="arrows-left-right" onClick={() => { close(); modal(task.title, (c) => <ShiftModal task={task} close={c} done={again} />); }}>{t('Décaler')}</Button> : null}
+      </div>
+      {task.description ? <p className="muted" style={{ marginBottom: 12 }}>{task.description}</p> : null}
+      <TaskDetail task={task} tasks={tasks} close={close} done={again} />
+    </div>
+  );
+}
+
+/* ----- Un projet : tableau de bord, Gantt, kanban, calendrier, liste, suivi ----- */
+const VIEWS = (t) => [
+  { id: 'dash', label: t('Tableau de bord'), icon: 'pie' }, { id: 'gantt', label: t('Gantt'), icon: 'gantt' }, { id: 'kanban', label: t('Kanban'), icon: 'kanban' },
+  { id: 'calendar', label: t('Calendrier'), icon: 'calendar' }, { id: 'list', label: t('Liste'), icon: 'list' }, { id: 'follow', label: t('Suivi'), icon: 'wallet' },
+];
+function ProjectView({ id, back, actions }) {
+  const { oapi, dateFr, today: todayFn } = useWs();
+  const t = useT();
+  const { can, newTask, setStatus, confirm, fail, modal } = actions;
+  const today = todayFn();
   const st = useLoad(() => oapi('GET', '/projects/' + id), [id]);
-  const again = st.reload;
+  const sum = useLoad(() => oapi('GET', '/projects/' + id + '/summary'), [id]);
+  const [view, setView] = useState('dash');
+  const [f, setF] = useState(EMPTY_FILTER);
+  const again = () => { st.reload(); sum.reload(); };
   const j = st.data;
   const p = j && j.project;
+  const tasks = j ? j.tasks : [];
+  const shown = useMemo(() => applyFilter(tasks, f, today), [tasks, f, today]);
+  const ids = useMemo(() => new Set(shown.map((x) => x.id)), [shown]);
+  const openTask = (tk) => modal(tk.title, (close) => <TaskModal task={tk} tasks={tasks} close={close} again={again} actions={actions} />, { wide: true });
+  const openId = (tid) => { const tk = tasks.find((x) => x.id === tid); if (tk) openTask(tk); };
+  const move = (tk, s) => setStatus(tk, s, again);
 
   return (
     <div>
-      <button className="link" type="button" onClick={back}>{t('← Tous les projets')}</button>
-      <div className="ws-head">
-        {p ? (
-          <>
-            <div><h1>{p.name}</h1><p className="muted">{(p.description || '') + (p.due ? ' ' + t('Échéance : {date}', { date: dateFr(p.due) }) : '')}</p></div>
-            <div className="row">
-              <button className="btn primary small" type="button" onClick={() => newTask(p.id, again)}>{t('Ajouter une tâche')}</button>
-              <PdfActions kind="project" sourceId={id} title={p.name} canCosts={can('manager')} />
-              {can('manager') ? <button className="btn small" type="button" onClick={() => { oapi('PUT', '/projects/' + id, { status: p.status === 'done' ? 'active' : 'done' }).then(again).catch(fail); }}>{p.status === 'done' ? t('Rouvrir') : t('Marquer terminé')}</button> : null}
-              {can('manager') ? <button className="btn small" type="button" onClick={() => confirm(t('Supprimer ce projet et toutes ses tâches ?'), () => { oapi('DELETE', '/projects/' + id).then(back).catch(fail); })}>{t('Supprimer')}</button> : null}
-            </div>
-          </>
-        ) : null}
-      </div>
-      <div className="kan">
-        {!j && st.loading ? <Loading /> : null}
-        {!j && st.error ? <p className="ws-err" role="alert">{tsrv(st.error.message)}</p> : null}
-        {j ? ['todo', 'doing', 'done'].map((s) => {
-          const list = j.tasks.filter((tk) => tk.status === s);
-          return (
-            <div className="kcol" key={s}>
-              <h3>{t(TS[s])}</h3>
-              {!list.length ? <Empty text="—" /> : null}
-              {list.map((tk) => {
-                const late = tk.due && tk.status !== 'done' && tk.due < today();
-                return (
-                  <div className={'task p-' + tk.priority} key={tk.id}>
-                    <b>{tk.title}</b>
-                    {tk.description ? <p className="small muted">{tk.description}</p> : null}
-                    <small className={late ? 'late' : ''}>{(tk.assignee ? tk.assignee + ' · ' : t('Non assignée') + ' · ') + (tk.due ? dateFr(tk.due) : t('sans date')) + ' · ' + t(PR[tk.priority])}</small>
-                    <div className="row">
-                      <button className="btn small" type="button" onClick={() => setStatus(tk, NEXT[tk.status], again)}>{t(NEXT_LABEL[tk.status])}</button>
-                      <button className="link" type="button" onClick={() => editTask(tk, again)}>{t('Modifier')}</button>
-                      <button className="link" type="button" onClick={() => modal(tk.title, (close) => <TaskDetail task={tk} tasks={j.tasks} close={close} done={again} />, { wide: true })}>{t('Détails')}</button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        }) : null}
-      </div>
-      <Planning id={id} rev={j} />
-      {can('manager') ? <Insight id={id} rev={j} /> : null}
-      <ProjectTrack id={id} />
+      <Button variant="ghost" size="sm" icon="arrow-left" onClick={back}>{t('Tous les projets')}</Button>
+      {p ? (
+        <PageHeader title={p.name} subtitle={(p.description || '') + (p.due ? ' ' + t('Échéance : {date}', { date: dateFr(p.due) }) : '')} actions={<>
+          <Button variant="primary" size="sm" icon="plus" onClick={() => newTask(p.id, again)}>{t('Ajouter une tâche')}</Button>
+          <PdfActions kind="project" sourceId={id} title={p.name} canCosts={can('manager')} />
+          {can('manager') ? <Button size="sm" onClick={() => { oapi('PUT', '/projects/' + id, { status: p.status === 'done' ? 'active' : 'done' }).then(again).catch(fail); }}>{p.status === 'done' ? t('Rouvrir') : t('Marquer terminé')}</Button> : null}
+          {can('manager') ? <Button size="sm" variant="danger-outline" icon="delete" onClick={() => confirm(t('Supprimer ce projet et toutes ses tâches ?'), () => { oapi('DELETE', '/projects/' + id).then(back).catch(fail); })}>{t('Supprimer')}</Button> : null}
+        </>} />
+      ) : null}
+      {!j && st.loading ? <Loading /> : null}
+      {!j && st.error ? <p className="ws-err" role="alert">{tsrv(st.error.message)}</p> : null}
+      {j ? (
+        <>
+          <Tabs items={VIEWS(t)} value={view} onChange={setView} label={t('Vues du projet')} />
+          {view !== 'dash' && view !== 'follow' ? <Filters f={f} setF={setF} tasks={tasks} /> : null}
+          <div role="tabpanel" aria-labelledby={'tab-' + view}>
+            {view === 'dash' ? <ProjectDashboard id={id} tasks={tasks} today={today} rev={j} /> : null}
+            {view === 'gantt' ? (
+              <>
+                {can('manager') ? <div className="row" style={{ marginBottom: 8 }}><Button size="sm" icon="arrows-rotate" onClick={() => modal(t('Décaler les tâches qui suivent un retard'), (close) => <ReplanModal id={id} close={close} done={again} />, { wide: true })}>{t('Replanifier après un retard')}</Button></div> : null}
+                <Gantt id={id} rev={j} onOpen={openId} ids={f.q || f.assignee || f.priority || f.status || f.late ? ids : null} />
+              </>
+            ) : null}
+            {view === 'kanban' ? <Kanban tasks={shown} today={today} onMove={move} onOpen={openTask} onAdd={() => newTask(p.id, again)} /> : null}
+            {view === 'calendar' ? <CalendarView tasks={shown} milestones={sum.data ? sum.data.milestones : []} today={today} onOpen={openTask} /> : null}
+            {view === 'list' ? <ListView tasks={shown} today={today} onOpen={openTask} onMove={move} /> : null}
+            {view === 'follow' ? <><ProjectTrack id={id} /><Workload /></> : null}
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }
