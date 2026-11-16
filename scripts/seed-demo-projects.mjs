@@ -1,0 +1,32 @@
+// Enrichit le projet de démonstration (dates, dépendances, estimations, jalons, personnes) pour les captures. Serveur de démonstration uniquement.
+import { createRequire } from 'node:module';
+const require = createRequire('/Users/macboockpro/Downloads/MANAGER-IA/video-brij-ia-problemes/node_modules/');
+const puppeteer = require('puppeteer-core');
+const b = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new' });
+const p = await b.newPage();
+await p.goto('http://localhost:5184/connexion', { waitUntil: 'networkidle0' });
+await p.type('#contact', 'proprietaire@exemple.com'); await p.type('#pass', 'Essai-2026-brij');
+await Promise.all([p.waitForFunction(() => location.pathname.startsWith('/app'), { timeout: 20000 }), p.click('#go')]);
+await new Promise((r) => setTimeout(r, 1500));
+const out = await p.evaluate(async () => {
+  const tok = (() => { try { return localStorage.getItem('mi_token') || ''; } catch { return ''; } })();
+  const call = async (m, u, body) => { const r = await fetch('/api/ws/orgs/1' + u, { method: m, headers: { 'Content-Type': 'application/json', ...(tok ? { Authorization: 'Bearer ' + tok } : {}) }, credentials: 'include', body: body ? JSON.stringify(body) : undefined }); const t = await r.text(); try { return { s: r.status, j: JSON.parse(t) }; } catch { return { s: r.status, j: t }; } };
+  const list = await call('GET', '/projects'); if (list.s !== 200) return JSON.stringify(list).slice(0, 300);
+  const pj = list.j.projects.find((x) => /Hôtel/.test(x.name)) || list.j.projects[0];
+  const det = await call('GET', '/projects/' + pj.id);
+  const mem = (await call('GET', '/members')).j.members;
+  const day = (n) => new Date(Date.now() + n * 86400000).toISOString().slice(0, 10);
+  const mk = async (title, start, due, h, who, prev) => { const r = await call('POST', '/projects/tasks', { projectId: pj.id, title, due: day(due), assigneeId: who, priority: 'normal' }); const id = r.j.id; await call('PUT', '/projects/tasks/' + id + '/plan', { estimateHours: h, startDate: day(start), dependsOn: prev || null }); return id; };
+  const a = await mk('Plans et métrés', -6, -2, 30, mem[1].userId, null);
+  await call('PUT', '/projects/tasks/' + a, { status: 'done' });
+  const b2 = await mk('Découpe du bois', -3, 4, 60, mem[2].userId, a);
+  await call('PUT', '/projects/tasks/' + b2, { status: 'doing' });
+  const c = await mk('Assemblage des armoires', 5, 16, 90, mem[2].userId, b2);
+  const d = await mk('Finitions et vernis', 17, 24, 50, mem[3].userId, c);
+  await mk('Livraison et pose', 25, 29, 40, mem[1].userId, d);
+  await call('POST', '/projects/' + pj.id + '/milestones', { title: 'Validation du prototype', due: day(3) });
+  await call('POST', '/projects/' + pj.id + '/milestones', { title: 'Livraison client', due: day(29) });
+  return 'ok ' + pj.id + ' ' + det.s;
+});
+console.log(out);
+await b.close();

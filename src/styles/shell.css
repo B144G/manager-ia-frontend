@@ -197,3 +197,5 @@ body.ai-open .ws-fab{display:none}
   .ws-user{min-width:var(--touch);min-height:var(--touch);justify-content:center}
 }
 @media (max-width:1099px) and (min-width:768px){.app-top .ui-btn.icon-only,.bell{width:var(--touch);height:var(--touch)}.ws-ask input{min-height:var(--touch)}}
+.pz{align-content:start}
+@media (pointer:coarse){.app-find kbd{display:none}}

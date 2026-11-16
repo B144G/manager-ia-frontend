@@ -1,4 +1,6 @@
-import { Component, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import './icons.js';
+import wsStyles from './wsStyles.js';
+import { Component, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import InstallPrompt from '../components/InstallPrompt.jsx';
 import { useT } from '../lib/i18n.jsx';
@@ -17,6 +19,10 @@ import { WsProvider, useWs } from './WsContext.jsx';
 
 /** Espace de travail : connexion vérifiée, choix de l'organisation, menu des sous-applications, assistant IA. */
 export default function Workspace() {
+  useLayoutEffect(() => { // styles de l'espace de travail (chargés avec lui)
+    const els = wsStyles.map((css) => { const el = document.createElement('style'); el.setAttribute('data-mia', 'ws-app'); el.textContent = css; document.head.appendChild(el); return el; });
+    return () => els.forEach((e) => e.remove());
+  }, []);
   return <WsProvider><Gate /></WsProvider>;
 }
 

@@ -32,7 +32,7 @@ function Chart({ j, zoom, setZoom, onOpen, ids, t, dateFr }) {
   const [cw, setCw] = useState(0);
   const scrolled = useRef(false);
   useEffect(() => { const el = box.current; if (!el || !window.ResizeObserver) return undefined; const ro = new ResizeObserver(() => setCw(el.clientWidth)); ro.observe(el); setCw(el.clientWidth); return () => ro.disconnect(); }, []);
-  useEffect(() => { if (box.current && cw && !scrolled.current) { scrolled.current = true; box.current.scrollLeft = Math.max(0, LEFT + (dn(j.today) - (dn(j.from) - 3)) * px - cw / 3); } }, [cw]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (box.current && cw && !scrolled.current) { scrolled.current = true; const f0 = dn(j.from) - 3; const tx = (dn(j.today) - f0) * px, fx = (dn(j.from) - f0) * px; box.current.scrollLeft = tx - fx < cw * 0.6 ? 0 : Math.max(0, tx - (cw - LEFT) / 3); } }, [cw]); // eslint-disable-line react-hooks/exhaustive-deps
   const rows = useMemo(() => j.tasks.filter((x) => x.start && (!ids || ids.has(x.id))).sort((a, b) => (a.start < b.start ? -1 : a.start > b.start ? 1 : a.id - b.id)), [j, ids]);
   const unplanned = j.tasks.filter((x) => !x.start && (!ids || ids.has(x.id)));
   if (!rows.length) return <EmptyState icon="gantt" title={t('Rien à afficher dans le diagramme')}>{t('Donnez une date (et une estimation en heures) aux tâches pour les voir ici.')}</EmptyState>;
