@@ -6,6 +6,7 @@ import { useT } from '../lib/i18n.jsx';
 import AccountSecurity from './AccountSecurity.jsx';
 import AIPanel from './AIPanel.jsx';
 import UserNotices from './UserNotices.jsx';
+import SecurityNudge from '../privacy/SecurityNudge.jsx';
 import { MODULE_ICONS, hasModule, moduleComponent } from './registry.js';
 import { Empty, Form, Icon, Loading } from './ui.jsx';
 import { GuideButton, GuideProvider } from './guide/GuideContext.jsx';
@@ -26,7 +27,7 @@ function Gate() {
   if (ws.booting) return <p className="ws-boot">{t('Chargement…')}</p>;
   if (ws.onboarding) return <Onboarding />;
   if (!ws.info) return <p className="ws-boot">{t('Chargement…')}</p>;
-  return <><Shell /><InstallPrompt /></>;
+  return <><Shell /><InstallPrompt /><SecurityNudge /></>;
 }
 
 const Center = ({ children }) => (
