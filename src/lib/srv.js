@@ -1,4 +1,5 @@
 import { getLang, tr } from './i18n.jsx';
+import { WMS_TEMPLATES } from './srv-wms.js';
 
 /* Traduction des textes que le serveur fabrique en français (alertes, score de santé…).
    Les textes fixes passent par le dictionnaire ; les phrases avec des nombres ou des noms sont reconnues par un modèle
@@ -82,6 +83,13 @@ rule(/^Échéance dépassée \((.+?)\) · à vérifier$/, 'Échéance dépassée
 rule(/^Échéance dépassée \((.+?)\)$/, 'Échéance dépassée ({date})', ['date']);
 rule(/^À faire avant le (.+?) · à vérifier$/, 'À faire avant le {date} · à vérifier', ['date']);
 rule(/^À faire avant le (.+)$/, 'À faire avant le {date}', ['date']);
+
+// Entrepôt (WMS) : messages à variables, reconnus d'après leur modèle « … {nom} … » (les plus longs d'abord, pour que le plus précis gagne).
+for (const k of [...WMS_TEMPLATES].sort((a, b) => b.length - a.length)) {
+  const names = [];
+  const src = esc(k).replace(/\\\{(\w+)\\\}/g, (m, n) => { names.push(n); return '(.+?)'; });
+  rule(new RegExp('^' + src + '$'), k, names);
+}
 
 const FR_HINT = /[àâçéèêëîïôùûœ]|\b(vous|votre|vos|pour|dans|aucun|aucune|avec|cette|sont)\b/i;
 /** Recherche sans signaler de manque (un texte déjà traduit n'est pas une erreur). */

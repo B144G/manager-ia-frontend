@@ -19,6 +19,8 @@ import Abc from '../parts/stockwms/Abc.jsx';
 import Forecast from '../parts/stockwms/Forecast.jsx';
 import Reports from '../parts/stockwms/Reports.jsx';
 import Scan from '../parts/stockwms/Scan.jsx';
+import Units from '../parts/stockwms/Units.jsx';
+import Waves from '../parts/stockwms/Waves.jsx';
 
 export default function Stock() {
   const t = useT();
@@ -34,11 +36,13 @@ export default function Stock() {
     { id: 'wh', icon: '🏭', label: t('Entrepôt'), items: [
       { id: 'wh', label: t('Entrepôts et emplacements'), hint: t('Entrepôts, zones et emplacements (allée, rayon, bac) : où se trouve chaque article.') },
       { id: 'putaway', label: t('Rangement'), hint: t("Ranger ce qui est arrivé en réception, selon vos règles de rangement.") },
+      { id: 'units', label: t('Palettes et cartons'), hint: t('Unités logistiques : un code scannable, un contenu, un emplacement ; déplacer l\'unité déplace son contenu.') },
       { id: 'transfers', label: t('Transferts'), hint: t('Déplacer du stock entre entrepôts ou emplacements : demande, transit, réception avec écarts.') },
       { id: 'reservations', label: t('Réservations'), hint: t("Mettre du stock de côté pour une commande ou une demande ; voir ce qui reste à promettre.") }] },
     { id: 'flow', icon: '📦', label: t('Entrées et sorties'), items: [
       ...only(mgr, [{ id: 'receipts', label: t("Réceptions et frais d'arrivée"), hint: t("Réceptions de plusieurs articles, avec transport, douane et manutention répartis dans le coût de revient.") }]),
       { id: 'picking', label: t('Préparation de commandes'), hint: t('Listes de préparation avec le parcours dans l\'entrepôt, le scan et l\'expédition.') },
+      { id: 'waves', label: t('Vagues de préparation'), hint: t('Plusieurs commandes préparées en une seule tournée, lignes regroupées dans l\'ordre du parcours.') },
       { id: 'returns', label: t('Retours et rebuts'), hint: t('Retours des clients, retours aux fournisseurs et mises au rebut, avec leur motif.') },
       ...only(mgr, [{ id: 'suppliers', label: t('Fournisseurs : fiabilité'), hint: t('Retards et taux de livraison de vos fournisseurs.') }])] },
     { id: 'count', icon: '✅', label: t('Inventaire'), items: [
@@ -59,7 +63,7 @@ export default function Stock() {
   ];
   const SCREENS = {
     items: <Items />, stockouts: <Reports part="stockouts" />, valuation: <Reports part="valuation" />, wh: <Warehouses />, putaway: <Putaway />, transfers: <Transfers />, reservations: <Reservations />,
-    receipts: <Receipts />, picking: <Picking />, returns: <Returns />, suppliers: <SupplierStats />, counts: <Counts />, abc: <Abc />, forecast: <Forecast />,
+    receipts: <Receipts />, picking: <Picking />, units: <Units />, waves: <Waves />, returns: <Returns />, suppliers: <SupplierStats />, counts: <Counts />, abc: <Abc />, forecast: <Forecast />,
     rotation: <Reports part="rotation" />, aging: <Reports part="aging" />, moves: <Reports part="moves" />, scan: <Scan />,
   };
   return (

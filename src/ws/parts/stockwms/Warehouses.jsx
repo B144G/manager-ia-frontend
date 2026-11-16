@@ -13,6 +13,7 @@ export function ItemLevels({ item }) {
   const { oapi, money, modal } = useWs();
   const st = useLoad(() => oapi('GET', WMS + '/items/' + item.id + '/levels'), []);
   const locs = useLocations();
+  const trk = useLoad(() => (item.tracking && item.tracking !== 'none' ? oapi('GET', WMS + '/items/' + item.id + '/tracking') : Promise.resolve(null)), []);
   const move = (from, close) => modal(t('Déplacer : {name}', { name: item.name }), (c2) => (
     <Form submitText={t('Déplacer')} fields={[
       { k: 'to', label: t('Vers l\'emplacement'), type: 'select', options: locOptions(locs.locations.filter((l) => l.id !== from.locationId), t('Choisir…')), required: true },
@@ -32,6 +33,18 @@ export function ItemLevels({ item }) {
               {locs.locations.length > 1 ? <button className="link" type="button" onClick={() => move(l)}>{t('Déplacer')}</button> : null}</span>
           </div>
         ))}
+        {trk.data && trk.data.lots.length ? (
+          <>
+            <h3>{t('Lots par emplacement')}</h3>
+            {trk.data.lots.map((l) => <div className="line" key={l.id}><span><b>{l.lotNo}</b><small>{l.expiry ? ' ' + t('péremption {d}', { d: l.expiry }) : ''}</small></span><small>{l.locations.map((c) => c.code + ' : ' + qty(c.quantity)).join(' · ')}</small></div>)}
+          </>
+        ) : null}
+        {trk.data && trk.data.serials.length ? (
+          <>
+            <h3>{t('Numéros de série par emplacement')}</h3>
+            {trk.data.serials.slice(0, 100).map((x) => <div className="line" key={x.serial}><b>{x.serial}</b><small>{x.location || '—'}</small></div>)}
+          </>
+        ) : null}
       </div>
     )}
     </Loaded>

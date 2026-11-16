@@ -9,6 +9,40 @@ import Scanner from './Scanner.jsx';
 const ST = { open: ['À préparer', 'mid'], in_progress: ['En préparation', 'mid'], picked: ['Préparée', 'good'], issued: ['Expédiée', 'good'], cancelled: ['Annulée', 'bad'] };
 
 /** Exécution d'une liste (écran du préparateur, prévu pour le téléphone). */
+/** Colisage d'une liste préparée : colis, contenu, poids. */
+function Packing({ id, status, reloadPick }) {
+  const t = useT();
+  const { oapi, fail, toast, modal } = useWs();
+  const st = useLoad(() => oapi('GET', WMS + '/picks/' + id + '/packages'), [status]);
+  const pack = (all) => modal(t('Nouveau colis'), (close) => (
+    <Form submitText={t('Créer le colis')} fields={[
+      { k: 'weight', label: t('Poids (kg)'), placeholder: '2.5' },
+      ...(all ? [] : st.data.unpacked.map((x) => ({ k: 'i' + x.itemId, label: t('{name} (à emballer : {n})', { name: x.name, n: qty(x.q) }), value: '' }))),
+      { k: 'note', label: t('Note (facultatif)') }]}
+    onSubmit={(v) => {
+      const lines = all ? undefined : st.data.unpacked.filter((x) => String(v['i' + x.itemId]).trim()).map((x) => ({ itemId: x.itemId, quantity: v['i' + x.itemId] }));
+      return oapi('POST', WMS + '/picks/' + id + '/packages', { weight: v.weight || undefined, note: v.note, all: all || undefined, lines }).then(() => { close(); toast(t('Colis créé.')); st.reload(); reloadPick(); });
+    }} />
+  ));
+  return (
+    <Loaded state={st}>{(j) => (
+      <div className="ws-card">
+        <h2>{t('Colisage')}</h2>
+        {j.packages.map((p) => (
+          <div className="line" key={p.id}>
+            <span><b>{p.code}</b><small>{' ' + p.items.map((x) => qty(x.quantity) + ' × ' + x.name).join(', ') + (p.weight ? ' · ' + qty(p.weight) + ' kg' : '')}</small></span>
+            {status !== 'issued' ? <button className="link" type="button" onClick={() => oapi('DELETE', WMS + '/packages/' + p.id).then(st.reload).catch(fail)}>{t('Défaire')}</button> : null}
+          </div>
+        ))}
+        {j.unpacked.length ? <p className="small">{t('À emballer : {l}', { l: j.unpacked.map((x) => qty(x.q) + ' × ' + x.name).join(', ') })}</p> : null}
+        {status !== 'issued' && j.unpacked.length ? <div className="row"><button className="btn small" type="button" onClick={() => pack(true)}>{t('Tout dans un colis')}</button><button className="btn small" type="button" onClick={() => pack(false)}>{t('Composer un colis')}</button></div> : null}
+        {j.packages.length ? <p className="muted small">{t('Poids total : {n} kg', { n: qty(j.weight) })}</p> : null}
+      </div>
+    )}
+    </Loaded>
+  );
+}
+
 export function PickRunner({ id, back }) {
   const t = useT();
   const { oapi, can, fail, toast, modal } = useWs();
@@ -93,6 +127,7 @@ export function PickRunner({ id, back }) {
               </div>
             );
           })}
+          {(p.status === 'picked' || p.status === 'issued') ? <Packing id={id} status={p.status} reloadPick={st.reload} /> : null}
           <div className="row" style={{ marginTop: 12 }}>
             {open ? <button className="btn primary" type="button" onClick={() => complete(false)}>{t('Terminer la préparation')}</button> : null}
             {mgr && p.status === 'picked' ? <button className="btn primary" type="button" onClick={() => issue(p)}>{t('Expédier (sortir le stock)')}</button> : null}

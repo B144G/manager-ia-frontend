@@ -35,7 +35,7 @@ function Lookup() {
           {res.content.map((c) => <div className="line" key={c.itemId}><b>{c.name}</b><b>{qty(c.quantity) + ' ' + c.unit}</b></div>)}
         </div>
       ) : null}
-      {res && !['item', 'location'].includes(res.type) ? <p><Tag tone="mid">{t({ pick: 'Liste de préparation', transfer: 'Transfert', return: 'Retour', receipt: 'Réception' }[res.type] || res.type)}</Tag> <b>{res.label}</b></p> : null}
+      {res && !['item', 'location'].includes(res.type) ? <p><Tag tone="mid">{t({ pick: 'Liste de préparation', transfer: 'Transfert', return: 'Retour', receipt: 'Réception', wave: 'Vague de préparation', package: 'Colis', unit: 'Palette ou carton' }[res.type] || res.type)}</Tag> <b>{res.label}</b></p> : null}
     </div>
   );
 }
