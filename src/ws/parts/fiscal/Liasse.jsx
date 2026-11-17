@@ -64,7 +64,7 @@ export default function Liasse({ year, setYear }) {
   if (st.loading && !st.data) return <Loading />;
   if (st.error) return <p className="ws-err" role="alert">{t(st.error.message)}</p>;
   const l = st.data;
-  const head = [[t('Document de travail préparé par Brij-IA, à faire valider par un expert-comptable avant tout dépôt officiel')], [info.org.name + ' · ' + t('exercice {year}', { year })], []];
+  const head = [[t('Document préparé par Brij-IA')], [info.org.name + ' · ' + t('exercice {year}', { year })], []];
   const csvBilan = () => downloadCsv('bilan-' + year + '.csv', head.concat([[t('Poste'), t('Montant')], [t('ACTIF'), '']], l.bilan.actif.map((x) => [t(x.label), x.amount]), [[t('Total actif'), l.bilan.totalActif], [t('PASSIF'), '']], l.bilan.passif.map((x) => [t(x.label), x.amount]), [[t('Total passif'), l.bilan.totalPassif]]));
   const csvRes = () => downloadCsv('compte-de-resultat-' + year + '.csv', head.concat([[t('Compte'), t('Libellé'), t('Montant')], ['', t('PRODUITS'), '']], l.resultat.produits.map((x) => [x.account, t(x.label), x.amount]), [['', t('Total des produits'), l.resultat.totalProduits], ['', t('CHARGES'), '']], l.resultat.charges.map((x) => [x.account, t(x.label), x.amount]), [['', t('Total des charges'), l.resultat.totalCharges], ['', t("Résultat de l'exercice"), l.resultat.resultat]]));
   const csvSig = () => downloadCsv('soldes-intermediaires-' + year + '.csv', head.concat([[t('Solde'), t('Montant')]], l.sig.lines.map((x) => [t(x.label), x.amount])));
@@ -87,7 +87,7 @@ export default function Liasse({ year, setYear }) {
       </div>
       <div className="ws-card">
         <h2>{t('À corriger avant dépôt')}</h2>
-        {!issues.length && l.entryCount ? <p><span className="pill good">{t('Aucune anomalie bloquante')}</span> <span className="muted small">{t('Contrôles automatiques passés : relecture par un expert-comptable toujours nécessaire.')}</span></p> : null}
+        {!issues.length && l.entryCount ? <p><span className="pill good">{t('Aucune anomalie bloquante')}</span></p> : null}
         {issues.map((i) => (
           <div className="line" key={i.code} style={{ display: 'block' }}>
             <span className={'pill ' + LV[i.level][1]}>{t(LV[i.level][0])}</span>{' ' + issueText(t, i)}
@@ -101,7 +101,7 @@ export default function Liasse({ year, setYear }) {
           <div className="ws-card">
             <h2>{t('Soldes intermédiaires de gestion')}</h2>
             {l.sig.lines.map((x) => <div className="line" key={x.key}><span>{x.total ? <b>{t(x.label)}</b> : t(x.label)}</span>{x.total ? <b>{money(x.amount)}</b> : <span>{money(x.amount)}</span>}</div>)}
-            <p className="muted small">{t("Classement des comptes d'après leur numéro (SYSCOHADA, tableau dans l'onglet « Classement ») : à vérifier avec votre expert-comptable.")}</p>
+            <p className="muted small">{t("Classement des comptes d'après leur numéro (SYSCOHADA, tableau dans l'onglet « Classement »).")}</p>
           </div>
           <div className="ws-card">
             <h2>{t('Compte de résultat')}</h2>

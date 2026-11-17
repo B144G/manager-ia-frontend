@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useWs } from '../../WsContext.jsx';
 import { useT } from '../../../lib/i18n.jsx';
 import { Empty, Form, Loaded, useLoad } from '../../ui.jsx';
-import { BTN, TAP, WorkNotice } from '../finance/util.jsx';
+import { BTN, TAP } from '../finance/util.jsx';
 
 /* Registre des immobilisations : plan d'amortissement linéaire (durée choisie par vous) et dotation mensuelle en un clic. */
 
@@ -18,7 +18,6 @@ function Plan({ id }) {
         <>
           <p className="muted small">{t('{monthly} par mois sur {n} mois ; valeur nette actuelle {nbv}.', { monthly: money(j.asset.monthly), n: j.asset.lifeMonths, nbv: money(j.asset.netBookValue) })}</p>
           {j.plan.map((r) => <div className="line" key={r.period}><span>{r.period}{' '}{r.posted ? <span className="pill good">{t('Comptabilisée')}</span> : null}</span><span>{money(r.amount) + ' · ' + t('valeur nette {v}', { v: money(r.netBookValue) })}</span></div>)}
-          <p className="muted small">{t("Document de travail : à faire valider par un expert-comptable.")}</p>
         </>
       )}
     </Loaded>
@@ -36,7 +35,7 @@ export default function AssetsTab() {
       { k: 'label', label: t('Désignation'), required: true },
       { k: 'category', label: t('Catégorie'), type: 'select', options: cats.map((c) => [c.key, t(CAT[c.key] || c.label) + ' (' + c.assetAccount + ')']) },
       { k: 'cost', label: t("Coût d'acquisition"), required: true }, { k: 'residual', label: t('Valeur résiduelle'), value: '' },
-      { k: 'lifeMonths', label: t("Durée d'amortissement (mois)"), required: true, hint: t("À choisir avec votre expert-comptable : aucune durée n'est imposée par le logiciel.") },
+      { k: 'lifeMonths', label: t("Durée d'amortissement (mois)"), required: true, hint: t("Aucune durée n'est imposée par le logiciel.") },
       { k: 'acquiredOn', label: t("Date d'acquisition"), type: 'date', value: today() },
       { k: 'startMonth', label: t('Premier mois d\'amortissement'), type: 'month', value: today().slice(0, 7) }]}
     onSubmit={(v) => oapi('POST', '/accounting/assets', { ...v, lifeMonths: Number(v.lifeMonths) }).then(() => { close(); reload(); })} />
@@ -49,7 +48,6 @@ export default function AssetsTab() {
     <Loaded state={st}>
       {(j) => (
         <>
-          <WorkNotice>{t("Document de travail : les durées et les dotations sont à faire valider par un expert-comptable.")}</WorkNotice>
           <div className="kpis">
             <div className="stat"><b>{money(j.totals.cost)}</b><span>{t("valeur d'acquisition")}</span></div>
             <div className="stat"><b>{money(j.totals.accumulated)}</b><span>{t('amortissements cumulés')}</span></div>

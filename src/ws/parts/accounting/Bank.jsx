@@ -143,7 +143,7 @@ export default function BankTab() {
         const bank = j.banks.find((b) => b.id === sel) || j.banks[0];
         return (
           <>
-            <WorkNotice>{t("Document de travail : le rapprochement ne modifie pas vos écritures. À faire valider par un expert-comptable.")}</WorkNotice>
+            <WorkNotice>{t("Le rapprochement ne modifie pas vos écritures.")}</WorkNotice>
             <div className="row" style={{ flexWrap: 'wrap', marginBottom: 8 }}>
               {j.banks.length ? <select aria-label={t('Compte')} value={bank.id} onChange={(e) => setSel(Number(e.target.value))}>{j.banks.map((b) => <option key={b.id} value={b.id}>{b.name + ' (' + b.glAccount + ') · ' + t('{n} à pointer', { n: b.unmatched })}</option>)}</select> : null}
               <button className="btn small" type="button" style={BTN} onClick={create}>{t('Ajouter un compte')}</button>

@@ -61,7 +61,7 @@ export default function ClosingTab({ part = 'all' }) { // part : all | month (cl
   ));
   return (
     <>
-      <WorkNotice>{t("Document de travail : la clôture mensuelle est une aide au contrôle, à faire valider par un expert-comptable.")}</WorkNotice>
+      <WorkNotice>{t("La clôture mensuelle est une aide au contrôle.")}</WorkNotice>
       <div className="row" style={{ marginBottom: 8, flexWrap: 'wrap' }}>
         <input type="month" value={month} max={today().slice(0, 7)} aria-label={t('Mois')} onChange={(e) => { if (e.target.value) setMonth(e.target.value); }} />
       </div>

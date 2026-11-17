@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useWs } from '../../WsContext.jsx';
 import { useT } from '../../../lib/i18n.jsx';
 import { Empty, Form, Loaded, useLoad } from '../../ui.jsx';
-import { BTN, Check, TAP, WorkNotice } from '../finance/util.jsx';
+import { BTN, Check, TAP } from '../finance/util.jsx';
 
 /* Tiers : balance âgée clients / fournisseurs, lettrage 411 / 401, dettes fournisseurs avec échéances. Documents de travail. */
 
@@ -135,7 +135,6 @@ export default function ThirdTab({ sub: forced }) { // forced : écran imposé p
   const sub = forced || own;
   return (
     <>
-      <WorkNotice>{t("Documents de travail : à faire valider par un expert-comptable.")}</WorkNotice>
       {forced ? null : <div className="ws-tabs" style={{ flexWrap: 'wrap', overflowX: 'visible' }}>
         {[['aged', 'Balance âgée'], ['payables', 'Dettes fournisseurs'], ['lettering', 'Lettrage']].map((x) => <button key={x[0]} type="button" className={'tab' + (sub === x[0] ? ' on' : '')} style={BTN} onClick={() => setSub(x[0])}>{t(x[1])}</button>)}
       </div>}

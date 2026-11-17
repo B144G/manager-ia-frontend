@@ -19,7 +19,7 @@ import RatiosTab from '../parts/accounting/Ratios.jsx';
 import { BalanceTab, Home, JournalTab, LedgerBox, ResultsTab, SettingsTab } from '../parts/accounting/Tabs.jsx';
 
 /* Comptabilité (plan OHADA de base, journal, balance, résultat, bilan, TVA). Les écritures ne se modifient pas :
-   une erreur se corrige par une écriture inverse. Outil d'aide : à faire valider par un expert-comptable. */
+   une erreur se corrige par une écriture inverse. Outil d'aide. */
 
 export default function Accounting() {
   const t = useT();
@@ -137,7 +137,7 @@ export default function Accounting() {
         <button className="btn primary small" type="button" onClick={() => editEntry()}>{t('Nouvelle écriture')}</button>
       </>}
     >
-      {tab === 'home' ? <p className="muted small">{t("Vos écritures, votre balance, votre résultat et votre TVA. Outil d'aide : à faire valider par un expert-comptable.")}</p> : null}
+      {tab === 'home' ? <p className="muted small">{t("Vos écritures, votre balance, votre résultat et votre TVA.")}</p> : null}
       <div>{content}</div>
     </ModuleShell>
   );

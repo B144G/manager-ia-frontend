@@ -15,8 +15,7 @@ export function CmWarning() {
   const t = useT();
   return (
     <WorkNotice>
-      <b>{t('Barème à faire valider par un expert-comptable ou le CNPS/DGI avant usage officiel.')}</b>
-      {' ' + t("Ces taux sont un point de départ chiffré d'après la connaissance de l'auteur du logiciel : ils ne sont pas présentés comme officiels et peuvent être dépassés.")}
+      {t("Ces taux sont un point de départ chiffré d'après la connaissance de l'auteur du logiciel : ils ne sont pas présentés comme officiels et peuvent être dépassés.")}
     </WorkNotice>
   );
 }

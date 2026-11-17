@@ -71,7 +71,7 @@ export default function YearEndTab({ year, setYear }) {
   ));
   return (
     <>
-      <WorkNotice>{t("Document de travail : la clôture annuelle est une aide, à faire valider par un expert-comptable avant dépôt des états financiers.")}</WorkNotice>
+      <WorkNotice>{t("La clôture annuelle est une aide au contrôle des états financiers.")}</WorkNotice>
       <YearBar year={year} setYear={setYear} />
       <Loaded state={st}>
         {(j) => {

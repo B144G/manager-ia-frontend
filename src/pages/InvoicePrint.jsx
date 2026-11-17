@@ -5,7 +5,7 @@ import { useT, getLocale } from '../lib/i18n.jsx';
 import { dateFr } from '../lib/format.js';
 
 /* Page d'impression d'une facture, d'un devis ou d'un avoir (sans dépendance : le navigateur produit le PDF via « Imprimer »).
-   Document de travail : à faire valider par l'expert-comptable avant tout usage légal ou fiscal. */
+   Document généré par Brij-IA. */
 
 const CSS = `
 .ip{font:14px/1.45 Arial,Helvetica,sans-serif;color:#111;background:#fff;max-width:800px;margin:0 auto;padding:24px 16px}
@@ -75,7 +75,7 @@ export default function InvoicePrint() {
       ) : null}
       {p.org.payInfo ? <p className="small"><b>{t('Règlement')}</b><br />{p.org.payInfo.split('\n').map((l, i) => <span key={i}>{l}<br /></span>)}</p> : null}
       {p.org.footer ? <p className="small">{p.org.footer.split('\n').map((l, i) => <span key={i}>{l}<br /></span>)}</p> : null}
-      <div className="wd">{t("Document de travail généré par Brij-IA : à faire valider par votre expert-comptable avant tout usage légal ou fiscal.")}</div>
+      <div className="wd">{t("Document généré par Brij-IA.")}</div>
     </div>
   );
 }

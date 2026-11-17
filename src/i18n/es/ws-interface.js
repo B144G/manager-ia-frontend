@@ -175,5 +175,19 @@ export default {
   "Septembre": "Septiembre",
   "Octobre": "Octubre",
   "Novembre": "Noviembre",
-  "Décembre": "Diciembre"
+  "Décembre": "Diciembre",
+  "Document généré par Brij-IA.": "Documento generado por Brij-IA.",
+  "Les états de fin d'exercice se calculent à partir des écritures. Ce sont des documents de travail.": "Los estados de fin de ejercicio se calculan a partir de los asientos. Son documentos de trabajo.",
+  "Après validation, chaque salarié ne reçoit que le sien. Ce sont des documents de travail.": "Tras la validación, cada empleado solo recibe el suyo. Son documentos de trabajo.",
+  "Le document de fin d'exercice se prépare à partir de la comptabilité.": "El documento de fin de ejercicio se prepara a partir de la contabilidad.",
+  "Vos écritures, votre balance, votre résultat et votre TVA.": "Sus asientos, su balance de comprobación, su resultado y su IVA.",
+  "Aucune durée n'est imposée par le logiciel.": "El programa no impone ninguna duración.",
+  "Le rapprochement ne modifie pas vos écritures.": "La conciliación no modifica sus asientos.",
+  "La clôture mensuelle est une aide au contrôle.": "El cierre mensual es una ayuda de control.",
+  "Ratios indicatifs calculés d'après vos écritures.": "Ratios indicativos calculados a partir de sus asientos.",
+  "La clôture annuelle est une aide au contrôle des états financiers.": "El cierre anual es una ayuda para controlar los estados financieros.",
+  "Ces mentions figurent sur vos factures.": "Estas menciones figuran en sus facturas.",
+  "Document préparé par Brij-IA": "Documento preparado por Brij-IA",
+  "Classement des comptes d'après leur numéro (SYSCOHADA, tableau dans l'onglet « Classement »).": "Clasificación de las cuentas según su número (SYSCOHADA, tabla en la pestaña «Clasificación»).",
+  "Barème Cameroun, version {version}.": "Baremo de Camerún, versión {version}."
 };

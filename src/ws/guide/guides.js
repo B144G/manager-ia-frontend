@@ -96,7 +96,7 @@ export function buildGuides(t, { admin, mods }) {
       { at: tab('Journal'), click: true, optional: true, title: t('Le journal'), text: t("Toutes les écritures, de la plus récente à la plus ancienne. Une écriture validée n'est plus modifiable : on la corrige par une écriture inverse.") },
       { at: btn('Nouvelle écriture'), optional: true, title: t('Une écriture à la main'), text: t('Pour une opération sans facture : choisissez les comptes au débit et au crédit. Le total doit être équilibré.') },
       { at: tab('Rapprochement'), click: true, optional: true, title: t('Le rapprochement bancaire'), text: t("Importez le relevé de la banque ou du Mobile Money : Brij-IA liste les lignes à pointer. Pour chacune, vous pointez, écrivez en comptabilité ou ignorez.") },
-      { at: tab('Résultat et bilan'), optional: true, title: t('Résultat et bilan'), text: t("Les états de fin d'exercice se calculent à partir des écritures. Ce sont des documents de travail à faire valider par votre expert-comptable.") },
+      { at: tab('Résultat et bilan'), optional: true, title: t('Résultat et bilan'), text: t("Les états de fin d'exercice se calculent à partir des écritures. Ce sont des documents de travail.") },
       { at: tab('Clôture'), optional: true, title: t('La clôture'), text: t("En fin de période, vérifiez puis clôturez : les écritures de la période sont alors verrouillées.") },
     ] });
   }
@@ -155,7 +155,7 @@ export function buildGuides(t, { admin, mods }) {
     add({ id: 'payroll-run', group: G, title: t('Lancer la paie du mois'), keys: 'paie bulletin salaire cnps virement', steps: [
       open('payroll', t('Ouvrez la Paie'), t('Réservé aux administrateurs : les bulletins se préparent mois par mois.')),
       { at: btn('Lancer la paie du mois'), click: true, optional: true, title: t('Lancer la paie'), text: t("Brij-IA calcule un bulletin par employé à partir de sa fiche. Vérifiez chaque bulletin avant de le valider.") },
-      { at: tab('Bulletins'), optional: true, title: t('Les bulletins'), text: t("Après validation, chaque salarié ne reçoit que le sien. Ce sont des documents de travail à faire valider par un expert.") },
+      { at: tab('Bulletins'), optional: true, title: t('Les bulletins'), text: t("Après validation, chaque salarié ne reçoit que le sien. Ce sont des documents de travail.") },
       { at: tab('Déclarations et virements'), optional: true, title: t('Déclarations et virements'), text: t('Préparez ici le fichier de virement et les montants à déclarer.') },
     ] });
   }
@@ -252,7 +252,7 @@ export function buildGuides(t, { admin, mods }) {
     open('fiscal', t('Ouvrez la Fiscalité'), t("Préparez votre fin d'exercice et suivez vos échéances.")),
     { at: tab('Calendrier'), optional: true, title: t('Le calendrier fiscal'), text: t('Les dates à ne pas manquer, avec un rappel avant chaque échéance.') },
     { at: tab('TVA du mois'), click: true, optional: true, title: t('La TVA du mois'), text: t("Une estimation de la TVA collectée moins la TVA déductible. À vérifier avant toute déclaration.") },
-    { at: tab("Liasse de fin d'exercice"), optional: true, title: t('La liasse'), text: t("Le document de fin d'exercice se prépare à partir de la comptabilité. À faire valider par votre expert-comptable.") },
+    { at: tab("Liasse de fin d'exercice"), optional: true, title: t('La liasse'), text: t("Le document de fin d'exercice se prépare à partir de la comptabilité.") },
   ] });
 
   if (has('structure')) add({ id: 'structure-tour', group: t('Équipe et paie'), title: t("Organiser les postes de l'entreprise"), keys: 'organisation poste organigramme responsable', steps: [

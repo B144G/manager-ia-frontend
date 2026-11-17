@@ -175,5 +175,19 @@ export default {
   "Septembre": "September",
   "Octobre": "Oktober",
   "Novembre": "November",
-  "Décembre": "Dezember"
+  "Décembre": "Dezember",
+  "Document généré par Brij-IA.": "Von Brij-IA erstelltes Dokument.",
+  "Les états de fin d'exercice se calculent à partir des écritures. Ce sont des documents de travail.": "Die Jahresabschlüsse werden aus den Buchungen berechnet. Es sind Arbeitsdokumente.",
+  "Après validation, chaque salarié ne reçoit que le sien. Ce sont des documents de travail.": "Nach der Freigabe erhält jede Person nur die eigene. Es sind Arbeitsdokumente.",
+  "Le document de fin d'exercice se prépare à partir de la comptabilité.": "Das Jahresabschlussdokument wird aus der Buchhaltung erstellt.",
+  "Vos écritures, votre balance, votre résultat et votre TVA.": "Ihre Buchungen, Saldenliste, Ihr Ergebnis und Ihre Mehrwertsteuer.",
+  "Aucune durée n'est imposée par le logiciel.": "Die Software schreibt keine Dauer vor.",
+  "Le rapprochement ne modifie pas vos écritures.": "Der Abgleich ändert Ihre Buchungen nicht.",
+  "La clôture mensuelle est une aide au contrôle.": "Der Monatsabschluss ist eine Kontrollhilfe.",
+  "Ratios indicatifs calculés d'après vos écritures.": "Richtwerte, berechnet aus Ihren Buchungen.",
+  "La clôture annuelle est une aide au contrôle des états financiers.": "Der Jahresabschluss ist eine Kontrollhilfe für die Abschlüsse.",
+  "Ces mentions figurent sur vos factures.": "Diese Angaben erscheinen auf Ihren Rechnungen.",
+  "Document préparé par Brij-IA": "Von Brij-IA erstelltes Dokument",
+  "Classement des comptes d'après leur numéro (SYSCOHADA, tableau dans l'onglet « Classement »).": "Kontenzuordnung nach Nummer (SYSCOHADA, Tabelle im Tab „Zuordnung“).",
+  "Barème Cameroun, version {version}.": "Kamerun-Tabelle, Version {version}."
 };

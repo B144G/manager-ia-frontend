@@ -4,7 +4,7 @@ import { api } from '../lib/api.js';
 import { getLocale, useT } from '../lib/i18n.jsx';
 import { tsrv } from '../lib/srv.js';
 
-/* Tableau de bord imprimable (le navigateur produit le PDF via « Imprimer »). Estimation de gestion : à faire valider par l'expert-comptable. */
+/* Tableau de bord imprimable (le navigateur produit le PDF via « Imprimer »). Estimation de gestion. */
 const CSS = `
 .ip{font:14px/1.45 Arial,Helvetica,sans-serif;color:#111;background:#fff;max-width:800px;margin:0 auto;padding:24px 16px}
 .ip h1{font-size:22px;margin:0 0 4px}.ip table{width:100%;border-collapse:collapse;margin:12px 0}.ip th,.ip td{border-bottom:1px solid #ddd;padding:6px 4px;text-align:left}.ip .r{text-align:right}
@@ -35,7 +35,7 @@ export default function KpiPrint() {
       <table><tbody>{rows.map((r) => <tr key={r[0]}><td>{r[0]}</td><td className="r">{fmt(r[1]) + ' ' + c}</td></tr>)}</tbody></table>
       <h2>{t("Chiffre d'affaires sur 6 mois")}</h2>
       <table><tbody>{j.series.map((s) => <tr key={s.month}><td>{s.month}</td><td className="r">{fmt(s.revenue) + ' ' + c}</td></tr>)}</tbody></table>
-      <p className="small">{t("Estimation de gestion : chiffre d'affaires HT moins les sorties du budget du mois.")} {t('Document de travail : à faire valider par un expert-comptable.')}</p>
+      <p className="small">{t("Estimation de gestion : chiffre d'affaires HT moins les sorties du budget du mois.")}</p>
     </div>
   );
 }

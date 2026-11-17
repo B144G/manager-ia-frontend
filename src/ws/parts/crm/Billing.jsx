@@ -94,7 +94,7 @@ export function InvoiceSettings({ close }) {
   return (
     <Loaded state={st}>{(s) => (
       <>
-        <p className="muted small">{t("Ces mentions figurent sur vos factures. Les documents produits sont des documents de travail : faites-les valider par votre expert-comptable avant tout usage légal ou fiscal.")}</p>
+        <p className="muted small">{t("Ces mentions figurent sur vos factures.")}</p>
         <Form
           submitText={t('Enregistrer')}
           fields={[

@@ -40,7 +40,7 @@ export default function RatiosTab({ year, setYear }) {
                 </div>
               ))}
             </div>
-            <p className="muted small">{t("Ratios indicatifs calculés d'après vos écritures. À faire valider par un expert-comptable.")}</p>
+            <p className="muted small">{t("Ratios indicatifs calculés d'après vos écritures.")}</p>
           </>
         )}
       </Loaded>
