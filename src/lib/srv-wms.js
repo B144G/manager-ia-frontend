@@ -63,4 +63,7 @@ export const WMS_TEMPLATES = [
   '« {name} » : {r} seulement reste(nt) à emballer.',
   'Écart sur « {name} » ({n} {unit} manquant) : indiquez le motif (casse, vol, erreur de comptage…).',
   '« {name} » : {n} disponible(s) à promettre seulement (le reste est réservé).',
+  '« {name} » ne figure pas sur la facture {doc} avec un article du stock : faites l\'avoir à la main depuis la facture.',
+  'La facture {number} est déjà entièrement répartie en frais d\'arrivée.',
+  'Il ne reste que {n} (HT) à répartir sur la facture {number}.',
 ];

@@ -60,14 +60,19 @@ function NewReturn({ kind, close, done }) {
 
 function Detail({ id, reload }) {
   const t = useT();
-  const { oapi, can, money, fail, modal } = useWs();
+  const { oapi, can, money, fail, modal, toast, confirm } = useWs();
   const st = useLoad(() => oapi('GET', WMS + '/returns/' + id), []);
   const mgr = can('manager');
   const dispose = (r, l, disposition) => oapi('POST', WMS + '/returns/' + r.id + '/lines/' + l.id + '/dispose', { disposition }).then(() => { st.reload(); reload(); }).catch(fail);
   const credit = (r) => modal(t('Avoir fournisseur'), (close) => (
-    <Form submitText={t('Enregistrer')} fields={[{ k: 'amount', label: t('Montant de l\'avoir reçu'), value: r.creditAmount || '', required: true }]}
-    onSubmit={(v) => oapi('POST', WMS + '/returns/' + r.id + '/credit', { amount: v.amount }).then(() => { close(); st.reload(); reload(); })} />
+    <Form submitText={t('Enregistrer')} fields={[
+      { k: 'amount', label: t("Montant de l'avoir reçu (TTC)"), value: r.creditAmount || '', required: true },
+      { k: 'vat', label: t('dont TVA récupérable (facultatif)'), hint: t("Sert à l'écriture : la TVA récupérable baisse du même montant.") },
+      { k: 'book', label: t('Comptabilité'), type: 'select', options: [['1', t("Comptabiliser et déduire des dettes du fournisseur")], ['0', t('Seulement enregistrer le montant')]] }]}
+    onSubmit={(v) => oapi('POST', WMS + '/returns/' + r.id + '/credit', { amount: v.amount, vat: v.vat || undefined, book: v.book === '1' }).then((j) => { close(); st.reload(); reload(); toast(j.booked ? t('Avoir comptabilisé ({e}).', { e: j.entry }) + (j.unapplied ? ' ' + t('{n} en fournisseurs débiteurs.', { n: money(j.unapplied) }) : '') : t('Avoir enregistré.')); })} />
   ));
+  const undoCredit = (r) => confirm(t("Annuler l'écriture de cet avoir ? Les dettes du fournisseur sont remises comme avant."), () => { oapi('POST', WMS + '/returns/' + r.id + '/credit/reverse', {}).then(() => { st.reload(); reload(); toast(t('Avoir annulé.')); }).catch(fail); });
+  const creditNote = (r) => confirm(t("Émettre l'avoir client pour ce retour ? Il se rattache à la facture {n}, avec ses prix.", { n: r.documentNumber }), () => { oapi('POST', WMS + '/returns/' + r.id + '/credit-note', {}).then((j) => { st.reload(); reload(); toast(t('Avoir {n} émis ({a}).', { n: j.number, a: money(j.total) })); }).catch(fail); });
   const rma = (r) => modal(t('Retour fournisseur : RMA'), (close) => (
     <Form submitText={t('Enregistrer')} fields={[{ k: 'rmaNo', label: t('Numéro RMA du fournisseur'), value: r.rmaNo || '' }, { k: 'purchaseOrderId', label: t('Identifiant du bon de commande (facultatif)'), value: r.purchaseOrderId ? String(r.purchaseOrderId) : '' }, { k: 'purchaseInvoiceId', label: t("Identifiant de la facture d'achat (facultatif)"), value: r.purchaseInvoiceId ? String(r.purchaseInvoiceId) : '' }]}
     onSubmit={(v) => oapi('PUT', WMS + '/returns/' + r.id + '/rma', { rmaNo: v.rmaNo, purchaseOrderId: v.purchaseOrderId ? Number(v.purchaseOrderId) : null, purchaseInvoiceId: v.purchaseInvoiceId ? Number(v.purchaseInvoiceId) : null }).then(() => { close(); st.reload(); reload(); })} />
@@ -89,7 +94,19 @@ function Detail({ id, reload }) {
             ) : null}
           </div>
         ))}
-        {mgr && r.kind === 'supplier' && r.status === 'done' ? <div className="row" style={{ marginTop: 8 }}><span className="muted small">{r.creditAmount ? t('Avoir reçu : {n}', { n: money(r.creditAmount) }) : t('Avoir attendu : {n}', { n: money(r.value) })}</span><button className="btn small" type="button" onClick={() => credit(r)}>{t("Enregistrer l'avoir")}</button></div> : null}
+        {mgr && r.kind === 'supplier' && r.status === 'done' ? (
+          <div className="row" style={{ marginTop: 8 }}>
+            <span className="muted small">{r.creditAmount ? t('Avoir reçu : {n}', { n: money(r.creditAmount) }) : t('Avoir attendu : {n}', { n: money(r.value) })}</span>
+            {r.creditBooked ? <Tag tone="good">{t('comptabilisé')}</Tag> : null}
+            {!r.creditBooked ? <button className="btn small" type="button" onClick={() => credit(r)}>{t("Enregistrer l'avoir")}</button> : null}
+            {r.creditBooked && can('admin') ? <button className="link" type="button" onClick={() => undoCredit(r)}>{t("Annuler l'avoir")}</button> : null}
+          </div>
+        ) : null}
+        {mgr && r.kind === 'customer' && r.status === 'done' && r.documentNumber ? (
+          <div className="row" style={{ marginTop: 8 }}>
+            {r.creditNoteDocId ? <Tag tone="good">{t('avoir client émis')}</Tag> : <button className="btn small" type="button" onClick={() => creditNote(r)}>{t("Émettre l'avoir client")}</button>}
+          </div>
+        ) : null}
       </div>
     )}
     </Loaded>

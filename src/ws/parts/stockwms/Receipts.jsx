@@ -63,7 +63,7 @@ function NewReceipt({ close, done }) {
 
 function Detail({ id, reload }) {
   const t = useT();
-  const { oapi, money, modal } = useWs();
+  const { oapi, money, modal, fail, toast } = useWs();
   const st = useLoad(() => oapi('GET', WMS + '/receipts/' + id), []);
   const kinds = useLoad(() => oapi('GET', WMS + '/receipts/kinds'), []);
   const add = () => modal(t("Ajouter un coût d'arrivée"), (close) => (
@@ -74,6 +74,14 @@ function Detail({ id, reload }) {
       { k: 'label', label: t('Libellé (facultatif)'), placeholder: t('Facture du transitaire') }]}
     onSubmit={(v) => oapi('POST', WMS + '/receipts/' + id + '/costs', v).then(() => { close(); st.reload(); reload(); })} />
   ));
+  const fromInvoice = () => oapi('GET', WMS + '/receipts/invoice-candidates').then((j) => modal(t("Rattacher une facture d'achat"), (close) => (
+    <Form submitText={t('Rattacher')} fields={[
+      { k: 'invoiceId', label: t("Facture d'achat validée"), type: 'select', options: [['', t('Choisir…')]].concat(j.invoices.map((v) => [String(v.id), v.number + ' · ' + v.supplier + ' · ' + t('reste {n} HT', { n: money(v.remaining) })])), required: true, hint: t("La charge est déjà en comptabilité : aucune nouvelle écriture, le montant entre dans le coût de revient.") },
+      { k: 'amount', label: t('Montant à rattacher (vide : tout le reste)') },
+      { k: 'kind', label: t('Type'), type: 'select', options: Object.entries(kinds.data.costKinds).map(([k, x]) => [k, t(x)]) },
+      { k: 'basis', label: t('Répartir selon'), type: 'select', options: Object.entries(kinds.data.bases).map(([k, x]) => [k, t(x)]) }]}
+    onSubmit={(v) => oapi('POST', WMS + '/receipts/' + id + '/costs', { invoiceId: Number(v.invoiceId), amount: v.amount || undefined, kind: v.kind, basis: v.basis }).then(() => { close(); st.reload(); reload(); toast(t("Facture rattachée aux frais d'arrivée.")); })} />
+  ))).catch(fail);
   return (
     <Loaded state={st}>{({ receipt: r }) => (
       <div>
@@ -82,8 +90,8 @@ function Detail({ id, reload }) {
         {r.lines.map((l) => <div className="line" key={l.id}><span><b>{l.name + ' × ' + qty(l.quantity)}</b><small>{' ' + t('prix {a} · coût de revient {b}', { a: money(l.unitCost), b: money(l.landedUnit) })}</small></span><small>{money(l.baseValue + l.landedTotal)}</small></div>)}
         <h3>{t("Coûts d'arrivée")}</h3>
         {!r.costs.length ? <Empty text={t("Aucun coût d'arrivée.")} /> : null}
-        {r.costs.map((c) => <div className="line" key={c.id}><span><b>{t(c.kindLabel)}</b><small>{(c.label ? ' ' + c.label : '') + ' · ' + t('réparti selon la {x}', { x: t(c.basisLabel).toLowerCase() })}</small></span><span><b>{money(c.amount)}</b>{c.expensed ? <small>{' ' + t('dont {n} déjà sorti', { n: money(c.expensed) })}</small> : null}</span></div>)}
-        {kinds.data ? <button className="btn small" type="button" style={{ marginTop: 8 }} onClick={add}>{t("Ajouter un coût d'arrivée")}</button> : null}
+        {r.costs.map((c) => <div className="line" key={c.id}><span><b>{t(c.kindLabel)}</b>{c.invoiceId ? <> <Tag tone="good">{t('facture liée')}</Tag></> : null}<small>{(c.label ? ' ' + c.label : '') + ' · ' + t('réparti selon la {x}', { x: t(c.basisLabel).toLowerCase() })}</small></span><span><b>{money(c.amount)}</b>{c.expensed ? <small>{' ' + t('dont {n} déjà sorti', { n: money(c.expensed) })}</small> : null}</span></div>)}
+        {kinds.data ? <div className="row" style={{ marginTop: 8 }}><button className="btn small" type="button" onClick={add}>{t("Ajouter un coût d'arrivée")}</button><button className="btn small" type="button" onClick={fromInvoice}>{t("Rattacher une facture d'achat")}</button></div> : null}
       </div>
     )}
     </Loaded>

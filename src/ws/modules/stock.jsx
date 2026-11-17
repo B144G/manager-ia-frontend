@@ -19,6 +19,7 @@ import Returns from '../parts/stockwms/Returns.jsx';
 import Abc from '../parts/stockwms/Abc.jsx';
 import Forecast from '../parts/stockwms/Forecast.jsx';
 import Reports from '../parts/stockwms/Reports.jsx';
+import Finance from '../parts/stockwms/Finance.jsx';
 import Scan from '../parts/stockwms/Scan.jsx';
 import HandlingUnits from '../parts/stockwms/HandlingUnits.jsx';
 import Waves from '../parts/stockwms/Waves.jsx';
@@ -43,6 +44,7 @@ export default function Stock() {
     { id: 'pilot', icon: 'chart-pie', label: t('Pilotage'), items: [
       { id: 'items', label: t('Articles et commandes'), hint: t('Vos articles, vos fournisseurs et vos commandes, avec des alertes avant la rupture.') },
       { id: 'stockouts', label: t('Ruptures et alertes'), hint: t('Articles en rupture, sous le seuil ou dont les réservations ne sont plus couvertes.') },
+      ...only(mgr, [{ id: 'finance', label: t('Stock et finances'), hint: t("Valeur du stock face à la comptabilité, avoirs, frais d'arrivée, argent immobilisé et besoin de trésorerie.") }]),
       ...only(mgr, [{ id: 'valuation', label: t('Valorisation du stock'), hint: t('La valeur du stock par entrepôt et par emplacement : celle que reprend la comptabilité.') }])] },
     { id: 'wmspilot', icon: 'gauge', label: t("Pilotage de l'entrepôt"), items: [
       { id: 'wmsdash', label: t("Tableau de bord de l'entrepôt"), hint: t('En temps réel : lignes à prélever, vagues, retards, réceptions à ranger, remplissage des zones, quais et alertes.') },
@@ -85,7 +87,7 @@ export default function Stock() {
       { id: 'production', to: 'production', label: t('Production'), hint: t('Ouvre le module Production.') }] },
   ];
   const SCREENS = {
-    items: <Items />, stockouts: <Reports part="stockouts" />, valuation: <Reports part="valuation" />, wh: <Warehouses />, putaway: <Putaway />, hus: <HandlingUnits />, transfers: <Transfers />, reservations: <Reservations />,
+    items: <Items />, stockouts: <Reports part="stockouts" />, valuation: <Reports part="valuation" />, finance: <Finance />, wh: <Warehouses />, putaway: <Putaway />, hus: <HandlingUnits />, transfers: <Transfers />, reservations: <Reservations />,
     receipts: <Receipts />, picking: <Picking />, waves: <Waves />, replen: <Replenishment />, packing: <Packing />, shipments: <Shipments />, returns: <Returns />, suppliers: <SupplierStats />, counts: <Counts />, abc: <Abc />, forecast: <Forecast />,
     crossdock: <CrossDock />, kits: <Kits />, vas: <Vas />, rotation: <Reports part="rotation" />, aging: <Reports part="aging" />, moves: <Reports part="moves" />, scan: <Scan />,
     wmsdash: <WmsDashboard />, yard: <Yard />, slotting: <Slotting />, labor: <Labor />,
