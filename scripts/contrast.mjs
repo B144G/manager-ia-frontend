@@ -6,11 +6,11 @@ const [mods = 'dashboard', theme = 'clair', w = '1280'] = process.argv.slice(2);
 const b = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new' });
 const p = await b.newPage(); await p.setViewport({ width: Number(w), height: 900 });
 await p.evaluateOnNewDocument((th) => { localStorage.setItem('mi_prefs_v1', JSON.stringify({ theme: th === 'sombre' ? 'dark' : 'light' })); localStorage.setItem('brij-guide-seen', 'true'); }, theme);
-await p.goto('http://localhost:5184/connexion', { waitUntil: 'networkidle0' });
+await p.goto((process.env.BASE || 'http://localhost:5184') + '/connexion', { waitUntil: 'networkidle0' });
 if (await p.$('#contact')) { await p.type('#contact', 'proprietaire@exemple.com'); await p.type('#pass', 'Essai-2026-brij'); await Promise.all([p.waitForFunction(() => location.pathname.startsWith('/app'), { timeout: 20000 }).catch(() => {}), p.click('#go')]); }
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 for (const mod of mods.split(',')) {
-  await p.goto(`http://localhost:5184/app/1/${mod}`, { waitUntil: 'networkidle0' }); await wait(2500);
+  await p.goto(`${process.env.BASE || 'http://localhost:5184'}/app/1/${mod}`, { waitUntil: 'networkidle0' }); await wait(2500);
   const bad = await p.evaluate(() => {
     const parse = (c) => { const m = c.match(/-?[\d.]+(?:e-?\d+)?/g).map(Number); if (c.startsWith('color(')) return { r: m[0] * 255, g: m[1] * 255, b: m[2] * 255, a: m[3] === undefined ? 1 : m[3] }; return { r: m[0], g: m[1], b: m[2], a: m[3] === undefined ? 1 : m[3] }; };
     const lum = ({ r, g, b }) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };

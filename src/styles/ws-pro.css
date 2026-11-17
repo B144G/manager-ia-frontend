@@ -1,24 +1,15 @@
 /* Espace de travail — style « Pro » (choix A + polices B) : menu latéral bleu nuit, barre du haut blanche, cartes sobres,
-   titres en Plus Jakarta Sans, texte en Inter, boutons rectangulaires de 40 px (une seule action principale en bleu),
+   une seule police (Inter), boutons rectangulaires de 40 px (une seule action principale en bleu),
    icônes Font Awesome. Chargé APRÈS toutes les autres feuilles de l'espace de travail : il ne touche qu'à l'apparence. */
+/* Fusion : les couleurs, la police et les rayons viennent des jetons communs (src/styles/tokens.css : thème clair/sombre/auto,
+   couleur de marque personnalisable). Ici, seulement les noms propres au style « Pro » de la ligne A, branchés sur les jetons. */
 body.ws{
-  --bg:#f5f7fa;--surface:#ffffff;--surface2:#eef2f7;--fg:#0f172a;--muted:#5b6577;--line:#e3e8ef;--line2:#d5dce6;
-  --accent:#1f6feb;--accent-h:#1a5fd0;--accent-soft:#e8f0fe;--accent-fg:#ffffff;--pink:#b42318;--ok:#067647;--signal:#b54708;
-  --side:#0f1e36;--side2:#1b3358;--side-fg:#c9d3e3;--side-mute:#8ea0ba;--side-line:#22344f;
-  --grad:var(--accent);--sh1:0 1px 2px rgba(15,23,42,.04);--sh2:0 8px 24px -12px rgba(15,23,42,.18);
-  --r:8px;--r2:10px;
-  --f-display:"Plus Jakarta Sans","Inter",system-ui,sans-serif;--f-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --accent-h:var(--accent-hover);--line2:var(--border-strong);
+  --side:var(--nav-bg);--side2:var(--nav-bg-2);--side-fg:var(--nav-text);--side-mute:var(--nav-muted);--side-line:var(--nav-line);
+  --grad:var(--accent);--r:var(--radius-md);
   background:var(--bg);color:var(--fg);font:14.5px/1.55 var(--f-body);-webkit-font-smoothing:antialiased}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.ws{
-  --bg:#0b1220;--surface:#121a2b;--surface2:#18233a;--fg:#e6ebf5;--muted:#9aa8c1;--line:#1e2a40;--line2:#2a3854;
-  --accent:#4c8dff;--accent-h:#6ea2ff;--accent-soft:#16264a;--accent-fg:#0b1220;--pink:#f97066;--ok:#47cd89;--signal:#f5b547;
-  --side:#0a1324;--side2:#16264a;--side-line:#1b2a45;--sh1:none;--sh2:0 8px 24px -12px rgba(0,0,0,.6)}}
-:root[data-theme="dark"] body.ws{
-  --bg:#0b1220;--surface:#121a2b;--surface2:#18233a;--fg:#e6ebf5;--muted:#9aa8c1;--line:#1e2a40;--line2:#2a3854;
-  --accent:#4c8dff;--accent-h:#6ea2ff;--accent-soft:#16264a;--accent-fg:#0b1220;--pink:#f97066;--ok:#47cd89;--signal:#f5b547;
-  --side:#0a1324;--side2:#16264a;--side-line:#1b2a45;--sh1:none;--sh2:0 8px 24px -12px rgba(0,0,0,.6)}
 
-/* Typographie : titres en Plus Jakarta Sans, chiffres alignés */
+/* Typographie : Inter partout (police unique), chiffres alignés */
 body.ws h1,body.ws h2,body.ws h3{font-family:var(--f-display);letter-spacing:-.015em;color:var(--fg)}
 body.ws h1{font-weight:700;font-size:clamp(22px,2.4vw,26px)}
 body.ws h2{font-weight:700;font-size:17px}
@@ -33,7 +24,7 @@ body.ws h3{font-weight:600;font-size:15px}
 .ws-side .logo b{color:#8db8ff}
 .ws-org,.ws-me{background:rgba(255,255,255,.04);border:1px solid var(--side-line);border-radius:var(--r2)}
 .av{background:#2b4266;color:#fff}
-.ws-user .av{background:var(--accent);color:#fff}
+.ws-user .av{background:var(--accent);color:var(--on-accent)}
 .av.gold{background:#e3b341;color:#2b1d00}
 .ws-label{color:var(--side-mute);letter-spacing:.08em}
 .ws-nav{gap:2px}
@@ -204,3 +195,18 @@ body.ws .pbar i{background:var(--accent)}
   .stat b{font-size:clamp(13px,11cqi,22px);overflow-wrap:normal;word-break:keep-all}
   .kpi b{font-size:clamp(14px,10.5cqi,28px);overflow-wrap:normal;word-break:keep-all}
 }
+
+/* Fusion : zones tactiles de 44 px (la règle de responsive.css est surpassée par les styles « pro » ci-dessus) */
+@media (pointer:coarse),(max-width:1099px){
+  body.ws .btn,body.ws .btn.small,body.ws .bt{min-height:44px}
+  body.ws input:not([type=checkbox]):not([type=radio]):not([type=range]),body.ws select,body.ws textarea{min-height:44px}
+  body.ws .ws-ask input,body.ws .app-find input{min-height:44px}
+}
+/* Fusion : les grands chiffres des cartes (taille de la ligne B) ne doivent jamais élargir la page */
+.stat,.kpi{min-width:0}.stat b,.kpi b{white-space:normal}.stat b,.kpi b,.stat span,.kpi small{overflow-wrap:anywhere}
+@media (max-width:640px){.ws-main .kpis .stat b,.ws-main .kpis4 .kpi b{font-size:clamp(16px,5.2vw,22px)}}
+
+/* Fusion : le titre des cartes de la Bibliothèque est blanc sur fond de couleur (la règle des titres ci-dessus le rendait sombre) */
+body.ws .lib-card-h h3{color:#fff}
+/* Fusion : texte « ok » en vert lisible (--ok est un vert de remplissage, pas de texte) */
+body.ws b.ok,body.ws p.ok,body.ws small.ok,body.ws span.ok,body.ws .ok.small{color:var(--ok-text)}

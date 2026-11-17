@@ -1,0 +1,39 @@
+projects clair 1280px : 3 contraste(s) insuffisant(s)
+  4.04 BUTTON.ui-btn "Plan avec l'IA"
+  4.25 BUTTON.ui-tab "Projets"
+  4.04 SPAN.ui-badge "En cours"
+budget clair 1280px : 3 contraste(s) insuffisant(s)
+  4.04 BUTTON.btn "Limites avec l'IA"
+  4.25 BUTTON.tab "Vue d'ensemble"
+  4.04 BUTTON.ui-btn "Saisir le budget annuel"
+stock clair 1280px : 3 contraste(s) insuffisant(s)
+  4.04 BUTTON.msh-item "Articles et commandes"
+  4.25 DIV.msh-cur "Articles et commandes"
+  4.04 BUTTON.btn "Commandes avec l'IA"
+logistics clair 1280px : 2 contraste(s) insuffisant(s)
+  4.04 BUTTON.msh-item "Livraisons"
+  4.25 DIV.msh-cur "Livraisons"
+library clair 1280px : 9 contraste(s) insuffisant(s)
+  4.04 BUTTON.msh-item "Les blocs"
+  4.25 DIV.msh-cur "Les blocs"
+  1.81 H3. "MES DOCUMENTS"
+  2.21 H3. "ADMINISTRATIF"
+  1.99 H3. "COMMERCIAL"
+  2.27 H3. "PROJETS"
+  2.53 H3. "RESSOURCES HUMAINES"
+  2.36 H3. "COMPTABILITÉ ET FINANCES"
+  1.71 H3. "JURIDIQUE"
+billing clair 1280px : 1 contraste(s) insuffisant(s)
+  4.25 BUTTON.tab "Nos offres"
+projects sombre 1280px : 1 contraste(s) insuffisant(s)
+  3.20 SPAN.av "MN"
+budget sombre 1280px : 1 contraste(s) insuffisant(s)
+  3.20 SPAN.av "MN"
+stock sombre 1280px : 1 contraste(s) insuffisant(s)
+  3.20 SPAN.av "MN"
+logistics sombre 1280px : 1 contraste(s) insuffisant(s)
+  3.20 SPAN.av "MN"
+library sombre 1280px : 1 contraste(s) insuffisant(s)
+  3.20 SPAN.av "MN"
+billing sombre 1280px : 1 contraste(s) insuffisant(s)
+  3.20 SPAN.av "MN"

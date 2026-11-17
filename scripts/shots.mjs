@@ -17,10 +17,12 @@ for (const w of widths.split(',').map(Number)) {
   await page.setViewport({ width: land ? 812 : w, height: land ? 375 : (mobile ? 800 : 900), deviceScaleFactor: mobile ? 2 : 1, isMobile: mobile, hasTouch: mobile });
   await page.evaluateOnNewDocument((th) => { try { localStorage.setItem('mi_prefs_v1', JSON.stringify({ theme: th === 'sombre' ? 'dark' : 'light' })); localStorage.setItem('brij-guide-seen', 'true'); } catch (e) { /* */ } }, theme);
   await page.goto(BASE + '/connexion', { waitUntil: 'networkidle0' });
+  await page.evaluate(() => { const b = [...document.querySelectorAll('#cookie-banner button')].find((x) => /refuser/i.test(x.textContent)); if (b) b.click(); });
   if (await page.$('#contact')) { await page.type('#contact', 'proprietaire@exemple.com');
   await page.type('#pass', 'Essai-2026-brij');
   await Promise.all([page.waitForFunction(() => location.pathname.startsWith('/app'), { timeout: 20000 }).catch(() => {}), page.click('#go')]); }
   await new Promise((r) => setTimeout(r, 1200));
+  await page.evaluate(() => { const b = [...document.querySelectorAll('#cookie-banner button')].find((x) => /refuser/i.test(x.textContent)); if (b) b.click(); });
   const m = page.url().match(/\/app\/(\d+)/); const org = m ? m[1] : '1';
   for (const mod of mods.split(',')) {
     await page.goto(`${BASE}/app/${org}/${mod}`, { waitUntil: 'networkidle0' });
