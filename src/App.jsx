@@ -29,8 +29,10 @@ export default function App() {
   return (
     <Suspense fallback={null}>
       <Routes>
-        <Route element={<StyleLayout group="site" body="site" />}>
+        <Route element={<StyleLayout group="vitrine" body="vt" />}>
           <Route path="/" element={<Home />} />
+        </Route>
+        <Route element={<StyleLayout group="site" body="site" />}>
           <Route path="/confidentialite" element={<Privacy />} />
           <Route path="/conditions" element={<Terms />} />
           <Route path="/index.html" element={<Navigate to="/" replace />} />
