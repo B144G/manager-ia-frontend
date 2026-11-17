@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { trackVisit } from './lib/visit.js';
 import { StyleLayout } from './lib/styles.jsx';
+import PrivacyGlobal from './privacy/PrivacyGlobal.jsx';
 
 // Chaque groupe de pages ne charge que son code et ses styles.
 const Home = lazy(() => import('./pages/Home.jsx'));
@@ -17,7 +18,9 @@ const KpiPrint = lazy(() => import('./pages/KpiPrint.jsx'));
 const Receipt = lazy(() => import('./pages/Receipt.jsx'));
 const Csat = lazy(() => import('./pages/Csat.jsx'));
 const Tracking = lazy(() => import('./pages/Tracking.jsx'));
+const PrivacyCenter = lazy(() => import('./privacy/PrivacyCenter.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
+const LegalCenter = lazy(() => import('./legal/LegalCenter.jsx'));
 const Privacy = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Privacy })));
 const Terms = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Terms })));
 
@@ -27,12 +30,22 @@ export default function App() {
   useEffect(() => { trackVisit(pathname); }, [pathname]);
   useEffect(() => { window.__miaStarted = true; const box = document.getElementById('mia-fail'); if (box) box.remove(); }, []);
   return (
+    <>
+    <PrivacyGlobal />
     <Suspense fallback={null}>
       <Routes>
         <Route element={<StyleLayout group="site" body="site" />}>
           <Route path="/" element={<Home />} />
-          <Route path="/confidentialite" element={<Privacy />} />
-          <Route path="/conditions" element={<Terms />} />
+          <Route path="/confidentialite" element={<LegalCenter slug="confidentialite" legacy={Privacy} />} />
+          <Route path="/conditions" element={<LegalCenter slug="conditions" legacy={Terms} />} />
+          <Route path="/cookies" element={<LegalCenter slug="cookies" />} />
+          <Route path="/mentions-legales" element={<LegalCenter slug="mentions-legales" />} />
+          <Route path="/registre-traitements" element={<LegalCenter slug="registre-traitements" />} />
+          <Route path="/accord-sous-traitance" element={<LegalCenter slug="accord-sous-traitance" />} />
+          <Route path="/sous-traitants" element={<LegalCenter slug="sous-traitants" />} />
+          <Route path="/violation-donnees" element={<LegalCenter slug="violation-donnees" />} />
+          <Route path="/securite" element={<LegalCenter slug="securite" />} />
+          <Route path="/continuite" element={<LegalCenter slug="continuite" />} />
           <Route path="/index.html" element={<Navigate to="/" replace />} />
           <Route path="*" element={<NotFound />} />
         </Route>
@@ -52,6 +65,8 @@ export default function App() {
           <Route path="/suivi/:token" element={<Tracking />} />
         </Route>
         <Route element={<StyleLayout group="ws" body="ws" />}>
+          <Route path="/app/confidentialite" element={<PrivacyCenter />} />
+          <Route path="/app/confidentialite/:tab" element={<PrivacyCenter />} />
           <Route path="/app/*" element={<Workspace />} />
         </Route>
         <Route path="/imprimer/:orgId/:docId" element={<InvoicePrint />} />
@@ -62,5 +77,6 @@ export default function App() {
         </Route>
       </Routes>
     </Suspense>
+    </>
   );
 }

@@ -1,14 +1,16 @@
 import { API_BASE } from './api.js';
+import { hasAnalyticsConsent } from './consent.js';
 
 /* Compteur de visites anonyme : une page vue = un compteur de plus côté serveur (page, origine, type d'appareil).
-   Aucun cookie, aucun identifiant, aucune adresse enregistrée. Le signal « Ne pas me suivre » du navigateur est respecté.
+   Uniquement si la mesure d'audience est acceptée dans le bandeau de cookies. Aucun cookie, aucun identifiant, aucune adresse enregistrée. Le signal « Ne pas me suivre » du navigateur est respecté.
    Seules les pages publiques sont comptées (jamais l'espace de travail). */
-const COUNTED = new Set(['/', '/confidentialite', '/conditions', '/connexion', '/inscription', '/essai']);
+const COUNTED = new Set(['/', '/confidentialite', '/conditions', '/cookies', '/mentions-legales', '/connexion', '/inscription', '/essai']);
 
 export function trackVisit(pathname) {
   try {
     const path = (pathname || '/').replace(/\/+$/, '') || '/';
     if (!COUNTED.has(path)) return;
+    if (!hasAnalyticsConsent()) return; // aucune mesure sans consentement explicite (bandeau de cookies)
     if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
     const key = 'brij-seen:' + path;
     try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch { /* stockage indisponible : on compte quand même */ }

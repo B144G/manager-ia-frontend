@@ -5,6 +5,7 @@ import { getLocale, useT } from '../lib/i18n.jsx';
 import { tsrv } from '../lib/srv.js';
 import { Form, Loading, useLoad } from './ui.jsx';
 import { useWs } from './WsContext.jsx';
+import PrivacyLinks from '../privacy/PrivacyLinks.jsx';
 
 const sec = (method, path, body) => rq(method, '/api/security' + path, body);
 const when = (iso) => { try { return new Date(iso).toLocaleString(getLocale(), { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch { return iso; } };
@@ -42,6 +43,7 @@ export default function AccountSecurity() {
         ))}
         {others.length ? <p style={{ marginTop: 12 }}><button className="btn small" type="button" onClick={() => sec('POST', '/sessions/revoke-others', {}).then((j) => { toast(t('{n} appareil(s) déconnecté(s).', { n: j.closed })); st.reload(); }, fail)}>{t('Déconnecter tous les autres appareils')}</button></p> : <p className="muted small">{t('Aucun autre appareil connecté.')}</p>}
       </section>
+      <PrivacyLinks />
     </div>
   );
 }
