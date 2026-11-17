@@ -5,7 +5,7 @@ import { useWs } from '../../WsContext.jsx';
 
 /* Forfait sur mesure : deux champs (le forfait en FCFA, le temps d'utilisation) et, à côté, le bloc « Accès et disponibilités » qui se met à jour en direct.
    Les contrôles de somme sont refaits ici pour afficher des messages traduits ; le serveur reste seul juge (il recalcule tout au paiement). */
-const PRESETS = { week: [10000, 15000, 25000, 40000], month: [10000, 15000, 25000, 50000], quarter: [10000, 50000, 150000, 300000], semester: [10000, 100000, 300000, 600000], year: [10000, 200000, 600000, 1200000] };
+const PRESETS = { week: [10000, 12500, 15000, 20000], month: [10000, 20000, 40000, 60000], quarter: [10000, 60000, 120000, 180000], semester: [10000, 100000, 200000, 350000], year: [10000, 200000, 400000, 650000] };
 
 export default function CustomPlan({ b, onPay }) {
   const t = useT();

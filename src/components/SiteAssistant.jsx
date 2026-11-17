@@ -8,7 +8,7 @@ import { tr, useT } from '../lib/i18n.jsx';
    si le serveur ne répond pas, il donne des repères simples et oriente vers WhatsApp. */
 const WA = `https://wa.me/${SUPPORT_WHATSAPP}`;
 const FALLBACK = [
-  [/prix|tarif|co[uû]t|abonnement|payer|paiement|price|pricing|cost|plan|subscription|pay|preis|kosten|abo|zahl|precio|coste|plan|suscrip|pago|pagar/, 'Offres : Gratuit pour essayer, Pro à 50 000 FCFA par mois, Pro Max à 75 000 FCFA, Méga Pro à 100 000 FCFA et Illimité à 150 000 FCFA par mois. Paiement par MTN Mobile Money ou Orange Money.'],
+  [/prix|tarif|co[uû]t|abonnement|payer|paiement|price|pricing|cost|plan|subscription|pay|preis|kosten|abo|zahl|precio|coste|plan|suscrip|pago|pagar/, 'Offres : Gratuit pour essayer, Illimité à 80 000 FCFA par mois (aussi à la semaine, au trimestre, au semestre ou à l\'année, moins cher par mois), ou un forfait sur mesure dès 10 000 FCFA. Paiement par MTN Mobile Money ou Orange Money.'],
   [/compte|inscri|connexion|connecter|mot de passe|commencer|account|sign|log ?in|password|start|fang|beginn|konto|anmeld|registr|passwort|loslegen|cuenta|registr|sesión|contraseña|empez|comenz/, 'Cliquez sur « Commencer gratuitement » : vous arrivez sur la page de connexion. Si vous n\'avez pas de compte, « Créer un compte » est sous le formulaire. Ensuite vous arrivez dans votre tableau de bord.'],
   [/gestion|projet|budget|client|[eé]quipe|organisation|agent|fonction|manage|project|customer|team|feature|verwalt|projekt|kunde|funktion|gesti|proyecto|cliente|equipo|función/, "L'agent IA de gestion d'activité contient : service client, projets et tâches, budget, organisation, fonctionnement, équipe et antennes. Il connaît vos données et vous conseille ; vous validez ses propositions."],
 ];

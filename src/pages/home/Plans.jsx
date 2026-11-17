@@ -4,7 +4,7 @@ import { rq } from '../../lib/api.js';
 import { useT } from '../../lib/i18n.jsx';
 
 // Prix de repli (identiques aux prix par défaut du serveur) ; les vrais prix sont relus depuis /api/plans.
-const DEFAULT_PRICES = { week: 40000, month: 150000, quarter: 420000, semester: 800000, year: 1500000 };
+const DEFAULT_PRICES = { week: 21500, month: 80000, quarter: 224000, semester: 425000, year: 800000 };
 const fcfa = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' FCFA';
 
 export default function Plans() {
