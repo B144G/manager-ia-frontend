@@ -1,4 +1,5 @@
 import { getLang, tr } from './i18n.jsx';
+import { WMS_TEMPLATES } from './srv-wms.js';
 
 /* Traduction des textes que le serveur fabrique en français (alertes, score de santé…).
    Les textes fixes passent par le dictionnaire ; les phrases avec des nombres ou des noms sont reconnues par un modèle
@@ -139,6 +140,12 @@ rule(/^Le véhicule (.+) est déjà affecté à la tournée « (.+) » ce jour-l
 rule(/^Le chauffeur (.+) est déjà affecté à la tournée « (.+) » ce jour-là\.$/, 'Le chauffeur {driver} est déjà affecté à la tournée « {name} » ce jour-là.', ['driver', 'name']);
 rule(/^(\d+) ligne\(s\) à vérifier \((.+)\)\. Corrigez, ou validez quand même en expliquant pourquoi\.$/, '{n} ligne(s) à vérifier ({list}). Corrigez, ou validez quand même en expliquant pourquoi.', ['n', 'list']);
 rule(/^Indiquez le montant encaissé \((.+) à encaisser\)\.$/, 'Indiquez le montant encaissé ({amount} à encaisser).', ['amount']);
+// Entrepôt (WMS) : messages à variables, reconnus d'après leur modèle « … {nom} … » (les plus longs d'abord, pour que le plus précis gagne).
+for (const k of [...WMS_TEMPLATES].sort((a, b) => b.length - a.length)) {
+  const names = [];
+  const src = esc(k).replace(/\\\{(\w+)\\\}/g, (m, n) => { names.push(n); return '(.+?)'; });
+  rule(new RegExp('^' + src + '$'), k, names);
+}
 
 const FR_HINT = /[àâçéèêëîïôùûœ]|\b(vous|votre|vos|pour|dans|aucun|aucune|avec|cette|sont)\b/i;
 /** Recherche sans signaler de manque (un texte déjà traduit n'est pas une erreur). */

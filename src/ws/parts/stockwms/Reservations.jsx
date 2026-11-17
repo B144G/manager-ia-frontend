@@ -11,6 +11,7 @@ const ST = { active: ['Active', 'mid'], fulfilled: ['Livrée', 'good'], released
 function FromDocument({ close, done }) {
   const t = useT();
   const { oapi } = useWs();
+  const whs = useLoad(() => oapi('GET', WMS + '/overview'), []);
   const docs = useLoad(() => oapi('GET', '/crm/documents'), []);
   const ords = useLoad(() => oapi('GET', '/sales/orders').catch(() => ({ orders: [] })), []);
   const list = [];
@@ -19,8 +20,9 @@ function FromDocument({ close, done }) {
   return (
     <Form submitText={t('Réserver')} fields={[
       { k: 'documentId', label: t('Commande, devis ou facture'), type: 'select', options: [['', t('Choisir…')]].concat(list), required: true, hint: t("Seules les lignes rattachées à un article du stock réservent du stock.") },
+      ...(whs.data && whs.data.warehouses.length > 1 ? [{ k: 'warehouseId', label: t('Entrepôt (facultatif)'), type: 'select', options: [['', t('Tous')]].concat(whs.data.warehouses.map((w) => [String(w.id), w.name])), hint: t('Le stock est alors réservé dans cet entrepôt.') }] : []),
       { k: 'partial', label: t('Si le stock ne suffit pas'), type: 'select', options: [['0', t('Tout refuser')], ['1', t('Réserver ce qui est disponible')]] }]}
-    onSubmit={(v) => oapi('POST', WMS + '/reservations/from-document', { documentId: Number(v.documentId), partial: v.partial === '1' }).then((j) => { close(); done(j); })} />
+    onSubmit={(v) => oapi('POST', WMS + '/reservations/from-document', { documentId: Number(v.documentId), partial: v.partial === '1', warehouseId: v.warehouseId ? Number(v.warehouseId) : undefined }).then((j) => { close(); done(j); })} />
   );
 }
 
@@ -31,6 +33,7 @@ export default function Reservations() {
   const mgr = can('manager');
   const [f, setF] = useState('active');
   const items = useItems();
+  const whs = useLoad(() => oapi('GET', WMS + '/overview'), []);
   const st = useLoad(() => oapi('GET', WMS + '/reservations?status=' + f), [f]);
   const av = useLoad(() => oapi('GET', WMS + '/availability?onlyReserved=1'), []);
   const reload = () => { st.reload(); av.reload(); };
@@ -40,8 +43,9 @@ export default function Reservations() {
       { k: 'quantity', label: t('Quantité'), required: true },
       { k: 'label', label: t('Pour qui ou pour quoi'), required: true, placeholder: t('Chantier, client, atelier…') },
       ...(mgr ? [{ k: 'kind', label: t('Type'), type: 'select', options: [['internal', t('Demande interne')], ['manual', t('Réservation libre')]] }] : []),
+      ...(whs.data && whs.data.warehouses.length > 1 ? [{ k: 'warehouseId', label: t('Entrepôt (facultatif)'), type: 'select', options: [['', t('Tous')]].concat(whs.data.warehouses.map((w) => [String(w.id), w.name])) }] : []),
       { k: 'expiresAt', label: t('Garder jusqu\'au (facultatif)'), type: 'date' }]}
-    onSubmit={(v) => oapi('POST', WMS + '/reservations', { itemId: Number(v.itemId), quantity: v.quantity, label: v.label, kind: v.kind || 'internal', expiresAt: v.expiresAt || undefined }).then(() => { close(); toast(t('Stock réservé.')); reload(); })} />
+    onSubmit={(v) => oapi('POST', WMS + '/reservations', { itemId: Number(v.itemId), quantity: v.quantity, label: v.label, kind: v.kind || 'internal', expiresAt: v.expiresAt || undefined, warehouseId: v.warehouseId ? Number(v.warehouseId) : undefined }).then(() => { close(); toast(t('Stock réservé.')); reload(); })} />
   ));
   const fromDoc = () => modal(t('Réserver pour une commande'), (close) => <FromDocument close={close} done={(j) => { reload(); toast(t('{n} article(s) réservé(s).', { n: j.reserved.length }) + (j.short.length ? ' ' + t('{n} article(s) en manque.', { n: j.short.length }) : '')); }} />);
   const fulfil = (r) => modal(t('Livrer : {name}', { name: r.item }), (close) => (
@@ -67,7 +71,7 @@ export default function Reservations() {
             {j.reservations.map((r) => (
               <div className="line" key={r.id}>
                 <span><b>{r.item + ' × ' + qty(r.quantity)}</b> <Tag tone={ST[r.status][1]}>{t(ST[r.status][0])}</Tag>
-                  <small>{' ' + (r.label || t(r.sourceLabel)) + (r.fulfilledQty ? ' · ' + t('livré {n}', { n: qty(r.fulfilledQty) }) : '') + (r.neededBy ? ' · ' + t('pour le {date}', { date: date(r.neededBy) }) : '') + (r.expiresAt ? ' · ' + t('jusqu\'au {date}', { date: date(r.expiresAt) }) : '') + (r.closeReason ? ' · ' + r.closeReason : '')}</small></span>
+                  <small>{' ' + (r.label || t(r.sourceLabel)) + (r.warehouse ? ' · ' + r.warehouse : '') + (r.fulfilledQty ? ' · ' + t('livré {n}', { n: qty(r.fulfilledQty) }) : '') + (r.neededBy ? ' · ' + t('pour le {date}', { date: date(r.neededBy) }) : '') + (r.expiresAt ? ' · ' + t('jusqu\'au {date}', { date: date(r.expiresAt) }) : '') + (r.closeReason ? ' · ' + r.closeReason : '')}</small></span>
                 {r.status === 'active' ? (
                   <span className="row">
                     {mgr ? <button className="link" type="button" onClick={() => fulfil(r)}>{t('Livrer')}</button> : null}

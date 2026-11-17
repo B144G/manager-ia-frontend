@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useWs } from '../../WsContext.jsx';
 import { useT } from '../../../lib/i18n.jsx';
-import { Empty, Loaded, useLoad } from '../../ui.jsx';
+import { Empty, Form, Loaded, useLoad } from '../../ui.jsx';
 import Pill from './Pill.jsx';
 import { qty } from './common.js';
 
@@ -26,12 +26,13 @@ function CountSheet({ id, back }) {
       <div className="ws-card">
         <div className="ws-head"><h2>{c.code}</h2><span className="row"><Pill t={CS[c.status]} /><button className="link" type="button" onClick={back}>{t('Retour')}</button></span></div>
         {c.note ? <p className="muted small">{c.note}</p> : null}
+        {c.location ? <p className="small"><b>{t('Emplacement : {c}', { c: c.location })}</b>{c.blind ? ' · ' + t('à l’aveugle') : ''}</p> : null}
         {mgr ? <p className="small">{t('Écart valorisé : {total} (manquants {short}, surplus {surplus})', { total: money(c.gapValue), short: money(c.shortValue), surplus: money(c.surplusValue) })}</p> : null}
         {c.items.map((l) => {
           const v = vals[l.itemId] !== undefined ? vals[l.itemId] : (l.counted === null ? '' : l.counted);
           return (
             <div className="line" key={l.itemId}>
-              <span><b>{l.name}</b><small>{' ' + t('attendu {n} {unit}', { n: qty(l.expected), unit: l.unit })}</small>{l.gap ? <span className={'pill ' + (l.gap < 0 ? 'bad' : 'mid')}>{(l.gap > 0 ? '+' : '') + qty(l.gap) + (mgr && l.gapValue !== undefined ? ' · ' + money(l.gapValue) : '')}</span> : null}</span>
+              <span><b>{l.name}</b><small>{' ' + (l.expected === null ? t('quantité attendue cachée (comptage à l’aveugle)') : t('attendu {n} {unit}', { n: qty(l.expected), unit: l.unit }))}</small>{l.gap ? <span className={'pill ' + (l.gap < 0 ? 'bad' : 'mid')}>{(l.gap > 0 ? '+' : '') + qty(l.gap) + (mgr && l.gapValue !== undefined ? ' · ' + money(l.gapValue) : '')}</span> : null}</span>
               {c.status === 'open'
                 ? <input type="text" inputMode="decimal" style={{ width: 90, fontSize: 16 }} aria-label={t('Quantité comptée : {name}', { name: l.name })} value={v} onChange={(e) => setVals((s) => ({ ...s, [l.itemId]: e.target.value }))} />
                 : <b>{l.counted === null ? '—' : qty(l.counted)}</b>}
@@ -59,20 +60,26 @@ function CountSheet({ id, back }) {
 
 export default function Counts() {
   const t = useT();
-  const { oapi, can, money, dateFr, fail } = useWs();
+  const { oapi, can, money, dateFr, fail, modal } = useWs();
   const [open, setOpen] = useState(null);
   const st = useLoad(() => oapi('GET', '/stock/counts'), []);
   if (open) return <CountSheet id={open} back={() => { setOpen(null); st.reload(); }} />;
   const create = () => oapi('POST', '/stock/counts', {}).then((j) => setOpen(j.id)).catch(fail);
+  const byLocation = () => oapi('GET', '/stock/wms/locations').then((l) => modal(t("Inventaire d'un emplacement"), (close) => (
+    <Form submitText={t("Ouvrir l'inventaire")} fields={[
+      { k: 'locationId', label: t('Emplacement'), type: 'select', options: [['', t('Choisir…')]].concat(l.locations.filter((x) => x.active && x.kind !== 'transit').map((x) => [String(x.id), x.code + ' (' + x.warehouse + ')'])), required: true },
+      { k: 'blind', label: t('Comptage'), type: 'select', options: [['0', t('Avec les quantités attendues')], ['1', t("À l'aveugle (quantités attendues cachées)")]] }]}
+    onSubmit={(v) => oapi('POST', '/stock/wms/location-counts', { locationId: Number(v.locationId), blind: v.blind === '1' }).then((j) => { close(); setOpen(j.id); })} />
+  ))).catch(fail);
   return (
     <div className="ws-card">
-      <div className="ws-head"><h2>{t('Inventaires physiques')}</h2>{can('manager') ? <button className="btn primary small" type="button" onClick={create}>{t('Ouvrir un inventaire')}</button> : null}</div>
+      <div className="ws-head"><h2>{t('Inventaires physiques')}</h2>{can('manager') ? <span className="row"><button className="btn primary small" type="button" onClick={create}>{t('Ouvrir un inventaire')}</button><button className="btn small" type="button" onClick={byLocation}>{t("Inventaire d'un emplacement")}</button></span> : null}</div>
       <Loaded state={st}>{(j) => (
         <>
           {!j.counts.length ? <Empty text={t("Aucun inventaire. Ouvrez-en un pour compter vos articles, voir les écarts valorisés et corriger le stock.")} /> : null}
           {j.counts.map((c) => (
             <div className="line" key={c.id}>
-              <span><b>{c.code}</b>{' '}<Pill t={CS[c.status]} /><small>{' ' + dateFr(c.createdAt) + ' · ' + t('{n} article(s) comptés sur {m}', { n: c.counted, m: c.lines }) + (c.gapValue !== undefined && c.counted ? ' · ' + t('écart {amount}', { amount: money(c.gapValue) }) : '')}</small></span>
+              <span><b>{c.code}</b>{' '}<Pill t={CS[c.status]} /><small>{' ' + (c.location ? c.location + ' · ' : '') + dateFr(c.createdAt) + ' · ' + t('{n} article(s) comptés sur {m}', { n: c.counted, m: c.lines }) + (c.gapValue !== undefined && c.counted ? ' · ' + t('écart {amount}', { amount: money(c.gapValue) }) : '')}</small></span>
               <button className="link" type="button" onClick={() => setOpen(c.id)}>{c.status === 'open' ? t('Compter') : t('Voir')}</button>
             </div>
           ))}
