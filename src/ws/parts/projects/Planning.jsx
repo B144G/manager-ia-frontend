@@ -22,7 +22,7 @@ function ChangeList({ changes }) {
   ));
 }
 
-function ReplanModal({ id, close, done }) {
+export function ReplanModal({ id, close, done }) {
   const t = useT();
   const { oapi, toast, fail, dateFr } = useWs();
   const st = useLoad(() => oapi('GET', '/projects/' + id + '/replan'), [id]);
@@ -43,7 +43,7 @@ function ReplanModal({ id, close, done }) {
   );
 }
 
-function ShiftModal({ task, close, done }) {
+export function ShiftModal({ task, close, done }) {
   const t = useT();
   const { oapi, toast, fail } = useWs();
   const [prev, setPrev] = useState(null);

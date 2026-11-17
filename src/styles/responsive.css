@@ -6,21 +6,13 @@
    - Les grilles se règlent sur la largeur RÉELLE du contenu (requêtes de conteneur), pas sur celle de l'écran
    - Rien ne dépasse horizontalement : les seuls défilements latéraux sont des carrousels voulus (Kanban, planning)
    ================================================================================================ */
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body.ws{min-height:100vh;min-height:100dvh;overflow-x:clip}
 img,svg,video,canvas{max-width:100%}
 /* un nom, un e-mail ou une adresse très long (saisi par un client) ne doit jamais élargir la page */
 .ws-main :is(p,span,b,strong,small,a,h1,h2,h3,li,td,label,code){overflow-wrap:anywhere}
-.ws-shell *{min-width:0}
-.ws-shell{display:grid;grid-template-columns:268px minmax(0,1fr);min-height:100vh;min-height:100dvh}
-body.ai-open .ws-shell{grid-template-columns:268px minmax(0,1fr) 380px}
-.ws-side{position:sticky;top:0;height:100vh;height:100dvh}
-.ws-col{min-width:0}
 .ws-main{container:ws-main/inline-size;min-width:0}
 .ws-main>.ws-mod{width:100%;max-width:1360px;margin-inline:auto}
 .ws-ai{position:sticky;top:0;height:100vh;height:100dvh}
-.ws-burger,.ws-scrim,.ws-close{display:none}
-.ws-side-h{display:flex;align-items:center;justify-content:space-between;gap:10px}
 
 /* ---- Grilles du tableau de bord : selon la largeur du contenu ---- */
 .g2,.g3,.g4{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
@@ -51,26 +43,11 @@ body.ai-open .ws-shell{grid-template-columns:268px minmax(0,1fr) 380px}
 
 /* ---- Tablette et téléphone : le menu devient un tiroir ---- */
 @media (max-width:1099px){
-  .ws-shell,body.ai-open .ws-shell{grid-template-columns:minmax(0,1fr)}
-  .ws-burger{display:grid;place-items:center;flex:none;width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
-  .ws-burger .ic{width:22px;height:22px;stroke:currentColor}
-  .ws-side{position:fixed;top:0;left:0;bottom:0;z-index:90;width:min(86vw,340px);height:100vh;height:100dvh;overflow-y:auto;overscroll-behavior:contain;
-    padding:calc(18px + env(safe-area-inset-top,0px)) 14px calc(18px + env(safe-area-inset-bottom,0px));
-    transform:translateX(-102%);visibility:hidden;transition:transform .26s cubic-bezier(.2,.8,.2,1),visibility 0s linear .26s}
-  .ws-shell.nav-open .ws-side{transform:none;visibility:visible;transition:transform .26s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 90px rgba(0,0,0,.6)}
-  .ws-scrim{display:block;position:fixed;inset:0;z-index:85;background:rgba(5,9,20,.58);opacity:0;pointer-events:none;transition:opacity .2s}
-  .ws-shell.nav-open .ws-scrim{opacity:1;pointer-events:auto}
-  body.nav-open{overflow:hidden}
-  .ws-close{display:grid;place-items:center;flex:none;width:44px;height:44px;border:0;border-radius:50%;background:#16264a;color:#fff;font-size:26px;line-height:1;cursor:pointer}
-  .ws-nav a{padding:13px 12px}
-  .ws-top2{padding:calc(10px + env(safe-area-inset-top,0px)) clamp(12px,3vw,24px) 10px;gap:10px}
-  .ws-ask{max-width:none}
   .ws-main{padding:18px clamp(14px,3vw,28px) calc(110px + env(safe-area-inset-bottom,0px))}
   input,select,textarea{font-size:16px} /* évite le zoom automatique d'iOS dans les champs */
   /* Assistant IA : panneau qui se superpose */
   .ws-ai{position:fixed;top:0;right:0;bottom:0;left:auto;z-index:95;width:min(440px,100vw);border-left:1px solid var(--line);box-shadow:-24px 0 70px rgba(0,0,0,.4);padding-bottom:env(safe-area-inset-bottom,0px)}
   .ws-ai[hidden]{display:none!important}
-  .ws-fab{right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 }
 
 /* ---- Barres d'onglets : une seule ligne qu'on fait glisser (carrousel) ---- */
@@ -83,9 +60,6 @@ body.ai-open .ws-shell{grid-template-columns:268px minmax(0,1fr) 380px}
 /* ---- Téléphone ---- */
 @media (max-width:639px){
   .ws-ai{width:100vw;border:0;box-shadow:none}
-  .ws-user div{display:none}
-  .ws-top2 .bell{width:42px;height:42px}
-  .ws-ask input{font-size:16px}
   .kpi b,.stat b{font-size:clamp(15px,4.7vw,21px);white-space:nowrap}
   .kpis,.kpis4{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .ws-head{flex-direction:column;align-items:stretch;gap:12px}
@@ -105,38 +79,24 @@ body.ai-open .ws-shell{grid-template-columns:268px minmax(0,1fr) 380px}
 /* ---- Tablette ---- */
 @media (min-width:640px) and (max-width:1099px){
   .ws-box{width:min(640px,92vw)}.ws-box.wide{width:min(860px,94vw)}
-  .ws-fab span{display:inline}
 }
 
 /* ---- Très grands écrans : le contenu reste lisible ---- */
 @media (min-width:1700px){.ws-main{padding-inline:clamp(32px,4vw,72px)}}
 
 /* ---- Préférences d'accessibilité ---- */
-@media (prefers-reduced-motion:reduce){.ws-side,.ws-scrim{transition:none!important}}
-
-h1,h2,h3{text-wrap:balance}
 
 /* ================================================================================================
    FINITIONS MOBILE (encoche, clavier, zones tactiles, hauteurs) : ajouté après la structure ci-dessus
    ================================================================================================ */
-.ws-modal{height:100vh;height:100dvh}
-.ws-box{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px - var(--kb,0px))}
-.ws-modal{padding-bottom:calc(16px + var(--kb,0px))}
 @media (max-width:1099px){
   /* barre du haut : sa hauteur s'adapte à l'encoche (elle était fixée à 64 px, l'encoche écrasait le contenu) */
-  .ws-top2{height:auto;min-height:calc(64px + env(safe-area-inset-top,0px));box-sizing:border-box;align-items:center;
-    padding-left:max(clamp(12px,3vw,24px),env(safe-area-inset-left,0px));padding-right:max(clamp(12px,3vw,24px),env(safe-area-inset-right,0px))}
-  .ws-top2 .bell{width:44px;height:44px}
-  .ws-user{min-width:44px;min-height:44px;justify-content:center}
-  .ws-ask input{text-overflow:ellipsis}
   .ws-main{padding-left:max(clamp(14px,3vw,28px),env(safe-area-inset-left,0px));padding-right:max(clamp(14px,3vw,28px),env(safe-area-inset-right,0px))}
-  .ws-side{padding-left:max(14px,env(safe-area-inset-left,0px))}
   /* panneau de l'assistant : au-dessus du clavier, sous l'encoche */
   .ws-ai{height:auto;bottom:var(--kb,0px);padding-right:env(safe-area-inset-right,0px);padding-bottom:0}
   .ai-h{padding-top:calc(12px + env(safe-area-inset-top,0px))}
   .ai-in{padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
   .ai-in textarea{font-size:16px}
-  .ws-fab{min-height:48px;min-width:48px}
   #toasts{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 }
 html.kb-open .ws-fab{display:none}
@@ -146,25 +106,21 @@ html.kb-open .ai-in{padding-bottom:10px}
   .btn,.btn.small,.bt{min-height:44px}
   button.link,.link{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center;padding:6px 10px}
   .tab,.chip,.ai-chips .chip{min-height:44px}
-  .ws-nav a{min-height:44px}
   input,select,textarea{font-size:16px}
   input[type=checkbox],input[type=radio]{min-width:20px;min-height:20px}
 }
 /* téléphone en paysage : peu de hauteur, on gagne de la place */
 @media (max-height:500px) and (orientation:landscape){
-  .ws-top2{min-height:calc(52px + env(safe-area-inset-top,0px))}
   .ws-box,.ws-box.wide{max-height:calc(100dvh - 16px - var(--kb,0px))}
   .ws-modal{padding:8px}
   .ws-ai{width:min(440px,100vw)}
 }
 @media (max-width:639px){
-  .ws-top2 .bell{width:44px;height:44px}
   .ws-box,.ws-box.wide{max-height:calc(94vh - var(--kb,0px));max-height:calc(94dvh - var(--kb,0px))}
   .ws-modal{padding-bottom:var(--kb,0px)}
 }
 
 /* Corrections vues sur tablette : étiquette « Attention requise » coupée, date des alertes posée sur le titre */
-.pill{white-space:nowrap}
 .hside{min-width:min(200px,100%)}
 .hside .pill{justify-self:start}
 .al{grid-template-columns:minmax(0,1fr) auto;column-gap:10px}

@@ -1,0 +1,7 @@
+Total gzip : 1105 Ko ; premier chargement (index + css) : 127 Ko ; fichiers : 186
+  index-Vg4z0GQY.js 120.8 Ko
+  Workspace-D2iH3NmZ.js 35.4 Ko
+  stock-Jy1TcuQ_.js 30.4 Ko
+  accounting-Db77nANh.js 27.5 Ko
+  sales-Wo3KA3cu.js 22.7 Ko
+  purchasing-BBrebL6f.js 20.8 Ko

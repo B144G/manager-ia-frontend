@@ -1,0 +1,111 @@
+/* =====================================================================================================================
+   BRIJ-IA : JETONS DE DESIGN (fichier unique). Toute couleur, police, taille, espacement, rayon, ombre et durée vient d'ici.
+   - UNE seule famille de caractères : Inter (variable). Les chiffres utilisent les chiffres tabulaires (colonnes alignées).
+   - Thèmes : clair (défaut), sombre ; « automatique » = suit le système (aucun attribut data-theme).
+   - Personnalisation (posée par src/lib/prefs.js) : --brand (couleur d'accent ou de marque), data-density, data-theme.
+   - Les anciens noms (--bg, --fg, --line, --pink, --f-display…) restent disponibles en alias tout en bas : ne pas en créer de nouveaux.
+   ===================================================================================================================== */
+:root{
+  /* --- Police unique et échelle typographique (12 · 13 · 14 · 15 · 17 · 20 · 24 · 30 · 40) --- */
+  --font:"Inter Variable","Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --fs-xs:12px; --fs-sm:13px; --fs-md:14px; --fs-base:15px; --fs-lg:17px; --fs-xl:20px; --fs-2xl:24px; --fs-3xl:30px; --fs-4xl:40px;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600; --fw-bold:700;
+  --lh-tight:1.25; --lh-normal:1.5; --lh-loose:1.65;
+
+  /* --- Espacements (grille de 4 px) --- */
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px; --sp-8:32px; --sp-10:40px; --sp-12:48px;
+  /* --- Rayons --- */
+  --radius-xs:4px; --radius-sm:6px; --radius-md:8px; --radius-lg:12px; --radius-xl:16px; --radius-full:999px;
+  /* --- Durées et courbes --- */
+  --dur-fast:.12s; --dur:.2s; --dur-slow:.32s; --ease:cubic-bezier(.2,.8,.2,1);
+  /* --- Hauteurs : champs et boutons (la densité et le tactile les modifient) --- */
+  --ctl-h:38px; --ctl-h-sm:30px; --ctl-h-lg:46px; --row-h:44px; --pad-card:20px; --gap:16px;
+  --touch:44px;
+  /* --- Mise en page --- */
+  --side-w:264px; --side-w-mini:72px; --top-h:60px; --bottom-nav-h:60px; --content-max:1480px;
+  --z-sticky:20; --z-nav:80; --z-drawer:90; --z-modal:100; --z-toast:200;
+
+  /* --- Couleur de marque (personnalisable) : --brand ; le reste en découle --- */
+  --brand:#4f46e5; --on-brand:#ffffff; --brand-dk:#8b93ff; --on-brand-dk:#0b1220;
+  --accent:var(--brand); --on-accent:var(--on-brand);
+  --accent-hover:color-mix(in srgb,var(--accent) 86%,#000);
+  --accent-press:color-mix(in srgb,var(--accent) 74%,#000);
+  --accent-soft:color-mix(in srgb,var(--accent) 10%,var(--surface));
+  --accent-soft-2:color-mix(in srgb,var(--accent) 18%,var(--surface));
+  --focus:var(--accent);
+
+  /* --- Neutres (clair) --- */
+  --page:#f3f5f9; --surface:#ffffff; --surface-2:#f7f8fc; --surface-3:#eceff6; --overlay:rgba(10,15,30,.55);
+  --border:#dfe3ec; --border-strong:#c3cad8;
+  --text:#101828; --text-2:#3d4a5f; --muted:#5b6577; --on-dark:#ffffff;
+  /* Barre latérale (toujours sombre, comme SAP Fiori / Business Central) */
+  --nav-bg:#0e1526; --nav-bg-2:#16203a; --nav-line:#1f2a47; --nav-text:#c9d3e8; --nav-muted:#93a1bf; --nav-active:var(--accent); --nav-on-active:var(--on-accent);
+
+  /* --- États (fond, texte AA sur fond blanc, bordure) --- */
+  --ok:#12b76a;    --ok-text:#067647;    --ok-soft:#e6f6ee;
+  --warn:#f79009;  --warn-text:#9a4a00;  --warn-soft:#fff3d9;
+  --on-danger:#ffffff;
+  --danger:#d92d20;--danger-text:#b42318;--danger-soft:#fdeceb;
+  --info:#2e90fa;  --info-text:#175cd3;  --info-soft:#e8f1fe;
+
+  /* --- Séries de graphiques (distinguables y compris en daltonisme ; testées clair et sombre) --- */
+  --c1:#4f46e5; --c2:#0e9f8e; --c3:#f59e0b; --c4:#e0446b; --c5:#2e90fa; --c6:#7c3aed; --c7:#65a30d; --c8:#64748b;
+  --chart-grid:#e3e7f0; --chart-axis:#5b6577; --chart-plan:#9aa5bb;
+
+  /* --- Ombres --- */
+  --sh-1:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
+  --sh-2:0 4px 8px -2px rgba(16,24,40,.08),0 12px 24px -6px rgba(16,24,40,.12);
+  --sh-3:0 24px 48px -12px rgba(16,24,40,.28);
+  --ring:0 0 0 3px color-mix(in srgb,var(--focus) 35%,transparent);
+
+  --on-surface-hover:color-mix(in srgb,var(--text) 5%,transparent);
+  color-scheme:light;
+}
+/* Sombre : suit le système si aucun choix ; [data-theme=dark] force. */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --accent:var(--brand-dk); --on-accent:var(--on-brand-dk);
+  --page:#0a101e; --surface:#121a2c; --surface-2:#18223a; --surface-3:#1e2a45; --overlay:rgba(2,6,16,.7);
+  --border:#26324d; --border-strong:#36456a;
+  --text:#e9eef8; --text-2:#c4cee3; --muted:#9fadc7;
+  --nav-bg:#070c18; --nav-bg-2:#111a30; --nav-line:#1a2542;
+  --on-danger:#2a0807; --ok:#34d399; --ok-text:#4ade9c; --ok-soft:#10301f;
+  --warn:#fbbf24; --warn-text:#fbbf24; --warn-soft:#34280c;
+  --danger:#f87171; --danger-text:#ff8e8a; --danger-soft:#3a1618;
+  --info:#60a5fa; --info-text:#7db8ff; --info-soft:#13284a;
+  --c1:#8b93ff; --c2:#2dd4bf; --c3:#fbbf24; --c4:#fb7185; --c5:#60a5fa; --c6:#c4b5fd; --c7:#a3e635; --c8:#94a3b8;
+  --chart-grid:#26324d; --chart-axis:#9fadc7; --chart-plan:#6b7a99;
+  --sh-1:0 1px 2px rgba(0,0,0,.4),0 1px 3px rgba(0,0,0,.35);
+  --sh-2:0 4px 8px -2px rgba(0,0,0,.45),0 12px 24px -6px rgba(0,0,0,.5);
+  --sh-3:0 24px 48px -12px rgba(0,0,0,.7);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --accent:var(--brand-dk); --on-accent:var(--on-brand-dk);
+  --page:#0a101e; --surface:#121a2c; --surface-2:#18223a; --surface-3:#1e2a45; --overlay:rgba(2,6,16,.7);
+  --border:#26324d; --border-strong:#36456a;
+  --text:#e9eef8; --text-2:#c4cee3; --muted:#9fadc7;
+  --nav-bg:#070c18; --nav-bg-2:#111a30; --nav-line:#1a2542;
+  --on-danger:#2a0807; --ok:#34d399; --ok-text:#4ade9c; --ok-soft:#10301f;
+  --warn:#fbbf24; --warn-text:#fbbf24; --warn-soft:#34280c;
+  --danger:#f87171; --danger-text:#ff8e8a; --danger-soft:#3a1618;
+  --info:#60a5fa; --info-text:#7db8ff; --info-soft:#13284a;
+  --c1:#8b93ff; --c2:#2dd4bf; --c3:#fbbf24; --c4:#fb7185; --c5:#60a5fa; --c6:#c4b5fd; --c7:#a3e635; --c8:#94a3b8;
+  --chart-grid:#26324d; --chart-axis:#9fadc7; --chart-plan:#6b7a99;
+  --sh-1:0 1px 2px rgba(0,0,0,.4),0 1px 3px rgba(0,0,0,.35);
+  --sh-2:0 4px 8px -2px rgba(0,0,0,.45),0 12px 24px -6px rgba(0,0,0,.5);
+  --sh-3:0 24px 48px -12px rgba(0,0,0,.7);
+  color-scheme:dark}
+
+/* Densité : confortable (défaut) ou compacte (tableaux plus serrés, comme un ERP de saisie). */
+:root[data-density="compact"]{--ctl-h:32px;--ctl-h-sm:26px;--ctl-h-lg:40px;--row-h:34px;--pad-card:14px;--gap:12px;--fs-base:14px}
+/* Écran tactile : cibles de 44 px minimum, quelle que soit la densité. */
+@media (pointer:coarse),(max-width:1099px){:root,:root[data-density="compact"]{--ctl-h:var(--touch);--ctl-h-sm:var(--touch);--ctl-h-lg:48px;--row-h:var(--touch)}}
+
+/* --- Anciens noms (alias) : les écrans existants continuent de fonctionner et suivent les thèmes --- */
+:root{
+  --bg:var(--page); --bg2:var(--surface-2); --card:var(--surface); --surface2:var(--surface-3); --fg:var(--text); --ink:var(--text); --line:var(--border);
+  --accent-fg:var(--on-accent); --signal:var(--warn); --signal-fg:#2b1d00; --pink:var(--danger-text); --warn-bg:var(--warn-soft);
+  --p:var(--accent); --pfg:var(--on-accent); --gold:var(--warn); --rose:var(--danger);
+  --f-display:var(--font); --f-body:var(--font); --f-mono:var(--font); --f-h:var(--font); --f-b:var(--font);
+  --r1:var(--radius-lg); --r2:var(--radius-xl); --r3:var(--radius-xl); --sh1:var(--sh-1); --sh2:var(--sh-2);
+  --soft:var(--accent-soft); --soft2:var(--accent-soft-2); --wa:#128c4a; --wa-fg:#fff;
+}

@@ -77,7 +77,7 @@ export default function AnalyticsTab({ year, setYear }) {
                       <small>{t('Produits {p} · Charges {c}', { p: money(r.produits), c: money(r.charges) })}</small>
                       <b className={r.resultat >= 0 ? 'ok' : 'late'}>{money(r.resultat)}</b>
                       {r.margePct === null || r.margePct === undefined ? null : <span className={'pill ' + (r.margePct >= 0 ? 'good' : 'bad')}>{r.margePct + ' %'}</span>}
-                      <button className="link" type="button" style={{ minHeight: 44 }} onClick={() => lines(r)}>{t('Écritures')}</button>
+                      <button className="link" type="button" onClick={() => lines(r)}>{t('Écritures')}</button>
                     </span>
                   </div>
                 ))}
@@ -97,8 +97,8 @@ export default function AnalyticsTab({ year, setYear }) {
       <div className="ws-card">
         <div className="row" style={{ flexWrap: 'wrap' }}>
           <h2 className="grow">{t('Sections')}</h2>
-          <button className="btn small" type="button" style={{ minHeight: 44 }} onClick={importAll}>{t('Importer mes projets et antennes')}</button>
-          <button className="btn primary small" type="button" style={{ minHeight: 44 }} onClick={add}>{t('Nouvelle section')}</button>
+          <button className="btn small" type="button" onClick={importAll}>{t('Importer mes projets et antennes')}</button>
+          <button className="btn primary small" type="button" onClick={add}>{t('Nouvelle section')}</button>
         </div>
         <Loaded state={secs}>
           {(j) => (
@@ -109,8 +109,8 @@ export default function AnalyticsTab({ year, setYear }) {
                   <span><b>{s.code}</b><small>{' ' + tsrv(s.label) + ' · ' + t(KINDS[s.kind] || 'Activité') + ' · ' + t('{n} ligne(s)', { n: s.used })}</small></span>
                   <span className="row">
                     <span className={'pill ' + (s.active ? 'good' : '')}>{s.active ? t('Active') : t('Inactive')}</span>
-                    <button className="link" type="button" style={{ minHeight: 44 }} onClick={() => rename(s)}>{t('Renommer')}</button>
-                    <button className="link" type="button" style={{ minHeight: 44 }} onClick={() => toggle(s)}>{s.active ? t('Désactiver') : t('Réactiver')}</button>
+                    <button className="link" type="button" onClick={() => rename(s)}>{t('Renommer')}</button>
+                    <button className="link" type="button" onClick={() => toggle(s)}>{s.active ? t('Désactiver') : t('Réactiver')}</button>
                   </span>
                 </div>
               ))}

@@ -43,19 +43,19 @@ function TemplateForm({ tpl, sections, close, onSaved, back }) {
       <h3>{tsrv(tpl.label)}</h3>
       {tpl.hint ? <p className="muted small">{tsrv(tpl.hint)}</p> : null}
       <div className="ws-form">
-        <label className="fld"><span>{t('Date')}</span><input type="date" style={{ fontSize: 16 }} value={date} onChange={(e) => setDate(e.target.value)} /></label>
+        <label className="fld"><span>{t('Date')}</span><input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></label>
         {fields.map((f) => (
           <label className="fld" key={f.k}>
             <span>{tsrv(f.label)}</span>
             {f.type === 'select'
-              ? <select style={{ fontSize: 16 }} value={vals[f.k]} onChange={(e) => set(f.k, e.target.value)}>{(f.options || []).map((o) => { const [v, l] = opt(o); return <option key={v} value={v}>{tsrv(String(l))}</option>; })}</select>
-              : <input type={f.type === 'amount' ? 'number' : 'text'} min={f.type === 'amount' ? '0' : undefined} step={f.type === 'amount' ? '1' : undefined} inputMode={f.type === 'amount' ? 'numeric' : undefined} style={{ fontSize: 16 }} value={vals[f.k]} onChange={(e) => set(f.k, e.target.value)} />}
+              ? <select value={vals[f.k]} onChange={(e) => set(f.k, e.target.value)}>{(f.options || []).map((o) => { const [v, l] = opt(o); return <option key={v} value={v}>{tsrv(String(l))}</option>; })}</select>
+              : <input type={f.type === 'amount' ? 'number' : 'text'} min={f.type === 'amount' ? '0' : undefined} step={f.type === 'amount' ? '1' : undefined} inputMode={f.type === 'amount' ? 'numeric' : undefined} value={vals[f.k]} onChange={(e) => set(f.k, e.target.value)} />}
           </label>
         ))}
-        <label className="fld"><span>{t('Pièce (facultatif)')}</span><input type="text" style={{ fontSize: 16 }} maxLength={60} value={piece} onChange={(e) => setPiece(e.target.value)} /></label>
+        <label className="fld"><span>{t('Pièce (facultatif)')}</span><input type="text" maxLength={60} value={piece} onChange={(e) => setPiece(e.target.value)} /></label>
         {secs.length ? (
           <label className="fld"><span>{t('Section analytique')}</span>
-            <select style={{ fontSize: 16 }} value={section} onChange={(e) => setSection(e.target.value)}>
+            <select value={section} onChange={(e) => setSection(e.target.value)}>
               <option value="">{t('Sans section')}</option>
               {secs.map((s) => <option key={s.code} value={s.code}>{s.code + ' · ' + s.label}</option>)}
             </select>

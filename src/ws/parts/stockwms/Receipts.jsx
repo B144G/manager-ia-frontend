@@ -30,9 +30,9 @@ function NewReceipt({ close, done }) {
   const KINDS = kinds.data ? kinds.data.costKinds : {}; const BASES = kinds.data ? kinds.data.bases : {};
   return (
     <form className="ws-form" noValidate onSubmit={submit}>
-      <label className="fld"><span>{t('Fournisseur (facultatif)')}</span><select style={{ fontSize: 16 }} value={v.supplierId} onChange={(e) => setV({ ...v, supplierId: e.target.value })}><option value="">{t('Aucun')}</option>{(sup.data ? sup.data.suppliers : []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
-      <label className="fld"><span>{t('Bon de livraison ou facture (facultatif)')}</span><input type="text" style={{ fontSize: 16 }} value={v.reference} onChange={(e) => setV({ ...v, reference: e.target.value })} /></label>
-      <label className="fld"><span>{t('Emplacement de réception')}</span><select style={{ fontSize: 16 }} value={v.locationId} onChange={(e) => setV({ ...v, locationId: e.target.value })}>{locOptions(locs.locations, t('Automatique (règles de rangement)'), true).map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select></label>
+      <label className="fld"><span>{t('Fournisseur (facultatif)')}</span><select value={v.supplierId} onChange={(e) => setV({ ...v, supplierId: e.target.value })}><option value="">{t('Aucun')}</option>{(sup.data ? sup.data.suppliers : []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
+      <label className="fld"><span>{t('Bon de livraison ou facture (facultatif)')}</span><input type="text" value={v.reference} onChange={(e) => setV({ ...v, reference: e.target.value })} /></label>
+      <label className="fld"><span>{t('Emplacement de réception')}</span><select value={v.locationId} onChange={(e) => setV({ ...v, locationId: e.target.value })}>{locOptions(locs.locations, t('Automatique (règles de rangement)'), true).map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select></label>
       <h3>{t('Marchandises reçues')}</h3>
       <LinesEditor items={items.items} rows={rows} setRows={setRows} addText={t('Ajouter une ligne')}
         extra={[{ k: 'unitCost', label: t('Prix unitaire'), numeric: true }, { k: 'weight', label: t('Poids unitaire (kg)'), numeric: true }, { k: 'lotNo', label: t('N° de lot') }, { k: 'expiry', label: t('Péremption (AAAA-MM-JJ)') }, { k: 'serials', label: t('N° de série') }]} />
@@ -40,10 +40,10 @@ function NewReceipt({ close, done }) {
       <p className="muted small">{t("Transport, douane, manutention… Ils sont répartis sur les lignes et ajoutés au coût moyen de chaque article.")}</p>
       {costs.map((c, i) => (
         <div className="wms-lrow" key={i}>
-          <label className="fld wms-l-qty"><span>{t('Type')}</span><select style={{ fontSize: 16 }} value={c.kind} onChange={(e) => setCost(i, 'kind', e.target.value)}>{Object.entries(KINDS).map(([k, x]) => <option key={k} value={k}>{t(x)}</option>)}</select></label>
-          <label className="fld wms-l-qty"><span>{t('Montant ({currency})', { currency: info.org.currency })}</span><input type="text" inputMode="numeric" style={{ fontSize: 16 }} value={c.amount} onChange={(e) => setCost(i, 'amount', e.target.value)} /></label>
-          <label className="fld wms-l-qty"><span>{t('Répartir selon')}</span><select style={{ fontSize: 16 }} value={c.basis} onChange={(e) => setCost(i, 'basis', e.target.value)}>{Object.entries(BASES).map(([k, x]) => <option key={k} value={k}>{t(x)}</option>)}</select></label>
-          <label className="fld wms-l-item"><span>{t('Libellé (facultatif)')}</span><input type="text" style={{ fontSize: 16 }} value={c.label} onChange={(e) => setCost(i, 'label', e.target.value)} /></label>
+          <label className="fld wms-l-qty"><span>{t('Type')}</span><select value={c.kind} onChange={(e) => setCost(i, 'kind', e.target.value)}>{Object.entries(KINDS).map(([k, x]) => <option key={k} value={k}>{t(x)}</option>)}</select></label>
+          <label className="fld wms-l-qty"><span>{t('Montant ({currency})', { currency: info.org.currency })}</span><input type="text" inputMode="numeric" value={c.amount} onChange={(e) => setCost(i, 'amount', e.target.value)} /></label>
+          <label className="fld wms-l-qty"><span>{t('Répartir selon')}</span><select value={c.basis} onChange={(e) => setCost(i, 'basis', e.target.value)}>{Object.entries(BASES).map(([k, x]) => <option key={k} value={k}>{t(x)}</option>)}</select></label>
+          <label className="fld wms-l-item"><span>{t('Libellé (facultatif)')}</span><input type="text" value={c.label} onChange={(e) => setCost(i, 'label', e.target.value)} /></label>
           <button className="link" type="button" onClick={() => setCosts(costs.filter((_, j) => j !== i))}>{t('Retirer')}</button>
         </div>
       ))}
@@ -148,10 +148,10 @@ function PurchaseForm({ cands, kinds, close, done }) {
           <span><b>{c.item + ' × ' + qty(c.quantity)}</b><small>{' ' + (c.supplier || '') + ' · ' + t('commande n° {n}', { n: c.orderId }) + ' · ' + date(c.at.slice(0, 10)) + ' · ' + money(c.unitPrice)}</small></span>
         </label>
       ))}
-      <label className="fld"><span>{t('Type')}</span><select style={{ fontSize: 16 }} value={v.kind} onChange={(e) => setV({ ...v, kind: e.target.value })}>{Object.entries(kinds.costKinds).map(([k, x]) => <option key={k} value={k}>{t(x)}</option>)}</select></label>
-      <label className="fld"><span>{t('Montant')}</span><input type="text" inputMode="numeric" style={{ fontSize: 16 }} value={v.amount} onChange={(e) => setV({ ...v, amount: e.target.value })} /></label>
-      <label className="fld"><span>{t('Répartir selon')}</span><select style={{ fontSize: 16 }} value={v.basis} onChange={(e) => setV({ ...v, basis: e.target.value })}>{Object.entries(kinds.bases).filter(([k]) => k !== 'weight').map(([k, x]) => <option key={k} value={k}>{t(x)}</option>)}</select></label>
-      <label className="fld"><span>{t('Libellé (facultatif)')}</span><input type="text" style={{ fontSize: 16 }} value={v.label} onChange={(e) => setV({ ...v, label: e.target.value })} /></label>
+      <label className="fld"><span>{t('Type')}</span><select value={v.kind} onChange={(e) => setV({ ...v, kind: e.target.value })}>{Object.entries(kinds.costKinds).map(([k, x]) => <option key={k} value={k}>{t(x)}</option>)}</select></label>
+      <label className="fld"><span>{t('Montant')}</span><input type="text" inputMode="numeric" value={v.amount} onChange={(e) => setV({ ...v, amount: e.target.value })} /></label>
+      <label className="fld"><span>{t('Répartir selon')}</span><select value={v.basis} onChange={(e) => setV({ ...v, basis: e.target.value })}>{Object.entries(kinds.bases).filter(([k]) => k !== 'weight').map(([k, x]) => <option key={k} value={k}>{t(x)}</option>)}</select></label>
+      <label className="fld"><span>{t('Libellé (facultatif)')}</span><input type="text" value={v.label} onChange={(e) => setV({ ...v, label: e.target.value })} /></label>
       <FormFoot busy={busy} err={err} text={t('Rattacher')} />
     </form>
   );

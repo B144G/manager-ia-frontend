@@ -29,7 +29,7 @@
 .af-actions .btn.small{min-height:36px;padding:6px 12px;font-size:13px;display:inline-flex;gap:6px;align-items:center}
 .af-tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--surface2);color:var(--muted);margin-left:6px;vertical-align:middle}
 .af-ia{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:13px;white-space:nowrap}
-.af-ia.active{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.af-ia.active{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok-text)}
 .af-ia.excluded{background:color-mix(in srgb,var(--pink) 18%,transparent);color:var(--pink)}
 .af-ia.partial{background:color-mix(in srgb,var(--signal) 26%,transparent);color:#8a5a00}
 .af-ia.waiting{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent)}

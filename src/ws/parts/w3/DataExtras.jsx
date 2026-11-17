@@ -56,9 +56,9 @@ export function CsvTools() {
         {EXPORTS.map(([k, l]) => <button key={k} className="btn small" type="button" style={BTN} onClick={() => saveFile('/orgs/' + orgId + '/data/export/' + k, k + '.csv', fail)}>{t('Exporter : {what}', { what: t(l) })}</button>)}
       </div>
       <h3>{t('Importer')}</h3>
-      <label className="fld"><span>{t('Que voulez-vous importer ?')}</span><select style={{ fontSize: 16 }} value={kind} onChange={(e) => { setKind(e.target.value); setRes(null); }}><option value="customers">{t('Clients (colonnes : Nom, Téléphone, E-mail, Notes)')}</option><option value="stock">{t('Stock (colonnes : Article, SKU, Unité, Quantité, Seuil minimum, Coût unitaire)')}</option></select></label>
-      <input type="file" accept=".csv,text/csv,text/plain" onChange={load} aria-label={t('Choisir un fichier CSV')} style={{ fontSize: 16 }} />
-      <label className="fld"><span>{t('ou collez le contenu')}</span><textarea rows={5} style={{ fontSize: 16 }} value={csv} onChange={(e) => { setCsv(e.target.value); setRes(null); }} /></label>
+      <label className="fld"><span>{t('Que voulez-vous importer ?')}</span><select value={kind} onChange={(e) => { setKind(e.target.value); setRes(null); }}><option value="customers">{t('Clients (colonnes : Nom, Téléphone, E-mail, Notes)')}</option><option value="stock">{t('Stock (colonnes : Article, SKU, Unité, Quantité, Seuil minimum, Coût unitaire)')}</option></select></label>
+      <input type="file" accept=".csv,text/csv,text/plain" onChange={load} aria-label={t('Choisir un fichier CSV')} />
+      <label className="fld"><span>{t('ou collez le contenu')}</span><textarea rows={5} value={csv} onChange={(e) => { setCsv(e.target.value); setRes(null); }} /></label>
       <div className="row"><button className="btn small" type="button" style={BTN} disabled={busy || !csv.trim()} onClick={() => run(true)}>{t('Vérifier avant import')}</button><button className="btn primary small" type="button" style={BTN} disabled={busy || !res || !res.dryRun || !res.created} onClick={() => run(false)}>{t('Importer')}</button></div>
       {res ? (
         <>

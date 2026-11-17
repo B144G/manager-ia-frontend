@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useT } from '../../../lib/i18n.jsx';
 import { useWs } from '../../WsContext.jsx';
-import { Empty, Form, Loaded, useLoad } from '../../ui.jsx';
+import { Card, ChartFrame, Empty, Form, Loaded, useLoad } from '../../ui.jsx';
+import { HBars } from '../../charts/lazy.jsx';
 import { BTN, FilesBox, SettingsCard } from '../w3/common.jsx';
 
 /* Projets · vague 3 : budget et coût, temps passé, jalons, charge par personne, détail d'une tâche (temps, commentaires, dépendance, récurrence, pièces). */
@@ -106,15 +107,22 @@ export function Workload() {
   const { oapi } = useWs();
   const st = useLoad(() => oapi('GET', '/projects/workload'), []);
   return (
-    <div className="ws-card">
-      <h2>{t('Charge par personne')}</h2>
-      <Loaded state={st}>{(j) => (
-        <>
-          {!j.items.length ? <Empty text={t('Aucune tâche ouverte.')} /> : null}
-          {j.items.map((p, i) => <div className="line" key={i}><b>{p.name || t('Non assignée')}</b><span>{t('{n} tâche(s) ouverte(s) · {o} en retard · {e} h estimées · {l} h saisies (30 j)', { n: p.openTasks, o: p.overdue, e: p.estimatedHours, l: p.loggedHours30d })}</span></div>)}
-        </>
-      )}
+    <Card title={t('Charge par personne')} subtitle={t('Tâches ouvertes et heures estimées')} className="wl">
+      <Loaded state={st}>{(j) => {
+        const data = j.items.map((p) => ({ name: (p.name || t('Non assignée')).split(' ').slice(0, 2).join(' '), value: p.openTasks, color: p.overdue ? 'var(--danger)' : 'var(--c1)' }));
+        return (
+          <>
+            {!j.items.length ? <Empty text={t('Aucune tâche ouverte.')} /> : (
+              <div className="wl-g">
+                <ChartFrame title={t('Tâches ouvertes')} subtitle={t('Rouge : des tâches sont en retard')} height={Math.max(180, data.length * 36 + 40)} summary={data.map((d) => d.name + ' ' + d.value).join(', ')}><HBars data={data} valueLabel={t('Tâches ouvertes')} height={Math.max(180, data.length * 36 + 40)} /></ChartFrame>
+                <div className="ui-table-wrap"><table className="ui-table"><thead><tr><th scope="col">{t('Personne')}</th><th scope="col" className="r">{t('Ouvertes')}</th><th scope="col" className="r">{t('En retard')}</th><th scope="col" className="r">{t('Estimées')}</th><th scope="col" className="r">{t('Saisies (30 j)')}</th></tr></thead>
+                  <tbody>{j.items.map((p, i) => <tr key={i}><td><b>{p.name || t('Non assignée')}</b></td><td className="r num">{p.openTasks}</td><td className={'r num' + (p.overdue ? ' late' : '')}>{p.overdue}</td><td className="r num">{p.estimatedHours} h</td><td className="r num">{p.loggedHours30d} h</td></tr>)}</tbody></table></div>
+              </div>
+            )}
+          </>
+        );
+      }}
       </Loaded>
-    </div>
+    </Card>
   );
 }

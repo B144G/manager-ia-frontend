@@ -1,20 +1,24 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT } from '../lib/i18n.jsx';
+import { EMOJI_FA, Icon, hasIcon } from '../lib/fa.jsx';
 import { useWs } from './WsContext.jsx';
-import { Fa, faName } from '../lib/fa.jsx';
+import { publishScreens } from './shell/screens.js';
 
-/* Cadre commun d'un module : bandeau (entreprise, personne, rôle), menu à gauche en groupes dépliables,
-   recherche d'écran (Ctrl K), fil d'Ariane et phrase d'explication. N'affiche que ce qu'on lui donne :
-   il ne décide d'aucun droit (les droits restent contrôlés par le serveur).
+/* Cadre commun d'un module : menu à gauche en groupes dépliables (les écrans du module), recherche d'écran, fil d'Ariane et phrase d'explication.
+   L'organisation, la personne et la recherche globale (Ctrl K) sont dans l'en-tête de l'application (src/ws/shell) ; ce cadre publie ses écrans
+   pour le fil d'Ariane et la recherche. N'affiche que ce qu'on lui donne : il ne décide d'aucun droit (les droits restent contrôlés par le serveur).
    groups : [{ id, label, icon?, items: [{ id, label, hint, to? }] }]   active : id de l'écran affiché   onSelect(id)
    Un item avec `to` ouvre un autre module (ex. 'stock') au lieu d'un écran du module. quick : bloc « vue rapide » au-dessus de l'écran. */
 
+// Anciennes icônes en émoji (dans les modules) → icônes Font Awesome. Un nom d'icône du registre est aussi accepté.
+const EMOJI = { '📊': 'pie', '✏️': 'edit', '👥': 'users', '🏦': 'bank', '📈': 'chart', '📋': 'list', '🧾': 'billing', '📦': 'box', '🛒': 'sales', '🚚': 'logistics', '⚙️': 'settings', '🔧': 'maintenance', '💰': 'money', '📅': 'calendar', '🔍': 'search', '📁': 'folder', '🏭': 'production', '📝': 'doc', '🔔': 'alerts', '🎯': 'target', '🧮': 'table', '📑': 'doc', '🏗️': 'construction', '📚': 'library', '🔒': 'lock', '✅': 'ok', '⚠️': 'warn', '🛠️': 'maintenance', '🏷️': 'tag', '📥': 'download', '📤': 'upload', '🗂️': 'folder-open', '💼': 'briefcase', '🌱': 'seedling', '♻️': 'recycle' };
+const iconOf = (x) => (hasIcon(x) ? x : EMOJI[x] || EMOJI_FA[x] || 'layer-group');
+
 export default function ModuleShell({ title, groups, active, onSelect, actions, quick, children }) {
   const t = useT();
-  const { info, user, orgId } = useWs();
+  const { orgId } = useWs();
   const navigate = useNavigate();
-  const search = useRef(null);
   const [q, setQ] = useState('');
   const [drawer, setDrawer] = useState(false);
   const groupOf = (id) => (groups.find((g) => g.items.some((i) => i.id === id)) || {}).id;
@@ -25,19 +29,9 @@ export default function ModuleShell({ title, groups, active, onSelect, actions, 
     if (g) setOpen((s) => (s.has(g) ? s : new Set(s).add(g)));
   }, [active]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    const onKey = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        setDrawer(true);
-        setTimeout(() => { if (search.current) search.current.focus(); }, 30);
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
-
   const flat = useMemo(() => groups.flatMap((g) => g.items.map((i) => ({ ...i, group: g.label }))), [groups]);
+  useEffect(() => { publishScreens({ title, items: flat, active, onSelect }); }, [title, flat, active, onSelect]);
+  useEffect(() => () => publishScreens({ title: '', items: [], active: null, onSelect: null }), []);
   const found = useMemo(() => {
     const s = q.trim().toLowerCase();
     return s ? flat.filter((i) => (i.label + ' ' + (i.hint || '') + ' ' + i.group).toLowerCase().includes(s)) : [];
@@ -51,35 +45,28 @@ export default function ModuleShell({ title, groups, active, onSelect, actions, 
   };
   const toggle = (id) => setOpen((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
 
-  const org = info && info.org ? info.org.name : '';
-  const who = user ? user.name : '';
-  const role = info && info.me ? t(info.me.roleLabel) : '';
-
   return (
     <div className={'msh' + (drawer ? ' msh-open' : '')}>
-      <div className="msh-band">
-        <div><div className="msh-title">{title}</div><span className="msh-org">{org}</span></div>
-        <span className="msh-who">{who}{role ? <small>{role}</small> : null}</span>
-      </div>
       <div className="msh-body">
-        <button type="button" className="msh-burger btn small" aria-expanded={drawer} onClick={() => setDrawer(!drawer)}>
-          {drawer ? t('Fermer le menu') : t('Afficher le menu')}
+        <button type="button" className="msh-burger ui-btn" aria-expanded={drawer} onClick={() => setDrawer(!drawer)}>
+          <Icon name="list" />{cur ? cur.label : title} · {drawer ? t('Fermer le menu') : t('Afficher le menu')}
         </button>
         <nav className="msh-nav" aria-label={t('Menu du module')}>
-          <input ref={search} type="search" className="msh-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('Rechercher un écran…')} aria-label={t('Rechercher un écran…')} />
+          <div className="msh-title">{title}</div>
+          <div className="msh-sw"><Icon name="search" /><input type="search" className="msh-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('Rechercher un écran…')} aria-label={t('Rechercher un écran…')} /></div>
           {q.trim() ? (
             found.length ? found.map((i) => (
-              <button key={i.id} type="button" className={'msh-item' + (i.id === active ? ' on' : '')} onClick={() => pick(i.id)}>{i.label}{i.to ? ' ↗' : ''}<small>{i.group}</small></button>
+              <button key={i.id} type="button" className={'msh-item' + (i.id === active ? ' on' : '')} onClick={() => pick(i.id)}>{i.label}{i.to ? <Icon name="arrow-right" /> : null}<small>{i.group}</small></button>
             )) : <p className="muted small msh-none">{t('Aucun écran trouvé.')}</p>
           ) : groups.map((g) => {
             const isOpen = open.has(g.id);
             return (
               <div key={g.id} className="msh-group">
                 <button type="button" className="msh-gh" aria-expanded={isOpen} onClick={() => toggle(g.id)}>
-                  <span>{g.icon ? <span className="msh-ico"><Fa name={faName(g.icon)} fixedWidth /></span> : null}{g.label}</span><span className="msh-caret"><Fa name={isOpen ? 'down' : 'right'} /></span>
+                  <span>{g.icon ? <Icon name={iconOf(g.icon)} fixedWidth /> : null}{g.label}</span><Icon name={isOpen ? 'down' : 'right'} className="msh-caret" />
                 </button>
                 {isOpen ? g.items.map((i) => (
-                  <button key={i.id} type="button" className={'msh-item' + (i.id === active ? ' on' : '')} aria-current={i.id === active ? 'page' : undefined} onClick={() => pick(i.id)}>{i.label}{i.to ? ' ↗' : ''}</button>
+                  <button key={i.id} type="button" className={'msh-item' + (i.id === active ? ' on' : '')} aria-current={i.id === active ? 'page' : undefined} onClick={() => pick(i.id)}>{i.label}{i.to ? <Icon name="arrow-right" /> : null}</button>
                 )) : null}
               </div>
             );
@@ -88,8 +75,8 @@ export default function ModuleShell({ title, groups, active, onSelect, actions, 
         <div className="msh-main">
           <div className="msh-top">
             <div>
-              <div className="msh-crumb">{title}{cur ? <> › {cur.group} › <b>{cur.label}</b></> : null}</div>
-              {cur && cur.hint ? <p className="muted small msh-hint">{cur.hint}</p> : null}
+              {cur ? <div className="msh-cur">{cur.label}</div> : null}
+              {cur && cur.hint ? <p className="muted msh-hint">{cur.hint}</p> : null}
             </div>
             {actions ? <div className="row">{actions}</div> : null}
           </div>

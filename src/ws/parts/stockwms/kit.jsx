@@ -73,9 +73,9 @@ export function LinesEditor({ items, rows, setRows, extra = [], addText }) {
       {rows.map((r, i) => (
         <div className="wms-lrow" key={i}>
           <label className="fld wms-l-item"><span>{t('Article')}</span>
-            <select style={{ fontSize: 16 }} value={r.itemId} onChange={(e) => set(i, 'itemId', e.target.value)}>{itemOptions(items, t('Choisir…')).map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select></label>
-          <label className="fld wms-l-qty"><span>{t('Quantité')}</span><input type="text" inputMode="decimal" style={{ fontSize: 16 }} value={r.quantity} onChange={(e) => set(i, 'quantity', e.target.value)} /></label>
-          {extra.map((x) => <label className="fld wms-l-qty" key={x.k}><span>{x.label}</span><input type="text" inputMode={x.numeric ? 'decimal' : 'text'} style={{ fontSize: 16 }} placeholder={x.placeholder || ''} value={r[x.k] || ''} onChange={(e) => set(i, x.k, e.target.value)} /></label>)}
+            <select value={r.itemId} onChange={(e) => set(i, 'itemId', e.target.value)}>{itemOptions(items, t('Choisir…')).map((o) => <option key={o[0]} value={o[0]}>{o[1]}</option>)}</select></label>
+          <label className="fld wms-l-qty"><span>{t('Quantité')}</span><input type="text" inputMode="decimal" value={r.quantity} onChange={(e) => set(i, 'quantity', e.target.value)} /></label>
+          {extra.map((x) => <label className="fld wms-l-qty" key={x.k}><span>{x.label}</span><input type="text" inputMode={x.numeric ? 'decimal' : 'text'} placeholder={x.placeholder || ''} value={r[x.k] || ''} onChange={(e) => set(i, x.k, e.target.value)} /></label>)}
           {rows.length > 1 ? <button className="link" type="button" onClick={() => setRows(rows.filter((_, j) => j !== i))} aria-label={t('Retirer cette ligne')}>{t('Retirer')}</button> : null}
         </div>
       ))}

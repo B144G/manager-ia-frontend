@@ -38,19 +38,19 @@ function RecurringForm({ item, accs, JN, sections, close, onSaved }) {
   }
   return (
     <div className="ws-form">
-      <label className="fld"><span>{t('Libellé')}</span><input type="text" style={{ fontSize: 16 }} maxLength={200} value={label} onChange={(e) => setLabel(e.target.value)} /></label>
+      <label className="fld"><span>{t('Libellé')}</span><input type="text" maxLength={200} value={label} onChange={(e) => setLabel(e.target.value)} /></label>
       <div className="row" style={{ flexWrap: 'wrap' }}>
-        <select aria-label={t('Journal')} value={journal} style={{ fontSize: 16 }} onChange={(e) => setJournal(e.target.value)}>{Object.keys(JN).filter((k) => k !== 'AN').map((k) => <option key={k} value={k}>{t(JN[k])}</option>)}</select>
-        <select aria-label={t('Fréquence')} value={frequency} style={{ fontSize: 16 }} onChange={(e) => setFrequency(e.target.value)}>{Object.entries(FREQ).map(([k, v]) => <option key={k} value={k}>{t(v)}</option>)}</select>
+        <select aria-label={t('Journal')} value={journal} onChange={(e) => setJournal(e.target.value)}>{Object.keys(JN).filter((k) => k !== 'AN').map((k) => <option key={k} value={k}>{t(JN[k])}</option>)}</select>
+        <select aria-label={t('Fréquence')} value={frequency} onChange={(e) => setFrequency(e.target.value)}>{Object.entries(FREQ).map(([k, v]) => <option key={k} value={k}>{t(v)}</option>)}</select>
       </div>
       <div className="row" style={{ flexWrap: 'wrap' }}>
         <label className="fld"><span>{t('Jour du mois (1 à 28)')}</span><input type="number" min="1" max="28" style={{ fontSize: 16, width: 90 }} value={dayOfMonth} onChange={(e) => setDay(e.target.value)} /></label>
-        <label className="fld"><span>{t('Début')}</span><input type="date" style={{ fontSize: 16 }} value={startDate} onChange={(e) => setStart(e.target.value)} /></label>
-        <label className="fld"><span>{t('Fin (facultatif)')}</span><input type="date" style={{ fontSize: 16 }} value={endDate} onChange={(e) => setEnd(e.target.value)} /></label>
+        <label className="fld"><span>{t('Début')}</span><input type="date" value={startDate} onChange={(e) => setStart(e.target.value)} /></label>
+        <label className="fld"><span>{t('Fin (facultatif)')}</span><input type="date" value={endDate} onChange={(e) => setEnd(e.target.value)} /></label>
       </div>
       {secs.length ? (
         <label className="fld"><span>{t('Section analytique par défaut')}</span>
-          <select style={{ fontSize: 16 }} value={section} onChange={(e) => setSection(e.target.value)}>
+          <select value={section} onChange={(e) => setSection(e.target.value)}>
             <option value="">{t('Sans section')}</option>
             {secs.map((s) => <option key={s.code} value={s.code}>{s.code + ' · ' + s.label}</option>)}
           </select>
@@ -101,13 +101,13 @@ export default function RecurringTab() {
       <div className="ws-card">
         <div className="row" style={{ flexWrap: 'wrap' }}>
           <h2 className="grow">{t('Écritures récurrentes')}</h2>
-          <button className="btn primary small" type="button" style={{ minHeight: 44 }} disabled={!meta} onClick={() => edit(null)}>{t('Nouveau modèle')}</button>
+          <button className="btn primary small" type="button" disabled={!meta} onClick={() => edit(null)}>{t('Nouveau modèle')}</button>
         </div>
         <p className="muted small">{t("Pour les écritures qui se répètent (loyer, assurance, abonnement, redevance…). Créez le modèle une fois : l'écriture est générée à chaque échéance, sans jamais être passée deux fois.")}</p>
         <div className="row" style={{ flexWrap: 'wrap', gap: 8 }}>
           <label className="muted small" htmlFor="rec_upto">{t("Générer jusqu'au")}</label>
-          <input id="rec_upto" type="date" style={{ fontSize: 16, minHeight: 44 }} value={upTo} onChange={(e) => setUpTo(e.target.value)} />
-          <button className="btn small" type="button" style={{ minHeight: 44 }} disabled={busy} onClick={run}>{t('Générer les échéances dues')}</button>
+          <input id="rec_upto" type="date" value={upTo} onChange={(e) => setUpTo(e.target.value)} />
+          <button className="btn small" type="button" disabled={busy} onClick={run}>{t('Générer les échéances dues')}</button>
         </div>
       </div>
       <Loaded state={st}>
@@ -120,9 +120,9 @@ export default function RecurringTab() {
                   <br /><small className="muted">{(x.lastRun ? t('Dernière génération : {date}', { date: dateFr(x.lastRun) }) : t('Jamais générée')) + (x.nextDue && x.active ? ' · ' + t('prochaine échéance : {date}', { date: dateFr(x.nextDue) }) : '')}</small></span>
                 <span className="row" style={{ flexWrap: 'wrap' }}>
                   <span className={'pill ' + (x.active ? 'good' : '')}>{x.active ? t('Active') : t('En pause')}</span>
-                  <button className="link" type="button" style={{ minHeight: 44 }} onClick={() => edit(x)}>{t('Modifier')}</button>
-                  <button className="link" type="button" style={{ minHeight: 44 }} onClick={() => toggle(x)}>{x.active ? t('Mettre en pause') : t('Réactiver')}</button>
-                  <button className="link" type="button" style={{ minHeight: 44 }} onClick={() => del(x)}>{t('Supprimer')}</button>
+                  <button className="link" type="button" onClick={() => edit(x)}>{t('Modifier')}</button>
+                  <button className="link" type="button" onClick={() => toggle(x)}>{x.active ? t('Mettre en pause') : t('Réactiver')}</button>
+                  <button className="link" type="button" onClick={() => del(x)}>{t('Supprimer')}</button>
                 </span>
               </div>
             ))}

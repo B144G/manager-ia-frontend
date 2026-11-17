@@ -45,7 +45,7 @@ export function Schedule() {
           <p className="muted small">{j.note}</p>
           <label style={{ display: 'flex', gap: 8, minHeight: 44, alignItems: 'center' }}><input type="checkbox" disabled={!can('admin')} checked={s.enabled} onChange={(e) => setS({ ...s, enabled: e.target.checked })} style={{ width: 24, height: 24 }} />{t('Lancer automatiquement le digest de l’agent Direction')}</label>
           <div className="row" style={{ justifyContent: 'flex-start', flexWrap: 'wrap' }}>
-            <select aria-label={t('Jour')} style={{ fontSize: 16 }} disabled={!can('admin')} value={s.weekday} onChange={(e) => setS({ ...s, weekday: Number(e.target.value) })}>{DAYS.map((d, i) => <option key={i} value={i}>{t(d)}</option>)}<option value={7}>{t('Tous les jours')}</option></select>
+            <select aria-label={t('Jour')} disabled={!can('admin')} value={s.weekday} onChange={(e) => setS({ ...s, weekday: Number(e.target.value) })}>{DAYS.map((d, i) => <option key={i} value={i}>{t(d)}</option>)}<option value={7}>{t('Tous les jours')}</option></select>
             <input aria-label={t('Heure')} style={{ fontSize: 16, width: 90 }} inputMode="numeric" disabled={!can('admin')} value={s.hour} onChange={(e) => setS({ ...s, hour: e.target.value })} />
             <span className="muted small">{t('h (heure locale)')}</span>
           </div>

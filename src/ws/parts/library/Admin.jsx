@@ -53,7 +53,7 @@ export function PermsEditor({ L, block, close }) {
           ))}
           {free.length ? (
             <div className="row">
-              <select value={add} onChange={(e) => setAdd(e.target.value)} aria-label={t('Ajouter une exception')} style={{ fontSize: 16 }}>
+              <select value={add} onChange={(e) => setAdd(e.target.value)} aria-label={t('Ajouter une exception')}>
                 <option value="">{t('Ajouter une exception…')}</option>{free.map((m) => <option key={m.userId} value={m.userId}>{m.name} ({t(m.roleLabel)})</option>)}
               </select>
               <button type="button" className="btn small" disabled={!add} onClick={() => { setUsers([...U, { userId: Number(add), view: true, read: true, add: false, edit: false, delete: false }]); setAdd(''); }}>{t('Ajouter')}</button>
@@ -93,10 +93,10 @@ export function Audit({ L }) {
       <Loaded state={st}>{(j) => (
         <>
           <div className="lib-bar">
-            <select value={action} onChange={(e) => setAction(e.target.value)} aria-label={t('Action')} style={{ fontSize: 16 }}>
+            <select value={action} onChange={(e) => setAction(e.target.value)} aria-label={t('Action')}>
               <option value="">{t('Toutes les actions')}</option>{j.actions.map((a) => <option key={a.id} value={a.id}>{t(a.label)}</option>)}
             </select>
-            <select value={blockId} onChange={(e) => setBlockId(e.target.value)} aria-label={t('Bloc')} style={{ fontSize: 16 }}>
+            <select value={blockId} onChange={(e) => setBlockId(e.target.value)} aria-label={t('Bloc')}>
               <option value="">{t('Tous les blocs')}</option>{(blocks.data ? blocks.data.blocks : []).map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
             </select>
           </div>

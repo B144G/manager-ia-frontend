@@ -46,7 +46,7 @@ function RuleForm({ mode, target, current, close, done }) {
         )}
       <label className="fld" htmlFor="af_dur">
         <span>{t('Pendant combien de temps ?')}</span>
-        <select id="af_dur" style={{ fontSize: 16 }} value={duration} onChange={(e) => setDuration(e.target.value)}>
+        <select id="af_dur" value={duration} onChange={(e) => setDuration(e.target.value)}>
           <option value="24h">{t('24 heures')}</option>
           <option value="7d">{t('7 jours')}</option>
           <option value="none">{t('Sans limite (jusqu\'à ce que vous leviez la règle)')}</option>
@@ -54,7 +54,7 @@ function RuleForm({ mode, target, current, close, done }) {
       </label>
       <label className="fld" htmlFor="af_reason">
         <span>{t('Motif (facultatif)')}</span>
-        <input id="af_reason" style={{ fontSize: 16 }} type="text" maxLength={300} autoComplete="off" value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t('Ex. : litige en cours, client important…')} />
+        <input id="af_reason" type="text" maxLength={300} autoComplete="off" value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t('Ex. : litige en cours, client important…')} />
       </label>
       <p className="muted small">{t('Vous pouvez lever la règle à tout moment. À la fin de la durée choisie, elle se lève toute seule.')}</p>
       <p className="ws-err" role="alert">{err}</p>

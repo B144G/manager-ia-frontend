@@ -7,8 +7,8 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#0b1322",
-  "theme_color": "#0b1322",
+  "background_color": "#0a101e",
+  "theme_color": "#4f46e5",
   "icons": [
     {
       "src": "/assets/icons/icon-192.png",
@@ -37,5 +37,25 @@
   "display_override": [
     "standalone",
     "minimal-ui"
+  ],
+  "shortcuts": [
+    {
+      "name": "Tableau de bord",
+      "url": "/app",
+      "icons": [
+        {
+          "src": "/assets/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Projets",
+      "url": "/app/projects"
+    },
+    {
+      "name": "Budget",
+      "url": "/app/budget"
+    }
   ]
 }

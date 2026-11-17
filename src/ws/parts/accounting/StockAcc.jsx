@@ -26,9 +26,9 @@ export default function StockAccScreen() {
         <h2>{t('Stocks en comptabilité')}</h2>
         <p className="muted small">{t("Vos achats sont déjà comptabilisés en charges. À la date d'inventaire, le stock restant est ajouté au bilan et retiré des charges : c'est la variation de stock. Le stock est valorisé au coût moyen pondéré du module Stock.")}</p>
         <div className="row" style={{ flexWrap: 'wrap', alignItems: 'flex-end', gap: 10 }}>
-          <label className="fld"><span>{t("Date d'inventaire")}</span><input type="date" value={date} max={today()} style={{ fontSize: 16 }} onChange={(e) => { if (e.target.value) setDate(e.target.value); }} /></label>
+          <label className="fld"><span>{t("Date d'inventaire")}</span><input type="date" value={date} max={today()} onChange={(e) => { if (e.target.value) setDate(e.target.value); }} /></label>
           <label className="fld"><span>{t('Nature du stock')}</span>
-            <select value={nature} style={{ fontSize: 16 }} onChange={(e) => setNature(e.target.value)}>{NATURES.map((x) => <option key={x[0]} value={x[0]}>{t(x[1])}</option>)}</select>
+            <select value={nature} onChange={(e) => setNature(e.target.value)}>{NATURES.map((x) => <option key={x[0]} value={x[0]}>{t(x[1])}</option>)}</select>
           </label>
         </div>
         {st.loading && !j ? <Loading /> : null}
@@ -40,7 +40,7 @@ export default function StockAccScreen() {
             <div className="line"><span>{t('Stock valorisé (module Stock)')}</span><b>{money(j.totalValue)}</b></div>
             <div className="line"><span>{t('Stock en comptabilité (compte {account})', { account: j.account })}</span><b>{money(j.accounting)}</b></div>
             <div className="line"><b>{j.gap === 0 ? t('Aucun écart') : j.gap > 0 ? t('Stock à ajouter en comptabilité') : t('Stock à retirer de la comptabilité')}</b><b className={j.gap === 0 ? 'ok' : 'late'}>{money(Math.abs(j.gap))}</b></div>
-            {j.gap !== 0 ? <div className="row" style={{ marginTop: 10 }}><button className="btn primary small" type="button" style={{ minHeight: 44 }} onClick={post}>{t('Constater le stock à cette date')}</button></div> : <p className="ok small">{t('La comptabilité est à jour pour cette date.')}</p>}
+            {j.gap !== 0 ? <div className="row" style={{ marginTop: 10 }}><button className="btn primary small" type="button" onClick={post}>{t('Constater le stock à cette date')}</button></div> : <p className="ok small">{t('La comptabilité est à jour pour cette date.')}</p>}
             {j.gap !== 0 ? <p className="muted small">{j.gap > 0 ? t('Débit {s} (stock) · crédit {v} (variation de stock).', { s: j.account, v: j.variationAccount }) : t('Débit {v} (variation de stock) · crédit {s} (stock).', { s: j.account, v: j.variationAccount })}</p> : null}
           </div>
           <div className="ws-card">

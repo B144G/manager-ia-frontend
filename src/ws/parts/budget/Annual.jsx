@@ -26,8 +26,8 @@ function Editor({ year, lines, close, done }) {
         {rows.map((r, i) => (
           <div key={i} className="ws-card" style={{ minWidth: 640 }}>
             <div className="row" style={{ flexWrap: 'wrap' }}>
-              <select aria-label={t('Type')} style={{ fontSize: 16 }} value={r.kind} onChange={(e) => set(i, { kind: e.target.value })}><option value="expense">{t('Sortie (dépense)')}</option><option value="income">{t('Entrée (recette)')}</option></select>
-              <input aria-label={t('Catégorie')} style={{ fontSize: 16 }} value={r.category} placeholder={t('Catégorie')} onChange={(e) => set(i, { category: e.target.value })} />
+              <select aria-label={t('Type')} value={r.kind} onChange={(e) => set(i, { kind: e.target.value })}><option value="expense">{t('Sortie (dépense)')}</option><option value="income">{t('Entrée (recette)')}</option></select>
+              <input aria-label={t('Catégorie')} value={r.category} placeholder={t('Catégorie')} onChange={(e) => set(i, { category: e.target.value })} />
               <button className="link" type="button" style={TAP} onClick={() => set(i, { amounts: r.amounts.map(() => r.amounts[0]) })}>{t('Répéter janvier')}</button>
               <button className="link" type="button" style={TAP} onClick={() => setRows((l) => l.filter((_, j) => j !== i))}>{t('Retirer')}</button>
             </div>

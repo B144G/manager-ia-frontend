@@ -49,7 +49,7 @@ export default function Scanner({ onCode, label, hint, autoFocus }) {
     <div className="wms-scan-box">
       <form className="wms-scan-row" onSubmit={(e) => { e.preventDefault(); send(val); }}>
         <label className="fld"><span>{label || t('Code lu ou saisi')}</span>
-          <input type="text" inputMode="text" autoCapitalize="characters" autoComplete="off" autoFocus={autoFocus} value={val} onChange={(e) => setVal(e.target.value)} style={{ fontSize: 16 }} placeholder={t('Scannez ou tapez le code')} />
+          <input type="text" inputMode="text" autoCapitalize="characters" autoComplete="off" autoFocus={autoFocus} value={val} onChange={(e) => setVal(e.target.value)} placeholder={t('Scannez ou tapez le code')} />
         </label>
         <button className="btn primary" type="submit">{t('Valider')}</button>
         {cameraSupported() ? <button className="btn" type="button" onClick={() => setCam(!cam)}>{cam ? t('Fermer la caméra') : t('Scanner avec la caméra')}</button> : null}

@@ -28,9 +28,9 @@
 .gd-offer{position:fixed;right:20px;bottom:84px;z-index:290;width:min(360px,calc(100% - 24px));box-sizing:border-box;background:var(--surface,#fff);color:var(--fg,#0e1a2b);border:1px solid var(--line,#cdd6e2);border-left:5px solid var(--signal,#f2a900);border-radius:16px;padding:14px 16px;box-shadow:0 22px 50px -16px rgba(0,0,0,.55)}
 .gd-offer b{font-size:1.05rem}.gd-offer p{margin:6px 0 10px;font-size:.92rem;line-height:1.45}
 .gd-menu{position:relative}
-.gd-btn{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 12px;border-radius:999px;border:1px solid var(--line,#cdd6e2);background:var(--surface,#fff);color:var(--fg,#0e1a2b);font-weight:700;cursor:pointer}
-.gd-btn span{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--signal,#f2a900);color:var(--signal-fg,#2b1d00);font-weight:900;font-size:.9rem}
-.gd-btn:hover{background:var(--surface2,#e2e8f0)}
+.gd-btn{display:inline-flex;align-items:center;gap:var(--sp-2);min-height:var(--ctl-h);padding:0 var(--sp-3);border-radius:var(--radius-md);border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:var(--fw-semibold) var(--fs-md)/1 var(--font);cursor:pointer;white-space:nowrap}
+.gd-btn span{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--on-accent);font-weight:var(--fw-bold);font-size:var(--fs-xs)}
+.gd-btn:hover{background:var(--surface-3)}
 .gd-list{position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:min(380px,calc(100vw - 24px));max-height:min(70vh,560px);overflow:auto;background:var(--surface,#fff);color:var(--fg,#0e1a2b);border:1px solid var(--line,#cdd6e2);border-radius:14px;padding:10px;box-shadow:0 22px 50px -16px rgba(0,0,0,.5)}
 .gd-search input{width:100%;box-sizing:border-box;font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--line,#cdd6e2);background:var(--bg,#eef1f5);color:var(--fg,#0e1a2b)}
 .gd-search .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}

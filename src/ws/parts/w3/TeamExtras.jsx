@@ -21,7 +21,7 @@ export function Audit() {
       <Loaded state={st}>{(j) => (
         <>
           <label className="fld"><span>{t('Type')}</span>
-            <select style={{ fontSize: 16 }} value={entity} onChange={(e) => setEntity(e.target.value)}><option value="">{t('Tout')}</option>{j.entities.map((x) => <option key={x} value={x}>{x}</option>)}</select>
+            <select value={entity} onChange={(e) => setEntity(e.target.value)}><option value="">{t('Tout')}</option>{j.entities.map((x) => <option key={x} value={x}>{x}</option>)}</select>
           </label>
           {!j.items.length ? <Empty text={t('Aucune modification enregistrée.')} /> : null}
           {j.items.map((a) => (

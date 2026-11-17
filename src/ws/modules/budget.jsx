@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useWs } from '../WsContext.jsx';
 import { useT } from '../../lib/i18n.jsx';
-import { Empty, Form, Loading, useLoad } from '../ui.jsx';
+import { ChartFrame, Empty, Form, Loading, useLoad } from '../ui.jsx';
+import { Bars } from '../charts/lazy.jsx';
 import AnnualTab from '../parts/budget/Annual.jsx';
 import BudgetPro from '../parts/budget/Pro.jsx';
+import Overview from '../parts/budget/Overview.jsx';
 import { ApprovalsTab, CashTab } from '../parts/budget/Cash.jsx';
 import { BTN } from '../parts/finance/util.jsx';
 
@@ -13,7 +15,7 @@ export default function Budget() {
   const t = useT();
   const { oapi, can, money, dateFr, today, modal, confirm, propose, fail, info, toast } = useWs();
   const branches = info.branches;
-  const [tab, setTab] = useState(() => (can('admin') ? 'pilot' : 'month'));
+  const [tab, setTab] = useState(() => (can('admin') ? 'overview' : 'month'));
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const st = useLoad(() => oapi('GET', '/budget?month=' + month), [month]);
   const load = st.reload;
@@ -92,8 +94,9 @@ export default function Budget() {
         </div>
       </div>
       <div className="ws-tabs" style={{ flexWrap: 'wrap', overflowX: 'visible' }}>
-        {[...(can('admin') ? [['pilot', 'Pilotage']] : []), ['month', 'Mois'], ...(can('admin') ? [['annual', 'Budget annuel'], ['cash', 'Trésorerie']] : []), ['approvals', 'Validations']].map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} style={BTN} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
+        {[...(can('admin') ? [['overview', "Vue d'ensemble"], ['pilot', 'Pilotage']] : []), ['month', 'Mois'], ...(can('admin') ? [['annual', 'Budget annuel'], ['cash', 'Trésorerie']] : []), ['approvals', 'Validations']].map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} style={BTN} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
       </div>
+      {tab === 'overview' ? <Overview goTab={setTab} /> : null}
       {tab === 'pilot' ? <BudgetPro /> : null}
       {tab === 'annual' ? <AnnualTab /> : null}
       {tab === 'cash' ? <CashTab /> : null}
@@ -108,6 +111,13 @@ export default function Budget() {
               <div className="stat"><b>{money(j.expense)}</b><span>{t('sorties')}</span></div>
               <div className={'stat' + (j.balance < 0 ? ' bad' : '')}><b>{money(j.balance)}</b><span>{t('solde du mois')}</span></div>
             </div>
+            {j.categories.length ? (
+              <div style={{ marginBottom: 16 }}>
+                <ChartFrame title={t('Dépensé et limite par catégorie')} subtitle={t('Au-dessus de la limite = à surveiller')} height={260} legend={[{ label: t('Dépensé'), color: 'var(--c1)' }, { label: t('Limite mensuelle'), color: 'var(--chart-plan)' }]} summary={j.categories.map((k) => k.category + ' ' + money(k.spent)).join(', ')}>
+                  <Bars data={j.categories.slice(0, 8).map((k) => ({ x: k.category.length > 10 ? k.category.slice(0, 9) + '…' : k.category, spent: k.spent, limit: k.limit || 0 }))} fmt={money} height={260} series={[{ key: 'spent', label: t('Dépensé'), color: 'var(--c1)' }, { key: 'limit', label: t('Limite mensuelle'), color: 'var(--chart-plan)' }]} />
+                </ChartFrame>
+              </div>
+            ) : null}
             <div className="ws-card">
               <h2>{t('Dépenses par catégorie')}</h2>
               {!j.categories.length ? <Empty text={t("Aucune dépense ce mois-ci.")} /> : null}

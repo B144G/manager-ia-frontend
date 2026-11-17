@@ -1,0 +1,23 @@
+// Audit de l'interface : polices, couleurs, boutons, icônes, styles en ligne. Usage : node scripts/audit-ui.mjs > docs/interface/audit.md
+import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+const walk = (d) => readdirSync(d).flatMap((f) => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
+const files = walk('src');
+const css = files.filter((f) => f.endsWith('.css')), jsx = files.filter((f) => /\.(jsx|js)$/.test(f));
+const read = (f) => readFileSync(f, 'utf8');
+const count = (list, re, g = 0) => { const m = new Map(); for (const f of list) for (const x of read(f).matchAll(re)) { const k = (g ? x[g] : x[0]).toLowerCase().trim(); m.set(k, (m.get(k) || 0) + 1); } return [...m].sort((a, b) => b[1] - a[1]); };
+const top = (arr, n = 15) => arr.slice(0, n).map(([k, v]) => `- \`${k}\` × ${v}`).join('\n');
+const fam = count([...css, ...jsx], /font-family\s*:\s*([^;}"']+)/g, 1).concat(count(jsx, /fontFamily\s*:\s*['"]([^'"]+)['"]/g, 1));
+const hex = count(css, /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g);
+const hexJsx = count(jsx, /#[0-9a-fA-F]{6}\b/g);
+const radii = count(css, /border-radius\s*:\s*([^;}]+)/g, 1);
+const shadows = count(css, /box-shadow\s*:\s*([^;}]+)/g, 1);
+const sizes = count(css, /font-size\s*:\s*([^;}]+)/g, 1);
+const btn = count(jsx, /className=(?:"|{'|{`)([^"'`]*\bbtn\b[^"'`]*)/g, 1);
+const inlineStyles = jsx.reduce((n, f) => n + (read(f).match(/style=\{\{/g) || []).length, 0);
+const rawSvgIcons = jsx.reduce((n, f) => n + (read(f).match(/<svg\b/g) || []).length, 0);
+const faUse = jsx.reduce((n, f) => n + (read(f).match(/<Fa\b/g) || []).length, 0);
+const iconUse = jsx.reduce((n, f) => n + (read(f).match(/<Icon\b/g) || []).length, 0);
+const emoji = count(jsx, /[\u{1F300}-\u{1FAFF}☀-➿]/gu);
+const total = css.reduce((n, f) => n + read(f).split('\n').length, 0);
+console.log(`# Audit de l'interface (généré par scripts/audit-ui.mjs)\n\n- Fichiers CSS : ${css.length} (${total} lignes) ; fichiers JS/JSX : ${jsx.length}\n- Styles en ligne \`style={{…}}\` : ${inlineStyles}\n- Icônes : \`<Fa>\` ×${faUse}, \`<Icon>\` (tracés maison) ×${iconUse}, \`<svg>\` en dur ×${rawSvgIcons}\n- Emojis dans le code : ${emoji.reduce((n, x) => n + x[1], 0)}\n\n## Familles de polices\n${top(fam)}\n\n## Tailles de police (CSS)\n${top(sizes, 25)}\n\n## Couleurs en dur (CSS) : ${hex.length} valeurs différentes\n${top(hex, 25)}\n\n## Couleurs en dur (JSX) : ${hexJsx.length} valeurs différentes\n${top(hexJsx, 10)}\n\n## Rayons\n${top(radii, 15)}\n\n## Ombres\n${top(shadows, 10)}\n\n## Combinaisons de classes de bouton\n${top(btn, 20)}\n`);

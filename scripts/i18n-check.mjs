@@ -27,6 +27,7 @@ for (const l of langs) {
   console.log(`[${l}] ${used.size - missing.length}/${used.size} textes traduits`);
   for (const [k, f] of missing.slice(0, 15)) console.log(`   manque : « ${k.slice(0, 90)} »  (${f})`);
   if (missing.length > 15) console.log(`   … et ${missing.length - 15} autres`);
+  if (process.env.I18N_DUMP && l === 'en') { const { writeFileSync } = await import('node:fs'); writeFileSync(process.env.I18N_DUMP, JSON.stringify(missing.map((x) => x[0]), null, 1)); }
   bad += missing.length;
 }
 process.exit(bad ? 1 : 0);

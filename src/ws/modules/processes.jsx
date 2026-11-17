@@ -91,10 +91,10 @@ export default function Processes() {
                 <ol>{p.steps.map((s, i) => <li key={i}>{s}</li>)}</ol>
                 <p className="muted small">{[p.owner && t('Propriétaire : {name}', { name: p.owner }), p.nextReview && t('Prochaine révision : {date}', { date: dateFr(p.nextReview) }), t('{n} lecteur(s)', { n: p.readers })].filter(Boolean).join(' · ')}</p>
                 <div className="row">
-                  {!p.readByMe ? <button className="btn primary small" type="button" style={{ minHeight: 44 }} onClick={() => markRead(p)}>{t('J’ai lu cette version')}</button> : null}
-                  <button className="btn small" type="button" style={{ minHeight: 44 }} onClick={() => versions(p)}>{t('Versions')}</button>
-                  {can('manager') ? <button className="btn small" type="button" style={{ minHeight: 44 }} onClick={() => reads(p)}>{t('Qui a lu ?')}</button> : null}
-                  {p.nextReview && (can('admin') || p.ownerId === info.me.userId) ? <button className="btn small" type="button" style={{ minHeight: 44 }} onClick={() => reviewed(p)}>{t('Révision faite')}</button> : null}
+                  {!p.readByMe ? <button className="btn primary small" type="button" onClick={() => markRead(p)}>{t('J’ai lu cette version')}</button> : null}
+                  <button className="btn small" type="button" onClick={() => versions(p)}>{t('Versions')}</button>
+                  {can('manager') ? <button className="btn small" type="button" onClick={() => reads(p)}>{t('Qui a lu ?')}</button> : null}
+                  {p.nextReview && (can('admin') || p.ownerId === info.me.userId) ? <button className="btn small" type="button" onClick={() => reviewed(p)}>{t('Révision faite')}</button> : null}
                 </div>
                 {can('admin') ? (
                   <div className="row">
