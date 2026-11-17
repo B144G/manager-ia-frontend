@@ -10,10 +10,10 @@ const b = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.
 const p = await b.newPage(); await p.setViewport({ width: 1280, height: 800 });
 const log = [];
 await p.evaluateOnNewDocument(() => { localStorage.setItem('brij-guide-seen', 'true'); });
-await p.goto('http://localhost:5184/connexion', { waitUntil: 'networkidle0' });
+await p.goto((process.env.BASE || 'http://localhost:5184') + '/connexion', { waitUntil: 'networkidle0' });
 await p.type('#contact', 'proprietaire@exemple.com'); await p.type('#pass', 'Essai-2026-brij');
 await Promise.all([p.waitForFunction(() => location.pathname.startsWith('/app'), { timeout: 20000 }), p.click('#go')]);
-await p.goto('http://localhost:5184/app/1/projects', { waitUntil: 'networkidle0' }); await wait(2000);
+await p.goto((process.env.BASE || 'http://localhost:5184') + '/app/1/projects', { waitUntil: 'networkidle0' }); await wait(2000);
 await p.keyboard.down('Control'); await p.keyboard.press('k'); await p.keyboard.up('Control'); await wait(400);
 await p.keyboard.type('bud'); await wait(300);
 await p.screenshot({ path: `${out}/ctrl-k-1280-clair.png` });
