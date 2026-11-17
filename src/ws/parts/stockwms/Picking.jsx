@@ -4,6 +4,7 @@ import { useT } from '../../../lib/i18n.jsx';
 import { Empty, Form, Loaded, useLoad } from '../../ui.jsx';
 import { FormFoot, Kpis, LinesEditor, Seg, Tag, WMS, cleanRows, qty, useDate, useItems, useRows } from './kit.jsx';
 import Scanner from './Scanner.jsx';
+import { VasPanel } from './Vas.jsx';
 
 /* Listes de préparation : créées depuis une commande (ou à la main), parcours allée → rayon → bac, scan de l'article et de l'emplacement, puis expédition par un responsable. */
 const ST = { open: ['À préparer', 'mid'], in_progress: ['En préparation', 'mid'], picked: ['Préparée', 'good'], issued: ['Expédiée', 'good'], cancelled: ['Annulée', 'bad'] };
@@ -93,6 +94,7 @@ export function PickRunner({ id, back }) {
               </div>
             );
           })}
+          <VasPanel refKind="pick" refId={p.id} />
           <div className="row" style={{ marginTop: 12 }}>
             {open ? <button className="btn primary" type="button" onClick={() => complete(false)}>{t('Terminer la préparation')}</button> : null}
             {mgr && p.status === 'picked' ? <button className="btn primary" type="button" onClick={() => issue(p)}>{t('Expédier (sortir le stock)')}</button> : null}
@@ -158,7 +160,7 @@ export default function Picking() {
           {j.picks.map((p) => (
             <div className="line" key={p.id}>
               <span><b>{p.code}</b> <Tag tone={ST[p.status][1]}>{t(ST[p.status][0])}</Tag>{p.priority === 1 ? <Tag tone="bad">{t('Urgente')}</Tag> : null}
-                <small>{' ' + [p.documentNumber, p.customer, p.label].filter(Boolean).join(' · ') + ' · ' + t('{n} ligne(s)', { n: p.lineCount }) + ' · ' + date(p.createdAt.slice(0, 10)) + (p.assignedName ? ' · ' + p.assignedName : '')}</small>{p.short ? <Tag tone="bad">{t('manque')}</Tag> : null}</span>
+                <small>{' ' + [p.documentNumber, p.customer, p.label].filter(Boolean).join(' · ') + ' · ' + t('{n} ligne(s)', { n: p.lineCount }) + ' · ' + date(p.createdAt.slice(0, 10)) + (p.assignedName ? ' · ' + p.assignedName : '')}</small>{p.short ? <Tag tone="bad">{t('manque')}</Tag> : null}{p.waveCode ? <Tag tone="mid">{t('vague {code}', { code: p.waveCode })}</Tag> : null}{p.packedAt && p.status === 'picked' ? <Tag tone="good">{t('emballée')}</Tag> : null}</span>
               <span className="row">
                 <button className="btn small" type="button" onClick={() => setRun(p.id)}>{p.status === 'open' || p.status === 'in_progress' ? t('Préparer') : t('Ouvrir')}</button>
                 {mgr && (p.status === 'open' || p.status === 'in_progress' || p.status === 'picked') ? <button className="link" type="button" onClick={() => confirm(t('Annuler cette liste ? Le stock mis de côté est libéré.'), () => { oapi('POST', WMS + '/picks/' + p.id + '/cancel', {}).then(st.reload).catch(fail); })}>{t('Annuler')}</button> : null}

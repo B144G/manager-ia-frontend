@@ -17,7 +17,7 @@ function NewReturn({ kind, close, done }) {
   const sup = useLoad(() => (kind === 'supplier' ? oapi('GET', '/stock/suppliers') : Promise.resolve({ suppliers: [] })), [kind]);
   const cust = useLoad(() => (kind === 'customer' ? oapi('GET', '/crm/customers').catch(() => ({ customers: [] })) : Promise.resolve({ customers: [] })), [kind]);
   const [rows, setRows] = useRows([{ itemId: '', quantity: '', reasonCode: 'other', disposition: kind === 'customer' ? 'restock' : '' }]);
-  const [v, setV] = useState({ supplierId: '', customerId: '', documentId: '', reason: '', validate: mgr ? '1' : '0' });
+  const [v, setV] = useState({ supplierId: '', customerId: '', documentId: '', reason: '', validate: mgr ? '1' : '0', rmaNo: '' });
   const [err, setErr] = useState(''); const [busy, setBusy] = useState(false);
   const R = reasons.data ? reasons.data.reasons[kind] : {};
   const setRow = (i, k, x) => setRows(rows.map((r, j) => (j === i ? { ...r, [k]: x } : r)));
@@ -26,12 +26,13 @@ function NewReturn({ kind, close, done }) {
     const lines = rows.filter((r) => r.itemId && String(r.quantity).trim()).map((r) => ({ itemId: Number(r.itemId), quantity: r.quantity, reasonCode: r.reasonCode, disposition: r.disposition || undefined, lotNo: r.lotNo || undefined, serials: r.serials || undefined, locationId: r.locationId ? Number(r.locationId) : undefined }));
     if (!lines.length) { setErr(t('Ajoutez au moins une ligne.')); return; }
     setBusy(true);
-    oapi('POST', WMS + '/returns', { kind, lines, supplierId: v.supplierId ? Number(v.supplierId) : undefined, customerId: v.customerId ? Number(v.customerId) : undefined, documentId: v.documentId ? Number(v.documentId) : undefined, reason: v.reason, validate: v.validate === '1' })
+    oapi('POST', WMS + '/returns', { kind, lines, supplierId: v.supplierId ? Number(v.supplierId) : undefined, customerId: v.customerId ? Number(v.customerId) : undefined, documentId: v.documentId ? Number(v.documentId) : undefined, reason: v.reason, validate: v.validate === '1', rmaNo: kind === 'supplier' ? v.rmaNo : undefined })
       .then(() => { close(); done(); }).catch((x) => { if (x && x.status === 401) fail(x); setErr(x.message); }).finally(() => setBusy(false));
   };
   return (
     <form className="ws-form" noValidate onSubmit={submit}>
       {kind === 'supplier' ? <label className="fld"><span>{t('Fournisseur')}</span><select style={{ fontSize: 16 }} value={v.supplierId} onChange={(e) => setV({ ...v, supplierId: e.target.value })}><option value="">{t('Choisir…')}</option>{(sup.data ? sup.data.suppliers : []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label> : null}
+      {kind === 'supplier' ? <label className="fld"><span>{t('Numéro RMA du fournisseur (facultatif)')}</span><input type="text" style={{ fontSize: 16 }} value={v.rmaNo} onChange={(e) => setV({ ...v, rmaNo: e.target.value })} placeholder={t('Autorisation de retour donnée par le fournisseur')} /></label> : null}
       {kind === 'customer' ? <label className="fld"><span>{t('Client (facultatif)')}</span><select style={{ fontSize: 16 }} value={v.customerId} onChange={(e) => setV({ ...v, customerId: e.target.value })}><option value="">{t('Aucun')}</option>{(cust.data ? cust.data.customers : []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label> : null}
       {kind === 'customer' ? <label className="fld"><span>{t('Numéro de la commande ou facture (facultatif)')}</span><input type="text" inputMode="numeric" style={{ fontSize: 16 }} value={v.documentId} onChange={(e) => setV({ ...v, documentId: e.target.value })} placeholder={t('Identifiant du document')} /></label> : null}
       {rows.map((r, i) => {
@@ -67,11 +68,19 @@ function Detail({ id, reload }) {
     <Form submitText={t('Enregistrer')} fields={[{ k: 'amount', label: t('Montant de l\'avoir reçu'), value: r.creditAmount || '', required: true }]}
     onSubmit={(v) => oapi('POST', WMS + '/returns/' + r.id + '/credit', { amount: v.amount }).then(() => { close(); st.reload(); reload(); })} />
   ));
+  const rma = (r) => modal(t('Retour fournisseur : RMA'), (close) => (
+    <Form submitText={t('Enregistrer')} fields={[{ k: 'rmaNo', label: t('Numéro RMA du fournisseur'), value: r.rmaNo || '' }, { k: 'purchaseOrderId', label: t('Identifiant du bon de commande (facultatif)'), value: r.purchaseOrderId ? String(r.purchaseOrderId) : '' }, { k: 'purchaseInvoiceId', label: t("Identifiant de la facture d'achat (facultatif)"), value: r.purchaseInvoiceId ? String(r.purchaseInvoiceId) : '' }]}
+    onSubmit={(v) => oapi('PUT', WMS + '/returns/' + r.id + '/rma', { rmaNo: v.rmaNo, purchaseOrderId: v.purchaseOrderId ? Number(v.purchaseOrderId) : null, purchaseInvoiceId: v.purchaseInvoiceId ? Number(v.purchaseInvoiceId) : null }).then(() => { close(); st.reload(); reload(); })} />
+  ));
   return (
     <Loaded state={st}>{({ return: r }) => (
       <div>
         <p><b>{r.code}</b> <Tag tone={ST[r.status][1]}>{t(ST[r.status][0])}</Tag> <small className="muted">{t(r.kindLabel)}</small></p>
         <p className="muted small">{[r.customer, r.supplier, r.documentNumber, r.reason].filter(Boolean).join(' · ')}</p>
+        {r.kind === 'supplier' ? (
+          <p className="small">{[r.rmaNo ? t('RMA {x}', { x: r.rmaNo }) : t('Sans numéro RMA'), r.purchaseOrder && t('commande {x}', { x: r.purchaseOrder }), r.purchaseInvoice && t('facture {x}', { x: r.purchaseInvoice }), r.creditStatus === 'received' ? t('avoir reçu') : r.creditStatus === 'requested' ? t('avoir attendu') : ''].filter(Boolean).join(' · ')}
+            {mgr && r.status !== 'cancelled' ? <> <button className="link" type="button" onClick={() => rma(r)}>{t('Modifier le RMA')}</button></> : null}</p>
+        ) : null}
         {r.lines.map((l) => (
           <div className="line" key={l.id}>
             <span><b>{l.name + ' × ' + qty(l.quantity)}</b><small>{' ' + t(l.reasonLabel || '') + ' · ' + t(DISP[l.final || l.disposition]) + (l.location ? ' · ' + l.location : '')}</small>{l.value !== undefined ? <small>{' · ' + money(l.value)}</small> : null}</span>
@@ -110,7 +119,7 @@ export default function Returns() {
             {!j.returns.length ? <Empty text={t('Aucun retour.')} /> : null}
             {j.returns.map((r) => (
               <div className="line" key={r.id}>
-                <span><b>{r.code}</b> <Tag tone={ST[r.status][1]}>{t(ST[r.status][0])}</Tag> <small>{t(r.kindLabel) + ' · ' + [r.customer, r.supplier, r.documentNumber].filter(Boolean).join(' · ') + ' · ' + t('{n} ligne(s)', { n: r.lineCount }) + ' · ' + date(r.createdAt.slice(0, 10))}</small>{r.value !== undefined && r.value ? <small>{' · ' + money(r.value)}</small> : null}{r.pending ? <Tag tone="bad">{t('à contrôler')}</Tag> : null}</span>
+                <span><b>{r.code}</b> <Tag tone={ST[r.status][1]}>{t(ST[r.status][0])}</Tag> <small>{t(r.kindLabel) + ' · ' + [r.customer, r.supplier, r.documentNumber].filter(Boolean).join(' · ') + ' · ' + t('{n} ligne(s)', { n: r.lineCount }) + ' · ' + date(r.createdAt.slice(0, 10))}</small>{r.value !== undefined && r.value ? <small>{' · ' + money(r.value)}</small> : null}{r.pending ? <Tag tone="bad">{t('à contrôler')}</Tag> : null}{r.rmaNo ? <small>{' · ' + t('RMA {x}', { x: r.rmaNo })}</small> : null}</span>
                 <span className="row">
                   <button className="link" type="button" onClick={() => modal(t('Retour {code}', { code: r.code }), () => <Detail id={r.id} reload={st.reload} />)}>{t('Détail')}</button>
                   {mgr && r.status === 'draft' ? <button className="link" type="button" onClick={() => oapi('POST', WMS + '/returns/' + r.id + '/validate', {}).then(() => { toast(t('Validé.')); st.reload(); }).catch(fail)}>{t('Valider')}</button> : null}

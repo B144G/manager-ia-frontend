@@ -33,6 +33,10 @@ export function Fleet() {
         { k: 'kind', label: t('Type'), type: 'select', value: v ? v.kind : 'van', options: VKIND.map((x) => [x[0], t(x[1])]) },
         { k: 'vin', label: t('Numéro de châssis (VIN)'), value: v && v.vin }, { k: 'capacity', label: t('Capacité / charge utile'), value: v && v.capacity },
         { k: 'odometer', label: t('Kilométrage actuel'), value: v ? v.odometer : '' },
+        { k: 'capacityKg', label: t('Charge utile (kg)'), value: v && v.capacityKg ? v.capacityKg : '', hint: t('Contrôlée à la planification des tournées.') },
+        { k: 'capacityM3', label: t('Volume utile (m³)'), value: v && v.capacityM3 ? v.capacityM3 : '' }, { k: 'capacityPallets', label: t('Nombre de palettes'), value: v && v.capacityPallets ? v.capacityPallets : '' },
+        ...(mgr ? [{ k: 'kmRate', label: t('Coût au km (estimation des tournées)'), value: v && v.kmRate ? v.kmRate : '' }] : []),
+        { k: 'co2', label: t('Émission (g de CO2 par km)'), value: v && v.co2 ? v.co2 : '', hint: t('Vide : valeur des réglages du transport.') },
         { k: 'status', label: t('État'), type: 'select', value: v ? v.status : 'active', options: VSTATUS.map((x) => [x[0], t(x[1])]) },
         { k: 'equipmentId', label: t('Équipement de maintenance lié'), type: 'select', value: v && v.equipmentId ? String(v.equipmentId) : '', options: [['', t('Aucun')]].concat(equipment.filter((e) => e.kind === 'vehicle').map((e) => [String(e.id), e.name])), hint: t("Les plans d'entretien au kilomètre suivent alors le compteur du véhicule.") },
         { k: 'note', label: t('Note'), value: v && v.note },
@@ -40,17 +44,19 @@ export function Fleet() {
       onSubmit={(v2) => oapi(v ? 'PUT' : 'POST', '/logistics/vehicles' + (v ? '/' + v.id : ''), v2).then(() => { close(); reload(); })}
     />
   ));
-  const editDriver = (d) => modal(d ? t('Modifier le chauffeur') : t('Nouveau chauffeur'), (close) => (
+  const editDriver = (d) => oapi('GET', '/members').then((mj) => modal(d ? t('Modifier le chauffeur') : t('Nouveau chauffeur'), (close) => (
     <Form
       submitText={t('Enregistrer')}
       fields={[
         { k: 'name', label: t('Nom'), required: true, value: d && d.name }, { k: 'phone', label: t('Téléphone'), value: d && d.phone },
         { k: 'licenseNo', label: t('Numéro de permis'), value: d && d.licenseNo }, { k: 'licenseCategory', label: t('Catégorie'), value: d && d.licenseCategory, placeholder: 'B, C…' },
         { k: 'active', label: t('Disponible'), type: 'select', value: d && !d.active ? 'no' : 'yes', options: [['yes', t('Oui')], ['no', t('Non, en pause')]] },
+        { k: 'userId', label: t("Compte dans l'équipe"), type: 'select', value: d && d.userId ? String(d.userId) : '', options: [['', t('Aucun')]].concat(mj.members.map((m) => [String(m.userId), m.name])), hint: t('Le chauffeur voit alors « Ma tournée » sur son téléphone.') },
+        ...(mgr ? [{ k: 'dailyAllowance', label: t('Indemnité par tournée'), value: d && d.dailyAllowance ? d.dailyAllowance : '' }] : []),
       ]}
-      onSubmit={(v) => oapi(d ? 'PUT' : 'POST', '/logistics/drivers' + (d ? '/' + d.id : ''), { ...v, active: v.active === 'yes' }).then(() => { close(); reload(); })}
+      onSubmit={(v) => oapi(d ? 'PUT' : 'POST', '/logistics/drivers' + (d ? '/' + d.id : ''), { ...v, active: v.active === 'yes', userId: v.userId ? Number(v.userId) : null }).then(() => { close(); reload(); })}
     />
-  ));
+  ))).catch(fail);
   const addDue = (subject, id) => modal(t('Nouvelle échéance'), (close) => (
     <Form
       submitText={t('Enregistrer')}
@@ -93,7 +99,7 @@ export function Fleet() {
           {j.vehicles.map((v) => (
             <div className="ws-card" key={v.id}>
               <div className="line">
-                <span><b>{v.plate}</b>{v.status !== 'active' ? <span className="pill mid">{t(VSTATUS.find((x) => x[0] === v.status)[1])}</span> : null}<small>{' ' + [v.label, v.odometer + ' km', v.avgConsumption ? t('{n} L/100 km en moyenne', { n: v.avgConsumption }) : '', v.equipment ? t('maintenance : {name}', { name: v.equipment }) : '', mgr && v.costPerKm ? t('{amount} par km', { amount: money(v.costPerKm) }) : ''].filter(Boolean).join(' · ')}</small></span>
+                <span><b>{v.plate}</b>{v.status !== 'active' ? <span className="pill mid">{t(VSTATUS.find((x) => x[0] === v.status)[1])}</span> : null}<small>{' ' + [v.label, v.odometer + ' km', v.capacityKg ? t('{n} kg utiles', { n: v.capacityKg }) : '', v.capacityPallets ? t('{n} palette(s)', { n: v.capacityPallets }) : '', v.avgConsumption ? t('{n} L/100 km en moyenne', { n: v.avgConsumption }) : '', v.equipment ? t('maintenance : {name}', { name: v.equipment }) : '', mgr && v.costPerKm ? t('{amount} par km', { amount: money(v.costPerKm) }) : ''].filter(Boolean).join(' · ')}</small></span>
                 <span className="row">
                   <button className="link" type="button" onClick={() => fuel(v)}>{t('Plein')}</button>
                   <button className="link" type="button" onClick={() => fuelLog(v)}>{t('Carburant')}</button>
@@ -113,7 +119,7 @@ export function Fleet() {
           {j.drivers.map((d) => (
             <div key={d.id}>
               <div className="line">
-                <span><b>{d.name}</b>{!d.active ? <span className="pill">{t('En pause')}</span> : null}<small>{' ' + [d.phone, d.licenseNo ? t('permis {no}', { no: d.licenseNo }) + (d.licenseCategory ? ' ' + d.licenseCategory : '') : ''].filter(Boolean).join(' · ')}</small></span>
+                <span><b>{d.name}</b>{!d.active ? <span className="pill">{t('En pause')}</span> : null}{d.userId ? <span className="pill good">{t('Compte relié')}</span> : null}<small>{' ' + [d.phone, d.licenseNo ? t('permis {no}', { no: d.licenseNo }) + (d.licenseCategory ? ' ' + d.licenseCategory : '') : ''].filter(Boolean).join(' · ')}</small></span>
                 {mgr ? <span className="row"><button className="link" type="button" onClick={() => addDue('driver', d.id)}>{t('Échéance')}</button><button className="link" type="button" onClick={() => editDriver(d)}>{t('Modifier')}</button>
                   <button className="link" type="button" onClick={() => confirm(t('Supprimer {name} ?', { name: d.name }), () => { oapi('DELETE', '/logistics/drivers/' + d.id).then(reload).catch(fail); })}>{t('Supprimer')}</button></span> : null}
               </div>

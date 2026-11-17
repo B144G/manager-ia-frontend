@@ -16,6 +16,7 @@ const InvoicePrint = lazy(() => import('./pages/InvoicePrint.jsx'));
 const KpiPrint = lazy(() => import('./pages/KpiPrint.jsx'));
 const Receipt = lazy(() => import('./pages/Receipt.jsx'));
 const Csat = lazy(() => import('./pages/Csat.jsx'));
+const Tracking = lazy(() => import('./pages/Tracking.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
 const Privacy = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Privacy })));
 const Terms = lazy(() => import('./pages/Legal.jsx').then((m) => ({ default: m.Terms })));
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="/form" element={<ContactForm />} />
           <Route path="/essai" element={<Essai />} />
           <Route path="/satisfaction/:token" element={<Csat />} />
+          <Route path="/suivi/:token" element={<Tracking />} />
         </Route>
         <Route element={<StyleLayout group="ws" body="ws" />}>
           <Route path="/app/*" element={<Workspace />} />

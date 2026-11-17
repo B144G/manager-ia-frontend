@@ -1,0 +1,199 @@
+/* Espace de travail — style « Pro » (choix A + polices B) : menu latéral bleu nuit, barre du haut blanche, cartes sobres,
+   titres en Plus Jakarta Sans, texte en Inter, boutons rectangulaires de 40 px (une seule action principale en bleu),
+   icônes Font Awesome. Chargé APRÈS toutes les autres feuilles de l'espace de travail : il ne touche qu'à l'apparence. */
+body.ws{
+  --bg:#f5f7fa;--surface:#ffffff;--surface2:#eef2f7;--fg:#0f172a;--muted:#5b6577;--line:#e3e8ef;--line2:#d5dce6;
+  --accent:#1f6feb;--accent-h:#1a5fd0;--accent-soft:#e8f0fe;--accent-fg:#ffffff;--pink:#b42318;--ok:#067647;--signal:#b54708;
+  --side:#0f1e36;--side2:#1b3358;--side-fg:#c9d3e3;--side-mute:#8ea0ba;--side-line:#22344f;
+  --grad:var(--accent);--sh1:0 1px 2px rgba(15,23,42,.04);--sh2:0 8px 24px -12px rgba(15,23,42,.18);
+  --r:8px;--r2:10px;
+  --f-display:"Plus Jakarta Sans","Inter",system-ui,sans-serif;--f-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);color:var(--fg);font:14.5px/1.55 var(--f-body);-webkit-font-smoothing:antialiased}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.ws{
+  --bg:#0b1220;--surface:#121a2b;--surface2:#18233a;--fg:#e6ebf5;--muted:#9aa8c1;--line:#1e2a40;--line2:#2a3854;
+  --accent:#4c8dff;--accent-h:#6ea2ff;--accent-soft:#16264a;--accent-fg:#0b1220;--pink:#f97066;--ok:#47cd89;--signal:#f5b547;
+  --side:#0a1324;--side2:#16264a;--side-line:#1b2a45;--sh1:none;--sh2:0 8px 24px -12px rgba(0,0,0,.6)}}
+:root[data-theme="dark"] body.ws{
+  --bg:#0b1220;--surface:#121a2b;--surface2:#18233a;--fg:#e6ebf5;--muted:#9aa8c1;--line:#1e2a40;--line2:#2a3854;
+  --accent:#4c8dff;--accent-h:#6ea2ff;--accent-soft:#16264a;--accent-fg:#0b1220;--pink:#f97066;--ok:#47cd89;--signal:#f5b547;
+  --side:#0a1324;--side2:#16264a;--side-line:#1b2a45;--sh1:none;--sh2:0 8px 24px -12px rgba(0,0,0,.6)}
+
+/* Typographie : titres en Plus Jakarta Sans, chiffres alignés */
+body.ws h1,body.ws h2,body.ws h3{font-family:var(--f-display);letter-spacing:-.015em;color:var(--fg)}
+body.ws h1{font-weight:700;font-size:clamp(22px,2.4vw,26px)}
+body.ws h2{font-weight:700;font-size:17px}
+body.ws h3{font-weight:600;font-size:15px}
+.ws-head h1{font-size:clamp(22px,2.4vw,26px)}
+.stat b,.msh-quick-row b,.kpis b{font-variant-numeric:tabular-nums}
+
+/* Menu latéral : bleu nuit uni, élément actif discret avec un repère bleu */
+.ws-side{background:var(--side);color:var(--side-fg)}
+.ws-side::before{display:none}
+.ws-side .logo::before{background:var(--accent);border-radius:8px;color:#fff}
+.ws-side .logo b{color:#8db8ff}
+.ws-org,.ws-me{background:rgba(255,255,255,.04);border:1px solid var(--side-line);border-radius:var(--r2)}
+.av{background:#2b4266;color:#fff}
+.ws-user .av{background:var(--accent);color:#fff}
+.av.gold{background:#e3b341;color:#2b1d00}
+.ws-label{color:var(--side-mute);letter-spacing:.08em}
+.ws-nav{gap:2px}
+.ws-nav a{border-radius:var(--r);padding:0 12px;min-height:40px;font-size:14px;font-weight:500;color:var(--side-fg);box-shadow:none;position:relative}
+.ws-nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+.ws-nav a.on{background:var(--side2);color:#fff;font-weight:600;box-shadow:none}
+.ws-nav a.on::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:3px;background:#5b9bff}
+.ws-nav .svg-inline--fa,.ws-nav .ic{width:16px;height:16px;color:var(--side-mute);stroke:currentColor;flex:none}
+.ws-nav a:hover .svg-inline--fa,.ws-nav a.on .svg-inline--fa,.ws-nav a.on .ic{color:#fff}
+.ws-me .out{color:var(--side-mute)}.ws-me .out:hover{background:rgba(255,255,255,.08);color:#fff}
+
+/* Barre du haut : blanche, nette */
+.ws-top2{background:var(--surface);backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:1px solid var(--line);height:64px}
+.ws-ask{background:var(--surface2);border:1px solid var(--line);border-radius:var(--r)}
+.ws-ask:focus-within{background:var(--surface);border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.ws-ask .ic,.ws-ask .svg-inline--fa{stroke:var(--accent);color:var(--accent)}
+.ws-top2 .bell,.ws-top2 .lang-switch,.ws-top2 .gbtn{border-radius:var(--r)}
+.lang-switch{border-radius:var(--r);min-height:40px}
+.ws-fab{background:var(--accent);color:#fff;border-radius:12px;box-shadow:var(--sh2)}
+.ws-fab:hover{transform:none;background:var(--accent-h)}
+
+/* Cartes, chiffres, listes : bords fins, rayons modérés, pas d'effet « flottant » */
+.ws-card{border-radius:var(--r2);padding:20px;box-shadow:var(--sh1);border-color:var(--line)}
+.ws-card h2{font-size:17px}
+.stat{border-radius:var(--r2);padding:16px 18px;box-shadow:var(--sh1);transition:border-color .15s}
+.stat:hover{transform:none;border-color:var(--line2)}
+.stat b{font:700 22px/1.15 var(--f-display);letter-spacing:-.01em}
+.stat span{font-size:13px}
+.stat.bad{border-color:color-mix(in srgb,var(--pink) 45%,var(--line))}
+.line{border-color:var(--line);padding:12px 0}
+.ws-sub{border-radius:var(--r2)}
+.kcol{border-radius:var(--r2)}.task{border-radius:var(--r);box-shadow:var(--sh1)}
+.tk-detail,.tk-item{border-radius:var(--r2)}.pos{border-radius:var(--r2)}
+.brief{border-radius:var(--r2);background:linear-gradient(135deg,#123063,#0f1e36);box-shadow:none}
+
+/* Onglets : soulignés, comme un vrai logiciel de gestion (plus de « pilules ») */
+.ws-tabs{gap:0;border-bottom:1px solid var(--line);margin-bottom:14px;flex-wrap:wrap}
+.tab{border:0;border-bottom:2px solid transparent;border-radius:0;background:transparent;color:var(--muted);font:500 14px var(--f-body);padding:0 14px;min-height:42px}
+.tab:hover{color:var(--fg);border-color:var(--line2)}
+.tab.on{background:transparent;color:var(--fg);font-weight:600;border-bottom-color:var(--accent)}
+
+/* Pastilles d'état : sobres et lisibles */
+.pill{border-radius:999px;padding:3px 10px;font:600 12px/1.5 var(--f-body);letter-spacing:0}
+.pill.good{background:#dcfce7;color:#166534}.pill.mid{background:#fef3c7;color:#92400e}.pill.bad{background:#fee4e2;color:#b42318}
+:root[data-theme="dark"] body.ws .pill.good{background:#0f3b26;color:#86efac}:root[data-theme="dark"] body.ws .pill.mid{background:#3a2a0b;color:#fcd34d}:root[data-theme="dark"] body.ws .pill.bad{background:#3d1512;color:#fda29b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body.ws .pill.good{background:#0f3b26;color:#86efac}:root:not([data-theme="light"]) body.ws .pill.mid{background:#3a2a0b;color:#fcd34d}:root:not([data-theme="light"]) body.ws .pill.bad{background:#3d1512;color:#fda29b}}
+
+/* Boutons : rectangulaires, 40 px, une seule couleur forte (l'action principale) */
+body.ws .btn{border-radius:var(--r);border:1px solid var(--line2);background:var(--surface);color:var(--fg);font:600 14px/1 var(--f-body);min-height:40px;padding:0 16px;box-shadow:var(--sh1);transition:background .15s,border-color .15s,color .15s;transform:none}
+body.ws .btn:hover{transform:none;filter:none;background:var(--surface2);border-color:var(--line2);box-shadow:var(--sh1)}
+body.ws .btn:active{background:var(--line)}
+body.ws .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);box-shadow:none}
+body.ws .btn.primary:hover{background:var(--accent-h);border-color:var(--accent-h)}
+body.ws .btn.signal{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 30%,var(--line));color:var(--accent);box-shadow:none}
+body.ws .btn.signal:hover{background:color-mix(in srgb,var(--accent) 14%,var(--surface))}
+body.ws .btn.small{min-height:36px;padding:0 12px;font-size:13.5px}
+body.ws .btn:disabled{opacity:.55;cursor:not-allowed}
+body.ws .btn .svg-inline--fa{width:14px;height:14px}
+/* Actions secondaires dans les lignes : liens nets, soulignés au survol seulement */
+body.ws button.link{color:var(--accent);text-decoration:none;font-weight:500;padding:6px 4px;border-radius:6px}
+body.ws button.link:hover{text-decoration:underline;background:var(--accent-soft)}
+.row{gap:8px}
+
+/* Champs */
+body.ws input,body.ws select,body.ws textarea{border-radius:var(--r);border-color:var(--line2);min-height:40px;background:var(--surface)}
+body.ws input:focus,body.ws select:focus,body.ws textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.fld span{font:600 13px var(--f-body);color:var(--fg)}
+
+/* Fenêtres et notifications */
+.ws-modal{background:rgba(15,23,42,.45);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.ws-box{border-radius:12px;box-shadow:0 24px 60px -24px rgba(15,23,42,.45)}
+.ws-box-h{background:var(--surface);border-bottom:1px solid var(--line)}
+.toast{border-radius:var(--r2)}
+
+/* Cadre des modules : en-tête de page clair (plus de bandeau noir), menu du module avec icônes Font Awesome */
+.msh-band{background:transparent;color:var(--fg);padding:0 2px;border-radius:0;margin-bottom:16px}
+.msh-band .msh-title{margin:0;font:700 clamp(20px,2.2vw,24px)/1.2 var(--f-display);letter-spacing:-.015em}
+.msh-band .msh-org{font-weight:500;color:var(--muted);font-size:13px}
+.msh-band .msh-who{display:none}
+.msh-nav{border-radius:var(--r2);padding:10px;box-shadow:var(--sh1);gap:2px}
+.msh-search{border-radius:var(--r)}
+.msh-gh{border-radius:var(--r);color:var(--muted);font:600 13px var(--f-body);letter-spacing:0;text-transform:none;min-height:38px}
+.msh-gh:hover{background:var(--surface2);color:var(--fg)}
+.msh-ico{display:inline-flex;width:22px;color:var(--muted)}
+.msh-ico .svg-inline--fa{width:14px;height:14px}
+.msh-caret .svg-inline--fa{width:11px;height:11px;color:var(--muted)}
+.msh-item{border-radius:var(--r);padding:8px 12px 8px 32px;font-size:14px;color:var(--fg);min-height:38px;justify-content:center}
+.msh-item:hover{background:var(--surface2)}
+.msh-item.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.msh-item.on small{color:inherit}
+.msh-crumb{font-size:13px}
+.msh-quick{border-radius:var(--r2)}
+.msh-quick-row b{font:700 19px/1.15 var(--f-display)}
+.msh-quick-row b.ok{color:var(--ok)}
+
+/* Accessibilité : focus clavier bien visible */
+body.ws :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:760px){.ws-card{border-radius:var(--r2);padding:16px}.stat{border-radius:var(--r2)}}
+
+/* Exceptions : champs « intégrés » qui ne doivent pas ressembler à des cases */
+body.ws .ws-org select{background:transparent;border:0;box-shadow:none;min-height:0;padding:0;color:#fff;font:600 14px var(--f-body)}
+body.ws .ws-ask input{background:transparent;border:0;box-shadow:none;min-height:0}
+body.ws .ws-ask input:focus{box-shadow:none}
+body.ws .lang-switch select{background:transparent;border:0;box-shadow:none;min-height:0}
+/* Grands montants : retour à la ligne entre les mots, jamais au milieu de « FCFA » */
+.stat b,.msh-quick-row b{overflow-wrap:break-word;word-break:normal;font-size:clamp(18px,1.7vw,22px)}
+/* Boutons hérités de l'ancien style (profil de l'entreprise, point de situation, guide) : même forme que les autres */
+body.ws .popts button,body.ws .popts .btn{border-radius:var(--r);min-height:44px;font:600 14px var(--f-body)}
+body.ws .bt{border-radius:var(--r);font:600 14px var(--f-body)}
+body.ws .pbar i{background:var(--accent)}
+
+/* Stock entrepôt : pilotage (tableau de bord, cour et quais, optimisation des emplacements, productivité). Couleurs des variables du thème (clair et sombre). */
+.wms-pilot-top{justify-content:space-between;align-items:flex-end;flex-wrap:wrap}
+.wms-inline{min-width:180px;max-width:260px}
+.wms-pilot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;margin-bottom:16px}
+.wms-pilot-grid .ws-card{margin:0}
+.wms-alerts{display:grid;gap:6px;padding:14px 18px;margin-bottom:12px;border-color:color-mix(in srgb,var(--pink) 35%,var(--line))}
+.wms-alert{display:flex;gap:8px;align-items:baseline;margin:0;font-size:14px;color:var(--fg)}
+.wms-alert .svg-inline--fa{flex:none;width:14px;height:14px}
+.wms-alert.bad .svg-inline--fa{color:var(--pink)}.wms-alert.mid .svg-inline--fa{color:var(--signal)}.wms-alert.ok{margin:0 0 12px}.wms-alert.ok .svg-inline--fa{color:var(--ok)}
+.wms-chart{margin:0 0 12px;min-width:0}
+.wms-chart-h{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:14px}
+.wms-chart-svg{width:100%;height:auto;max-height:240px;display:block;overflow:visible}
+.wms-bar{fill:var(--accent);transition:opacity .15s}.wms-bar.on{fill:var(--accent-h)}
+.wms-chart-svg g:focus{outline:none}.wms-chart-svg g:focus .wms-bar{stroke:var(--fg);stroke-width:1}
+.wms-axis{stroke:var(--line2);stroke-width:1}.wms-grid{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4}
+.wms-tick{fill:var(--muted);font:500 10px var(--f-body)}
+.wms-chart-table summary{cursor:pointer;color:var(--accent);font-size:13px;min-height:32px;display:flex;align-items:center}
+.wms-chart-table table,.wms-table{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+.wms-chart-table th,.wms-chart-table td,.wms-table th,.wms-table td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+.wms-table thead th{color:var(--muted);font-weight:600;font-size:12.5px}
+.wms-table-wrap{overflow-x:auto}
+.wms-hbars{display:grid;gap:10px}
+.wms-hbar{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(80px,2fr) auto;gap:10px;align-items:center;font-size:13.5px}
+.wms-hbar-l{overflow-wrap:anywhere;min-width:0}
+.wms-hbar-track{height:10px;border-radius:999px;background:var(--surface2);overflow:hidden;border:1px solid var(--line)}
+.wms-hbar-fill{display:block;height:100%;background:var(--accent);border-radius:999px}.wms-hbar-fill.bad{background:var(--pink)}
+.wms-hbar-v{font-variant-numeric:tabular-nums;min-width:56px;text-align:right}
+.wms-gauges{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.wms-gauge{margin:0;display:grid;justify-items:center;gap:4px}.wms-gauge svg{width:96px;height:96px}
+.wms-gauge-bg{fill:none;stroke:var(--surface2);stroke-width:10}.wms-gauge-fg{fill:none;stroke:var(--accent);stroke-width:10;stroke-linecap:round}
+.wms-gauge-t{fill:var(--fg);font:700 16px var(--f-display)}
+.wms-mini p{margin:2px 0;font-size:14px}
+.wms-person summary{min-height:44px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;cursor:pointer;border-bottom:1px solid var(--line)}
+.wms-cal{overflow-x:auto}
+.wms-cal-scale{position:relative;height:20px;margin-left:120px;min-width:560px;color:var(--muted);font-size:11px}
+.wms-cal-scale span{position:absolute;transform:translateX(-50%)}
+.wms-cal-lane{display:flex;align-items:stretch;min-width:680px;border-top:1px solid var(--line)}
+.wms-cal-dock{flex:0 0 120px;display:grid;padding:8px 8px 8px 0;font-size:13px;min-width:0}
+.wms-cal-track{position:relative;flex:1;min-height:44px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(12.5% - 1px),var(--line) calc(12.5% - 1px),var(--line) 12.5%)}
+.wms-cal-slot{position:absolute;top:8px;bottom:8px;border-radius:6px;padding:0 6px;font:600 11.5px/28px var(--f-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--accent-soft);color:var(--fg);border:1px solid color-mix(in srgb,var(--accent) 40%,var(--line));box-sizing:border-box}
+.wms-cal-slot.docked{background:color-mix(in srgb,var(--ok) 20%,var(--surface));border-color:var(--ok)}
+.wms-cal-slot.arrived{background:color-mix(in srgb,var(--signal) 18%,var(--surface));border-color:var(--signal)}
+.wms-cal-slot.departed,.wms-cal-slot.no_show{opacity:.6}
+.wms-cal-slot.late{border-left:3px solid var(--pink)}
+@media (max-width:760px){.wms-hbar{grid-template-columns:1fr auto}.wms-hbar-track{grid-column:1/-1;order:3}.wms-inline{max-width:none;flex:1 1 100%}}
+/* Entrepôt — flux spéciaux : transbordement (article attendu, réglage), kits, services à valeur ajoutée */
+.wms-xd-item{padding:10px 0;border-bottom:1px solid var(--line)}
+.wms-xd-item:last-child{border-bottom:0}
+.wms-xd-item > p{margin:0 0 4px}
+.wms-xd-hint{border:1px solid var(--accent);border-radius:var(--r);padding:12px 14px;margin:0 0 12px;background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.wms-xd-hint p{margin:0 0 8px}
+.wms-xd-mode{max-width:360px;margin:0}

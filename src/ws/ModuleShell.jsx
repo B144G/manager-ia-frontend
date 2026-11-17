@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT } from '../lib/i18n.jsx';
 import { useWs } from './WsContext.jsx';
+import { Fa, faName } from '../lib/fa.jsx';
 
 /* Cadre commun d'un module : bandeau (entreprise, personne, rôle), menu à gauche en groupes dépliables,
    recherche d'écran (Ctrl K), fil d'Ariane et phrase d'explication. N'affiche que ce qu'on lui donne :
@@ -57,7 +58,7 @@ export default function ModuleShell({ title, groups, active, onSelect, actions, 
   return (
     <div className={'msh' + (drawer ? ' msh-open' : '')}>
       <div className="msh-band">
-        <span className="msh-org"><b>{org}</b><span aria-hidden="true"> — </span>{title}</span>
+        <div><div className="msh-title">{title}</div><span className="msh-org">{org}</span></div>
         <span className="msh-who">{who}{role ? <small>{role}</small> : null}</span>
       </div>
       <div className="msh-body">
@@ -75,7 +76,7 @@ export default function ModuleShell({ title, groups, active, onSelect, actions, 
             return (
               <div key={g.id} className="msh-group">
                 <button type="button" className="msh-gh" aria-expanded={isOpen} onClick={() => toggle(g.id)}>
-                  <span>{g.icon ? <span aria-hidden="true" className="msh-ico">{g.icon}</span> : null}{g.label}</span><span aria-hidden="true" className="msh-caret">{isOpen ? '▾' : '▸'}</span>
+                  <span>{g.icon ? <span className="msh-ico"><Fa name={faName(g.icon)} fixedWidth /></span> : null}{g.label}</span><span className="msh-caret"><Fa name={isOpen ? 'down' : 'right'} /></span>
                 </button>
                 {isOpen ? g.items.map((i) => (
                   <button key={i.id} type="button" className={'msh-item' + (i.id === active ? ' on' : '')} aria-current={i.id === active ? 'page' : undefined} onClick={() => pick(i.id)}>{i.label}{i.to ? ' ↗' : ''}</button>

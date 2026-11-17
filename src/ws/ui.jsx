@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useWs } from './WsContext.jsx';
 import { ICONS } from '../lib/icons.js';
+import { Fa, MODULE_FA } from '../lib/fa.jsx';
 import { useT } from '../lib/i18n.jsx';
 import { tsrv } from '../lib/srv.js';
 
@@ -10,6 +11,8 @@ export { ICONS };
 
 /** Icône du menu (classe « ic », comme avant). */
 export function Icon({ name }) {
+  // Icônes Font Awesome (cohérentes dans tout l'espace de travail) ; l'ancien dessin reste en secours.
+  if (MODULE_FA[name]) return <Fa name={MODULE_FA[name]} fixedWidth />;
   return <svg viewBox="0 0 24 24" className="ic" aria-hidden="true"><path d={ICONS[name] || ICONS.dashboard} /></svg>;
 }
 

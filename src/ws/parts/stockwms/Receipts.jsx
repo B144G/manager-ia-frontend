@@ -24,7 +24,7 @@ function NewReceipt({ close, done }) {
     if (!lines().length) { setErr(t('Ajoutez au moins une ligne.')); return; }
     setBusy(true);
     oapi('POST', WMS + '/receipts', { supplierId: v.supplierId ? Number(v.supplierId) : undefined, reference: v.reference, locationId: v.locationId ? Number(v.locationId) : undefined, lines: lines(), costs: cl() })
-      .then(() => { close(); done(); }).catch((x) => { if (x && x.status === 401) fail(x); setErr(x.message); }).finally(() => setBusy(false));
+      .then((j) => { close(); done(j); }).catch((x) => { if (x && x.status === 401) fail(x); setErr(x.message); }).finally(() => setBusy(false));
   };
   const setCost = (i, k, x) => setCosts(costs.map((c, j) => (j === i ? { ...c, [k]: x } : c)));
   const KINDS = kinds.data ? kinds.data.costKinds : {}; const BASES = kinds.data ? kinds.data.bases : {};
@@ -97,7 +97,7 @@ export default function Receipts() {
   const st = useLoad(() => oapi('GET', WMS + '/receipts'), []);
   return (
     <>
-      <div className="row wms-toolbar"><button className="btn primary small" type="button" onClick={() => modal(t('Nouvelle réception'), (close) => <NewReceipt close={close} done={() => { toast(t('Réception enregistrée.')); st.reload(); }} />, { wide: true })}>{t('Nouvelle réception')}</button></div>
+      <div className="row wms-toolbar"><button className="btn primary small" type="button" onClick={() => modal(t('Nouvelle réception'), (close) => <NewReceipt close={close} done={(j) => { toast(j && j.crossDock && j.crossDock.length ? t('Réception enregistrée : {n} transbordement(s) vers les commandes qui attendent (écran Transbordement).', { n: j.crossDock.length }) : t('Réception enregistrée.')); st.reload(); }} />, { wide: true })}>{t('Nouvelle réception')}</button></div>
       <Loaded state={st}>{(j) => (
         <div className="ws-card">
           {!j.receipts.length ? <Empty text={t('Aucune réception enregistrée ici.')} /> : null}

@@ -90,3 +90,22 @@ export const cleanRows = (rows, keys = []) => rows.filter((r) => r.itemId && Str
 export function FormFoot({ busy, err, text }) {
   return <div className="wms-foot">{err ? <p className="ws-err" role="alert">{err}</p> : null}<button className="btn primary" type="submit" disabled={busy}>{text}</button></div>;
 }
+
+/** Ouvre un PDF du serveur (cookie de connexion) dans un nouvel onglet, sinon le télécharge. path est relatif à /stock/wms. */
+export function usePdf() {
+  const t = useT();
+  const { orgId, fail } = useWs();
+  return (path, name) => fetch(API_BASE + '/api/ws/orgs/' + orgId + WMS + path, { credentials: 'include' })
+    .then((r) => { if (!r.ok) throw new Error(t('Document indisponible.')); return r.blob(); })
+    .then((b) => {
+      const url = URL.createObjectURL(b);
+      const w = window.open(url, '_blank', 'noopener');
+      if (!w) { const a = document.createElement('a'); a.href = url; a.download = (name || 'document') + '.pdf'; document.body.appendChild(a); a.click(); a.remove(); }
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    }).catch(fail);
+}
+/** Barre de progression (0 à 100). */
+export function Progress({ value, label }) {
+  const v = Math.max(0, Math.min(100, Math.round(Number(value) || 0)));
+  return <div className="wms-progress" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={v} aria-label={label}><span style={{ width: v + '%' }} /></div>;
+}

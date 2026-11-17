@@ -3,6 +3,7 @@ import { useWs } from '../WsContext.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { Empty, Form, Loading, useLoad } from '../ui.jsx';
 import AnnualTab from '../parts/budget/Annual.jsx';
+import BudgetPro from '../parts/budget/Pro.jsx';
 import { ApprovalsTab, CashTab } from '../parts/budget/Cash.jsx';
 import { BTN } from '../parts/finance/util.jsx';
 
@@ -12,7 +13,7 @@ export default function Budget() {
   const t = useT();
   const { oapi, can, money, dateFr, today, modal, confirm, propose, fail, info, toast } = useWs();
   const branches = info.branches;
-  const [tab, setTab] = useState('month');
+  const [tab, setTab] = useState(() => (can('admin') ? 'pilot' : 'month'));
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const st = useLoad(() => oapi('GET', '/budget?month=' + month), [month]);
   const load = st.reload;
@@ -91,8 +92,9 @@ export default function Budget() {
         </div>
       </div>
       <div className="ws-tabs" style={{ flexWrap: 'wrap', overflowX: 'visible' }}>
-        {[['month', 'Mois'], ...(can('admin') ? [['annual', 'Budget annuel'], ['cash', 'Trésorerie']] : []), ['approvals', 'Validations']].map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} style={BTN} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
+        {[...(can('admin') ? [['pilot', 'Pilotage']] : []), ['month', 'Mois'], ...(can('admin') ? [['annual', 'Budget annuel'], ['cash', 'Trésorerie']] : []), ['approvals', 'Validations']].map((x) => <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} style={BTN} onClick={() => setTab(x[0])}>{t(x[1])}</button>)}
       </div>
+      {tab === 'pilot' ? <BudgetPro /> : null}
       {tab === 'annual' ? <AnnualTab /> : null}
       {tab === 'cash' ? <CashTab /> : null}
       {tab === 'approvals' ? <ApprovalsTab /> : null}

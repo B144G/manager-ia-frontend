@@ -5,7 +5,7 @@ import { Empty, Form, Loaded, Loading, useLoad } from '../../ui.jsx';
 import { Kpis, Tag, WMS, itemOptions, locOptions, qty, useItems, useLocations } from './kit.jsx';
 
 /* Entrepôts → zones → emplacements (allée / rayon / bac), contenu d'un emplacement, stock d'un article par emplacement, règles et tâches de rangement. */
-const KIND_TONE = { storage: 'good', picking: 'good', reception: 'mid', quarantine: 'bad', returns: 'mid', scrap: 'bad', transit: 'mid' };
+const KIND_TONE = { storage: 'good', picking: 'good', reception: 'mid', quarantine: 'bad', returns: 'mid', scrap: 'bad', transit: 'mid', staging: 'mid', shipping: 'mid' };
 
 /** Stock d'un article par emplacement (fenêtre ouverte depuis la liste des articles). */
 export function ItemLevels({ item }) {
@@ -51,12 +51,13 @@ function LocationDetail({ id, reload, close }) {
     onSubmit={(v) => oapi('PUT', WMS + '/locations/' + l.id, { name: v.name, capacity: v.capacity === '' ? null : v.capacity, active: v.active === '1' }).then(() => { c2(); st.reload(); reload(); })} />
   ));
   return (
-    <Loaded state={st}>{({ location: l, content }) => (
+    <Loaded state={st}>{({ location: l, content, hus }) => (
       <div>
         <p><b>{l.code}</b> <Tag tone={KIND_TONE[l.kind]}>{t(l.kindLabel)}</Tag> <small className="muted">{l.warehouse}{l.zone ? ' · ' + l.zone : ''}</small></p>
         {l.capacity !== null ? <p className="muted small">{t('Capacité {n}', { n: qty(l.capacity) })}</p> : null}
         {!content.length ? <Empty text={t('Cet emplacement est vide.')} /> : null}
         {content.map((c) => <div className="line" key={c.itemId}><span><b>{c.name}</b>{c.sku ? <small>{' ' + c.sku}</small> : null}</span><span className="row"><b>{qty(c.quantity) + ' ' + c.unit}</b>{c.value !== undefined ? <small>{money(c.value)}</small> : null}</span></div>)}
+        {hus && hus.length ? <p className="muted small">{t('Palettes et colis ici : {list}', { list: hus.map((h) => h.code).join(', ') })}</p> : null}
         {mgr ? (
           <div className="row" style={{ marginTop: 10 }}>
             <button className="btn small" type="button" onClick={() => edit(l)}>{t('Modifier')}</button>

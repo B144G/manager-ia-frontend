@@ -32,6 +32,7 @@ pl('décision attend', 'décisions attendent', ' votre validation', ' votre vali
 rule(/^Nouveau message de (.+) : l'IA est exclue pour ce contact, répondez-lui vous-même \(Suivi de l'IA\)\.$/, "Nouveau message de {name} : l'IA est exclue pour ce contact, répondez-lui vous-même (Suivi de l'IA).", ['name']);
 rule(/^Réponse à valider pour (.+) : l'IA a préparé un brouillon \(Suivi de l'IA\)\.$/, "Réponse à valider pour {name} : l'IA a préparé un brouillon (Suivi de l'IA).", ['name']);
 rule(/^Projet « (.+) »$/, 'Projet « {name} »', ['name']);
+rule(/^Risque élevé signalé sur le projet « (.+) » : (.+)$/, 'Risque élevé signalé sur le projet « {name} » : {title}', ['name', 'title']);
 rule(/^Budget · (.+)$/, 'Budget · {name}', ['name']);
 rule(/^(\d+) % au-dessus de la limite \((.+) pour (.+)\)$/, '{pct} % au-dessus de la limite ({spent} pour {limit})', ['pct', 'spent', 'limit']);
 rule(/^Les sorties dépassent les entrées ce mois-ci \(solde (.+)\)$/, 'Les sorties dépassent les entrées ce mois-ci (solde {balance})', ['balance']);
@@ -83,6 +84,59 @@ rule(/^Échéance dépassée \((.+?)\)$/, 'Échéance dépassée ({date})', ['da
 rule(/^À faire avant le (.+?) · à vérifier$/, 'À faire avant le {date} · à vérifier', ['date']);
 rule(/^À faire avant le (.+)$/, 'À faire avant le {date}', ['date']);
 
+// Stock entrepôt, préparation avancée (vagues, emballage, expéditions) : messages du serveur avec des codes et des noms.
+rule(/^Ce n'est pas le bon emplacement : déposez en (.+)\.$/, "Ce n'est pas le bon emplacement : déposez en {code}.", ['code']);
+rule(/^Ce n'est pas le bon emplacement : prenez en (.+)\.$/, "Ce n'est pas le bon emplacement : prenez en {code}.", ['code']);
+rule(/^Ce n'est pas le bon emplacement : allez en (.+)\.$/, "Ce n'est pas le bon emplacement : allez en {code}.", ['code']);
+rule(/^Ce n'est pas la bonne palette : prenez (.+)\.$/, "Ce n'est pas la bonne palette : prenez {code}.", ['code']);
+rule(/^Ce n'est pas le bon article : attendu « (.+) »\.$/, "Ce n'est pas le bon article : attendu « {name} ».", ['name']);
+// Pilotage de l'entrepôt (4E) : cour et quais
+rule(/^Ce quai est déjà réservé sur ce créneau \((.+)\)\.$/, 'Ce quai est déjà réservé sur ce créneau ({code}).', ['code']);
+rule(/^Ce quai est occupé \((.+)\)\.$/, 'Ce quai est occupé ({code}).', ['code']);
+rule(/^Fermez d'abord le colis (\S+) au poste d'emballage\.$/, "Fermez d'abord le colis {code} au poste d'emballage.", ['code']);
+rule(/^Ce colis est sur la palette (\S+) : scannez la palette\.$/, 'Ce colis est sur la palette {code} : scannez la palette.', ['code']);
+rule(/^Ce colis est sur l'expédition (\S+) : retirez-le d'abord de l'expédition\.$/, "Ce colis est sur l'expédition {code} : retirez-le d'abord de l'expédition.", ['code']);
+rule(/^Le colis (\S+) est sur l'expédition (\S+) : retirez-le d'abord de l'expédition\.$/, "Le colis {code} est sur l'expédition {s} : retirez-le d'abord de l'expédition.", ['code', 's']);
+rule(/^Le colis (\S+) est posé sur (.+) : ajoutez la palette entière\.$/, 'Le colis {code} est posé sur {p} : ajoutez la palette entière.', ['code', 'p']);
+rule(/^(Palette|Colis|Conteneur|Bac) (\S+) ne fait pas partie de l'expédition (\S+)\.$/, "{type} {code} ne fait pas partie de l'expédition {s}.", ['type', 'code', 's']);
+rule(/^(Palette|Colis|Conteneur|Bac) (\S+) est déjà sur l'expédition (\S+)\.$/, "{type} {code} est déjà sur l'expédition {s}.", ['type', 'code', 's']);
+rule(/^(Palette|Colis|Conteneur|Bac) (\S+) : déjà expédié\.$/, '{type} {code} : déjà expédié.', ['type', 'code']);
+rule(/^(Palette|Colis|Conteneur|Bac) (\S+) ne contient aucun colis emballé\.$/, '{type} {code} ne contient aucun colis emballé.', ['type', 'code']);
+rule(/^(Palette|Colis|Conteneur|Bac) (\S+) contient de la marchandise qui n'est emballée pour aucune commande\.$/, "{type} {code} contient de la marchandise qui n'est emballée pour aucune commande.", ['type', 'code']);
+rule(/^(\d+) unité\(s\) ne sont pas encore chargées\. Expédier sans elles \? Elles seront retirées de l'expédition\.$/, "{n} unité(s) ne sont pas encore chargées. Expédier sans elles ? Elles seront retirées de l'expédition.", ['n']);
+rule(/^(\d+) ligne\(s\) ne sont pas entièrement prélevées\. Terminer quand même \? Le reste ne sera pas préparé\.$/, '{n} ligne(s) ne sont pas entièrement prélevées. Terminer quand même ? Le reste ne sera pas préparé.', ['n']);
+rule(/^La liste (\S+) est déjà commencée\.$/, 'La liste {code} est déjà commencée.', ['code']);
+rule(/^La liste (\S+) est déjà commencée ou dans une autre vague\.$/, 'La liste {code} est déjà commencée ou dans une autre vague.', ['code']);
+rule(/^La liste (\S+) est déjà commencée : elle reste dans la vague\.$/, 'La liste {code} est déjà commencée : elle reste dans la vague.', ['code']);
+rule(/^Il n'y a que (\S+) (\S+) de « (.+) » dans ce colis\.$/, "Il n'y a que {q} {u} de « {name} » dans ce colis.", ['q', 'u', 'name']);
+rule(/^Il ne reste que (\S+) (\S+) de « (.+) » à emballer\.$/, 'Il ne reste que {q} {u} de « {name} » à emballer.', ['q', 'u', 'name']);
+rule(/^« (.+) » est déjà entièrement emballé\.$/, '« {name} » est déjà entièrement emballé.', ['name']);
+rule(/^« (.+) » ne fait pas partie de cette commande\.$/, '« {name} » ne fait pas partie de cette commande.', ['name']);
+rule(/^Il reste (\S+) à déplacer sur cette tâche\.$/, 'Il reste {q} à déplacer sur cette tâche.', ['q']);
+rule(/^Tout n'est pas emballé : (.+)\.$/, "Tout n'est pas emballé : {list}.", ['list']);
+rule(/^Aucune commande n'a pu entrer dans la vague : (.+)$/, "Aucune commande n'a pu entrer dans la vague : {list}", ['list']);
+rule(/^Rien à préparer pour (.+) : aucun stock disponible\.$/, 'Rien à préparer pour {n} : aucun stock disponible.', ['n']);
+// Flux spéciaux (4D) : transbordement, kits, services à valeur ajoutée
+rule(/^Services obligatoires à terminer avant la sortie du stock : (.+)\.$/, 'Services obligatoires à terminer avant la sortie du stock : {list}.', ['list']);
+rule(/^Il reste (\S+) (\S+) à transborder\.$/, 'Il reste {q} {u} à transborder.', ['q', 'u']);
+rule(/^Aucun transbordement en attente pour « (.+) » : rangez-le normalement\.$/, 'Aucun transbordement en attente pour « {name} » : rangez-le normalement.', ['name']);
+rule(/^Cette commande n'attend que (\S+) (\S+) de « (.+) »\.$/, "Cette commande n'attend que {q} {u} de « {name} ».", ['q', 'u', 'name']);
+rule(/^Cette commande n'attend pas de « (.+) » \(déjà couverte par le stock, une liste ou un transbordement\)\.$/, "Cette commande n'attend pas de « {name} » (déjà couverte par le stock, une liste ou un transbordement).", ['name']);
+rule(/^Stock insuffisant pour « (.+) » dans l'entrepôt : il manque (\S+) (\S+) \(hors stock promis aux préparations\)\.$/, "Stock insuffisant pour « {name} » dans l'entrepôt : il manque {q} {u} (hors stock promis aux préparations).", ['name', 'q', 'u']);
+rule(/^Stock disponible insuffisant pour « (.+) » : (\S+) (\S+) \(il en faut (\S+)\)\.$/, 'Stock disponible insuffisant pour « {name} » : {q} {u} (il en faut {n}).', ['name', 'q', 'u', 'n']);
+rule(/^Il reste (\S+) à assembler sur cet ordre\.$/, 'Il reste {q} à assembler sur cet ordre.', ['q']);
+rule(/^Il reste (\S+) à désassembler sur cet ordre\.$/, 'Il reste {q} à désassembler sur cet ordre.', ['q']);
+// Transport (TMS)
+rule(/^Le véhicule (.+) est trop chargé \((.+)\)\.$/, 'Le véhicule {plate} est trop chargé ({detail}).', ['plate', 'detail']);
+rule(/^Le permis de (.+) est périmé à la date de la tournée\.$/, 'Le permis de {name} est périmé à la date de la tournée.', ['name']);
+rule(/^L'assurance du véhicule (.+) est périmée à la date de la tournée\.$/, "L'assurance du véhicule {plate} est périmée à la date de la tournée.", ['plate']);
+rule(/^La visite technique du véhicule (.+) est périmée à la date de la tournée\.$/, 'La visite technique du véhicule {plate} est périmée à la date de la tournée.', ['plate']);
+rule(/^Il reste (\d+) arrêt\(s\) sans issue \(livrée, échec ou report\) : (.+)\.$/, 'Il reste {n} arrêt(s) sans issue (livrée, échec ou report) : {list}.', ['n', 'list']);
+rule(/^Le véhicule (.+) est déjà affecté à la tournée « (.+) » ce jour-là\.$/, 'Le véhicule {plate} est déjà affecté à la tournée « {name} » ce jour-là.', ['plate', 'name']);
+rule(/^Le chauffeur (.+) est déjà affecté à la tournée « (.+) » ce jour-là\.$/, 'Le chauffeur {driver} est déjà affecté à la tournée « {name} » ce jour-là.', ['driver', 'name']);
+rule(/^(\d+) ligne\(s\) à vérifier \((.+)\)\. Corrigez, ou validez quand même en expliquant pourquoi\.$/, '{n} ligne(s) à vérifier ({list}). Corrigez, ou validez quand même en expliquant pourquoi.', ['n', 'list']);
+rule(/^Indiquez le montant encaissé \((.+) à encaisser\)\.$/, 'Indiquez le montant encaissé ({amount} à encaisser).', ['amount']);
+
 const FR_HINT = /[àâçéèêëîïôùûœ]|\b(vous|votre|vos|pour|dans|aucun|aucune|avec|cette|sont)\b/i;
 /** Recherche sans signaler de manque (un texte déjà traduit n'est pas une erreur). */
 function quiet(fn) {
@@ -125,7 +179,7 @@ export function tsrv(text) {
       return tr(n > 1 ? r.many : r.one, vars);
     }
     const vars = {};
-    r.names.forEach((k, i) => { vars[k] = k === 'when' ? whenTr(m[i + 1]) : m[i + 1]; });
+    r.names.forEach((k, i) => { vars[k] = k === 'when' ? whenTr(m[i + 1]) : k === 'type' ? quiet(() => tr(m[i + 1])) : m[i + 1]; });
     return tr(r.key, vars);
   }
   return FR_HINT.test(text) ? tr(text) : text;

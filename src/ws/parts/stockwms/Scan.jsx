@@ -4,7 +4,12 @@ import { useT } from '../../../lib/i18n.jsx';
 import { Empty, Loaded, useLoad } from '../../ui.jsx';
 import { Kpis, Tag, WMS, qty, useDate } from './kit.jsx';
 import Scanner from './Scanner.jsx';
+import { Fa } from '../../../lib/fa.jsx';
 import { PickRunner } from './Picking.jsx';
+import { HuScan } from './HandlingUnits.jsx';
+import { Queue as CrossDockQueue } from './CrossDock.jsx';
+import { Tasks as VasTasks } from './Vas.jsx';
+import { tsrv } from '../../../lib/srv.js';
 
 /* Écran du téléphone : chercher, réceptionner, préparer, compter, en scannant (caméra du téléphone si le navigateur sait lire les codes, sinon saisie ou lecteur). */
 function Lookup() {
@@ -35,7 +40,7 @@ function Lookup() {
           {res.content.map((c) => <div className="line" key={c.itemId}><b>{c.name}</b><b>{qty(c.quantity) + ' ' + c.unit}</b></div>)}
         </div>
       ) : null}
-      {res && !['item', 'location'].includes(res.type) ? <p><Tag tone="mid">{t({ pick: 'Liste de préparation', transfer: 'Transfert', return: 'Retour', receipt: 'Réception' }[res.type] || res.type)}</Tag> <b>{res.label}</b></p> : null}
+      {res && !['item', 'location'].includes(res.type) ? <p><Tag tone="mid">{t({ pick: 'Liste de préparation', transfer: 'Transfert', return: 'Retour', receipt: 'Réception', hu: 'Palette ou colis' }[res.type] || res.type)}</Tag> <b>{res.label}</b></p> : null}
     </div>
   );
 }
@@ -47,16 +52,26 @@ function Receive() {
   const [v, setV] = useState({ quantity: '', lotNo: '', expiry: '', loc: '', serials: '' });
   const [err, setErr] = useState('');
   const [last, setLast] = useState('');
+  const [awaited, setAwaited] = useState(null);
+  const j0 = (x) => (item && item.tracking === 'serial' ? String(x.serials || '').split(/[\n,;]+/).filter((y) => y.trim()).length : x.quantity);
   const find = (code) => oapi('GET', '/stock/lookup?code=' + encodeURIComponent(code)).then((j) => { setItem(j.item); setErr(''); }).catch((e) => { setItem(null); fail(e); });
   const place = (code) => oapi('GET', WMS + '/locations/lookup?code=' + encodeURIComponent(code)).then((j) => setV((x) => ({ ...x, loc: String(j.location.id), locCode: j.location.code }))).catch(fail);
   const save = () => {
     setErr('');
     const body = { kind: 'in', quantity: v.quantity, lotNo: v.lotNo || undefined, expiry: v.expiry || undefined, serials: v.serials || undefined, locationId: v.loc ? Number(v.loc) : undefined, reason: t('Réception au scanner') };
-    oapi('POST', '/stock/items/' + item.id + '/move', body).then((j) => { setLast(t('{name} : +{n}, stock {s}', { name: item.name, n: v.quantity || v.serials, s: qty(j.quantity) })); toast(t('Réception enregistrée.')); setItem(null); setV({ quantity: '', lotNo: '', expiry: '', loc: '', serials: '' }); }).catch((e) => { if (e && e.status === 401) fail(e); setErr(e.message); });
+    const got = { item, quantity: j0(v), locationId: v.loc ? Number(v.loc) : undefined };
+    oapi('POST', '/stock/items/' + item.id + '/move', body).then((j) => {
+      setLast(t('{name} : +{n}, stock {s}', { name: item.name, n: v.quantity || v.serials, s: qty(j.quantity) })); toast(t('Réception enregistrée.')); setItem(null); setV({ quantity: '', lotNo: '', expiry: '', loc: '', serials: '' });
+      // Une commande attend-elle cet article ? On propose de le transborder au lieu de le ranger.
+      oapi('GET', WMS + '/crossdock/check?itemId=' + got.item.id + '&quantity=' + encodeURIComponent(got.quantity)).then((c) => setAwaited(c.awaited > 0 ? { ...got, awaited: c.awaited } : null)).catch(() => setAwaited(null));
+    }).catch((e) => { if (e && e.status === 401) fail(e); setErr(e.message); });
   };
+  const xdock = () => oapi('POST', WMS + '/crossdock/from-stock', { itemId: awaited.item.id, quantity: Math.min(Number(String(awaited.quantity).replace(',', '.')) || 0, awaited.awaited), locationId: awaited.locationId })
+    .then((j) => { setAwaited(null); toast(j.crossDock.length ? t('{n} transbordement(s) prêt(s) : mode « Transborder ».', { n: j.crossDock.length }) : t('Aucune commande ne peut recevoir cette marchandise (réglage ou stock déjà réservé).')); }).catch((e) => setErr(tsrv(e.message)));
   return (
     <div className="ws-card">
       {last ? <p className="ok">{last}</p> : null}
+      {awaited ? <div className="wms-xd-hint" role="status"><p><b>{t('Une commande attend {q} {u} de « {name} ».', { q: qty(awaited.awaited), u: awaited.item.unit, name: awaited.item.name })}</b></p><div className="row"><button className="btn primary" type="button" onClick={xdock}>{t('Transborder au lieu de ranger')}</button><button className="btn" type="button" onClick={() => setAwaited(null)}>{t('Ranger normalement')}</button></div></div> : null}
       {!item ? <Scanner label={t("Scanner l'article reçu")} onCode={find} autoFocus /> : (
         <div className="ws-form">
           <h2>{item.name}</h2>
@@ -156,14 +171,17 @@ function CountSheet({ id, list, setId, fail, toast, done }) {
 export default function Scan() {
   const t = useT();
   const [mode, setMode] = useState('lookup');
-  const MODES = [['lookup', t('Chercher'), '🔍'], ['receive', t('Réceptionner'), '📥'], ['prepare', t('Préparer'), '📦'], ['count', t('Compter'), '🔢']];
+  const MODES = [['lookup', t('Chercher'), 'search'], ['receive', t('Réceptionner'), 'box-open'], ['prepare', t('Préparer'), 'list-check'], ['count', t('Compter'), 'clipboard-check'], ['pallet', t('Palette'), 'stock'], ['xdock', t('Transborder'), 'shuffle'], ['vas', t('Services'), 'tags']];
   return (
     <div className="wms-scan">
-      <div className="wms-modes" role="tablist">{MODES.map((m) => <button key={m[0]} type="button" role="tab" aria-selected={mode === m[0]} className={'wms-mode' + (mode === m[0] ? ' on' : '')} onClick={() => setMode(m[0])}><span aria-hidden="true">{m[2]}</span>{m[1]}</button>)}</div>
+      <div className="wms-modes" role="tablist">{MODES.map((m) => <button key={m[0]} type="button" role="tab" aria-selected={mode === m[0]} className={'wms-mode' + (mode === m[0] ? ' on' : '')} onClick={() => setMode(m[0])}><Fa name={m[2]} fixedWidth />{m[1]}</button>)}</div>
       {mode === 'lookup' ? <Lookup /> : null}
       {mode === 'receive' ? <Receive /> : null}
       {mode === 'prepare' ? <Prepare /> : null}
       {mode === 'count' ? <Count /> : null}
+      {mode === 'pallet' ? <HuScan /> : null}
+      {mode === 'xdock' ? <CrossDockQueue status="todo" compact /> : null}
+      {mode === 'vas' ? <VasTasks mine /> : null}
     </div>
   );
 }

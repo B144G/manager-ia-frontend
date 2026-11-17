@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ProjectTrack, TaskDetail, Workload } from '../parts/projects/Extras.jsx';
 import { Insight, Planning } from '../parts/projects/Planning.jsx';
+import { Portfolio, ProjectPilot, RiskRegister, WorkloadPlan } from '../parts/projects/Pro.jsx';
 import { PdfActions } from '../parts/share/Share.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
@@ -98,7 +99,7 @@ export default function Projects() {
     ));
   };
 
-  const actions = { can, newTask, editTask, setStatus, newProject, aiPlan, confirm, fail, modal };
+  const actions = { can, newTask, editTask, setStatus, newProject, aiPlan, confirm, fail, modal, members };
   return pid ? <ProjectView key={pid} id={pid} back={() => setPid(null)} actions={actions} /> : <ProjectList open={setPid} actions={actions} />;
 }
 
@@ -111,6 +112,7 @@ function ProjectList({ open, actions }) {
   const ts = useLoad(() => oapi('GET', '/projects/tasks'), []);
   const reload = () => { ps.reload(); ts.reload(); };
   const mine = ts.data ? ts.data.tasks.filter((tk) => tk.status !== 'done' && (!tk.projectId || tk.assigneeId === info.me.userId)) : null;
+  const [view, setView] = useState('list');
 
   return (
     <div>
@@ -122,6 +124,12 @@ function ProjectList({ open, actions }) {
           <button className="btn small" type="button" onClick={() => newTask(null, reload)}>{t('Nouvelle tâche')}</button>
         </div>
       </div>
+      <div className="ws-tabs" role="tablist">
+        {[['list', 'Projets'], ['portfolio', 'Portefeuille'], ...(can('manager') ? [['load', 'Charge prévue']] : [])].map((x) => <button key={x[0]} type="button" role="tab" aria-selected={view === x[0]} className={'tab' + (view === x[0] ? ' on' : '')} style={{ minHeight: 44 }} onClick={() => setView(x[0])}>{t(x[1])}</button>)}
+      </div>
+      {view === 'portfolio' ? <Portfolio open={open} /> : null}
+      {view === 'load' ? <WorkloadPlan /> : null}
+      <div hidden={view !== 'list'}>
       <div className="ws-grid">
         <Loaded state={ps}>
           {(j) => (
@@ -162,6 +170,7 @@ function ProjectList({ open, actions }) {
         ) : null}
       </div>
       {can('manager') ? <Workload /> : null}
+      </div>
     </div>
   );
 }
@@ -170,8 +179,9 @@ function ProjectList({ open, actions }) {
 function ProjectView({ id, back, actions }) {
   const { oapi, dateFr, today } = useWs();
   const t = useT();
-  const { can, newTask, editTask, setStatus, confirm, fail, modal } = actions;
+  const { can, newTask, editTask, setStatus, confirm, fail, modal, members } = actions;
   const st = useLoad(() => oapi('GET', '/projects/' + id), [id]);
+  const [view, setView] = useState('tasks');
   const again = st.reload;
   const j = st.data;
   const p = j && j.project;
@@ -192,6 +202,12 @@ function ProjectView({ id, back, actions }) {
           </>
         ) : null}
       </div>
+      <div className="ws-tabs" role="tablist">
+        {[['tasks', 'Tâches'], ['pilot', 'Pilotage'], ['risks', 'Risques']].map((x) => <button key={x[0]} type="button" role="tab" aria-selected={view === x[0]} className={'tab' + (view === x[0] ? ' on' : '')} style={{ minHeight: 44 }} onClick={() => setView(x[0])}>{t(x[1])}</button>)}
+      </div>
+      {view === 'pilot' ? <ProjectPilot id={id} rev={j} /> : null}
+      {view === 'risks' ? <RiskRegister id={id} members={members} /> : null}
+      <div hidden={view !== 'tasks'}>
       <div className="kan">
         {!j && st.loading ? <Loading /> : null}
         {!j && st.error ? <p className="ws-err" role="alert">{tsrv(st.error.message)}</p> : null}
@@ -223,6 +239,7 @@ function ProjectView({ id, back, actions }) {
       <Planning id={id} rev={j} />
       {can('manager') ? <Insight id={id} rev={j} /> : null}
       <ProjectTrack id={id} />
+      </div>
     </div>
   );
 }
