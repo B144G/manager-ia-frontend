@@ -34,8 +34,10 @@ export default function App() {
     <PrivacyGlobal />
     <Suspense fallback={null}>
       <Routes>
-        <Route element={<StyleLayout group="site" body="site" />}>
+        <Route element={<StyleLayout group="vitrine" body="vt" />}>
           <Route path="/" element={<Home />} />
+        </Route>
+        <Route element={<StyleLayout group="site" body="site" />}>
           <Route path="/confidentialite" element={<LegalCenter slug="confidentialite" legacy={Privacy} />} />
           <Route path="/conditions" element={<LegalCenter slug="conditions" legacy={Terms} />} />
           <Route path="/cookies" element={<LegalCenter slug="cookies" />} />

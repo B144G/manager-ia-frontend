@@ -14,7 +14,7 @@ import siteResponsive from '../styles/responsive-site.css?inline';
 import chat from '../styles/chat.css?inline';
 
 const DS = [tokens, base]; // jetons et base : communs à toutes les pages
-const GROUPS = { site: [...DS, style, ui, home, site, composer, siteResponsive], auth: [...DS, style, ui, home, site, authPlus, composer, siteResponsive], ws: [...DS, style] /* le reste des styles de l'espace de travail est chargé avec lui (src/ws/wsStyles.js) */, chat: [...DS, chat] };
+const GROUPS = { site: [...DS, style, ui, home, site, composer, siteResponsive], auth: [...DS, style, ui, home, site, authPlus, composer, siteResponsive], ws: [...DS, style] /* le reste des styles de l'espace de travail est chargé avec lui (src/ws/wsStyles.js) */, chat: [...DS, chat], vitrine: [] /* la page de présentation charge elle-même sa feuille (src/pages/Home.jsx) : hors du paquet principal */ };
 
 /** Route « enveloppe » : charge le groupe de feuilles de style, règle la classe du <body>, puis affiche la page. */
 export function StyleLayout({ group, body = '', mode }) {
