@@ -22,13 +22,27 @@ function siteUrlPlugin(raw) {
   };
 }
 
+// Précharge la police Inter (sous-ensemble latin) : le texte du premier écran s'affiche dans la bonne police sans attendre la fin du chargement des styles.
+function preloadFontPlugin() {
+  return {
+    name: 'brij-preload-font',
+    transformIndexHtml: {
+      order: 'post',
+      handler(html, ctx) {
+        const names = Object.keys((ctx && ctx.bundle) || {}).filter((n) => /inter-latin-wght-normal.*\.woff2$/.test(n));
+        return names.map((n) => ({ tag: 'link', attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: '/' + n, crossorigin: '' }, injectTo: 'head' }));
+      },
+    },
+  };
+}
+
 // En développement, les appels /api et /webhooks sont renvoyés vers le serveur (par défaut http://localhost:3000) :
 // le navigateur croit parler à un seul site, les cookies de connexion fonctionnent sans réglage particulier.
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const target = env.DEV_API_TARGET || 'http://localhost:3000';
   return {
-    plugins: [react(), siteUrlPlugin(env.SITE_URL || env.VITE_SITE_URL || process.env.SITE_URL)],
+    plugins: [react(), preloadFontPlugin(), siteUrlPlugin(env.SITE_URL || env.VITE_SITE_URL || process.env.SITE_URL)],
     css: { postcss: { plugins: [miaFallbacks()] } },
     server: { port: 5173, proxy: { '/api': { target, changeOrigin: false }, '/webhooks': { target, changeOrigin: false } } },
     preview: { port: 5173, proxy: { '/api': { target, changeOrigin: false } } },

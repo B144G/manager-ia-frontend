@@ -60,7 +60,7 @@ export default function Carousel() {
                   <ul>{s.pts.map((p) => <li key={p}><Fa name="check" />{p}</li>)}</ul>
                 </div>
                 <div className="vt-slide-img">
-                  <img src={shot(s.id, 1280)} srcSet={`${shot(s.id, 720)} 720w, ${shot(s.id, 1280)} 1280w`} sizes="(min-width:900px) 640px, 90vw" width="1280" height="900" loading="lazy" decoding="async"
+                  <img src={shot(s.id, 1280)} srcSet={`${shot(s.id, 480)} 480w, ${shot(s.id, 720)} 720w, ${shot(s.id, 1280)} 1280w`} sizes="(min-width:900px) 640px, 90vw" width="1280" height="900" loading="lazy" decoding="async"
                     alt={t("Écran « {title} » de Brij-IA (données d'exemple)", { title: s.title })} />
                 </div>
               </div>
@@ -68,6 +68,7 @@ export default function Carousel() {
           </div>
           <div className="vt-carctl">
             <button type="button" className="vt-iconbtn" aria-label={t('Écran précédent')} onClick={() => go(i - 1)}><Fa name="arrow-left" /></button>
+            <span className="vt-count" aria-hidden="true">{i + 1} / {n}</span>
             <div className="vt-dots">
               {slides.map((s, k) => <button key={s.id} type="button" className="vt-dot" aria-label={t('Aller à {title}', { title: s.title })} aria-current={k === i ? 'true' : undefined} onClick={() => go(k)} />)}
             </div>

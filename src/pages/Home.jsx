@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import SiteAssistant from '../components/SiteAssistant.jsx';
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import composerCss from '../styles/composer.css?inline';
+import vitrineCss from '../styles/vitrine.css?inline';
 import { useT } from '../lib/i18n.jsx';
 import Carousel from './vitrine/Carousel.jsx';
 import Faq from './vitrine/Faq.jsx';
@@ -12,6 +13,9 @@ import Modules, { useModules } from './vitrine/Modules.jsx';
 import Pricing from './vitrine/Pricing.jsx';
 import Problem from './vitrine/Problem.jsx';
 import Security from './vitrine/Security.jsx';
+
+// L'assistant du site (bulle flottante) se charge après l'affichage de la page.
+const SiteAssistant = lazy(() => import('../components/SiteAssistant.jsx'));
 
 /** Fenêtre de la vidéo : Échap ou clic à côté pour fermer, le focus revient là où il était. */
 function VideoModal({ onClose }) {
@@ -38,6 +42,13 @@ export default function Home() {
   const [video, setVideo] = useState(false);
   const page = useRef(null);
   const mods = useModules();
+  const [late, setLate] = useState(false);
+  // Feuille de style de la présentation : posée avant l'affichage, retirée en quittant la page.
+  useLayoutEffect(() => {
+    const els = [vitrineCss, composerCss].map((css) => { const el = document.createElement('style'); el.setAttribute('data-mia', 'vitrine'); el.textContent = css; document.head.appendChild(el); return el; });
+    return () => els.forEach((e) => e.remove());
+  }, []);
+  useEffect(() => { const id = setTimeout(() => setLate(true), 1200); return () => clearTimeout(id); }, []);
 
   // Apparition douce des blocs « .vt-rv » au défilement (rien ne bouge si la personne préfère moins d'animations ; sans JavaScript tout reste visible).
   useEffect(() => {
@@ -65,7 +76,7 @@ export default function Home() {
         <Final />
       </main>
       <Footer />
-      <SiteAssistant />
+      {late ? <Suspense fallback={null}><SiteAssistant /></Suspense> : null}
       {video ? <VideoModal onClose={() => setVideo(false)} /> : null}
     </div>
   );

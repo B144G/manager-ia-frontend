@@ -178,8 +178,10 @@ body.vt{margin:0;background:var(--vt-bg);color:var(--vt-ink);font:400 1rem/1.6 v
 .vt-slide-img{overflow:hidden;border:1px solid var(--vt-line);border-radius:var(--vt-r-m);box-shadow:var(--vt-shadow-1);background:var(--vt-soft)}
 .vt-slide-img img{width:100%;aspect-ratio:1280/900;object-fit:cover;object-position:top left}
 .vt-carctl{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap}
-.vt-dots{display:flex;gap:2px}
-.vt-dot{display:grid;place-items:center;width:28px;height:44px;padding:0;border:0;background:none}
+.vt-dots{display:none}
+.vt-count{min-width:56px;text-align:center;font-weight:650;font-variant-numeric:tabular-nums;color:var(--vt-muted)}
+@media (min-width:640px){.vt-dots{display:flex}.vt-count{display:none}}
+.vt-dot{display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;background:none}
 .vt-dot::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--vt-line);transition:background-color .2s,transform .2s,width .2s}
 .vt-dot[aria-current="true"]::before{width:26px;border-radius:6px;background:var(--vt-btn)}
 .vt-dot:hover::before{background:var(--vt-brand)}
@@ -295,7 +297,7 @@ body.vt{margin:0;background:var(--vt-bg);color:var(--vt-ink);font:400 1rem/1.6 v
 .vt-footgrid{display:grid;gap:32px}
 .vt-foot h2{margin-bottom:12px;font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--vt-muted)}
 .vt-foot ul{display:grid;gap:2px}
-.vt-foot li a{display:inline-flex;align-items:center;min-height:44px;color:var(--vt-ink);text-decoration:none;font-size:.9375rem;overflow-wrap:anywhere}
+.vt-foot li a{display:inline-flex;min-width:44px;align-items:center;min-height:44px;color:var(--vt-ink);text-decoration:none;font-size:.9375rem;overflow-wrap:anywhere}
 .vt-foot li a:hover{color:var(--vt-brand);text-decoration:underline;text-underline-offset:4px}
 .vt-foot .brand p{margin-top:12px;max-width:34ch;color:var(--vt-muted);font-size:.9375rem}
 .vt-legalrow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;margin-top:36px;padding-top:20px;border-top:1px solid var(--vt-line);color:var(--vt-muted);font-size:.875rem}

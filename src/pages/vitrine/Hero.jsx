@@ -28,7 +28,7 @@ export default function Hero({ onPlay, modules }) {
           <div className="vt-stage">
             <div className="vt-browser">
               <div className="dots" aria-hidden="true"><i /><i /><i /></div>
-              <img src={shot('crm', 1280)} srcSet={`${shot('crm', 720)} 720w, ${shot('crm', 1280)} 1280w`} sizes="(min-width:1024px) 600px, 92vw" width="1280" height="800"
+              <img src={shot('crm', 1280)} srcSet={`${shot('crm', 480)} 480w, ${shot('crm', 720)} 720w, ${shot('crm', 1280)} 1280w`} sizes="(min-width:1024px) 600px, 92vw" width="1280" height="800"
                 alt={t("Écran « Clients et ventes » de Brij-IA : liste des factures et montants à encaisser (données d'exemple)")} {...{ fetchpriority: 'high' }} decoding="async" />
             </div>
             <div className="vt-phone"><img src="/vitrine/mobile-crm.webp" width="390" height="844" alt={t("Brij-IA sur téléphone : liste des clients (données d'exemple)")} loading="eager" decoding="async" /></div>

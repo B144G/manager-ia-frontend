@@ -15,9 +15,8 @@ import wsResponsive from '../styles/responsive.css?inline';
 import wsPro from '../styles/ws-pro.css?inline';
 import siteResponsive from '../styles/responsive-site.css?inline';
 import chat from '../styles/chat.css?inline';
-import vitrine from '../styles/vitrine.css?inline';
 
-const GROUPS = { site: [style, home, site, composer, siteResponsive], auth: [style, home, site, authPlus, composer, siteResponsive], ws: [style, ws, wsPlus, wsGuide, wsAifollow, composer, wsResponsive, wsPro], chat: [chat], vitrine: [vitrine, composer] };
+const GROUPS = { site: [style, home, site, composer, siteResponsive], auth: [style, home, site, authPlus, composer, siteResponsive], ws: [style, ws, wsPlus, wsGuide, wsAifollow, composer, wsResponsive, wsPro], chat: [chat], vitrine: [] }; // la page de présentation charge elle-même sa feuille (src/pages/Home.jsx) : elle reste hors du paquet principal
 
 /** Route « enveloppe » : charge le groupe de feuilles de style, règle la classe du <body>, puis affiche la page. */
 export function StyleLayout({ group, body = '', mode }) {
