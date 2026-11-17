@@ -151,8 +151,12 @@ export default function Crm() {
     if (d.overdue) a.push([t("Relancer avec l'IA"), () => remind(d)]);
     if (d.overdue) a.push([t('Centre de relances'), () => navigate('/app/' + orgId + '/sales?tab=followup')]);
     if (d.kind === 'quote' && d.status === 'sent') { a.push([t('Accepté'), () => setDoc(d, { status: 'accepted' })]); a.push([t('Refusé'), () => setDoc(d, { status: 'refused' })]); }
+    if (d.kind === 'quote' && ['sent', 'accepted'].includes(d.status)) a.push([t('Créer la commande'), () => { oapi('POST', '/crm/documents/' + d.id + '/order', {}).then(() => { setTab('order'); load(); }).catch(fail); }]);
+    if (d.kind === 'order' && d.status === 'pending') { a.push([t('Confirmer'), () => { oapi('PUT', '/sales/orders/' + d.id + '/status', { status: 'confirmed' }).then(load).catch(fail); }]); a.push([t('Annuler'), () => confirm(t('Annuler cette commande ?'), () => { oapi('PUT', '/sales/orders/' + d.id + '/status', { status: 'cancelled' }).then(load).catch(fail); })]); }
+    if (d.kind === 'order' && d.status === 'confirmed') a.push([t('Créer la facture'), () => { oapi('POST', '/sales/orders/' + d.id + '/invoice', {}).then(() => { setTab('invoice'); load(); }).catch(fail); }]);
+    if (d.kind === 'order' && d.status === 'confirmed') a.push([t('Livraison'), () => navigate('/app/' + orgId + '/logistics')]);
     if (d.kind === 'quote' && d.status === 'accepted') a.push([t('Créer la facture'), () => { oapi('POST', '/crm/documents/' + d.id + '/convert', {}).then(() => { setTab('invoice'); load(); }).catch(fail); }]);
-    if (d.kind !== 'quote' && d.status !== 'draft') {
+    if (!['quote', 'order'].includes(d.kind) && d.status !== 'draft') {
       a.push([t('Imprimer / PDF'), () => printDoc(d)]);
       a.push([t('Télécharger le PDF'), () => saveFile('/orgs/' + orgId + '/share/pdf/invoice/' + d.id, d.number + '.pdf', fail)]);
       a.push([t("Partager à l'équipe"), () => modal(t('Partager « {title} »', { title: d.number }), (close) => <ShareDialog kind="invoice" sourceId={d.id} close={close} />, { wide: true })]);
@@ -164,11 +168,11 @@ export default function Crm() {
     a.push([t('Envoyer par e-mail'), () => {
       const cu = findCustomer(d.customerId);
       if (!cu || !cu.email) return toast(t("Ajoutez d'abord l'adresse e-mail de ce client sur sa fiche (Clients → Modifier)."), 'bad');
-      return composeMail(cu, { subject: d.kind === 'quote' ? t('Votre devis {number}', { number: d.number }) : t('Votre facture {number}', { number: d.number }), body: t('Bonjour {name},', { name: cu.name.split(' ')[0] }) + '\n\n' + (d.kind === 'quote' ? t('Veuillez trouver ci-dessous votre devis.') : t('Veuillez trouver ci-dessous votre facture.')) + '\n\n' + docText(d, money, dateFr, info.org.name) + '\n\n' + t('Cordialement.') });
+      return composeMail(cu, { subject: d.kind === 'quote' ? t('Votre devis {number}', { number: d.number }) : d.kind === 'order' ? t('Confirmation de votre commande {number}', { number: d.number }) : t('Votre facture {number}', { number: d.number }), body: t('Bonjour {name},', { name: cu.name.split(' ')[0] }) + '\n\n' + (d.kind === 'quote' ? t('Veuillez trouver ci-dessous votre devis.') : d.kind === 'order' ? t('Nous confirmons votre commande, détaillée ci-dessous.') : t('Veuillez trouver ci-dessous votre facture.')) + '\n\n' + docText(d, money, dateFr, info.org.name) + '\n\n' + t('Cordialement.') });
     }]);
     a.push([t('Copier le texte'), () => copy(docText(d, money, dateFr, info.org.name), t('Texte copié : collez-le dans WhatsApp ou un e-mail.'))]);
     if (d.kind === 'invoice' && d.status !== 'paid' && d.status !== 'cancelled' && d.status !== 'draft') a.push([t('Annuler'), () => confirm(t('Annuler cette facture ?'), () => setDoc(d, { status: 'cancelled' }))]);
-    if (d.status === 'draft' || (can('admin') && !d.paid)) a.push([t('Supprimer'), () => confirm(t('Supprimer {number} ?', { number: d.number }), () => { oapi('DELETE', '/crm/documents/' + d.id).then(load).catch(fail); })]);
+    if ((d.status === 'draft' || (can('admin') && !d.paid)) && !(d.kind === 'order' && d.status === 'invoiced')) a.push([t('Supprimer'), () => confirm(t('Supprimer {number} ?', { number: d.number }), () => { oapi('DELETE', '/crm/documents/' + d.id).then(load).catch(fail); })]);
     return (
       <div className="line" key={d.id}>
         <span>
@@ -216,8 +220,8 @@ export default function Crm() {
           <div className="stat"><b className="ok">{money(s.paidMonth)}</b><span>{t('encaissé ce mois')}</span></div>
         </div>
         <div className="ws-card">
-          <h2>{tab === 'quote' ? t('Devis') : tab === 'credit' ? t('Avoirs') : t('Factures')}</h2>
-          {!j.documents.length ? <Empty text={tab === 'quote' ? t('Aucun devis.') : tab === 'credit' ? t('Aucun avoir.') : t('Aucune facture.')} /> : null}
+          <h2>{tab === 'quote' ? t('Devis') : tab === 'order' ? t('Commandes') : tab === 'credit' ? t('Avoirs') : t('Factures')}</h2>
+          {!j.documents.length ? <Empty text={tab === 'quote' ? t('Aucun devis.') : tab === 'order' ? t('Aucune commande.') : tab === 'credit' ? t('Aucun avoir.') : t('Aucune facture.')} /> : null}
           {j.documents.map(docRow)}
         </div>
       </>
@@ -231,13 +235,13 @@ export default function Crm() {
   else if (tab === 'mail') content = <MailTab />;
   else if (st.data && st.data.docs) content = showDocs(st.data.docs);
 
-  const tabs = mgr ? [['customers', t('Clients')], ['quote', t('Devis')], ['invoice', t('Factures')], ['credit', t('Avoirs')], ['mail', t('E-mails')]] : [['customers', t('Clients')]];
+  const tabs = mgr ? [['customers', t('Clients')], ['quote', t('Devis')], ['order', t('Commandes')], ['invoice', t('Factures')], ['credit', t('Avoirs')], ['mail', t('E-mails')]] : [['customers', t('Clients')]];
   return (
     <>
       <div className="ws-head">
         <div>
           <h1>{t('Clients et ventes')}</h1>
-          <p className="muted">{mgr ? t("Vos clients, vos devis, vos factures et ce qu'il reste à encaisser.") : t('Vos clients.')}</p>
+          <p className="muted">{mgr ? t("Vos clients, vos devis, vos commandes, vos factures et ce qu'il reste à encaisser.") : t('Vos clients.')}</p>
         </div>
         <div className="row">
           {mgr ? <button className="btn signal small" type="button" onClick={proposal}>{t("Proposition avec l'IA")}</button> : null}

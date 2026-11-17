@@ -1,6 +1,6 @@
 import { getLocale, tr } from '../../../lib/i18n.jsx';
 
-export const DST = { draft: ['Brouillon', ''], sent: ['Envoyé', 'mid'], accepted: ['Accepté', 'good'], refused: ['Refusé', 'bad'], paid: ['Payée', 'good'], cancelled: ['Annulée', 'bad'], credited: ['Soldée par avoir', 'good'] };
+export const DST = { draft: ['Brouillon', ''], sent: ['Envoyé', 'mid'], accepted: ['Accepté', 'good'], refused: ['Refusé', 'bad'], paid: ['Payée', 'good'], cancelled: ['Annulée', 'bad'], credited: ['Soldée par avoir', 'good'], pending: ['À confirmer', 'mid'], confirmed: ['Confirmée', 'good'], invoiced: ['Facturée', 'good'] };
 
 export function Pill({ t }) {
   return t && t[0] ? <span className={'pill ' + t[1]}>{tr(t[0])}</span> : null;

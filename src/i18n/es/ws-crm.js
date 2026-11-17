@@ -77,7 +77,6 @@ export default {
   'Aucune facture.': 'Ninguna factura.',
   'E-mails': 'Correos',
   'Clients et ventes': 'Clientes y ventas',
-  'Vos clients, vos devis, vos factures et ce qu\'il reste à encaisser.': 'Sus clientes, presupuestos, facturas y lo que queda por cobrar.',
   'Vos clients.': 'Sus clientes.',
   'Ajouter un client': 'Añadir un cliente',
   'Historique': 'Historial',
@@ -153,5 +152,12 @@ export default {
   'Brouillon': 'Borrador',
   'Payée': 'Pagada',
   'Annulée': 'Anulada',
-  'En retard': 'Vencida'
+  'En retard': 'Vencida',
+  "Vos clients, vos devis, vos commandes, vos factures et ce qu'il reste à encaisser.": "Sus clientes, presupuestos, pedidos, facturas y lo que queda por cobrar.",
+  "Seul un devis envoyé ou accepté peut devenir une commande.": "Solo un presupuesto enviado o aceptado puede convertirse en pedido.",
+  "Ce devis est déjà devenu la commande {number}.": "Este presupuesto ya se convirtió en el pedido {number}.",
+  "Ce devis est déjà devenu la commande {number} : facturez-la depuis l'onglet Commandes.": "Este presupuesto ya se convirtió en el pedido {number}: factúrelo desde la pestaña Pedidos.",
+  "Confirmation de votre commande {number}": "Confirmación de su pedido {number}",
+  "Nous confirmons votre commande, détaillée ci-dessous.": "Confirmamos su pedido, detallado a continuación.",
+  "Une commande facturée ne se supprime pas : annulez ou créditez sa facture.": "Un pedido facturado no se puede eliminar: anule o abone su factura.",
 };

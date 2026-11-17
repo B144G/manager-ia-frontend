@@ -77,7 +77,6 @@ export default {
   'Aucune facture.': 'No invoices.',
   'E-mails': 'Emails',
   'Clients et ventes': 'Customers and sales',
-  'Vos clients, vos devis, vos factures et ce qu\'il reste à encaisser.': 'Your customers, quotes, invoices and what is still to be collected.',
   'Vos clients.': 'Your customers.',
   'Ajouter un client': 'Add a customer',
   'Historique': 'History',
@@ -153,5 +152,12 @@ export default {
   'Brouillon': 'Draft',
   'Payée': 'Paid',
   'Annulée': 'Cancelled',
-  'En retard': 'Overdue'
+  'En retard': 'Overdue',
+  "Vos clients, vos devis, vos commandes, vos factures et ce qu'il reste à encaisser.": "Your customers, quotes, orders, invoices and what is still to be collected.",
+  "Seul un devis envoyé ou accepté peut devenir une commande.": "Only a sent or accepted quote can become an order.",
+  "Ce devis est déjà devenu la commande {number}.": "This quote has already become order {number}.",
+  "Ce devis est déjà devenu la commande {number} : facturez-la depuis l'onglet Commandes.": "This quote has already become order {number}: invoice it from the Orders tab.",
+  "Confirmation de votre commande {number}": "Confirmation of your order {number}",
+  "Nous confirmons votre commande, détaillée ci-dessous.": "We confirm your order, detailed below.",
+  "Une commande facturée ne se supprime pas : annulez ou créditez sa facture.": "An invoiced order cannot be deleted: cancel or credit its invoice.",
 };

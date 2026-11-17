@@ -126,6 +126,9 @@ rule(/^Stock insuffisant pour « (.+) » dans l'entrepôt : il manque (\S+) (\S+
 rule(/^Stock disponible insuffisant pour « (.+) » : (\S+) (\S+) \(il en faut (\S+)\)\.$/, 'Stock disponible insuffisant pour « {name} » : {q} {u} (il en faut {n}).', ['name', 'q', 'u', 'n']);
 rule(/^Il reste (\S+) à assembler sur cet ordre\.$/, 'Il reste {q} à assembler sur cet ordre.', ['q']);
 rule(/^Il reste (\S+) à désassembler sur cet ordre\.$/, 'Il reste {q} à désassembler sur cet ordre.', ['q']);
+// Commandes clients (devis → commande)
+rule(/^Ce devis est déjà devenu la commande (\S+) : facturez-la depuis l'onglet Commandes\.$/, "Ce devis est déjà devenu la commande {number} : facturez-la depuis l'onglet Commandes.", ['number']);
+rule(/^Ce devis est déjà devenu la commande (\S+)\.$/, 'Ce devis est déjà devenu la commande {number}.', ['number']);
 // Transport (TMS)
 rule(/^Le véhicule (.+) est trop chargé \((.+)\)\.$/, 'Le véhicule {plate} est trop chargé ({detail}).', ['plate', 'detail']);
 rule(/^Le permis de (.+) est périmé à la date de la tournée\.$/, 'Le permis de {name} est périmé à la date de la tournée.', ['name']);

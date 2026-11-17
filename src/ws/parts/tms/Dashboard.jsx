@@ -79,7 +79,7 @@ export default function Dashboard() {
         return (
           <>
             <div className="kpis wms-kpis">
-              <div className="stat"><b>{pct(s.onTimePct)}</b><span>{t("livraisons à l'heure")}</span></div>
+              <div className="stat"><b>{pct(s.onTimePct)}</b><span>{t("livraisons à l'heure")}{s.declaredTimes ? ' · ' + t('dont {n} heure(s) saisie(s) après coup ; en direct : {p}', { n: s.declaredTimes, p: pct(s.onTimeLivePct) }) : ''}</span></div>
               <div className="stat"><b>{pct(s.firstAttemptPct)}</b><span>{t('réussies au premier passage')}</span></div>
               <div className="stat"><b>{s.delivered + ' / ' + s.deliveries}</b><span>{t('livrées sur la période')}</span></div>
               <div className={'stat' + (s.failed ? ' bad' : '')}><b>{String(s.failed)}</b><span>{t('en échec ou retournées')}</span></div>

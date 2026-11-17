@@ -34,7 +34,8 @@ const here = () => new Promise((resolve) => {
 
 function Complete({ stop, close, done }) {
   const t = useT();
-  const { oapi, money, fail } = useWs();
+  const { oapi, money, fail, can } = useWs();
+  const [late, setLate] = useState(false); const [at, setAt] = useState(''); const [proof, setProof] = useState('');
   const upload = useUpload();
   const [partial, setPartial] = useState(false);
   const [recipient, setRecipient] = useState('');
@@ -46,12 +47,13 @@ function Complete({ stop, close, done }) {
   const submit = async (e) => {
     e.preventDefault(); setErr('');
     if (!recipient.trim()) { setErr(t('Indiquez le nom de la personne qui a reçu la marchandise.')); return; }
+    if (late && (!at || proof.trim().length < 5)) { setErr(t("Saisie après coup : indiquez l'heure réelle et la pièce qui la justifie.")); return; }
     setBusy(true);
     try {
       if (sig) await upload(TMS + '/stops/' + stop.id + '/pod?kind=signature', sig);
       if (photo) await upload(TMS + '/stops/' + stop.id + '/pod?kind=photo', await shrink(photo));
       const g = await here();
-      await oapi('POST', TMS + '/stops/' + stop.id + '/complete', { outcome: partial ? 'partial' : 'delivered', recipient, codCollected: stop.codAmount ? cod : undefined, lines: partial ? Object.entries(lines).map(([id, q]) => ({ id: Number(id), delivered: q })) : undefined, ...g });
+      await oapi('POST', TMS + '/stops/' + stop.id + '/complete', { outcome: partial ? 'partial' : 'delivered', recipient, codCollected: stop.codAmount ? cod : undefined, lines: partial ? Object.entries(lines).map(([id, q]) => ({ id: Number(id), delivered: q })) : undefined, ...(late ? { deliveredAt: at, note: proof } : {}), ...g });
       close(); done(t('Livraison enregistrée.'));
     } catch (x) { if (x && x.status === 401) fail(x); setErr(tsrv(x.message)); }
     setBusy(false);
@@ -71,6 +73,18 @@ function Complete({ stop, close, done }) {
       {stop.codAmount ? <label className="fld"><span>{t('Montant encaissé (à encaisser : {amount})', { amount: money(stop.codAmount) })}</span><input type="text" inputMode="numeric" style={{ fontSize: 16 }} value={cod} onChange={(e) => setCod(e.target.value)} /></label> : null}
       <div className="fld"><span>{t('Signature du client')}</span><SignaturePad onChange={setSig} /></div>
       <label className="fld"><span>{t('Photo de la livraison (facultatif)')}</span><input type="file" accept="image/*" capture="environment" onChange={(e) => setPhoto(e.target.files && e.target.files[0])} /><small>{t('JPEG, PNG ou WebP, réduite automatiquement à moins de 2 Mo.')}</small></label>
+      {can('manager') ? (
+        <fieldset className="fld tms-late">
+          <label className="row" style={{ gap: 8, alignItems: 'center' }}><input type="checkbox" checked={late} onChange={(e) => setLate(e.target.checked)} /><span>{t('Saisie après coup (bon de livraison papier)')}</span></label>
+          {late ? (
+            <>
+              <label className="fld"><span>{t('Heure réelle de la livraison')}</span><input type="datetime-local" style={{ fontSize: 16 }} value={at} onChange={(e) => setAt(e.target.value)} /></label>
+              <label className="fld"><span>{t('Pièce justificative')}</span><input type="text" style={{ fontSize: 16 }} value={proof} onChange={(e) => setProof(e.target.value)} placeholder={t('Ex. bon de livraison signé n° BL-0412')} /></label>
+              <small className="muted">{t("L'heure est marquée « saisie après coup » : les indicateurs la comptent à part de l'heure enregistrée en direct.")}</small>
+            </>
+          ) : null}
+        </fieldset>
+      ) : null}
       <p className="ws-err" role="alert">{err}</p>
       <button className="btn primary tms-big" type="submit" disabled={busy}>{busy ? t('Envoi…') : t('Valider la livraison')}</button>
     </form>

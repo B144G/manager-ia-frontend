@@ -77,7 +77,6 @@ export default {
   'Aucune facture.': 'Keine Rechnungen.',
   'E-mails': 'E-Mails',
   'Clients et ventes': 'Kunden und Verkauf',
-  'Vos clients, vos devis, vos factures et ce qu\'il reste à encaisser.': 'Ihre Kunden, Angebote, Rechnungen und was noch einzuziehen ist.',
   'Vos clients.': 'Ihre Kunden.',
   'Ajouter un client': 'Kunden hinzufügen',
   'Historique': 'Verlauf',
@@ -153,5 +152,12 @@ export default {
   'Brouillon': 'Entwurf',
   'Payée': 'Bezahlt',
   'Annulée': 'Storniert',
-  'En retard': 'Überfällig'
+  'En retard': 'Überfällig',
+  "Vos clients, vos devis, vos commandes, vos factures et ce qu'il reste à encaisser.": "Ihre Kunden, Angebote, Bestellungen, Rechnungen und was noch einzuziehen ist.",
+  "Seul un devis envoyé ou accepté peut devenir une commande.": "Nur ein gesendetes oder angenommenes Angebot kann zu einer Bestellung werden.",
+  "Ce devis est déjà devenu la commande {number}.": "Dieses Angebot ist bereits Bestellung {number} geworden.",
+  "Ce devis est déjà devenu la commande {number} : facturez-la depuis l'onglet Commandes.": "Dieses Angebot ist bereits Bestellung {number} geworden: Rechnen Sie sie im Reiter Bestellungen ab.",
+  "Confirmation de votre commande {number}": "Bestätigung Ihrer Bestellung {number}",
+  "Nous confirmons votre commande, détaillée ci-dessous.": "Wir bestätigen Ihre Bestellung, siehe unten.",
+  "Une commande facturée ne se supprime pas : annulez ou créditez sa facture.": "Eine abgerechnete Bestellung kann nicht gelöscht werden: Stornieren Sie ihre Rechnung oder erstellen Sie eine Gutschrift.",
 };
