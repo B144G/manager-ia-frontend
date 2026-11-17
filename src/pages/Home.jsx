@@ -2,13 +2,15 @@ import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 're
 import composerCss from '../styles/composer.css?inline';
 import vitrineCss from '../styles/vitrine.css?inline';
 import { useT } from '../lib/i18n.jsx';
-import Carousel from './vitrine/Carousel.jsx';
+import Audience from './vitrine/Audience.jsx';
 import Faq from './vitrine/Faq.jsx';
 import Final from './vitrine/Final.jsx';
 import Footer from './vitrine/Footer.jsx';
 import Header from './vitrine/Header.jsx';
-import Hero from './vitrine/Hero.jsx';
-import How from './vitrine/How.jsx';
+import Hero, { ExampleChat } from './vitrine/Hero.jsx';
+import Stats from './vitrine/Stats.jsx';
+import Steps3 from './vitrine/Steps3.jsx';
+import Story from './vitrine/Story.jsx';
 import Modules, { useModules } from './vitrine/Modules.jsx';
 import Pricing from './vitrine/Pricing.jsx';
 import Problem from './vitrine/Problem.jsx';
@@ -50,32 +52,37 @@ export default function Home() {
   }, []);
   useEffect(() => { const id = setTimeout(() => setLate(true), 1200); return () => clearTimeout(id); }, []);
 
-  // Apparition douce des blocs « .vt-rv » au défilement (rien ne bouge si la personne préfère moins d'animations ; sans JavaScript tout reste visible).
+  // Apparition douce des blocs « .vt-rv » : seuls ceux encore sous l'écran sont masqués (.vt-pre) puis révélés ; une minuterie de sécurité
+  // les révèle tous au bout de 4 s, donc rien ne reste jamais invisible (JavaScript lent, observateur défaillant, etc.).
   useEffect(() => {
     const root = document.documentElement;
-    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!('IntersectionObserver' in window) || reduce) return undefined;
     root.classList.add('js-vt');
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { threshold: 0.08, rootMargin: '0px 0px -5% 0px' });
-    page.current.querySelectorAll('.vt-rv').forEach((n) => io.observe(n));
-    return () => { io.disconnect(); root.classList.remove('js-vt'); };
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) return () => root.classList.remove('js-vt');
+    const els = [...page.current.querySelectorAll('.vt-rv')];
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.remove('vt-pre'); io.unobserve(e.target); } }), { threshold: 0.05, rootMargin: '0px 0px -4% 0px' });
+    els.forEach((n) => { if (n.getBoundingClientRect().top > window.innerHeight) { n.classList.add('vt-pre'); io.observe(n); } });
+    const safety = setTimeout(() => els.forEach((n) => n.classList.remove('vt-pre')), 4000);
+    return () => { clearTimeout(safety); io.disconnect(); root.classList.remove('js-vt'); };
   }, []);
 
   return (
     <div className="vt-page" ref={page}>
       <Header />
       <main id="contenu">
-        <Hero onPlay={() => setVideo(true)} modules={mods.length} />
+        <Hero onPlay={() => setVideo(true)} />
+        <Stats modules={mods.length} />
         <Problem />
-        <Carousel />
+        <Story chat={<ExampleChat compact />} />
         <Modules mods={mods} />
-        <How />
+        <Audience />
+        <Steps3 />
         <Pricing />
         <Security />
         <Faq />
         <Final />
       </main>
-      <Footer />
+      <Footer onPlay={() => setVideo(true)} />
       {late ? <Suspense fallback={null}><SiteAssistant /></Suspense> : null}
       {video ? <VideoModal onClose={() => setVideo(false)} /> : null}
     </div>

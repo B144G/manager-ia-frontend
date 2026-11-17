@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Fa } from '../../lib/fa.jsx';
 import { useT } from '../../lib/i18n.jsx';
+import { shot } from './shared.js';
 
 /** Liste des modules réellement présents dans l'application (src/ws/modules). */
 export function useModules() {
@@ -31,25 +30,41 @@ export function useModules() {
   ];
 }
 
-/** Grille des modules avec filtres (boutons à bascule, accessibles au clavier). */
+const BENTO = [['crm', 'vt-b7'], ['sales', 'vt-b5'], ['stock', 'vt-b5'], ['accounting', 'vt-b7'], ['payroll', 'vt-b4'], ['budget', 'vt-b4'], ['logistics', 'vt-b4']];
+const sizes = '(min-width:1040px) 560px, (min-width:720px) 46vw, 90vw';
+
+/** Grille « bento » : cartes de tailles variées avec un vrai écran de l'application (ou la conversation WhatsApp), puis les autres modules en pastilles. */
 export default function Modules({ mods }) {
   const t = useT();
-  const [g, setG] = useState('all');
-  const groups = [['all', t('Tous')], ['sell', t('Vendre')], ['money', t('Finances')], ['ops', t('Opérations')], ['team', t('Équipe et pilotage')]];
-  const list = g === 'all' ? mods : mods.filter((m) => m.g === g);
+  const byId = Object.fromEntries(mods.map((m) => [m.id, m]));
+  const rest = mods.filter((m) => !BENTO.some(([id]) => id === m.id));
   return (
-    <section className="vt-sec" id="modules" aria-labelledby="vt-mods">
+    <section className="vt-sec vt-sec--soft" id="modules" aria-labelledby="vt-mods">
       <div className="vt-wrap">
-        <div className="vt-head vt-rv"><span className="vt-eyebrow">{t('Modules')}</span><h2 className="vt-h2" id="vt-mods">{t("Les outils d'une PME, réunis dans un seul endroit")}</h2><p>{t("Utilisez ce qui vous sert. Les modules partagent les mêmes données : rien n'est saisi deux fois.")}</p></div>
-        <div className="vt-filters" role="group" aria-label={t('Filtrer les modules')}>
-          {groups.map(([k, l]) => <button key={k} type="button" className="vt-chip" aria-pressed={g === k} onClick={() => setG(k)}>{l}</button>)}
+        <div className="vt-head vt-rv"><span className="vt-eyebrow">{t('Modules')}</span><h2 className="vt-h2" id="vt-mods">{t("Les outils d'une PME, réunis dans un seul endroit")}</h2><p className="vt-lead">{t("Utilisez ce qui vous sert. Les modules partagent les mêmes données : rien n'est saisi deux fois.")}</p></div>
+        <div className="vt-bento">
+          {BENTO.map(([id, cls]) => {
+            const m = byId[id];
+            return (
+              <article key={id} className={'vt-bcard vt-rv ' + cls}>
+                <div className="top"><span className="vt-ico"><Fa name={m.icon} /></span><h3 className="vt-h4">{m.title}</h3></div>
+                <p>{m.text}</p>
+                {id === 'sales' ? (
+                  <div className="vt-bchat" aria-hidden="true">
+                    <div className="m in">{t('Bonjour, vous avez la chaise de bureau en stock ? Quel prix ?')}</div>
+                    <div className="m out">{t('Bonjour ! Oui, elle est disponible : 45 000 FCFA. Voulez-vous que je prépare une commande ?')}</div>
+                  </div>
+                ) : (
+                  <div className="vt-bimg"><img src={shot(id, 720)} srcSet={`${shot(id, 480)} 480w, ${shot(id, 720)} 720w, ${shot(id, 1280)} 1280w`} sizes={sizes} width="1280" height="760" loading="lazy" decoding="async" alt={t("Écran « {title} » de Brij-IA (données d'exemple)", { title: m.title })} /></div>
+                )}
+              </article>
+            );
+          })}
         </div>
-        <ul className="vt-mods">
-          {list.map((m) => (
-            <li key={m.id} className="vt-mod"><span className="vt-ico"><Fa name={m.icon} /></span><div><h3>{m.title}</h3><p>{m.text}</p></div></li>
-          ))}
+        <h3 className="vt-more-h vt-rv">{t('Et aussi')}</h3>
+        <ul className="vt-chips vt-rv">
+          {rest.map((m) => <li key={m.id}><Fa name={m.icon} />{m.title}</li>)}
         </ul>
-        <p className="vt-more"><Link to="/inscription" className="vt-btn vt-btn--primary">{t('Créer mon espace gratuit')}</Link></p>
       </div>
     </section>
   );

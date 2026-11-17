@@ -6,7 +6,8 @@ import { fcfa, usePlans } from './plans.js';
 
 const MONTHS = { month: 1, quarter: 3, semester: 6, year: 12 };
 
-/** Trois offres + tableau des durées. Les montants viennent du serveur (/api/plans) ; les « équivalents par mois » et les réductions sont calculés à partir de ces mêmes montants. */
+/** Trois offres (Illimité recommandée), bascule de durée, tableau comparatif honnête. Les montants viennent du serveur (/api/plans) ;
+    « par mois » et l'économie sont calculés à partir de ces mêmes montants. */
 export default function Pricing() {
   const t = useT();
   const { prices, min } = usePlans();
@@ -21,9 +22,14 @@ export default function Pricing() {
     const b = e.currentTarget.querySelector(`[data-k="${nk}"]`); if (b) b.focus();
   };
   return (
-    <section className="vt-sec vt-sec--soft" id="tarifs" aria-labelledby="vt-price">
+    <section className="vt-sec" id="tarifs" aria-labelledby="vt-price">
       <div className="vt-wrap">
-        <div className="vt-head vt-rv"><span className="vt-eyebrow">{t('Tarifs')}</span><h2 className="vt-h2" id="vt-price">{t('Commencez gratuitement, évoluez quand vous êtes prêt')}</h2><p>{t('Paiement par MTN Mobile Money ou Orange Money. Pas de carte bancaire pour essayer.')}</p></div>
+        <div className="vt-head vt-head--center vt-rv"><span className="vt-eyebrow">{t('Tarifs')}</span><h2 className="vt-h2" id="vt-price">{t('Commencez gratuitement, évoluez quand vous êtes prêt')}</h2><p className="vt-lead">{t('Paiement par MTN Mobile Money ou Orange Money. Pas de carte bancaire pour essayer.')}</p></div>
+        <div style={{ textAlign: 'center' }}>
+          <div className="vt-seg" role="radiogroup" aria-label={t('Durée')} onKeyDown={onKey}>
+            {rows.map(([k, l]) => <button key={k} data-k={k} type="button" role="radio" aria-checked={per === k} tabIndex={per === k ? 0 : -1} onClick={() => setPer(k)}>{l}</button>)}
+          </div>
+        </div>
         <div className="vt-plans">
           <div className="vt-plan vt-rv">
             <h3 className="vt-h3">{t('Gratuit')}</h3>
@@ -33,14 +39,15 @@ export default function Pricing() {
             <Link to="/inscription" className="vt-btn vt-btn--secondary">{t('Commencer gratuitement')}</Link>
           </div>
           <div className="vt-plan vt-plan--hot vt-rv">
-            <span className="vt-flag">{t('Tout inclus')}</span>
+            <span className="vt-flag">{t('Recommandé')}</span>
             <h3 className="vt-h3">{t('Illimité')}</h3>
-            <div className="vt-seg" role="radiogroup" aria-label={t('Durée')} onKeyDown={onKey}>
-              {rows.map(([k, l]) => <button key={k} data-k={k} type="button" role="radio" aria-checked={per === k} tabIndex={per === k ? 0 : -1} onClick={() => setPer(k)}>{l}</button>)}
-            </div>
             <div className="vt-price" aria-live="polite"><b>{fcfa(prices[per])}</b>{saving(per) > 0 ? <span className="vt-saving">{t('−{n} % par rapport au mois', { n: saving(per) })}</span> : null}</div>
             {perMonth(per) && per !== 'month' ? <p>{t('Soit {price} par mois', { price: fcfa(perMonth(per)) })}</p> : null}
-            <p>{t('Organisations, personnes et antennes sans limite pratique, toutes les fonctions.')}</p>
+            <ul>
+              <li><Fa name="check" />{t('Toutes les fonctions et tous les modules')}</li>
+              <li><Fa name="check" />{t('Organisations, personnes et antennes sans limite pratique')}</li>
+              <li><Fa name="check" />{t("Messages IA partagés par toute l'organisation, renouvelés avec l'abonnement")}</li>
+            </ul>
             <Link to="/inscription" className="vt-btn vt-btn--primary">{t('Choisir Illimité')}</Link>
           </div>
           <div className="vt-plan vt-rv">
@@ -53,9 +60,15 @@ export default function Pricing() {
         </div>
         <div className="vt-tablewrap vt-rv">
           <table className="vt-table">
-            <caption>{t("Offre Illimité : prix selon la durée")}</caption>
-            <thead><tr><th scope="col">{t('Durée')}</th><th scope="col">{t('Prix')}</th><th scope="col">{t('Par mois')}</th></tr></thead>
-            <tbody>{rows.map(([k, l]) => <tr key={k}><th scope="row">{l}</th><td>{fcfa(prices[k])}</td><td>{perMonth(k) ? fcfa(perMonth(k)) : '—'}</td></tr>)}</tbody>
+            <caption>{t('Gratuit ou Illimité : ce qui change')}</caption>
+            <thead><tr><th scope="col"><span className="sr-only">{t('Critère')}</span></th><th scope="col">{t('Gratuit')}</th><th scope="col" className="hot">{t('Illimité')}</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">{t('Prix')}</th><td>0 FCFA</td><td className="hot">{fcfa(prices[per])}</td></tr>
+              <tr><th scope="row">{t('Organisations')}</th><td>1</td><td className="hot">{t('Sans limite pratique')}</td></tr>
+              <tr><th scope="row">{t('Personnes')}</th><td>3</td><td className="hot">{t('Sans limite pratique')}</td></tr>
+              <tr><th scope="row">{t('Messages IA')}</th><td>{t('40 par mois')}</td><td className="hot">{t("Renouvelés avec l'abonnement")}</td></tr>
+              <tr><th scope="row">{t('Fonctions')}</th><td>{t('Découverte de la plateforme')}</td><td className="hot">{t('Toutes')}</td></tr>
+            </tbody>
           </table>
         </div>
         <p className="vt-note">{t("Les messages IA sont partagés par toute l'organisation et se renouvellent avec votre abonnement.")}</p>

@@ -31,7 +31,8 @@ export default function Faq() {
   return (
     <section className="vt-sec" id="faq" aria-labelledby="vt-faq">
       <div className="vt-wrap">
-        <div className="vt-head vt-rv"><span className="vt-eyebrow">{t('Questions fréquentes')}</span><h2 className="vt-h2" id="vt-faq">{t("Ce que l'on nous demande souvent")}</h2></div>
+        <div className="vt-faqgrid">
+        <div className="vt-head"><span className="vt-eyebrow">{t('Questions fréquentes')}</span><h2 className="vt-h2" id="vt-faq">{t("Ce que l'on nous demande souvent")}</h2><p className="vt-p">{t('Une autre question ? Écrivez-nous, nous vous répondons.')}</p><a className="vt-btn vt-btn--secondary" href={waLink(t('Bonjour, je voudrais en savoir plus sur Brij-IA.'))} target="_blank" rel="noopener noreferrer"><Fa name="whatsapp" />{t('Écrire sur WhatsApp')}</a></div>
         <div className="vt-faq">
           {qs.map(([q, a], k) => (
             <div className={'vt-q' + (open === k ? ' is-open' : '')} key={k}>
@@ -39,6 +40,7 @@ export default function Faq() {
               <div className="vt-qa" id={'vt-a' + k} role="region" aria-labelledby={'vt-q' + k}><div><p>{a}</p></div></div>
             </div>
           ))}
+        </div>
         </div>
       </div>
     </section>

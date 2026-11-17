@@ -4,11 +4,11 @@ import { useT } from '../../lib/i18n.jsx';
 import { VtLogo } from './Header.jsx';
 import { EMAIL, WA_DISPLAY, waLink } from './shared.js';
 
-/** Pied de page : produit, compte, informations légales (pages existantes), contact. Aucun réseau social n'est cité tant qu'aucun lien officiel n'existe dans le code. */
-export default function Footer() {
+/** Pied de page dense : produit, ressources, compte, légal (pages existantes), contact. Aucun réseau social n'est cité tant qu'aucun lien officiel n'existe dans le code. */
+export default function Footer({ onPlay }) {
   const t = useT();
   return (
-    <footer className="vt-foot" id="contact">
+    <footer className="vt-foot vt-dark" id="contact">
       <div className="vt-wrap">
         <div className="vt-footgrid">
           <div className="brand">
@@ -20,30 +20,33 @@ export default function Footer() {
             <ul>
               <li><a href="#fonctions">{t('Fonctions')}</a></li>
               <li><a href="#modules">{t('Modules')}</a></li>
+              <li><a href="#metiers">{t('Pour qui ?')}</a></li>
               <li><a href="#tarifs">{t('Tarifs')}</a></li>
-              <li><a href="#faq">{t('Questions')}</a></li>
             </ul>
           </nav>
-          <nav aria-label={t('Mon espace')}>
-            <h2>{t('Mon espace')}</h2>
+          <nav aria-label={t('Ressources')}>
+            <h2>{t('Ressources')}</h2>
             <ul>
-              <li><Link to="/inscription">{t('Essai gratuit')}</Link></li>
-              <li><Link to="/connexion">{t('Me connecter')}</Link></li>
-              <li><Link to="/essai">{t('Être contacté gratuitement')}</Link></li>
+              <li><a href="#faq">{t('Questions')}</a></li>
+              <li><button type="button" onClick={onPlay}>{t('Vidéo de présentation')}</button></li>
               <li><a href="/steve-brandon-tenda/">{t('Le fondateur')}</a></li>
+              <li><Link to="/essai">{t('Être contacté gratuitement')}</Link></li>
+            </ul>
+          </nav>
+          <nav aria-label={t('Informations légales')}>
+            <h2>{t('Informations légales')}</h2>
+            <ul>
+              <li><Link to="/confidentialite">{t('Confidentialité')}</Link></li>
+              <li><Link to="/conditions">{t('Conditions')}</Link></li>
+              <li><Link to="/confidentialite">{t('Cookies et données')}</Link></li>
+              <li><Link to="/connexion">{t('Me connecter')}</Link></li>
             </ul>
           </nav>
           <div>
             <h2>{t('Contact')}</h2>
             <ul>
-              <li><a href={waLink()} target="_blank" rel="noopener noreferrer"><Fa name="whatsapp" />&nbsp;WhatsApp {WA_DISPLAY}</a></li>
-              <li><a href={`mailto:${EMAIL}`}><Fa name="mail" />&nbsp;{EMAIL}</a></li>
-            </ul>
-            <h2 style={{ marginTop: 20 }}>{t('Informations légales')}</h2>
-            <ul>
-              <li><Link to="/confidentialite">{t('Confidentialité')}</Link></li>
-              <li><Link to="/conditions">{t('Conditions')}</Link></li>
-              <li><Link to="/confidentialite">{t('Cookies et données')}</Link></li>
+              <li><a href={waLink()} target="_blank" rel="noopener noreferrer"><Fa name="whatsapp" />WhatsApp {WA_DISPLAY}</a></li>
+              <li><a href={`mailto:${EMAIL}`}><Fa name="mail" />{EMAIL}</a></li>
             </ul>
           </div>
         </div>

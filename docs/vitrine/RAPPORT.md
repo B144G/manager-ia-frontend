@@ -1,3 +1,27 @@
+# DEUXIÈME PASSE (direction artistique « nuit et or »)
+
+Retour du fondateur sur la première version : « ça fait genre débutant ». Refonte visuelle et structurelle, mêmes règles d'honnêteté, de SEO, d'i18n et d'accessibilité.
+
+## Ce qui change
+- Identité : fond bleu nuit du logo (hero, chiffres, parcours, sécurité, pied de page), alternance avec des sections claires ; un seul accent chaud, l'or de l'étoile du logo, pour les boutons principaux et les chiffres clés ; halos, grille légère ; plus de lavande pâle.
+- Typographie : Inter seule, titres jusqu'à 68 px (clamp), graisse 800, crénage −0,04 em, sur-titres en capitales espacées, texte courant 17 à 22 px, largeurs de ligne limitées (56 à 60 caractères).
+- Hero sombre : accroche courte (« Toute votre entreprise, enfin au même endroit. »), deux grands boutons (Essai gratuit doré, WhatsApp contour), grande capture réelle en légère perspective + téléphone avec conversation WhatsApp animée présentée comme « Exemple illustratif ». Les images ont des dimensions et un fond de repli : plus de cadre vide.
+- Chiffres animés (modules, langues, niveaux d'accès, moyens de paiement Mobile Money : tous réels ; le nombre de modules est compté dans la liste affichée) puis bandeau « Paiements et canaux » (MTN Mobile Money, Orange Money, WhatsApp, en texte, avec mention qu'aucun partenariat officiel n'est suggéré). Pas de « tests automatiques » : fait non vérifié ici.
+- Constat (3 douleurs) + bloc solution sombre ; parcours collant en 4 étapes « de la commande WhatsApp à la facture et au stock » (vue qui change au défilement sur ordinateur, images intégrées sur téléphone) ; grille bento de 7 modules avec vrais écrans (cartes de tailles variées, élévation au survol) + les 14 autres modules en pastilles ; onglets « Pour qui ? » (Commerce, Atelier, École, Restaurant, Transport et logistique, BTP : titre, 3 bénéfices tirés de modules existants, vrai écran) ; 3 étapes de démarrage.
+- Tarifs : offre Illimité mise en avant (carte sombre, étiquette « Recommandé »), bascule de durée (semaine à année) avec économie calculée sur les prix du serveur, tableau comparatif Gratuit / Illimité honnête (« Sans limite pratique », sans chiffres inventés).
+- Sécurité : bandeau sombre de 6 garanties (inchangées, vérifiables). FAQ à deux colonnes (titre collant), 10 questions. Appel final en bandeau doré plein largeur. Pied de page dense à 5 colonnes (produit, ressources, légal, contact).
+- Micro-interactions : apparition au défilement corrigée : tout est visible par défaut ; seuls les blocs encore sous l'écran au chargement sont masqués puis révélés, et une minuterie de sécurité (4 s) les révèle tous si l'observateur échoue ; rien n'est masqué en mouvement réduit.
+- Carrousel retiré (remplacé par les onglets « Pour qui ? » et le parcours collant, comme demandé) ; `Carousel.jsx`, `How.jsx` supprimés. Captures ajoutées : Production, Chantiers (BTP).
+
+## Mesures (deuxième passe)
+Lighthouse 12.8, mobile, 3 passages : performance 90 / 90 / 91, accessibilité 100, SEO 100, bonnes pratiques 96 (une seule erreur de console : `/api/visit` renvoie 404 sur le serveur de démonstration local, absente en production), LCP ≈ 3,4 s, CLS 0, TBT 50 à 80 ms. Ordinateur : 100 / 100 / 96 / 100 (même cause).
+Tailles : paquet principal 505,55 Ko (138,98 gzip) → 507,84 Ko (139,77 gzip, +0,8 Ko) ; chunk Home 70,8 Ko (18,7 gzip, chargé seulement sur `/`).
+Vérifications : eslint 0 erreur ; `node scripts/i18n-check.mjs` 0 manque (6390/6390 en/de/es) ; aucun défilement horizontal de 360 à 1440 px ; aucune cible tactile < 44 px hors liens dans les phrases ; onglets, accordéon, menu mobile testés au clavier ; mouvement réduit (aucun bloc masqué) ; mode sombre.
+Captures : `v1-*` (première passe), `v2-*` (deuxième passe), `avant-*` (page d'origine).
+Décisions de contenu à valider en plus : accroche du hero, intitulés et bénéfices des 6 métiers (formulés à partir des modules existants), « Sans limite pratique » dans le tableau, nom des marques MTN/Orange/WhatsApp dans le bandeau.
+
+---
+
 # Refonte de la page de présentation : rapport
 
 Branche `claude/vitrine-pro-48db9d` (base f5d11dd = origin/main). Rien n'est poussé. Patchs : `/Users/macboockpro/Downloads/MANAGER-IA/patches/vitrine/`.

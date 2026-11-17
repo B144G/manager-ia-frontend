@@ -38,7 +38,7 @@ export default function Header() {
   return (
     <>
       <a className="vt-skip" href="#contenu">{t('Aller au contenu')}</a>
-      <header className={'vt-header' + (stuck ? ' is-stuck' : '')}>
+      <header className={'vt-header vt-dark' + (stuck ? ' is-stuck' : '')}>
         <div className="vt-wrap vt-bar">
           <VtLogo />
           <nav className="vt-nav" aria-label={t('Navigation principale')}>
@@ -54,7 +54,7 @@ export default function Header() {
             </button>
           </div>
         </div>
-        <div className={'vt-panel' + (open ? ' is-open' : '')} id="vt-panel">
+        <div className={'vt-panel vt-dark' + (open ? ' is-open' : '')} id="vt-panel">
           {links.map(([h, l]) => <a key={h} className="vt-pl" href={h} onClick={close}>{l}</a>)}
           <div className="vt-prow">
             <LangSwitch />

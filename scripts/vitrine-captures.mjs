@@ -9,7 +9,8 @@ const OUT = process.argv[2] || 'captures';
 const BASE = process.env.BASE || 'http://localhost:5193';
 const CHROME = process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 // [identifiant du module, onglet à ouvrir (texte du bouton) ou '']
-const SHOTS = [['crm', 'Factures'], ['stock', ''], ['accounting', ''], ['payroll', ''], ['budget', ''], ['hr', ''], ['logistics', ''], ['legal', ''], ['projects', ''], ['sales', '']];
+const SHOTS = [['crm', 'Factures'], ['stock', ''], ['accounting', ''], ['payroll', ''], ['budget', ''], ['hr', ''], ['logistics', ''], ['legal', ''], ['projects', ''], ['sales', ''], ['production', ''], ['construction', '']];
+const ONLY = (process.env.ONLY || '').split(',').filter(Boolean); // ex. ONLY=production,construction
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 async function clean(p) {
   await p.evaluate(() => {
@@ -25,11 +26,12 @@ await p.evaluate(() => fetch('/api/login', { method: 'POST', headers: { 'content
 await p.goto(BASE + '/app', { waitUntil: 'networkidle0' }); await wait(1200);
 const org = p.url().split('/app/')[1].split('/')[0];
 for (const [m, tab] of SHOTS) {
+  if (ONLY.length && !ONLY.includes(m)) continue;
   await p.goto(`${BASE}/app/${org}/${m}`, { waitUntil: 'networkidle0' }); await wait(1500);
   if (tab) { await p.evaluate((t) => { [...document.querySelectorAll('[role=tab],button')].find((x) => x.textContent.trim() === t)?.click(); }, tab); await wait(900); }
   await clean(p); await wait(400);
   await p.screenshot({ path: `${OUT}/${m}.png` }); console.log('ok', m);
 }
 await p.setViewport({ width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
-for (const m of ['crm', 'stock']) { await p.goto(`${BASE}/app/${org}/${m}`, { waitUntil: 'networkidle0' }); await wait(1500); await clean(p); await wait(300); await p.screenshot({ path: `${OUT}/m-${m}.png` }); console.log('ok mobile', m); }
+for (const m of ONLY.length ? [] : ['crm', 'stock']) { await p.goto(`${BASE}/app/${org}/${m}`, { waitUntil: 'networkidle0' }); await wait(1500); await clean(p); await wait(300); await p.screenshot({ path: `${OUT}/m-${m}.png` }); console.log('ok mobile', m); }
 await b.close();
