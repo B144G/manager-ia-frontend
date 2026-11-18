@@ -3,7 +3,7 @@ import { lazy } from 'react';
 // Une sous-application = un fichier dans ./modules (nom du fichier = identifiant donné par le serveur), qui exporte par défaut un composant.
 // Pour en ajouter une : créez le fichier, puis ajoutez son identifiant et son icône ici.
 export const MODULE_ICONS = {
-  dashboard: 'dashboard', alerts: 'alerts', support: 'support', projects: 'projects', budget: 'budget', stock: 'stock', crm: 'crm', hr: 'hr',
+  dashboard: 'dashboard', alerts: 'alerts', support: 'support', projects: 'projects', budget: 'budget', stock: 'stock', crm: 'crm', hr: 'hr', talents: 'talents',
   accounting: 'accounting', library: 'library', purchasing: 'purchasing', integrations: 'integrations', billing: 'billing', sales: 'sales', aifollow: 'aifollow', structure: 'structure', processes: 'processes', team: 'team',
   payroll: 'payroll', fiscal: 'fiscal', marketing: 'marketing', logistics: 'logistics', production: 'production', construction: 'construction', maintenance: 'maintenance', legal: 'legal', memory: 'memory', agents: 'agents',
 };

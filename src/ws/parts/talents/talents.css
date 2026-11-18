@@ -1,0 +1,42 @@
+/* RH Talents : éléments propres au module (matrice de compétences, 9-box, kanban de recrutement, cascade d'objectifs). Couleurs = jetons du thème. */
+.tl-grid { display: grid; gap: var(--sp-4); }
+.tl-2 { display: grid; gap: var(--sp-4); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.tl-kpis { display: grid; gap: var(--sp-3); grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.tl-bar { height: 8px; border-radius: 999px; background: var(--surface-3, var(--soft)); overflow: hidden; min-width: 80px; }
+.tl-bar > i { display: block; height: 100%; background: var(--brand); border-radius: 999px; }
+.tl-bar.ok > i { background: var(--ok); } .tl-bar.warn > i { background: var(--warn); } .tl-bar.bad > i { background: var(--danger); }
+.tl-heat { border-collapse: separate; border-spacing: 3px; font-size: var(--fs-sm); }
+.tl-heat th { font-weight: var(--fw-medium); color: var(--muted); text-align: center; padding: 2px 6px; max-width: 110px; }
+.tl-heat th.r { text-align: left; white-space: nowrap; color: var(--text); }
+.tl-heat td { min-width: 44px; height: 34px; text-align: center; border-radius: var(--radius-sm); font-variant-numeric: tabular-nums; font-weight: var(--fw-semibold); }
+.tl-heat td.l0 { background: var(--surface-3, var(--soft)); color: var(--muted); }
+.tl-heat td.ok { background: var(--ok-soft); color: var(--ok-text); } .tl-heat td.gap1 { background: var(--warn-soft); color: var(--warn-text); } .tl-heat td.gap2 { background: var(--danger-soft); color: var(--danger-text); }
+.tl-heat td.na { background: transparent; color: var(--muted); font-weight: var(--fw-regular); }
+.tl-legend { display: flex; flex-wrap: wrap; gap: var(--sp-3); font-size: var(--fs-xs); color: var(--muted); align-items: center; }
+.tl-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+.tl-kan { display: grid; gap: var(--sp-3); grid-template-columns: repeat(6, minmax(190px, 1fr)); overflow-x: auto; padding-bottom: var(--sp-2); }
+.tl-col { background: var(--surface-2, var(--soft)); border-radius: var(--radius-md); padding: var(--sp-2); min-height: 120px; }
+.tl-col h4 { margin: 0 0 var(--sp-2); font-size: var(--fs-sm); display: flex; justify-content: space-between; }
+.tl-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--sp-2) var(--sp-3); margin-bottom: var(--sp-2); font-size: var(--fs-sm); }
+.tl-card b { display: block; }
+.tl-card select { width: 100%; margin-top: 6px; }
+.tl-9 { display: grid; grid-template-columns: 28px repeat(3, 1fr); grid-template-rows: repeat(3, minmax(110px, auto)) 28px; gap: 4px; }
+.tl-9 .cell { border-radius: var(--radius-md); padding: var(--sp-2); font-size: var(--fs-sm); background: var(--surface-2, var(--soft)); border: 1px solid var(--border); }
+.tl-9 .cell small { display: block; color: var(--muted); margin-bottom: 4px; }
+.tl-9 .cell.hot { background: var(--ok-soft); } .tl-9 .cell.cold { background: var(--danger-soft); }
+.tl-9 .ax { color: var(--muted); font-size: var(--fs-xs); display: grid; place-items: center; }
+.tl-9 .ax.y { writing-mode: vertical-rl; transform: rotate(180deg); }
+.tl-tree ul { list-style: none; margin: 0; padding-left: var(--sp-5); border-left: 2px solid var(--border); }
+.tl-tree > ul { padding-left: 0; border-left: 0; }
+.tl-tree li { margin: var(--sp-2) 0; }
+.tl-node { display: grid; gap: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--sp-2) var(--sp-3); }
+.tl-node .top { display: flex; gap: var(--sp-2); align-items: center; flex-wrap: wrap; }
+.tl-smart { display: flex; gap: 6px; flex-wrap: wrap; margin: var(--sp-2) 0; }
+.tl-smart span { width: 34px; height: 34px; display: grid; place-items: center; border-radius: var(--radius-md); font-weight: var(--fw-bold); background: var(--danger-soft); color: var(--danger-text); }
+.tl-smart span.ok { background: var(--ok-soft); color: var(--ok-text); }
+.tl-row { display: flex; gap: var(--sp-2); align-items: center; flex-wrap: wrap; justify-content: space-between; padding: var(--sp-2) 0; border-bottom: 1px solid var(--border); }
+.tl-row:last-child { border-bottom: 0; }
+.tl-chart { height: 280px; }
+.tl-note { color: var(--muted); font-size: var(--fs-sm); }
+.tl-alerts { display: grid; gap: var(--sp-2); }
+@media (max-width: 720px) { .tl-9 { grid-template-columns: 22px repeat(3, minmax(90px, 1fr)); overflow-x: auto; } }

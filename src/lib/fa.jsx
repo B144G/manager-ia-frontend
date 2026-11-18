@@ -106,7 +106,7 @@ export function Icon({ name, spin, fixedWidth, className, title, style, size }) 
 }
 /** Icônes des modules (menu principal) : nom de module → icône. Les noms sont enregistrés par src/ws/icons.js. */
 export const MODULE_FA = {
-  dashboard: 'gauge', support: 'headset', projects: 'list-check', budget: 'wallet', stock: 'stock', crm: 'address-book', hr: 'users', sales: 'handshake',
+  dashboard: 'gauge', support: 'headset', projects: 'list-check', budget: 'wallet', stock: 'stock', crm: 'address-book', hr: 'users', talents: 'seedling', sales: 'handshake',
   aifollow: 'eye', structure: 'sitemap', processes: 'gears', team: 'people-group', payroll: 'money-check', fiscal: 'file-invoice', marketing: 'bullhorn',
   logistics: 'truck', production: 'industry', construction: 'helmet', maintenance: 'tools', legal: 'scale', memory: 'brain', agents: 'robot',
   accounting: 'calculator', library: 'book-open', purchasing: 'cart', billing: 'card', integrations: 'plug', alerts: 'bell', out: 'logout', shield: 'shield', ai: 'magic',
