@@ -13,6 +13,7 @@ function noticeText(t, n) {
     case 'payment_paid': return { title: t('Paiement validé'), text: t("Votre paiement {ref} est validé : votre offre {plan} est active jusqu'au {date}.", { ref: d.reference, plan: tsrv(d.plan || ''), date: dateFr(d.until) }), good: true, link: true };
     case 'payment_rejected': return { title: t('Paiement refusé'), text: t("Votre paiement {ref} n'a pas pu être validé. Motif : {reason}", { ref: d.reference, reason: d.reason }), link: true };
     case 'payment_failed': return { title: t('Paiement non abouti'), text: t("Votre paiement {ref} n'a pas abouti (refusé ou annulé sur le téléphone). Aucune somme n'est due : vous pouvez réessayer depuis « Abonnement ».", { ref: d.reference }), link: true };
+    case 'payment_expired': return { title: t('Paiement non abouti'), text: t("Votre demande de paiement {ref} a expiré sans confirmation sur le téléphone. Aucune somme n'est due : vous pouvez réessayer depuis « Abonnement ».", { ref: d.reference }), link: true };
     case 'account_suspended': return { title: t('Compte suspendu'), text: t('Votre compte est suspendu. Motif : {reason}. Contactez le support pour le réactiver.', { reason: d.reason }) };
     case 'account_reactivated': return { title: t('Compte réactivé'), text: t('Votre compte est de nouveau actif.'), good: true };
     default: return { title: tsrv(n.title), text: tsrv(n.text) };
