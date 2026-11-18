@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
-import { Empty, Form, Loaded, useLoad } from '../ui.jsx';
+import { Empty, Loaded, useLoad } from '../ui.jsx';
 import Instructions from '../parts/billing/Instructions.jsx';
 import CustomPlan from '../parts/billing/Custom.jsx';
+import PayForm from '../parts/billing/PayForm.jsx';
+import { TestBanner } from '../parts/billing/CampayWait.jsx';
 
 /* Abonnement (offre actuelle, quotas, choix d'une offre, paiement MTN / Orange, historique). Réservée au propriétaire. */
-const ST = { pending: ['En attente', 'mid'], awaiting_validation: ['À valider', 'mid'], paid: ['Payé', 'good'], failed: ['Échoué', 'bad'] };
+const ST = { pending: ['En attente', 'mid'], awaiting_validation: ['À valider', 'mid'], paid: ['Payé', 'good'], failed: ['Échoué', 'bad'], expired: ['Expiré', 'bad'], needs_review: ['En vérification', 'mid'] };
 const fr = (dateFr, iso) => (iso ? dateFr(String(iso).slice(0, 10)) : '');
 
 export default function Billing() {
@@ -23,23 +25,15 @@ export default function Billing() {
   const aliveRef = useRef(true);
   useEffect(() => { aliveRef.current = true; return () => { aliveRef.current = false; }; }, []);
 
-  function instructions(r) {
-    modal(t('Finalisez votre paiement'), (close) => <Instructions r={r} close={close} onDone={st.reload} aliveRef={aliveRef} />, { onclose: st.reload });
+  function instructions(r, retry) {
+    modal(r.mode === 'push' ? t('Paiement Mobile Money') : t('Finalisez votre paiement'), (close) => <Instructions r={r} close={close} onDone={st.reload} onRetry={retry} aliveRef={aliveRef} />, { onclose: st.reload });
   }
 
   // p = une offre habituelle { id, name, priceXAF, current } ou un forfait sur mesure { custom: { amount, period }, name, priceXAF, days, current }
   function pay(p, b) {
     modal(p.current ? t('Renouveler {plan}', { plan: t(p.name) }) : t('Passer à {plan}', { plan: t(p.name) }), (close) => (
       <>
-        <p>{t('{price} pour {days} jours.', { price: money(p.priceXAF), days: p.days || b.durationDays })}</p>
-        <Form
-          submitText={t('Payer')}
-          fields={[
-            { k: 'operator', label: t('Opérateur'), type: 'select', options: [['mtn', 'MTN Mobile Money'], ['orange', 'Orange Money']] },
-            { k: 'phone', label: t('Numéro qui paie (ex. 6XXXXXXXX)'), required: true },
-          ]}
-          onSubmit={(v) => rq('POST', '/api/payments/initiate', Object.assign({ operator: v.operator, phone: v.phone }, p.custom ? { custom: p.custom } : { plan: p.id })).then((r) => { close(); instructions(r); })}
-        />
+        <PayForm p={{ ...p, priceText: money(p.priceXAF), days: p.days || b.durationDays }} b={b} close={close} onStarted={(r) => instructions(r, () => pay(p, b))} />
       </>
     ));
   }
@@ -48,6 +42,7 @@ export default function Billing() {
     const paid = b.plan !== 'Gratuit';
     return (
       <>
+        {b.automatic && b.testMode ? <TestBanner /> : null}
         <div className="ws-card">
           <h2>{t('Offre actuelle : {plan}', { plan: planName(b.plan, b.plan) })}</h2>
           <p>{paid ? (b.daysLeft > 1 ? t("Active jusqu'au {date} ({n} jours restants).", { date: fr(dateFr, b.expiresAt), n: b.daysLeft }) : t("Active jusqu'au {date} ({n} jour restant).", { date: fr(dateFr, b.expiresAt), n: b.daysLeft })) : t('Offre gratuite : essayez Brij-IA, puis passez à une offre payante quand vous êtes prêt.')}</p>
