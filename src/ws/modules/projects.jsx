@@ -4,6 +4,10 @@ import { Insight, Planning, ReplanModal, ShiftModal } from '../parts/projects/Pl
 import { Portfolio as PortfolioPro, ProjectPilot, RiskRegister, WorkloadPlan } from '../parts/projects/Pro.jsx';
 import { ProjectDashboard, Portfolio } from '../parts/projects/Dash.jsx';
 import Gantt from '../parts/projects/Gantt.jsx';
+import { Advice, Dependencies, useOpenTool } from '../parts/projects/Deps.jsx';
+import Finance from '../parts/projects/Finance.jsx';
+import Optim from '../parts/projects/Optim.jsx';
+import Pert from '../parts/projects/Pert.jsx';
 import { CalendarView, EMPTY_FILTER, Filters, Kanban, ListView, TS, applyFilter } from '../parts/projects/Views.jsx';
 import { PdfActions } from '../parts/share/Share.jsx';
 import { useT } from '../../lib/i18n.jsx';
@@ -68,9 +72,10 @@ export default function Projects() {
           { k: 'name', label: t('Nom du projet'), required: true },
           { k: 'description', label: t('Description'), type: 'textarea', rows: 3 },
           { k: 'due', label: t('Échéance'), type: 'date' },
+          { k: 'kind', label: t('Type de projet'), type: 'select', options: [['general', t('Général')], ['sale', t('Vente : maximiser la marge, trouver le meilleur prix')], ['production', t('Production : minimiser le coût')]], hint: t('Pour une vente ou une production, le système calcule automatiquement la solution optimale.') },
         ].concat(branches.length ? [{ k: 'branchId', label: t('Antenne concernée'), type: 'select', options: branchOpts() }] : [])}
         submitText={t('Créer')}
-        onSubmit={(v) => oapi('POST', '/projects', { name: v.name, description: v.description, due: v.due || null, branchId: v.branchId || null }).then((j) => { close(); setPid(j.id); })}
+        onSubmit={(v) => oapi('POST', '/projects', { name: v.name, description: v.description, due: v.due || null, kind: v.kind, branchId: v.branchId || null }).then((j) => { close(); setPid(j.id); })}
       />
     ));
   };
@@ -169,10 +174,11 @@ function TaskModal({ task, tasks, close, again, actions }) {
 }
 
 /* ----- Un projet : tableau de bord, Gantt, kanban, calendrier, liste, suivi ----- */
-const VIEWS = (t) => [
+const VIEWS = (t, manager) => [
   { id: 'dash', label: t('Tableau de bord'), icon: 'pie' }, { id: 'gantt', label: t('Gantt'), icon: 'gantt' }, { id: 'kanban', label: t('Kanban'), icon: 'kanban' },
   { id: 'calendar', label: t('Calendrier'), icon: 'calendar' }, { id: 'list', label: t('Liste'), icon: 'list' }, { id: 'follow', label: t('Suivi'), icon: 'wallet' },
-  { id: 'plan', label: t('Planification'), icon: 'target' }, { id: 'pilot', label: t('Pilotage'), icon: 'gauge' }, { id: 'risks', label: t('Risques'), icon: 'flag' },
+  { id: 'plan', label: t('Planification'), icon: 'target' }, { id: 'pert', label: t('PERT'), icon: 'gantt' }, { id: 'pilot', label: t('Pilotage'), icon: 'gauge' }, { id: 'risks', label: t('Risques et dépendances'), icon: 'flag' },
+  ...(manager ? [{ id: 'money', label: t('Budget et coûts'), icon: 'wallet' }, { id: 'optim', label: t('Optimisation'), icon: 'target' }] : []),
 ];
 function ProjectView({ id, back, actions }) {
   const { oapi, dateFr, today: todayFn } = useWs();
@@ -182,6 +188,9 @@ function ProjectView({ id, back, actions }) {
   const st = useLoad(() => oapi('GET', '/projects/' + id), [id]);
   const sum = useLoad(() => oapi('GET', '/projects/' + id + '/summary'), [id]);
   const [view, setView] = useState('dash');
+  const [adviceKey, setAdviceKey] = useState(0);
+  const { orgId } = useWs();
+  const openTool2 = useOpenTool(setView, orgId);
   const [f, setF] = useState(EMPTY_FILTER);
   const again = () => { st.reload(); sum.reload(); };
   const j = st.data;
@@ -208,8 +217,8 @@ function ProjectView({ id, back, actions }) {
       {!j && st.error ? <p className="ws-err" role="alert">{tsrv(st.error.message)}</p> : null}
       {j ? (
         <>
-          <Tabs items={VIEWS(t)} value={view} onChange={setView} label={t('Vues du projet')} />
-          {!['dash', 'follow', 'plan', 'pilot', 'risks'].includes(view) ? <Filters f={f} setF={setF} tasks={tasks} /> : null}
+          <Tabs items={VIEWS(t, can('manager'))} value={view} onChange={setView} label={t('Vues du projet')} />
+          {!['dash', 'follow', 'plan', 'pilot', 'risks', 'pert', 'money', 'optim'].includes(view) ? <Filters f={f} setF={setF} tasks={tasks} /> : null}
           <div role="tabpanel" aria-labelledby={'tab-' + view}>
             {view === 'dash' ? <ProjectDashboard id={id} tasks={tasks} today={today} rev={j} /> : null}
             {view === 'gantt' ? (
@@ -224,7 +233,10 @@ function ProjectView({ id, back, actions }) {
             {view === 'follow' ? <><ProjectTrack id={id} /><Workload /></> : null}
             {view === 'plan' ? <><Planning id={id} rev={j} />{can('manager') ? <Insight id={id} rev={j} /> : null}</> : null}
             {view === 'pilot' ? <ProjectPilot id={id} rev={j} /> : null}
-            {view === 'risks' ? <RiskRegister id={id} members={members} /> : null}
+            {view === 'pert' ? <Pert id={id} /> : null}
+            {view === 'risks' ? <><Advice id={id} openTool={openTool2} reloadKey={adviceKey} /><RiskRegister id={id} members={members} onChange={() => setAdviceKey((k) => k + 1)} /><Dependencies id={id} onChange={() => setAdviceKey((k) => k + 1)} /></> : null}
+            {view === 'money' && can('manager') ? <Finance id={id} openTool={openTool2} /> : null}
+            {view === 'optim' && can('manager') ? <Optim id={id} projectKind={p ? p.kind : 'general'} /> : null}
           </div>
         </>
       ) : null}

@@ -1,0 +1,36 @@
+/* Projets et Production : PERT, dépendances, recherche opérationnelle, finances du projet, circuit de production.
+   Réutilise les jetons du site et les classes « bp-… » de ws-bp.css ; ne définit que ce qui manque (réseau PERT, tableaux modifiables, avis). */
+.ro-net{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:8px;max-width:100%}
+.ro-net svg{display:block}
+.ro-node rect.box{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.ro-node.crit rect.box{stroke:var(--pink);stroke-width:2.5;fill:color-mix(in srgb,var(--pink) 7%,var(--surface))}
+.ro-node.done rect.box{opacity:.65}
+.ro-node text{fill:var(--fg);font-size:12px}
+.ro-node text.mut{fill:var(--muted);font-size:11px}
+.ro-node text.ttl{font-weight:700;font-size:12.5px}
+.ro-node line{stroke:var(--line)}
+.ro-edge{fill:none;stroke:var(--plan);stroke-width:1.6}
+.ro-edge.crit{stroke:var(--pink);stroke-width:2.6}
+.ro-edge-t{fill:var(--muted);font-size:10.5px;font-weight:700}
+.ro-flow rect.box{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.ro-flow .bad rect.box{stroke:var(--pink);stroke-width:2.5}
+.ro-flow .warn rect.box{stroke:var(--signal);stroke-width:2.5}
+.ro-ed{width:100%;border-collapse:collapse;font-size:14px}
+.ro-ed th{color:var(--muted);font-size:12px;font-weight:700;text-align:left;padding:4px 6px;white-space:nowrap}
+.ro-ed td{padding:3px 4px;vertical-align:middle}
+.ro-ed input,.ro-ed select{width:100%;min-width:70px;font-size:16px;padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg)}
+.ro-ed input[type=checkbox]{width:22px;min-width:22px;height:22px}
+.ro-ed .num{text-align:right}
+.ro-scroll{overflow-x:auto;max-width:100%}
+.ro-find{border:1px solid var(--line);border-left:5px solid var(--signal);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--surface)}
+.ro-find.high{border-left-color:var(--pink)}.ro-find.low{border-left-color:var(--accent)}.ro-find.off{opacity:.6}
+.ro-find h3{margin:0 0 4px;font-size:15px}
+.ro-find .sol{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.ro-concl{padding:14px 16px;border-radius:14px;border:1px solid var(--line);border-left:5px solid var(--ok);background:color-mix(in srgb,var(--ok) 7%,var(--surface));font-size:15px;line-height:1.5;margin:12px 0}
+.ro-bar{height:10px;border-radius:6px;background:var(--surface2);overflow:hidden;min-width:80px}
+.ro-bar i{display:block;height:100%;background:var(--s1)}
+.ro-bar.full i{background:var(--pink)}
+.ro-advice{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:10px}
+.ro-adv{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface);display:flex;flex-direction:column;gap:8px;justify-content:space-between}
+.ro-adv p{margin:0}
+.ro-pos{color:var(--ok);font-weight:700}.ro-neg{color:var(--pink);font-weight:700}

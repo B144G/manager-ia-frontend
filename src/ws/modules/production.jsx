@@ -4,6 +4,7 @@ import { useWs } from '../WsContext.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { Empty, Loaded, useLoad } from '../ui.jsx';
 import { BomForm, CloseForm, OrderForm } from '../parts/production/Forms.jsx';
+import Flow from '../parts/production/Flow.jsx';
 import Plan from '../parts/production/Plan.jsx';
 import { Pill, STATUS, qty } from '../parts/production/common.jsx';
 
@@ -13,6 +14,8 @@ export default function Production() {
   const mgr = can('manager');
   const [tab, setTab] = useState('orders');
   const st = useLoad(() => Promise.all([oapi('GET', '/production'), oapi('GET', '/production/boms')]), []);
+  const mem = useLoad(() => oapi('GET', '/members'), []);
+  const members = mem.data ? mem.data.members : [];
   const load = st.reload;
   const act = (path, body, msg) => oapi('POST', '/production/orders/' + path, body || {}).then(() => { if (msg) toast(msg); load(); }).catch(fail);
 
@@ -63,7 +66,7 @@ export default function Production() {
               {s.avgUnitCost !== undefined ? <div className="stat"><b>{money(s.avgUnitCost)}</b><span>{t('coût de revient moyen du mois')}</span></div> : <div className="stat"><b>{qty(s.monthProduced)}</b><span>{t('produit ce mois-ci')}</span></div>}
             </div>
             <div className="ws-tabs">
-              {[['orders', 'Ordres de fabrication'], ['boms', 'Nomenclatures'], ['plan', 'Planification']].map((x) => (
+              {[['orders', 'Ordres de fabrication'], ['boms', 'Nomenclatures'], ['plan', 'Planification'], ['flow', 'Circuit de production']].map((x) => (
                 <button key={x[0]} type="button" className={'tab' + (tab === x[0] ? ' on' : '')} onClick={() => setTab(x[0])}>{t(x[1])}</button>
               ))}
             </div>
@@ -117,6 +120,7 @@ export default function Production() {
             ) : null}
 
             {tab === 'plan' ? <Plan boms={boms} /> : null}
+            {tab === 'flow' ? <Flow members={members} /> : null}
           </>
         );
       }}
