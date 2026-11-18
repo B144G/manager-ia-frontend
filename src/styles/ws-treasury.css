@@ -1,0 +1,11 @@
+/* Trésorerie : quelques ajustements (jetons : tokens.css). Le reste vient des composants communs (ui.css, charts.css). */
+.tre .ui-card{margin-bottom:var(--gap)}
+.tre .ui-card.pad-0 .ui-table-wrap{border:0;border-radius:0}
+.tre .line{display:flex;justify-content:space-between;gap:var(--sp-3);padding:6px 0;border-bottom:1px solid var(--chart-grid);font-size:var(--fs-md)}
+.tre .line:last-child{border-bottom:0}
+.tre .kpi{display:grid;gap:4px;align-content:start;padding:var(--sp-4);border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface)}
+.tre .kpi b{font-size:var(--fs-xl);font-variant-numeric:tabular-nums}
+.tre .ui-table td,.tre .ui-table th{white-space:nowrap}
+.tre .ui-table td:first-child{white-space:normal;min-width:120px}
+.tre button[role="gridcell"],.tre [role="grid"] button{min-width:0}
+@media (max-width:640px){.tre [role="grid"]{gap:2px}.tre [role="grid"] button{min-height:60px;padding:4px}}

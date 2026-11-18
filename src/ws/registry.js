@@ -4,7 +4,7 @@ import { lazy } from 'react';
 // Pour en ajouter une : créez le fichier, puis ajoutez son identifiant et son icône ici.
 export const MODULE_ICONS = {
   dashboard: 'dashboard', alerts: 'alerts', support: 'support', projects: 'projects', budget: 'budget', stock: 'stock', crm: 'crm', hr: 'hr',
-  accounting: 'accounting', library: 'library', purchasing: 'purchasing', integrations: 'integrations', billing: 'billing', sales: 'sales', aifollow: 'aifollow', structure: 'structure', processes: 'processes', team: 'team',
+  accounting: 'accounting', treasury: 'treasury', library: 'library', purchasing: 'purchasing', integrations: 'integrations', billing: 'billing', sales: 'sales', aifollow: 'aifollow', structure: 'structure', processes: 'processes', team: 'team',
   payroll: 'payroll', fiscal: 'fiscal', marketing: 'marketing', logistics: 'logistics', production: 'production', construction: 'construction', maintenance: 'maintenance', legal: 'legal', memory: 'memory', agents: 'agents',
 };
 
@@ -30,6 +30,7 @@ export const SUGGEST = {
   sales: ['Quelle campagne marche le mieux ?', 'Que dois-je faire des prospects non convertis ?', 'Que manque-t-il à mon catalogue ?'],
   structure: ['Quels postes me manquent ?', 'Y a-t-il des zones floues dans mon organisation ?'],
   processes: ['Quelles procédures devrais-je écrire en premier ?', 'Comment rendre mon équipe autonome ?'],
+  treasury: ['Où serai-je à découvert dans 13 semaines ?', 'Quelles factures encaisser en priorité ?', 'Quelles dettes payer maintenant et lesquelles reporter ?'],
   payroll: ['Prépare la paie du mois', 'Quel est le coût total de mon équipe ?'],
   fiscal: ['Quelles déclarations dois-je préparer ?', 'Mes comptes sont-ils prêts pour la liasse ?'],
   marketing: ['Quelle campagne rapporte le plus ?', 'Écris une publicité pour mon produit phare'],
