@@ -13,6 +13,7 @@ import { BTN, downloadCsv } from '../finance/util.jsx';
 const RAG = { green: 'Vert : dans les clous', amber: 'Orange : à surveiller', red: 'Rouge : en difficulté', grey: 'Gris : terminé ou sans tâche' };
 const RAG_SHORT = { green: 'Vert', amber: 'Orange', red: 'Rouge', grey: 'Gris' };
 const REASON = { spi: 'Retard sur le planning (SPI)', cpi: 'Coût au-dessus de la valeur produite (CPI)', overBudget: 'Budget dépassé', eac: 'Coût final prévu au-dessus du budget', late: "Fin prévue après l'échéance", pastDue: 'Échéance dépassée', overdueTasks: 'Tâches en retard', highRisks: 'Risque élevé ouvert' };
+const RCAT = (t) => ({ delay: t('Délai'), cost: t('Coût'), resource: t('Ressource (équipe, matériel)'), supplier: t('Fournisseur'), quality: t('Qualité'), other: t('Autre') });
 const RKIND = { risk: 'Risque', issue: 'Problème' };
 const RSTATUS = { open: 'Ouvert', mitigating: 'En traitement', closed: 'Clos' };
 const LEVEL = { high: 'Élevé', medium: 'Moyen', low: 'Faible' };
@@ -256,7 +257,7 @@ export function ProjectPilot({ id, rev }) {
 }
 
 /* ---------- Risques et problèmes ---------- */
-export function RiskRegister({ id, members }) {
+export function RiskRegister({ id, members, onChange }) {
   const t = useT();
   const { oapi, modal, confirm, fail, can, info, dateFr } = useWs();
   const st = useLoad(() => oapi('GET', '/projects/' + id + '/risks'), [id]);
@@ -269,6 +270,7 @@ export function RiskRegister({ id, members }) {
         fields={[
           { k: 'kind', label: t('Type'), type: 'select', options: [['risk', t('Risque (peut arriver)')], ['issue', t('Problème (déjà là)')]], value: r.kind || 'risk' },
           { k: 'title', label: t('En quelques mots'), required: true, value: r.title },
+          { k: 'category', label: t('Nature du risque'), type: 'select', options: Object.entries(RCAT(t)), value: r.category || 'other', hint: t('Le système propose l\'outil adapté selon la nature du risque.') },
           { k: 'probability', label: t('Probabilité'), type: 'select', options: scale('p'), value: String(r.probability || 3) },
           { k: 'impact', label: t('Impact'), type: 'select', options: scale('i'), value: String(r.impact || 3) },
           { k: 'mitigation', label: t('Parade ou action prévue'), type: 'textarea', rows: 2, value: r.mitigation },
@@ -277,7 +279,7 @@ export function RiskRegister({ id, members }) {
           ...(r.id ? [{ k: 'status', label: t('Statut'), type: 'select', options: Object.entries(RSTATUS).map(([k, v]) => [k, t(v)]), value: r.status }] : []),
         ]}
         submitText={t('Enregistrer')}
-        onSubmit={(v) => oapi(r.id ? 'PUT' : 'POST', r.id ? '/projects/risks/' + r.id : '/projects/' + id + '/risks', { kind: v.kind, title: v.title, probability: Number(v.probability), impact: Number(v.impact), mitigation: v.mitigation, ownerId: v.ownerId || null, due: v.due || null, ...(r.id ? { status: v.status } : {}) }).then(() => { close(); st.reload(); })}
+        onSubmit={(v) => oapi(r.id ? 'PUT' : 'POST', r.id ? '/projects/risks/' + r.id : '/projects/' + id + '/risks', { kind: v.kind, category: v.category, title: v.title, probability: Number(v.probability), impact: Number(v.impact), mitigation: v.mitigation, ownerId: v.ownerId || null, due: v.due || null, ...(r.id ? { status: v.status } : {}) }).then(() => { close(); st.reload(); if (onChange) onChange(); })}
       />
     ));
   };
@@ -293,7 +295,7 @@ export function RiskRegister({ id, members }) {
                 <thead><tr><th>{t('Risque')}</th><th>{t('Note')}</th><th>{t('Statut')}</th><th>{''}</th></tr></thead>
                 <tbody>{d.items.map((r) => (
                   <tr key={r.id} style={{ opacity: r.status === 'closed' ? 0.6 : 1 }}>
-                    <td><b>{r.title}</b><br /><small className="muted">{[t(RKIND[r.kind]), r.owner, r.due ? dateFr(r.due) : null, r.mitigation].filter(Boolean).join(' · ')}</small></td>
+                    <td><b>{r.title}</b><br /><small className="muted">{[t(RKIND[r.kind]), RCAT(t)[r.category], r.owner, r.due ? dateFr(r.due) : null, r.mitigation].filter(Boolean).join(' · ')}</small></td>
                     <td><span className={'bp-st ' + (r.level === 'high' ? 'red' : r.level === 'medium' ? 'amber' : 'green')}>{r.score + ' · ' + t(LEVEL[r.level])}</span><br /><small className="muted">{t('P{p} × I{i}', { p: r.probability, i: r.impact })}</small></td>
                     <td>{t(RSTATUS[r.status])}</td>
                     <td>{mine(r) ? <><button className="link" type="button" onClick={() => edit(r)}>{t('Modifier')}</button>{' '}<button className="link" type="button" onClick={() => confirm(t('Supprimer ce risque ?'), () => oapi('DELETE', '/projects/risks/' + r.id).then(st.reload).catch(fail))}>{t('Supprimer')}</button></> : null}</td>
