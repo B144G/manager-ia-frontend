@@ -4,7 +4,8 @@ import { tsrv } from '../../../lib/srv.js';
 import { useWs } from '../../WsContext.jsx';
 import { Badge, Form, Loaded, useLoad } from '../../ui.jsx';
 import { saveBlob } from '../sales/util.jsx';
-import { day } from './util.jsx';
+import { day, when } from './util.jsx';
+import { AccessEditor } from './Access.jsx';
 
 /* Catalogue : notices (métadonnées) des documents et des ressources physiques, recherche par facettes, import / export CSV, étiquettes.
    Le site n'affiche que ce que le serveur renvoie : la visibilité (confidentialité, blocs ouverts) est décidée côté serveur. */
@@ -70,6 +71,9 @@ export function RecordModal({ L, id, close, onChange }) {
   const meta = useMeta(L);
   const cls = useLoad(() => L.lib('GET', '/classes'), []);
   const [edit, setEdit] = useState(false);
+  const [acc, setAcc] = useState(false);
+  const sim = useLoad(() => L.lib('GET', `/records/${id}/similar`), [id]);
+  const { modal } = useWs();
   const fail = (e) => toast(tsrv(e.message), true);
   const done = () => { st.reload(); onChange(); };
   const act = (p, body, msg) => L.lib('POST', p, body || {}).then(() => { if (msg) toast(msg); done(); }, fail);
@@ -111,6 +115,15 @@ export function RecordModal({ L, id, close, onChange }) {
           </div>
           {edit && meta.data && cls.data ? <RecordForm L={L} rec={r} meta={meta.data} classes={cls.data.classes} onDone={() => { setEdit(false); done(); }} /> : null}
 
+          {can('admin') ? <div className="row lib-actions"><button className="btn small" type="button" onClick={() => setAcc(!acc)}>{acc ? t('Fermer les droits') : t("Droits d'accès")}</button>
+            {j.archive && !j.archive.sealed ? <button className="btn small" type="button" onClick={() => act(`/records/${r.id}/seal`, {}, t('Notice mise sous scellé.'))}>{t('Mettre sous scellé')}</button> : null}</div> : null}
+          {acc ? <AccessEditor L={L} scope="records" id={r.id} close={() => setAcc(false)} /> : null}
+          {j.access ? <p className="muted small">{t('Vos droits sur cette ressource :')} {[j.access.read && t('lire'), j.access.download && t('télécharger'), j.access.edit && t('modifier'), j.access.loan && t('emprunter')].filter(Boolean).join(', ') || '—'}</p> : null}
+          {j.archive ? (
+            <p className="muted small">{t('Cycle de vie :')} <Badge tone={j.archive.lifecycle === 'destroy_due' ? 'warn' : 'neutral'}>{t(j.archive.lifecycleLabel)}</Badge>{j.archive.until ? ` · ${t('conservation jusqu’au {date}', { date: day(j.archive.until) })}` : ` · ${t('durée de conservation non fixée')}`}
+              {j.archive.holds.length ? <> <Badge tone="danger">{t('Gel légal : {name}', { name: j.archive.holds.map((x) => x.name).join(', ') })}</Badge></> : null}
+              {j.archive.sealed ? <> <Badge tone="info">{t('Scellée le {date}', { date: when(j.archive.sealed.at) })}</Badge> {can('manager') ? <button className="btn small" type="button" onClick={() => L.lib('GET', `/records/${r.id}/verify`).then((v) => toast(v.intact ? t('Intégrité vérifiée : rien n’a changé depuis le scellé.') : t('ATTENTION : le contenu ne correspond plus au scellé.'), !v.intact), fail)}>{t("Vérifier l'intégrité")}</button> : null}</> : null}</p>
+          ) : null}
           <h3>{t('Historique des prêts')}</h3>
           {(j.loans || []).length ? (
             <ul className="lib-versions">{j.loans.map((l) => (
@@ -118,6 +131,7 @@ export function RecordModal({ L, id, close, onChange }) {
                 <span className="row">{l.state === 'lost' ? <Badge tone="danger">{t('Perdu')}</Badge> : null}{l.lateDays ? <Badge tone="warn">{t('{n} j de retard', { n: l.lateDays })}</Badge> : null}{l.fine ? <Badge tone="danger">{l.fine}{l.finePaid >= l.fine ? ` · ${t('réglée')}` : ''}</Badge> : null}</span></li>
             ))}</ul>
           ) : <p className="muted small">{t('Aucun prêt.')}</p>}
+          {sim.data && sim.data.similar.length ? <><h3>{t('Documents similaires')}</h3><ul className="lib-versions">{sim.data.similar.map((x) => <li key={x.id}><span>{x.title} <small className="muted">{[x.classCode, x.year].filter(Boolean).join(' · ')}</small></span><button className="btn small" type="button" onClick={() => { close(); modal(x.title, (c2) => <RecordModal L={L} id={x.id} close={c2} onChange={onChange} />, { wide: true }); }}>{t('Ouvrir')}</button></li>)}</ul></> : null}
           {(j.reservations || []).length ? <p className="muted small">{t('File d’attente')} : {j.reservations.map((x) => `${x.position}. ${x.user || t('quelqu’un')}${x.state === 'ready' ? ` (${t('à retirer')})` : ''}`).join(' · ')}</p> : null}
         </div>
       );

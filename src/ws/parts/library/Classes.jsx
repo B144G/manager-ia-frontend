@@ -5,6 +5,7 @@ import { useWs } from '../../WsContext.jsx';
 import { Badge, ChartFrame, Form, Loaded, useLoad } from '../../ui.jsx';
 import { HBars } from '../../charts/lazy.jsx';
 import { confLabel } from './Catalog.jsx';
+import { AccessEditor } from './Access.jsx';
 
 /* Plan de classement : arborescence de classes (code, nom, durée de conservation, confidentialité par défaut), modèles pour PME. */
 
@@ -19,9 +20,10 @@ function ClassForm({ L, cls, parent, all, onDone }) {
         { k: 'name', label: t('Nom de la classe'), required: true, value: c.name || '' },
         { k: 'parentId', label: t('Classe parente'), type: 'select', value: c.parentId || (parent ? parent.id : ''), options: [['', t('— Aucune (niveau principal) —')], ...all.filter((x) => !cls || x.id !== cls.id).map((x) => [String(x.id), `${x.code} — ${x.name}`])] },
         { k: 'retentionMonths', label: t('Durée de conservation (mois)'), type: 'number', value: c.retentionMonths === null || c.retentionMonths === undefined ? '' : c.retentionMonths, hint: t('Laissez vide si elle n’est pas fixée. 120 mois = 10 ans.') },
+        { k: 'finalFate', label: t('Sort final à la fin de la conservation'), type: 'select', value: c.finalFate || 'destroy', options: [['destroy', t('Destruction (après validation)')], ['keep', t('Conservation définitive')]] },
         { k: 'confidentiality', label: t('Confidentialité par défaut des nouvelles notices'), type: 'select', value: c.confidentiality || '', options: [['', t('— Interne (par défaut) —')], ['public', t('Libre')], ['internal', t('Interne')], ['restricted', t('Restreint')], ['secret', t('Secret')]] },
       ]}
-      onSubmit={(v) => L.lib(cls ? 'PUT' : 'POST', cls ? `/classes/${cls.id}` : '/classes', { code: v.code, name: v.name, parentId: v.parentId ? Number(v.parentId) : null, retentionMonths: v.retentionMonths === '' ? null : Number(v.retentionMonths), confidentiality: v.confidentiality || null })
+      onSubmit={(v) => L.lib(cls ? 'PUT' : 'POST', cls ? `/classes/${cls.id}` : '/classes', { code: v.code, name: v.name, parentId: v.parentId ? Number(v.parentId) : null, retentionMonths: v.retentionMonths === '' ? null : Number(v.retentionMonths), confidentiality: v.confidentiality || null, finalFate: v.finalFate })
         .then(() => { toast(cls ? t('Classe enregistrée.') : t('Classe ajoutée.')); onDone(); })} />
   );
 }
@@ -44,6 +46,7 @@ function Node({ c, kids, depth, ctx }) {
           <span className="row lib-node-act">
             <button className="btn small" type="button" onClick={() => ctx.add(c)}>{t('+ Sous-classe')}</button>
             <button className="btn small" type="button" onClick={() => ctx.edit(c)}>{t('Modifier')}</button>
+            <button className="btn small" type="button" onClick={() => ctx.access(c)}>{t("Droits d'accès")}</button>
             <button className="btn small" type="button" onClick={() => ctx.del(c)}>{t('Supprimer')}</button>
           </span>
         ) : null}
@@ -61,6 +64,7 @@ export default function Classes({ L }) {
   const reload = () => { st.reload(); L.reload(); };
   const ctxFor = (j) => ({
     add: (parent) => modal(parent ? t('Nouvelle sous-classe de {code}', { code: parent.code }) : t('Nouvelle classe'), (close) => <ClassForm L={L} parent={parent} all={j.classes} onDone={() => { close(); reload(); }} />),
+    access: (c) => modal(t('Accès à la classe {code}', { code: c.code }), (close) => <AccessEditor L={L} scope="classes" id={c.id} close={close} />, { wide: true }),
     edit: (c) => modal(t('Modifier {code}', { code: c.code }), (close) => <ClassForm L={L} cls={c} all={j.classes} onDone={() => { close(); reload(); }} />),
     del: (c) => {
       if (c.own) {
