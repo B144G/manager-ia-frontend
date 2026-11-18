@@ -101,7 +101,7 @@ export function Home({ L }) {
             <div className="lib-grid">
               {j.blocks.map((b) => (
                 <article key={b.id} className={'lib-card' + (b.hidden ? ' off' : '')} style={{ '--lib-c': headColor(b.color) }}>
-                  <div className="lib-card-h"><h3>{upper(b.name)}</h3>{b.hidden ? <span className="lib-chip">{t('Masqué')}</span> : null}</div>
+                  <div className="lib-card-h"><h3>{upper(b.builtin ? t(b.name) : b.name)}</h3>{b.hidden ? <span className="lib-chip">{t('Masqué')}</span> : null}</div>
                   <div className="lib-card-b">
                     <span className="lib-badge" style={{ color: headColor(b.color) }}><BlockIcon name={b.icon} /></span>
                     <p className="lib-count"><b>{b.docCount}</b> {b.docCount === 1 ? t('document') : t('documents')}</p>

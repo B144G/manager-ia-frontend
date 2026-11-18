@@ -236,4 +236,7 @@ export default {
   "Trop d'envois de fichiers. Réessayez dans quelques minutes.": "Zu viele Datei-Uploads. Versuchen Sie es in einigen Minuten erneut.",
   "Trop de téléchargements. Réessayez dans quelques minutes.": "Zu viele Downloads. Versuchen Sie es in einigen Minuten erneut.",
   "Mots de passe de la bibliothèque ratés à répétition": "Wiederholt falsche Passwörter in der Bibliothek",
+  "Mes documents": "Meine Dokumente",
+  "Administratif": "Verwaltung",
+  "Comptabilité et finances": "Buchhaltung und Finanzen",
 };

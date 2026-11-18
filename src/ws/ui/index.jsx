@@ -76,7 +76,7 @@ export function Field({ label, hint, error, required, children }) {
 }
 
 export function EmptyState({ icon = 'inbox', title, children, action }) {
-  return <div className="ui-empty"><span className="ico"><Icon name={icon} /></span>{title ? <h3>{title}</h3> : null}{children ? <p>{children}</p> : null}{action || null}</div>;
+  return <div className="ui-empty"><span className="ico"><Icon name={icon} /></span>{title ? <h3>{title}</h3> : null}{children ? <div className="ui-empty-text">{children}</div> : null}{action || null}</div>;
 }
 
 export function Skeleton({ lines = 3, block }) {

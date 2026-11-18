@@ -236,4 +236,7 @@ export default {
   "Trop d'envois de fichiers. Réessayez dans quelques minutes.": "Too many file uploads. Try again in a few minutes.",
   "Trop de téléchargements. Réessayez dans quelques minutes.": "Too many downloads. Try again in a few minutes.",
   "Mots de passe de la bibliothèque ratés à répétition": "Repeated wrong passwords on the library",
+  "Mes documents": "My documents",
+  "Administratif": "Administrative",
+  "Comptabilité et finances": "Accounting and finance",
 };

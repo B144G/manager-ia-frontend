@@ -76,7 +76,7 @@ export default function BlockView({ L, block }) {
   return (
     <Loaded state={st}>{(j) => {
       const b = j.block;
-      const upper = b.name.toLocaleUpperCase(getLocale());
+      const upper = (b.builtin ? t(b.name) : b.name).toLocaleUpperCase(getLocale());
       return (
         <div onDragOver={(e) => { if (j.perms.add) { e.preventDefault(); setDrag(true); } }} onDragLeave={() => setDrag(false)} onDrop={(e) => { e.preventDefault(); setDrag(false); if (j.perms.add) upload(e.dataTransfer.files); }}>
           <div className="lib-bhead" style={{ '--lib-c': headColor(b.color) }}>
