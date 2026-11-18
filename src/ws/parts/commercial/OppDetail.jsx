@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useWs } from '../../WsContext.jsx';
 import { useT } from '../../../lib/i18n.jsx';
 import { Alert, Badge, Button, Drawer, Field, Loading, Stat, Table, Tabs, useLoad } from '../../ui.jsx';
+import { SpinPanel } from './Spin.jsx';
 import { ActivityForm, ActivityList, BantCard, FilesPanel, NotesPanel, TasksPanel } from './Panels.jsx';
 import { Failed, MemberSelect, Tag, ZoneSelect, fmtDT, num, useCp, useForm, useL } from './common.jsx';
 
@@ -138,7 +139,7 @@ export default function OppDetail({ id, onClose }) {
   const move = useMoveOpp(reload);
   const o = st.data && st.data.opportunity;
   const refs = { oppId: id };
-  const tabs = [{ id: 'sum', label: t('Résumé') }, { id: 'hist', label: t('Historique') }, { id: 'tasks', label: t('Tâches') }, { id: 'acts', label: t('Activités') }, { id: 'bant', label: t('BANT') }, { id: 'files', label: t('Pièces jointes') }, { id: 'notes', label: t('Notes') }];
+  const tabs = [{ id: 'sum', label: t('Résumé') }, { id: 'hist', label: t('Historique') }, { id: 'tasks', label: t('Tâches') }, { id: 'acts', label: t('Activités') }, { id: 'bant', label: t('BANT') }, { id: 'spin', label: t('SPIN') }, { id: 'files', label: t('Pièces jointes') }, { id: 'notes', label: t('Notes') }];
   const histCols = [
     { key: 'stage', label: t('Étape') }, { key: 'at', label: t('Entrée'), render: (h) => fmtDT(h.at) },
     { key: 'days', label: t('Jours dans l’étape'), align: 'r' }, { key: 'by', label: t('Par') }, { key: 'note', label: t('Remarque') },
@@ -170,6 +171,7 @@ export default function OppDetail({ id, onClose }) {
           {tab === 'tasks' ? <TasksPanel refs={refs} /> : null}
           {tab === 'acts' ? <div><ActivityForm refs={refs} onSaved={reload} /><ActivityList items={st.data.activities} /></div> : null}
           {tab === 'bant' ? <BantCard kind="opp" id={id} onChange={reload} /> : null}
+          {tab === 'spin' ? <SpinPanel refs={refs} /> : null}
           {tab === 'files' ? <FilesPanel refs={refs} /> : null}
           {tab === 'notes' ? <NotesPanel refs={refs} /> : null}
           {has('delete') ? <div className="row cp-danger"><Button variant="danger-outline" size="sm" icon="delete" onClick={() => confirm(t('Supprimer cette opportunité ?'), () => api('DELETE', '/opps/' + id).then(() => { bump(); closeDrawer(); }, fail))}>{t('Supprimer')}</Button></div> : null}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useWs } from '../../WsContext.jsx';
 import { useT } from '../../../lib/i18n.jsx';
 import { Alert, Badge, Button, Card, Drawer, Field, Loading, Table, Tabs, useLoad } from '../../ui.jsx';
+import { SpinPanel } from './Spin.jsx';
 import { ActivityForm, BantCard, FilesPanel, NotesPanel, TasksPanel } from './Panels.jsx';
 import { Failed, Facts, Grade, MapSelect, MemberSelect, Meter, Tag, ZoneSelect, fmtDT, num, qs, useCp, useForm, useL } from './common.jsx';
 
@@ -132,7 +133,7 @@ export function LeadDetail({ id, onClose }) {
   const PARTS = { profile: t('Fiche complète'), source: t('Source'), intent: t('Intérêt'), budget: t('Budget'), engagement: t('Échanges'), recency: t('Dernier contact'), bant: t('BANT') };
   const open = l && ['new', 'contacted', 'qualified'].includes(l.status);
   const qualify = () => api('PUT', '/leads/' + id, { status: 'qualified' }).then(() => { toast(t('Prospect qualifié.')); reload(); }, fail);
-  const tabs = [{ id: 'sum', label: t('Résumé') }, { id: 'bant', label: t('BANT') }, { id: 'tasks', label: t('Tâches') }, { id: 'acts', label: t('Activités') }, { id: 'files', label: t('Pièces jointes') }, { id: 'notes', label: t('Notes') }];
+  const tabs = [{ id: 'sum', label: t('Résumé') }, { id: 'bant', label: t('BANT') }, { id: 'spin', label: t('SPIN') }, { id: 'tasks', label: t('Tâches') }, { id: 'acts', label: t('Activités') }, { id: 'files', label: t('Pièces jointes') }, { id: 'notes', label: t('Notes') }];
   const refs = { leadId: id };
   return (
     <Drawer title={l ? l.name : t('Prospect')} onClose={onClose} wide>
@@ -177,6 +178,7 @@ export function LeadDetail({ id, onClose }) {
             </>
           ) : null}
           {tab === 'bant' ? <BantCard kind="lead" id={id} onChange={reload} /> : null}
+          {tab === 'spin' ? <SpinPanel refs={refs} /> : null}
           {tab === 'tasks' ? <TasksPanel refs={refs} /> : null}
           {tab === 'acts' ? <ActivityForm refs={refs} onSaved={reload} /> : null}
           {tab === 'files' ? <FilesPanel refs={refs} /> : null}

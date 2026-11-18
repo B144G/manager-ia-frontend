@@ -85,3 +85,21 @@
   .cp-board{grid-auto-columns:minmax(240px,86vw)}
   .cp-two{grid-template-columns:minmax(0,1fr)}
 }
+
+/* ===== Étapes 2 et 3 : SPIN, devis, tarifs, force de vente, performance ===== */
+.cp-spin-sec{border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--sp-3);display:grid;gap:var(--sp-3);min-width:0}
+.cp-spin-sec legend{font-weight:var(--fw-semibold);padding:0 var(--sp-2)}
+.cp-spin-q{display:grid;gap:var(--sp-2);padding-bottom:var(--sp-3);border-bottom:1px dashed var(--border)}
+.cp-pre{background:var(--surface-2);border-radius:var(--radius-md);padding:var(--sp-3);margin:var(--sp-2) 0}
+.cp-item-col{flex-direction:column;align-items:stretch}
+.cp-q{margin:4px 0 0;padding-left:var(--sp-5)}
+.cp-qline{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--sp-3);padding:var(--sp-3);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface)}
+.cp-qend{grid-column:1/-1;justify-content:space-between}
+.cp-qhint{grid-column:1/-1;margin:0}
+.cp-chain{margin:0;padding-left:var(--sp-5);display:grid;gap:var(--sp-2)}
+.cp-pl{display:grid;grid-template-columns:minmax(0,1fr) 140px;gap:var(--sp-3);align-items:center}
+.cp-bscore{display:inline-flex;align-items:center;gap:var(--sp-2);min-width:120px}
+.cp-bscore .cp-meter{flex:1;min-width:60px}
+.cp-sum{margin:var(--sp-2) 0 0;padding-left:var(--sp-5);display:grid;gap:var(--sp-2)}
+.cp-day h3{margin:var(--sp-3) 0 var(--sp-1);font-size:var(--fs-md)}
+@media (max-width:640px){.cp-pl{grid-template-columns:1fr}}

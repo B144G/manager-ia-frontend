@@ -17,13 +17,30 @@ import Segments, { CustomSegments } from '../parts/commercial/Segments.jsx';
 import Stages from '../parts/commercial/Stages.jsx';
 import Tasks from '../parts/commercial/Tasks.jsx';
 import TeamRoles from '../parts/commercial/TeamRoles.jsx';
+import Analytics from '../parts/commercial/Analytics.jsx';
+import Coaching from '../parts/commercial/Coaching.jsx';
+import Commissions from '../parts/commercial/Commissions.jsx';
+import { Objectives, Ranking } from '../parts/commercial/ForceBoard.jsx';
+import Loyalty from '../parts/commercial/Loyalty.jsx';
+import Margins from '../parts/commercial/Margins.jsx';
+import PricingItems from '../parts/commercial/PricingItems.jsx';
+import { PolicyScreen, PriceLists } from '../parts/commercial/PricingPolicy.jsx';
+import Retention from '../parts/commercial/Retention.jsx';
+import Satisfaction from '../parts/commercial/Satisfaction.jsx';
+import Simulator from '../parts/commercial/Simulator.jsx';
+import Visits from '../parts/commercial/Visits.jsx';
+import Bant from '../parts/commercial/Bant.jsx';
+import Forecast from '../parts/commercial/Forecast.jsx';
+import QuoteDetail from '../parts/commercial/QuoteDetail.jsx';
+import Quotes, { QuoteApprovals } from '../parts/commercial/Quotes.jsx';
+import Spin from '../parts/commercial/Spin.jsx';
 import { CommercialProvider, useCp } from '../parts/commercial/common.jsx';
 
 /* Commercial : CRM complet, prospection, pipeline, segmentation, équipe et droits (étape 1).
    Pour ajouter un écran (étapes suivantes) : un composant dans parts/commercial/, puis une ligne dans un groupe de menuGroups() ci-dessous
    (avec `perm` si l'écran n'est offert qu'à un rôle précis). Pour une nouvelle fiche en tiroir : une entrée dans DRAWERS. */
 
-const DRAWERS = { account: Account360, opp: OppDetail, lead: LeadDetail };
+const DRAWERS = { account: Account360, opp: OppDetail, lead: LeadDetail, quote: QuoteDetail };
 
 /** Menu du module : groupes → écrans. `perm` : droit commercial nécessaire pour voir l'écran (le serveur contrôle de toute façon). */
 function menuGroups(t) {
@@ -47,6 +64,32 @@ function menuGroups(t) {
     { id: 'clients', icon: 'users', label: t('Clientèle'), items: [
       { id: 'segments', label: t('Segmentation'), hint: t('RFM, ABC, secteurs et villes, actions suggérées.'), render: () => <Segments /> },
       { id: 'custom', label: t('Segments personnalisés'), hint: t('Vos groupes de clients définis par des règles.'), render: () => <CustomSegments /> }] },
+    { id: 'methods', icon: 'comments', label: t('Méthodes de vente'), items: [
+      { id: 'spin', label: t('Fiche SPIN'), perm: 'activity', hint: t("Guide d'entretien : situation, problème, implication, besoin-bénéfice."), render: () => <Spin /> },
+      { id: 'bant', label: t('Qualification BANT'), hint: t('Budget, autorité, besoin, délai : score et règles de passage.'), render: () => <Bant /> }] },
+    { id: 'forecast', icon: 'chart-line', label: t('Prévision'), items: [
+      { id: 'forecast', label: t('Prévision des ventes'), hint: t('Scénarios, objectifs, répartition et écarts.'), render: () => <Forecast /> }] },
+    { id: 'quotes', icon: 'file-lines', label: t('Devis'), items: [
+      { id: 'quotes', label: t('Devis'), hint: t('Versions, validité, remises et acceptation par le client.'), render: () => <Quotes /> },
+      { id: 'approvals', label: t('Remises à valider'), perm: 'approve', hint: t('Remises au-dessus du plafond de rôle.'), render: () => <QuoteApprovals /> }] },
+    { id: 'pricing', icon: 'percent', label: t('Tarifs et marges'), items: [
+      { id: 'policy', label: t('Politique tarifaire'), hint: t('Plafonds de remise par rôle et seuil de marge.'), render: () => <PolicyScreen /> },
+      { id: 'pricelists', label: t('Listes de prix'), hint: t('Prix par segment de clients et par canal.'), render: () => <PriceLists /> },
+      { id: 'priceitems', label: t('Articles et coûts'), hint: t('Coûts, prix proposé et historique des prix.'), render: () => <PricingItems /> },
+      { id: 'margins', label: t('Marges'), hint: t('Marge par document, client et produit, alertes.'), render: () => <Margins /> },
+      { id: 'simulator', label: t('Simulateur de prix'), hint: t('Effet d’un changement de prix sur le volume et la marge.'), render: () => <Simulator /> }] },
+    { id: 'loyalty', icon: 'heart', label: t('Fidélisation'), items: [
+      { id: 'loyalty', label: t('Programme de points'), hint: t('Points, paliers et soldes des clients.'), render: () => <Loyalty /> },
+      { id: 'retention', label: t('Rétention et risque de départ'), hint: t('Réachat, valeur client, clients à réactiver.'), render: () => <Retention /> },
+      { id: 'satisfaction', label: t('Satisfaction et réclamations'), hint: t('NPS et réclamations des clients.'), render: () => <Satisfaction /> }] },
+    { id: 'force', icon: 'people-group', label: t('Force de vente'), items: [
+      { id: 'ranking', label: t('Classement'), hint: t('Résultats du mois de chaque commercial.'), render: () => <Ranking /> },
+      { id: 'objectives', label: t('Objectifs'), perm: 'targets', hint: t('Répartir un objectif entre les mois et les commerciaux.'), render: () => <Objectives /> },
+      { id: 'commissions', label: t('Commissions'), hint: t('Règles, calcul et relevés.'), render: () => <Commissions /> },
+      { id: 'visits', label: t('Visites et agenda'), perm: 'activity', hint: t('Visites, tournées et agenda du commercial.'), render: () => <Visits /> },
+      { id: 'coaching', label: t('Coaching'), hint: t('Repères et conseils pour progresser.'), render: () => <Coaching /> }] },
+    { id: 'perf', icon: 'gauge', label: t('Performance'), items: [
+      { id: 'analytics', label: t('Tableau de bord'), hint: t('Chiffres clés, comparaison, résumé et exports.'), render: () => <Analytics /> }] },
     { id: 'team', icon: 'user-group', label: t('Équipe et droits'), items: [
       { id: 'roles', label: t('Rôles commerciaux'), hint: t('Qui peut faire quoi dans le module.'), render: () => <TeamRoles /> },
       { id: 'zones', label: t('Zones et équipes'), hint: t('Territoires et équipes commerciales.'), render: () => <ZonesTeams /> },
