@@ -5,7 +5,7 @@ import { lazy } from 'react';
 export const MODULE_ICONS = {
   dashboard: 'dashboard', alerts: 'alerts', support: 'support', projects: 'projects', budget: 'budget', stock: 'stock', crm: 'crm', hr: 'hr',
   accounting: 'accounting', library: 'library', purchasing: 'purchasing', integrations: 'integrations', billing: 'billing', sales: 'sales', aifollow: 'aifollow', structure: 'structure', processes: 'processes', team: 'team',
-  payroll: 'payroll', fiscal: 'fiscal', marketing: 'marketing', logistics: 'logistics', production: 'production', construction: 'construction', maintenance: 'maintenance', legal: 'legal', memory: 'memory', agents: 'agents',
+  payroll: 'payroll', fiscal: 'fiscal', marketing: 'marketing', logistics: 'logistics', production: 'production', construction: 'construction', maintenance: 'maintenance', legal: 'legal', memory: 'memory', agents: 'agents', commercial: 'chart-line',
 };
 
 const loaders = import.meta.glob('./modules/*.jsx');

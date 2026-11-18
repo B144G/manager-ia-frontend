@@ -9,5 +9,6 @@ import wsResponsive from '../styles/responsive.css?inline';
 import wsPro from '../styles/ws-pro.css?inline';
 import charts from '../styles/charts.css?inline';
 import shell from '../styles/shell.css?inline';
+import commercial from '../styles/commercial.css?inline';
 
-export default [ui, ws, wsPlus, wsGuide, wsAifollow, composer, wsResponsive, wsPro, charts, shell];
+export default [ui, ws, wsPlus, wsGuide, wsAifollow, composer, wsResponsive, wsPro, charts, shell, commercial];
