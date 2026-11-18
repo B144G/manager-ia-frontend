@@ -10,6 +10,9 @@ import Toc from './adv/Toc.jsx';
 import Jit from './adv/Jit.jsx';
 import Kanban from './adv/Kanban.jsx';
 import Fives from './adv/Fives.jsx';
+import SixSigma from './adv/SixSigma.jsx';
+import Tpm from './adv/Tpm.jsx';
+import Quality from './adv/Quality.jsx';
 
 /* Production · techniques avancées. Pour ajouter une technique : créer son composant dans ./adv (avec useDoc de ./adv/common.jsx) puis une ligne dans TECHS.
    Chaque technique charge et enregistre son propre document (/production/adv/:kind) ; le serveur calcule tout. */
@@ -23,6 +26,9 @@ const TECHS = (t) => [
   { id: 'jit', label: t('Juste-à-temps (JIT)'), Comp: Jit, row: 2 },
   { id: 'kanban', label: t('Kanban'), Comp: Kanban, row: 2 },
   { id: 'fives', label: t('5S'), Comp: Fives, row: 2 },
+  { id: 'sixsigma', label: t('Six Sigma'), Comp: SixSigma, row: 3 },
+  { id: 'tpm', label: t('TPM'), Comp: Tpm, row: 3 },
+  { id: 'quality', label: t('Qualité'), Comp: Quality, row: 3 },
 ];
 
 export default function Advanced() {
@@ -34,7 +40,8 @@ export default function Advanced() {
     <div className="bp">
       <div style={{ display: 'grid', gap: 8, justifyItems: 'start' }}>
         <Segmented label={t('Planification de la production')} value={cur.id} onChange={setTech} items={techs.filter((x) => !x.row).map((x) => ({ id: x.id, label: x.label }))} />
-        <Segmented label={t('Amélioration continue et flux')} value={cur.id} onChange={setTech} items={techs.filter((x) => x.row).map((x) => ({ id: x.id, label: x.label }))} />
+        <Segmented label={t('Amélioration continue et flux')} value={cur.id} onChange={setTech} items={techs.filter((x) => x.row === 2).map((x) => ({ id: x.id, label: x.label }))} />
+        <Segmented label={t('Qualité et fiabilité')} value={cur.id} onChange={setTech} items={techs.filter((x) => x.row === 3).map((x) => ({ id: x.id, label: x.label }))} />
       </div>
       <div style={{ marginTop: 14 }}><cur.Comp key={cur.id} go={setTech} /></div>
     </div>
