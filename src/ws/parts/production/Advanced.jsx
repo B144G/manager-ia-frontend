@@ -5,6 +5,11 @@ import Mps from './adv/Mps.jsx';
 import Mrp from './adv/Mrp.jsx';
 import Capacity from './adv/Capacity.jsx';
 import Schedule from './adv/Schedule.jsx';
+import Lean from './adv/Lean.jsx';
+import Toc from './adv/Toc.jsx';
+import Jit from './adv/Jit.jsx';
+import Kanban from './adv/Kanban.jsx';
+import Fives from './adv/Fives.jsx';
 
 /* Production · techniques avancées. Pour ajouter une technique : créer son composant dans ./adv (avec useDoc de ./adv/common.jsx) puis une ligne dans TECHS.
    Chaque technique charge et enregistre son propre document (/production/adv/:kind) ; le serveur calcule tout. */
@@ -13,6 +18,11 @@ const TECHS = (t) => [
   { id: 'mrp', label: t('Besoins en matières (MRP)'), Comp: Mrp },
   { id: 'capacity', label: t('Capacités'), Comp: Capacity },
   { id: 'schedule', label: t('Ordonnancement'), Comp: Schedule },
+  { id: 'lean', label: t('Lean'), Comp: Lean, row: 2 },
+  { id: 'toc', label: t('Théorie des contraintes (TOC)'), Comp: Toc, row: 2 },
+  { id: 'jit', label: t('Juste-à-temps (JIT)'), Comp: Jit, row: 2 },
+  { id: 'kanban', label: t('Kanban'), Comp: Kanban, row: 2 },
+  { id: 'fives', label: t('5S'), Comp: Fives, row: 2 },
 ];
 
 export default function Advanced() {
@@ -22,8 +32,11 @@ export default function Advanced() {
   const cur = techs.find((x) => x.id === tech) || techs[0];
   return (
     <div className="bp">
-      <Segmented label={t('Technique de production')} value={cur.id} onChange={setTech} items={techs.map((x) => ({ id: x.id, label: x.label }))} />
-      <div style={{ marginTop: 14 }}><cur.Comp key={cur.id} /></div>
+      <div style={{ display: 'grid', gap: 8, justifyItems: 'start' }}>
+        <Segmented label={t('Planification de la production')} value={cur.id} onChange={setTech} items={techs.filter((x) => !x.row).map((x) => ({ id: x.id, label: x.label }))} />
+        <Segmented label={t('Amélioration continue et flux')} value={cur.id} onChange={setTech} items={techs.filter((x) => x.row).map((x) => ({ id: x.id, label: x.label }))} />
+      </div>
+      <div style={{ marginTop: 14 }}><cur.Comp key={cur.id} go={setTech} /></div>
     </div>
   );
 }

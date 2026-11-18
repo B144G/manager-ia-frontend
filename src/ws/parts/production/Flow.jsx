@@ -16,7 +16,7 @@ const SECTOR = (t) => ({ general: t('Général'), btp: t('BTP'), food: t('Alimen
 const LEVEL = (t) => ({ solid: t('Circuit solide'), correct: t('Circuit correct, à consolider'), fragile: t('Circuit fragile'), critical: t('Circuit critique') });
 
 /** Titre et explication de chaque faille (le serveur envoie un code et des valeurs). */
-function findingText(f, t) {
+export function findingText(f, t) {
   const p = f.params;
   switch (f.code) {
     case 'empty': return [t('Le circuit est vide'), t('Aucune étape : partez du modèle de votre secteur.')];
@@ -31,10 +31,26 @@ function findingText(f, t) {
     case 'bottleneck': return [t('Goulot d\'étranglement'), t('« {step} » limite tout le circuit : {cap} lots par jour, alors que l\'étape suivante la plus lente peut en faire {next}. Charge actuelle : {load} %.', { step: p.step, cap: num(p.cap, 1), next: num(p.next, 1), load: num(p.load, 0) })];
     case 'spofStep': return [t('Point unique de défaillance'), t('Tout le flux passe par « {step} », sans doublure ni second poste : si elle s\'arrête, tout s\'arrête.', { step: p.step })];
     case 'spofPerson': return [t('Une personne porte trop d\'étapes'), t('{person} est responsable de {n} étapes ({steps}) : son absence bloquerait une grande partie du circuit.', { person: p.person, n: p.n, steps: p.steps })];
+    case 'mudaTransport': return [t('Gaspillage : transport'), t('{n} étape(s) avec du temps de déplacement entre postes : {steps}. Déplacer la matière ne crée aucune valeur.', p)];
+    case 'mudaInventory': return [t('Gaspillage : stocks'), t('{n} étape(s) avec plus de {days} jour de demande en stock devant elles : {steps}. Un gros stock immobilise de l\'argent et cache les problèmes.', p)];
+    case 'mudaMotion': return [t('Gaspillage : mouvements'), t('{n} étape(s) où l\'on perd du temps à chercher, se baisser ou marcher : {steps}.', p)];
+    case 'mudaWaiting': return [t('Gaspillage : attentes'), t('{n} étape(s) où le lot attend au moins la moitié de la durée de travail : {steps}.', p)];
+    case 'mudaOverproduction': return [t('Gaspillage : surproduction'), t('{n} étape(s) travaillent par lots de plus de 1,5 jour de demande : {steps}. On fabrique avant d\'en avoir besoin.', p)];
+    case 'mudaOverprocessing': return [t('Gaspillage : sur-traitement'), t('{n} étape(s) de transformation classées sans valeur ajoutée : {steps}. Le client ne paierait pas ce travail.', p)];
+    case 'mudaDefects': return [t('Gaspillage : défauts'), t('{n} étape(s) avec plus de 2 % de défauts (jusqu\'à {pct} %) : {steps}. Chaque défaut est du travail refait ou jeté.', p)];
+    case 'mudaTalent': return [t('Gaspillage : talents inutilisés'), t('{n} étape(s) où les compétences des personnes ne sont pas utilisées : {steps}.', p)];
+    case 'overTakt': return [t('Étape plus lente que le rythme demandé'), t('{n} étape(s) ont un temps de cycle supérieur au takt time ({takt} h par lot) : {steps}. Elles ne peuvent pas suivre la demande.', p)];
+    case 'leanLowVa': return [t('Très peu de valeur ajoutée'), t('Seulement {pct} % du délai ({lead} h) est du travail utile ({va} h) : le reste est de l\'attente, du transport et des mouvements.', p)];
+    case 'tocNoBuffer': return [t('Pas de tampon devant la contrainte'), t('« {step} » est la contrainte du circuit (charge {load} %) mais aucun stock ne la protège. Gardez environ {hours} h de travail devant elle.', p)];
+    case 'jitSingleSupplier': return [t('Fournisseur unique'), t('{n} approvisionnement(s) dépendent d\'un seul fournisseur : {steps}. S\'il manque, tout s\'arrête.', p)];
+    case 'jitLongLead': return [t('Délai d\'approvisionnement long sans tampon'), t('{n} approvisionnement(s) avec un long délai et aucun stock de protection : {steps}.', p)];
+    case 'tpmNoPlan': return [t('Machine sans plan de maintenance'), t('{n} étape(s) utilisent une machine sans plan de maintenance préventive : {steps}.', p)];
+    case 'tpmLowOee': return [t('Machine peu efficace'), t('{n} étape(s) utilisent une machine au rendement global (TRS) très bas, jusqu\'à {oee} % : {steps}.', p)];
+    case 'qcNoPlan': return [t('Contrôle qualité sans plan de contrôle'), t('Le circuit a une étape de contrôle qualité mais aucun plan de contrôle écrit n\'existe dans la qualité.')];
     default: return [f.code, ''];
   }
 }
-function solutionText(f, s, t) {
+export function solutionText(f, s, t) {
   const p = s.params || {};
   switch (`${f.code}/${s.id}`) {
     case 'empty/template': return t('Créer les 7 étapes du modèle');
@@ -56,8 +72,59 @@ function solutionText(f, s, t) {
     case 'spofStep/addSlot': return t('Ajouter un second poste');
     case 'spofPerson/reassign': return t('Confier « {step} » à {name}', p);
     case 'spofPerson/inviteMembers': return t('Invitez un collègue pour répartir les étapes');
+    case 'mudaTransport/halveMove': return t('Réduire de moitié le temps de transport');
+    case 'mudaTransport/manualLayout': return t('Rapprocher les postes : revoir l\'implantation de l\'atelier');
+    case 'mudaInventory/halveStock': return t('Réduire de moitié le stock devant l\'étape');
+    case 'mudaInventory/manualKanban': return t('Piloter ce stock avec des cartes kanban (onglet Kanban)');
+    case 'mudaMotion/halveMotion': return t('Réduire de moitié le temps de mouvements');
+    case 'mudaMotion/manual5s': return t('Ranger le poste avec la méthode 5S (onglet 5S)');
+    case 'mudaWaiting/halveWait': return t('Réduire de moitié le temps d\'attente');
+    case 'mudaWaiting/manualBalance': return t('Équilibrer la charge entre les postes pour limiter les attentes');
+    case 'mudaOverproduction/smallerBatch': return t('Réduire la taille de lot à {to}', p);
+    case 'mudaOverprocessing/removeOverprocessing': return t('Supprimer ou simplifier le travail que le client ne paie pas');
+    case 'mudaDefects/halveDefects': return t('Réduire de moitié le taux de défauts');
+    case 'mudaDefects/manualPokaYoke': return t('Installer un détrompeur (poka-yoke) pour empêcher l\'erreur');
+    case 'mudaTalent/clearTalent': return t('Marquer le talent comme employé');
+    case 'mudaTalent/manualTalent': return t('Confier à l\'équipe l\'amélioration de son propre poste');
+    case 'overTakt/addSlot': return t('Ajouter un poste en parallèle sur ces étapes');
+    case 'tocNoBuffer/setBuffer': case 'jitLongLead/setBuffer': return t('Garder un tampon de {to} lot(s) devant l\'étape', p);
+    case 'jitSingleSupplier/secondSupplier': return t('Trouver un second fournisseur');
+    case 'jitSingleSupplier/manualBuffer': return t('Garder un stock de sécurité en attendant un second fournisseur');
+    case 'leanLowVa/manualVsm': return t('Refaire la cartographie du flux et supprimer les attentes les plus longues');
+    case 'tpmNoPlan/planMaintenance': return t('Créer un plan de maintenance préventive pour cette machine');
+    case 'tpmLowOee/manualTpm': return t('Mener une analyse TPM : pannes, réglages, micro-arrêts');
+    case 'qcNoPlan/manualPlan': return t('Rédiger un plan de contrôle qualité');
     default: return s.id;
   }
+}
+
+/** Champs facultatifs d'une étape (Lean, TOC, JIT) : à renvoyer tels quels à l'enregistrement, sinon le serveur les perd. */
+export const STEP_EXTRA = ['cls', 'waitHours', 'moveHours', 'motionHours', 'stockBefore', 'defectPct', 'batch', 'suppliers', 'machine', 'talentUnused'];
+/** Corps d'une étape pour PUT /production/flows/:id (toutes les données, y compris Lean / TOC / JIT). */
+export function stepBody(s) {
+  const o = { id: s.id, name: s.name, kind: s.kind, after: s.after, ownerId: s.ownerId, backupId: s.backupId, hours: s.hours, slots: s.slots, validation: s.validation };
+  for (const k of STEP_EXTRA) if (s[k] !== undefined) o[k] = s[k];
+  return o;
+}
+
+/** Un avis du circuit avec ses solutions (appliquer / écarter) ; act(chemin, corps, message) envoie l'action au serveur. */
+export function FindingCard({ x, mgr, act }) {
+  const t = useT();
+  const [title, text] = findingText(x, t);
+  return (
+    <div className={'ro-find ' + x.severity}>
+      <h3>{title} <Badge tone={x.severity === 'high' ? 'danger' : x.severity === 'medium' ? 'warn' : 'info'}>{x.severity === 'high' ? t('majeur') : x.severity === 'medium' ? t('moyen') : t('mineur')}</Badge></h3>
+      <p className="muted" style={{ margin: 0 }}>{text}</p>
+      {mgr ? (
+        <div className="sol">
+          {x.solutions.map((s) => (s.apply
+            ? <Button key={s.id} size="sm" variant="primary" onClick={() => act('apply', { key: x.key, solution: s.id }, t('Solution appliquée.'))}>{solutionText(x, s, t)}</Button>
+            : <span key={s.id} className="muted small">💡 {solutionText(x, s, t)}</span>))}
+          <Button size="sm" variant="ghost" onClick={() => act('dismiss', { key: x.key })}>{t('Écarter')}</Button>
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 function Diagram({ steps, findings }) {
@@ -104,13 +171,14 @@ function Editor({ flow, members, reload }) {
   const { oapi, toast, fail } = useWs();
   const [steps, setSteps] = useState(() => JSON.parse(JSON.stringify(flow.steps)));
   const [target, setTarget] = useState(flow.targetPerDay); const [hpd, setHpd] = useState(flow.hoursPerDay); const [name, setName] = useState(flow.name);
-  useEffect(() => { setSteps(JSON.parse(JSON.stringify(flow.steps))); setTarget(flow.targetPerDay); setHpd(flow.hoursPerDay); setName(flow.name); }, [flow]);
+  const [extra, setExtra] = useState(() => ({ ...(flow.extra || {}) }));
+  useEffect(() => { setSteps(JSON.parse(JSON.stringify(flow.steps))); setTarget(flow.targetPerDay); setHpd(flow.hoursPerDay); setName(flow.name); setExtra({ ...(flow.extra || {}) }); }, [flow]);
   const set = (i, k, v) => setSteps((l) => l.map((s, j) => (j === i ? { ...s, [k]: v } : s)));
   const move = (i, d) => setSteps((l) => { const a = l.slice(); const j = i + d; if (j < 0 || j >= a.length) return a; [a[i], a[j]] = [a[j], a[i]]; return a; });
   const add = () => setSteps((l) => { let n = l.length + 1; while (l.some((s) => s.id === 's' + n)) n++; return l.concat([{ id: 's' + n, name: '', kind: 'other', after: l.length ? [l[l.length - 1].id] : [], ownerId: null, backupId: null, hours: 1, slots: 1, validation: false }]); });
   const del = (i) => setSteps((l) => { const id = l[i].id; return l.filter((_, j) => j !== i).map((s) => ({ ...s, after: s.after.filter((a) => a !== id) })); });
   const toggleAfter = (i, id) => setSteps((l) => l.map((s, j) => (j === i ? { ...s, after: s.after.includes(id) ? s.after.filter((a) => a !== id) : s.after.concat([id]) } : s)));
-  const save = () => oapi('PUT', `/production/flows/${flow.id}`, { name, targetPerDay: target, hoursPerDay: hpd, steps: steps.map((s) => ({ id: s.id, name: s.name, kind: s.kind, after: s.after, ownerId: s.ownerId, backupId: s.backupId, hours: s.hours, slots: s.slots, validation: s.validation })) }).then(() => { toast(t('Circuit enregistré.')); reload(); }).catch(fail);
+  const save = () => oapi('PUT', `/production/flows/${flow.id}`, { name, targetPerDay: target, hoursPerDay: hpd, extra, steps: steps.map(stepBody) }).then(() => { toast(t('Circuit enregistré.')); reload(); }).catch(fail);
   const kinds = KIND(t);
   const mem = [['', t('Personne')]].concat(members.map((m) => [String(m.userId), m.name]));
   return (
@@ -137,6 +205,35 @@ function Editor({ flow, members, reload }) {
         ))}</tbody>
       </table></div>
       <Button size="sm" icon="plus" onClick={add}>{t('Ajouter une étape')}</Button>
+      <h3 style={{ margin: '14px 0 6px', fontSize: 15 }}>{t('Données Lean, TOC et JIT (facultatives)')}</h3>
+      <p className="muted small">{t('Elles alimentent les techniques Lean, TOC et JIT. Laissez vide ce que vous ne connaissez pas : aucun avis n\'est créé sans donnée.')}</p>
+      {steps.map((s, i) => (
+        <details key={s.id} style={{ marginBottom: 6 }}>
+          <summary style={{ cursor: 'pointer', minHeight: 32 }}><b>{i + 1}. {s.name || t('Étape')}</b></summary>
+          <div className="ro-scroll"><table className="ro-ed">
+            <thead><tr><th>{t('Nature du temps')}</th><th>{t('Attente avant (h)')}</th><th>{t('Transport (h)')}</th><th>{t('Mouvements (h)')}</th><th>{t('Stock avant l\'étape (lots)')}</th><th>{t('Défauts (%)')}</th><th>{t('Taille de lot')}</th><th>{t('Fournisseurs')}</th><th>{t('Machine')}</th><th>{t('Talents inutilisés')}</th></tr></thead>
+            <tbody><tr>
+              <td><select aria-label={t('Nature du temps')} value={s.cls || ''} onChange={(e) => set(i, 'cls', e.target.value || null)}><option value="">{t('Automatique (selon le type)')}</option><option value="va">{t('Valeur ajoutée')}</option><option value="bnva">{t('Nécessaire sans valeur ajoutée')}</option><option value="nva">{t('Gaspillage')}</option></select></td>
+              <td><Cell label={t('Attente avant (h)')} value={s.waitHours} onChange={(v) => set(i, 'waitHours', v)} /></td>
+              <td><Cell label={t('Transport (h)')} value={s.moveHours} onChange={(v) => set(i, 'moveHours', v)} /></td>
+              <td><Cell label={t('Mouvements (h)')} value={s.motionHours} onChange={(v) => set(i, 'motionHours', v)} /></td>
+              <td><Cell label={t('Stock avant l\'étape (lots)')} value={s.stockBefore} onChange={(v) => set(i, 'stockBefore', v)} /></td>
+              <td><Cell label={t('Défauts (%)')} value={s.defectPct} onChange={(v) => set(i, 'defectPct', v)} /></td>
+              <td><Cell label={t('Taille de lot')} value={s.batch} onChange={(v) => set(i, 'batch', v)} /></td>
+              <td><Cell label={t('Fournisseurs')} value={s.suppliers} onChange={(v) => set(i, 'suppliers', v)} step="1" /></td>
+              <td><Cell type="text" label={t('Machine')} value={s.machine} onChange={(v) => set(i, 'machine', v)} /></td>
+              <td><input type="checkbox" aria-label={t('Talents inutilisés')} checked={Boolean(s.talentUnused)} onChange={(e) => set(i, 'talentUnused', e.target.checked)} /></td>
+            </tr></tbody>
+          </table></div>
+        </details>
+      ))}
+      <h3 style={{ margin: '14px 0 6px', fontSize: 15 }}>{t('Données économiques du circuit (TOC)')}</h3>
+      <div className="ro-scroll"><table className="ro-ed">
+        <thead><tr><th>{t('Prix de vente par lot')}</th><th>{t('Coût matière par lot')}</th><th>{t('Frais par jour')}</th><th>{t('Valeur des stocks')}</th></tr></thead>
+        <tbody><tr>
+          {['unitPrice', 'materialCost', 'opexPerDay', 'inventoryValue'].map((k, n) => <td key={k}><Cell label={[t('Prix de vente par lot'), t('Coût matière par lot'), t('Frais par jour'), t('Valeur des stocks')][n]} value={extra[k]} onChange={(v) => setExtra((o) => ({ ...o, [k]: v }))} /></td>)}
+        </tr></tbody>
+      </table></div>
     </Card>
   );
 }
@@ -171,23 +268,7 @@ function Detail({ id, members, onDeleted, reloadList }) {
           </Card>
           <Card title={t('Failles et risques détectés')} subtitle={t('Pour chacune : appliquez une solution proposée, ou écartez-la si vous l\'assumez.')}>
             {!open.length ? <Alert tone="ok" title={t('Aucune faille ouverte')}>{t('Le circuit tient la route. Relancez l\'analyse après chaque modification.')}</Alert> : null}
-            {open.map((x) => {
-              const [title, text] = findingText(x, t);
-              return (
-                <div key={x.key} className={'ro-find ' + x.severity}>
-                  <h3>{title} <Badge tone={x.severity === 'high' ? 'danger' : x.severity === 'medium' ? 'warn' : 'info'}>{x.severity === 'high' ? t('majeur') : x.severity === 'medium' ? t('moyen') : t('mineur')}</Badge></h3>
-                  <p className="muted" style={{ margin: 0 }}>{text}</p>
-                  {mgr ? (
-                    <div className="sol">
-                      {x.solutions.map((s) => (s.apply
-                        ? <Button key={s.id} size="sm" variant="primary" onClick={() => act('apply', { key: x.key, solution: s.id }, t('Solution appliquée.'))}>{solutionText(x, s, t)}</Button>
-                        : <span key={s.id} className="muted small">💡 {solutionText(x, s, t)}</span>))}
-                      <Button size="sm" variant="ghost" onClick={() => act('dismiss', { key: x.key })}>{t('Écarter')}</Button>
-                    </div>
-                  ) : null}
-                </div>
-              );
-            })}
+            {open.map((x) => <FindingCard key={x.key} x={x} mgr={mgr} act={act} />)}
             {off.length ? <p><button className="link" type="button" onClick={() => setShowOff(!showOff)}>{showOff ? t('Masquer') : t('Voir')} {t('les {n} faille(s) écartée(s)', { n: off.length })}</button></p> : null}
             {showOff ? off.map((x) => <div key={x.key} className={'ro-find off ' + x.severity}><h3>{findingText(x, t)[0]}</h3>{mgr ? <Button size="sm" onClick={() => act('dismiss', { key: x.key, restore: true })}>{t('Rétablir')}</Button> : null}</div>) : null}
           </Card>
