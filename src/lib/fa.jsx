@@ -109,7 +109,7 @@ export const MODULE_FA = {
   dashboard: 'gauge', support: 'headset', projects: 'list-check', budget: 'wallet', stock: 'stock', crm: 'address-book', hr: 'users', sales: 'handshake',
   aifollow: 'eye', structure: 'sitemap', processes: 'gears', team: 'people-group', payroll: 'money-check', fiscal: 'file-invoice', marketing: 'bullhorn',
   logistics: 'truck', production: 'industry', construction: 'helmet', maintenance: 'tools', legal: 'scale', memory: 'brain', agents: 'robot',
-  accounting: 'calculator', library: 'book-open', purchasing: 'cart', billing: 'card', integrations: 'plug', alerts: 'bell', out: 'logout', shield: 'shield', ai: 'magic',
+  accounting: 'calculator', treasury: 'sack-dollar', library: 'book-open', purchasing: 'cart', billing: 'card', integrations: 'plug', alerts: 'bell', out: 'logout', shield: 'shield', ai: 'magic',
 };
 /** Ancien menu des modules à émojis → icônes (les modules peuvent aussi donner directement un nom d'icône). */
 export const EMOJI_FA = {
