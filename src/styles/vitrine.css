@@ -369,3 +369,11 @@ html.kb-open #sa-btn{display:none}
 #sa-chips button{min-height:44px;font-size:13px;padding:6px 12px;border-radius:99px;border:1px solid var(--vt-line);background:var(--vt-bg)}
 @media (max-width:760px){#sa{left:8px;right:8px;width:auto;bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
 html.kb-open #sa{bottom:8px;height:calc(100dvh - var(--kb,0px) - 16px)}
+
+/* Témoignages (avis approuvés et consentis) */
+.vt-testi{padding-block:clamp(56px,7vw,96px);background:var(--vt-soft)}
+.vt-testi-list{list-style:none;margin:32px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px}
+.vt-testi-card{margin:0;padding:24px;border:1px solid var(--vt-line);border-radius:var(--vt-r-m);background:var(--vt-card);box-shadow:var(--vt-shadow-1);display:grid;gap:12px;align-content:start;color:var(--vt-ink)}
+.vt-testi-stars{margin:0;color:var(--vt-gold);letter-spacing:2px;font-size:1.1rem}
+.vt-testi-card blockquote{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
+.vt-testi-card footer{color:var(--vt-muted);font-size:.9rem}

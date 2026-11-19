@@ -5,6 +5,7 @@ import { useT } from '../lib/i18n.jsx';
 import Audience from './vitrine/Audience.jsx';
 import Faq from './vitrine/Faq.jsx';
 import Final from './vitrine/Final.jsx';
+import Testimonials from './vitrine/Testimonials.jsx';
 import Footer from './vitrine/Footer.jsx';
 import Header from './vitrine/Header.jsx';
 import Hero, { ExampleChat } from './vitrine/Hero.jsx';
@@ -79,6 +80,7 @@ export default function Home() {
         <Steps3 />
         <Pricing />
         <Security />
+        <Testimonials />
         <Faq />
         <Final />
       </main>

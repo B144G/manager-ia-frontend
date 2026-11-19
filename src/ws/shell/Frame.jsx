@@ -5,6 +5,7 @@ import { useT } from '../../lib/i18n.jsx';
 import { Icon } from '../../lib/fa.jsx';
 import { toggleFavorite, usePrefs } from '../../lib/prefs.js';
 import { MODULE_ICONS } from '../registry.js';
+import { FeedbackLink } from '../Feedback.jsx';
 import { GuideButton } from '../guide/GuideContext.jsx';
 import { useScreens, openPalette } from './screens.js';
 
@@ -105,7 +106,7 @@ function AskBar({ onAsk }) {
   );
 }
 
-export function Footer({ orgId }) {
+export function Footer({ orgId, onFeedback }) {
   const t = useT();
   return (
     <footer className="app-foot">
@@ -114,6 +115,7 @@ export function Footer({ orgId }) {
         <Link to="/confidentialite">{t('Confidentialité')}</Link>
         <Link to="/conditions">{t('Conditions')}</Link>
         <Link to={`/app/${orgId}/support`}>{t('Aide et support')}</Link>
+        {onFeedback ? <FeedbackLink onClick={onFeedback} /> : null}
       </nav>
       <span className="app-foot-r"><Icon name="shield" /> {t('Données protégées')} · <span className="mono">v2</span></span>
     </footer>

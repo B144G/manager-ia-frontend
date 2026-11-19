@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import InstallPrompt from '../components/InstallPrompt.jsx';
 import { useT } from '../lib/i18n.jsx';
 import AccountSecurity from './AccountSecurity.jsx';
+import { FeedbackPanel } from './Feedback.jsx';
 import AIPanel from './AIPanel.jsx';
 import UserNotices from './UserNotices.jsx';
 import SecurityNudge from '../privacy/SecurityNudge.jsx';
@@ -87,6 +88,7 @@ function Shell() {
   const p = usePrefs();
   const { user, orgs, orgId, info, dash, route, aiOpen, setAiOpen, askAI, logout, loadOrg, refreshKey, refreshBadges, setOrgs, modal } = ws;
   const openSecurity = () => modal(t('Sécurité du compte'), () => <AccountSecurity />, { wide: true });
+  const openFeedback = () => modal(t('Votre avis'), () => <FeedbackPanel orgId={orgId} />, { wide: true });
   const main = useRef(null);
   const mods = sortMods(info.modules.filter((m) => hasModule(m.id)), p.order);
   let cur = route ? route.mod : 'dashboard';
@@ -147,7 +149,7 @@ function Shell() {
             <Suspense fallback={<Loading />}><ModBoundary><Mod /></ModBoundary></Suspense>
           </div>
         </main>
-        <Footer orgId={orgId} />
+        <Footer orgId={orgId} onFeedback={openFeedback} />
       </div>
       <AIPanel mod={AI_MODULES.has(cur) ? cur : 'general'} />
       <button className="ws-fab" id="aiBtn" type="button" onClick={() => setAiOpen(!aiOpen)}><Icon name="ai" /><span>{t('Assistant IA')}</span></button>
