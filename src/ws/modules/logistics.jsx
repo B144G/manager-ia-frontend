@@ -15,6 +15,10 @@ import Dashboard from '../parts/tms/Dashboard.jsx';
 import { Dispatch, Planner, TripsList } from '../parts/tms/Planning.jsx';
 import { CarrierInvoices, Rates } from '../parts/tms/Costs.jsx';
 import { Network, TmsSettings } from '../parts/tms/Settings.jsx';
+import GeoDispatch from '../parts/geo/Dispatch.jsx';
+import GeoMe from '../parts/geo/Me.jsx';
+import GeoAdmin from '../parts/geo/Admin.jsx';
+import '../../styles/ws-geo.css';
 
 function ManualRounds() {
   const { oapi } = useWs();
@@ -37,7 +41,11 @@ export default function Logistics() {
       { id: 'dispatch', label: t('Répartition'), hint: t('Le planning du jour ou de la semaine : tournées, véhicules et chauffeurs libres, livraisons à planifier.') },
       { id: 'trips', label: t('Tournées'), hint: t('Suivi des tournées : départ, arrêts faits, kilomètres, encaissements, frais à valider.') },
       { id: 'rounds', label: t('Tournées manuelles'), hint: t('Regrouper des livraisons à la main et choisir l\'ordre de passage.') }] },
+    ...only(mgr, [{ id: 'geo', icon: 'location-dot', label: t('Géolocalisation'), items: [
+      { id: 'geomap', label: t('Carte et affectation'), hint: t('Où est le client, où sont vos transporteurs (vert : disponible, rouge : indisponible), distance, durée, et deux recommandations chiffrées pour choisir.') },
+      { id: 'geoadmin', label: t('Transporteurs et vie privée'), hint: t('Véhicule habituel, statut manuel, position saisie à la main, conservation des positions et journal d\'audit.') }] }]),
     { id: 'run', icon: 'mobile', label: t('Exécution'), items: [
+      { id: 'geome', label: t('Ma position'), hint: t('Sur le téléphone du transporteur : accord, début et fin de service, envoi périodique de la position.') },
       { id: 'driver', label: t('Ma tournée'), hint: t('Sur le téléphone du chauffeur : arrivée, livraison signée, photo, encaissement, échec et nouvelle date.') }] },
     ...only(mgr, [{ id: 'costs', icon: 'coins', label: t('Coûts et tarifs'), items: [
       { id: 'rates', label: t('Grilles tarifaires'), hint: t('Tarifs par zone, tranche de poids, distance et palette, minimum de perception, surcharge carburant.') },
@@ -54,7 +62,7 @@ export default function Logistics() {
   ];
   const SCREENS = {
     deliveries: <Deliveries />, kpi: <Dashboard />, planner: <Planner />, dispatch: <Dispatch />, trips: <TripsList />, rounds: <ManualRounds />, driver: <Driver />,
-    rates: <Rates />, invoices: <CarrierInvoices />, fleet: <Fleet />, carriers: <Carriers />, zones: <Zones />, network: <Network />, settings: <TmsSettings />,
+    geomap: <GeoDispatch />, geoadmin: <GeoAdmin />, geome: <GeoMe />, rates: <Rates />, invoices: <CarrierInvoices />, fleet: <Fleet />, carriers: <Carriers />, zones: <Zones />, network: <Network />, settings: <TmsSettings />,
   };
   return (
     <ModuleShell title={t('Logistique et transport')} groups={GROUPS} active={tab} onSelect={setTab}>

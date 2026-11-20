@@ -32,6 +32,12 @@ pl('demande de congé attend', 'demandes de congé attendent', ' une réponse', 
 pl('décision attend', 'décisions attendent', ' votre validation', ' votre validation');
 rule(/^Nouveau message de (.+) : l'IA est exclue pour ce contact, répondez-lui vous-même \(Suivi de l'IA\)\.$/, "Nouveau message de {name} : l'IA est exclue pour ce contact, répondez-lui vous-même (Suivi de l'IA).", ['name']);
 rule(/^Réponse à valider pour (.+) : l'IA a préparé un brouillon \(Suivi de l'IA\)\.$/, "Réponse à valider pour {name} : l'IA a préparé un brouillon (Suivi de l'IA).", ['name']);
+// Transport · géolocalisation et clients / fournisseurs typés : messages du serveur à variables (le motif entre parenthèses est traduit : variable « type »).
+rule(/^(.+) n'est pas disponible \((.+)\)\.$/, "{name} n'est pas disponible ({type}).", ['name', 'type']);
+rule(/^(.+) est en tournée : attendez la fin de sa mission ou choisissez un autre transporteur\.$/, '{name} est en tournée : attendez la fin de sa mission ou choisissez un autre transporteur.', ['name']);
+rule(/^Cette livraison n'est plus à planifier \((.+)\)\.$/, "Cette livraison n'est plus à planifier ({type}).", ['type']);
+rule(/^Type inconnu « (.+) » \(simple, temporaire, permanent, vip\)\.$/, 'Type inconnu « {x} » (simple, temporaire, permanent, vip).', ['x']);
+rule(/^Statut inconnu « (.+) »\.$/, 'Statut inconnu « {x} ».', ['x']);
 rule(/^Projet « (.+) »$/, 'Projet « {name} »', ['name']);
 rule(/^Risque élevé signalé sur le projet « (.+) » : (.+)$/, 'Risque élevé signalé sur le projet « {name} » : {title}', ['name', 'title']);
 rule(/^Budget · (.+)$/, 'Budget · {name}', ['name']);
