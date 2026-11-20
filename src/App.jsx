@@ -18,6 +18,7 @@ const KpiPrint = lazy(() => import('./pages/KpiPrint.jsx'));
 const Receipt = lazy(() => import('./pages/Receipt.jsx'));
 const Csat = lazy(() => import('./pages/Csat.jsx'));
 const Tracking = lazy(() => import('./pages/Tracking.jsx'));
+const Locate = lazy(() => import('./pages/Locate.jsx'));
 const QuoteAccept = lazy(() => import('./pages/QuoteAccept.jsx'));
 const PrivacyCenter = lazy(() => import('./privacy/PrivacyCenter.jsx'));
 const NotFound = lazy(() => import('./pages/NotFound.jsx'));
@@ -66,6 +67,7 @@ export default function App() {
           <Route path="/essai" element={<Essai />} />
           <Route path="/satisfaction/:token" element={<Csat />} />
           <Route path="/suivi/:token" element={<Tracking />} />
+          <Route path="/localiser/:token" element={<Locate />} />
           <Route path="/devis/:token" element={<QuoteAccept />} />
         </Route>
         <Route element={<StyleLayout group="ws" body="ws" />}>

@@ -1,6 +1,7 @@
 import { faStar as faStarOutline } from '@fortawesome/free-regular-svg-icons';
 import {
   faAddressBook,
+  faAddressCard,
   faBoxOpen,
   faCalculator,
   faCreditCard,
@@ -271,6 +272,7 @@ registerIcons({
   'plug': faPlug,
   'headset': faHeadset,
   'address-book': faAddressBook,
+  'address-card': faAddressCard,
   'boxes-stacked': faBoxesStacked,
   'building-columns': faBuildingColumns,
   'chart-line': faChartLine,
