@@ -49,7 +49,7 @@ body.ai-open.nav-mini .app{grid-template-columns:var(--side-w-mini) minmax(0,1fr
 .app-mini-btn:hover{background:var(--nav-bg-2);color:#fff}
 .ws-me{display:flex;gap:var(--sp-2);align-items:center;padding:var(--sp-2) var(--sp-3);border-radius:var(--radius-lg);background:var(--nav-bg-2);border:1px solid var(--nav-line)}
 .ws-me>div{flex:1;min-width:0}.ws-me b{display:block;color:#fff;font-size:var(--fs-md);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ws-me small{color:var(--nav-muted);font-size:var(--fs-xs)}
-.ws-me .out{flex:none;display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:var(--radius-sm);background:transparent;color:var(--nav-muted);cursor:pointer}
+.ws-me .out{flex:none;display:grid;place-items:center;width:32px;height:32px;padding:0;margin:0;border:0;border-radius:var(--radius-sm);background:transparent;color:var(--nav-muted);cursor:pointer}
 .ws-me .out:hover{background:var(--nav-line);color:#fff}
 .app-side :focus-visible{outline-color:#fff}
 /* Menu réduit (icônes seules) */
