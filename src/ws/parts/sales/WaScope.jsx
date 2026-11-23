@@ -124,7 +124,7 @@ export function WaScope() {
         <p className="muted">{t("Servent aux statistiques (la source « publicité » apparaît aussi dans le module Commercial).")}</p>
         <div className="wsc-stats">
           {['ad', 'organic', 'import', 'manual'].map((k) => <div className="stat" key={k}><b>{String(d.stats.bySource[k] || 0)}</b><span>{t(SOURCE_LABEL[k])}</span></div>)}
-          <div className="stat"><b>{String(d.stats.held)}</b><span>{t('conversations hors périmètre')}</span></div>
+          <div className="stat"><b>{String(d.stats.held)}</b><span>{t('hors périmètre')}</span></div>
         </div>
         {d.stats.campaigns.length ? d.stats.campaigns.map((c, i) => <div className="line" key={i}><span><b>{c.campaign ? '#' + c.campaign : t('Annonce {id}', { id: c.adId })}</b>{c.adId && c.campaign ? ' · ' + c.adId : ''}{c.detail ? <small>{' · ' + c.detail}</small> : null}</span><span>{t('{n} contact(s)', { n: c.contacts })}</span></div>) : null}
         <form className="wsc-add" onSubmit={markAd}>

@@ -35,6 +35,7 @@ export default {
   "Aucune exception.": "Keine Ausnahmen.",
   "Origine des contacts": "Herkunft der Kontakte",
   "Servent aux statistiques (la source « publicité » apparaît aussi dans le module Commercial).": "Dienen der Statistik (die Quelle „Werbung“ erscheint auch im Modul Vertrieb).",
+  "hors périmètre": "außerhalb der Reichweite",
   "conversations hors périmètre": "Unterhaltungen außerhalb der Reichweite",
   "Annonce {id}": "Anzeige {id}",
   "Marquer un contact « publicité »": "Kontakt als „Werbung“ markieren",

@@ -35,6 +35,7 @@ export default {
   "Aucune exception.": "No exceptions.",
   "Origine des contacts": "Contact origin",
   "Servent aux statistiques (la source « publicité » apparaît aussi dans le module Commercial).": "Used for statistics (the “advertising” source also appears in the Sales module).",
+  "hors périmètre": "out of scope",
   "conversations hors périmètre": "conversations out of scope",
   "Annonce {id}": "Ad {id}",
   "Marquer un contact « publicité »": "Mark a contact “advertising”",
