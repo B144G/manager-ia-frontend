@@ -92,7 +92,7 @@ export function SpaceSidebar({ spaces, cur, curMod, orgId, orgs, info, user, ini
       ) : null}
       <button type="button" className="app-find" onClick={openPalette} aria-label={t('Rechercher un écran…')}><Icon name="search" /><span>{t('Rechercher un écran…')}</span><kbd>Ctrl K</kbd></button>
       <nav className="ws-nav" aria-label={t('Écrans de mon espace')}>
-        <div className="ws-label">{t('MON ESPACE')}</div>
+        {cur ? <div className="ws-label">{t('MON ESPACE')}</div> : null}
         <ul>
           {cur ? (
             <li className="app-li"><Link to={`/app/${orgId}/home/${cur.id}`} className={curMod === 'home' ? 'on' : ''} aria-current={curMod === 'home' ? 'page' : undefined} title={mini ? t('Tableau de bord') : undefined}><Icon name="house" fixedWidth /><span className="nl">{t('Tableau de bord')}</span></Link></li>
@@ -155,13 +155,15 @@ export function VisitorBanner({ space, orgId, home }) {
   );
 }
 const WRITE_SEL = 'button.primary,button.danger,button[type="submit"],input[type="submit"]';
+// Boutons-liens d'écriture (« Modifier », « Supprimer »…) : désactivés à l'affichage ; le serveur refuse de toute façon toute écriture.
+const WRITE_WORDS = /^(modifier|supprimer|retirer|archiver|edit|delete|remove|bearbeiten|löschen|entfernen|editar|eliminar|quitar)\b/i;
 export function VisitorGuard({ on, children }) {
   const t = useT();
   const box = useRef(null);
   useEffect(() => {
     const el = box.current;
     if (!el || !on) return undefined;
-    const lock = () => el.querySelectorAll(WRITE_SEL).forEach((b) => { if (!b.dataset.spLock) { b.dataset.spLock = '1'; b.disabled = true; b.setAttribute('aria-disabled', 'true'); b.title = t('Consultation seule'); } });
+    const lock = () => [...el.querySelectorAll(WRITE_SEL), ...[...el.querySelectorAll('button.link,button.btn')].filter((b) => WRITE_WORDS.test(b.textContent.trim()))].forEach((b) => { if (!b.dataset.spLock) { b.dataset.spLock = '1'; b.disabled = true; b.setAttribute('aria-disabled', 'true'); b.title = t('Consultation seule'); } });
     lock();
     const mo = new MutationObserver(lock);
     mo.observe(el, { childList: true, subtree: true });
