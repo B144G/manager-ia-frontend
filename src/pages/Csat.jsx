@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Logo from '../components/Logo.jsx';
+import OrgLogo, { PublicFoot } from '../components/OrgLogo.jsx';
 import LangSwitch from '../components/LangSwitch.jsx';
 import { rq } from '../lib/api.js';
 import { useT } from '../lib/i18n.jsx';
@@ -24,7 +24,7 @@ export default function Csat() {
   return (
     <div className="au-main" style={{ minHeight: '100vh' }}>
       <div style={{ position: 'absolute', top: 10, right: 12, zIndex: 3 }}><LangSwitch /></div>
-      <Logo className="au-logo" style={{ display: 'flex' }} />
+      <OrgLogo kind="csat" token={token} />
       <div className="au-card">
         <h1>{t('Votre avis')}</h1>
         {info && !done && !info.answered ? (
@@ -42,6 +42,7 @@ export default function Csat() {
         {info && info.answered && !done ? <p>{t('Merci, votre avis a déjà été enregistré.')}</p> : null}
         {!info && err ? <p className="hm-err" role="alert">{tsrv(err)}</p> : null}
       </div>
+      <PublicFoot />
     </div>
   );
 }

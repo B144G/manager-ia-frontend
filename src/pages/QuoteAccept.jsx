@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Logo from '../components/Logo.jsx';
+import OrgLogo, { PublicFoot } from '../components/OrgLogo.jsx';
 import LangSwitch from '../components/LangSwitch.jsx';
 import { rq } from '../lib/api.js';
 import { getLocale, useT } from '../lib/i18n.jsx';
@@ -31,7 +31,7 @@ export default function QuoteAccept() {
   return (
     <div className="au-main" style={{ minHeight: '100vh' }}>
       <div style={{ position: 'absolute', top: 10, right: 12, zIndex: 3 }}><LangSwitch /></div>
-      <Logo className="au-logo" style={{ display: 'flex' }} />
+      <OrgLogo kind="quote" token={token} />
       <div className="au-card" style={{ width: 'min(760px,100%)' }}>
         <h1>{t('Votre devis')}</h1>
         {q ? (
@@ -67,6 +67,7 @@ export default function QuoteAccept() {
         {err ? <p className="hm-err" role="alert">{tsrv(err)}</p> : null}
         {!q && !err ? <p>{t('Chargement…')}</p> : null}
       </div>
+      <PublicFoot />
     </div>
   );
 }

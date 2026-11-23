@@ -42,19 +42,24 @@ export function brandVars(hex) {
 
 export function applyPrefs() {
   const root = document.documentElement;
-  if (state.theme === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', state.theme);
+  const theme = state.theme === 'auto' && serverTheme ? serverTheme : state.theme; // le thème par défaut de l'entreprise ne s'applique que si la personne n'a pas choisi le sien
+  if (theme === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', theme);
   root.setAttribute('data-density', state.density);
   const org = currentOrgBrand();
   const pre = ACCENTS.find((a) => a[0] === state.accent);
-  const hex = org && org.color ? org.color : pre ? pre[1] : /^#[0-9a-f]{6}$/i.test(state.accent) ? state.accent : '#4f46e5';
+  const hex = serverColor || (org && org.color ? org.color : pre ? pre[1] : /^#[0-9a-f]{6}$/i.test(state.accent) ? state.accent : '#4f46e5');
   const v = brandVars(hex);
   root.style.setProperty('--brand', v.brand); root.style.setProperty('--on-brand', v.onBrand);
   root.style.setProperty('--brand-dk', v.brandDk); root.style.setProperty('--on-brand-dk', v.onBrandDk);
   try { // couleur de la barre du navigateur (téléphone)
-    const dark = state.theme === 'dark' || (state.theme === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const dark = theme === 'dark' || (theme === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
     document.querySelectorAll('meta[name="theme-color"]').forEach((m) => { m.setAttribute('content', dark ? '#0a101e' : v.brand); });
   } catch { /* ignoré */ }
 }
+
+/* Marque de l'entreprise (réglée par l'administrateur, voir src/lib/brand.js) : couleur principale et thème par défaut. */
+let serverColor = ''; let serverTheme = '';
+export function setServerBrand({ color, theme }) { serverColor = color || ''; serverTheme = theme || ''; applyPrefs(); emit(); }
 
 let orgId = null;
 const currentOrgBrand = () => (orgId && state.brand[orgId]) || null;

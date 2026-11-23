@@ -4,6 +4,7 @@ import LangSwitch from '../../components/LangSwitch.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { Icon } from '../../lib/fa.jsx';
 import { toggleFavorite, usePrefs } from '../../lib/prefs.js';
+import { assetUrl, useBrand } from '../../lib/brand.js';
 import { MODULE_ICONS } from '../registry.js';
 import { FeedbackLink } from '../Feedback.jsx';
 import { GuideButton } from '../guide/GuideContext.jsx';
@@ -12,6 +13,8 @@ import { useScreens, openPalette } from './screens.js';
 /* Éléments du cadre d'application : barre latérale, en-tête (fil d'Ariane, recherche, actions), pied de page, barre de navigation basse (téléphone). */
 
 export function BrandMark({ brand }) {
+  const cb = useBrand(); // logo de l'entreprise (réglé par l'administrateur) ; à défaut, celui choisi sur cet appareil, puis le logo d'origine
+  if (cb.logoUrl) return <img className="app-logo-img" src={assetUrl(cb.logoUrl)} alt="" />;
   if (brand && brand.logo) return <img className="app-logo-img" src={brand.logo} alt="" />;
   return <img className="app-logo-img" src="/favicon.svg" alt="" />;
 }
@@ -20,6 +23,8 @@ export function Sidebar({ mods, cur, orgId, orgs, info, user, badgeOf, initials,
   const t = useT();
   const p = usePrefs();
   const brand = p.brand[orgId];
+  const cb = useBrand();
+  const named = cb.customized && (cb.mode !== 'brij' || cb.logoUrl); // nom et/ou logo de l'entreprise à la place de « Brij-IA »
   const fav = mods.filter((m) => p.favorites.includes(m.id));
   const rest = mods.filter((m) => !p.favorites.includes(m.id));
   const link = (m) => {
@@ -38,7 +43,7 @@ export function Sidebar({ mods, cur, orgId, orgs, info, user, badgeOf, initials,
   return (
     <aside className="app-side" id="ws-side" aria-label={t('Menu principal')}>
       <div className="app-side-h">
-        <Link className="app-logo" to="/" aria-label="Brij-IA"><BrandMark brand={brand} /><span className="app-logo-t">{brand && brand.logo ? info.org.name : <>Brij<b>-IA</b></>}</span></Link>
+        <Link className="app-logo" to="/" aria-label={cb.customized && cb.mode !== 'brij' ? cb.name : 'Brij-IA'}><BrandMark brand={brand} /><span className="app-logo-t">{cb.customized && cb.mode !== 'brij' ? cb.name : brand && brand.logo ? info.org.name : cb.logoUrl && named ? info.org.name : <>Brij<b>-IA</b></>}</span></Link>
         <button type="button" className="ws-close app-x" aria-label={t('Fermer le menu')} onClick={onClose}><Icon name="close" /></button>
       </div>
       <div className="ws-org">
@@ -108,12 +113,15 @@ function AskBar({ onAsk }) {
 
 export function Footer({ orgId, onFeedback }) {
   const t = useT();
+  const cb = useBrand();
+  const own = cb.customized && cb.mode !== 'brij'; // marque de l'entreprise : son nom, son texte de pied de page, « Propulsé par Brij-IA » si elle le souhaite
   return (
     <footer className="app-foot">
-      <span>© {new Date().getFullYear()} Brij-IA</span>
+      <span>© {new Date().getFullYear()} {own ? cb.name : 'Brij-IA'}{own && cb.footerText ? ' · ' + cb.footerText : ''}{own && cb.poweredBy ? <small className="muted"> · {t('Propulsé par {name}', { name: cb.platformName })}</small> : null}</span>
       <nav aria-label={t('Informations légales')}>
         <Link to="/confidentialite">{t('Confidentialité')}</Link>
         <Link to="/conditions">{t('Conditions')}</Link>
+        {own ? <Link to="/mentions-legales">{t('Mentions légales')}</Link> : null}
         <Link to={`/app/${orgId}/support`}>{t('Aide et support')}</Link>
         {onFeedback ? <FeedbackLink onClick={onFeedback} /> : null}
       </nav>

@@ -13,6 +13,7 @@ import { hasModule, moduleComponent } from './registry.js';
 import { Empty, Form, Icon, Loading } from './ui.jsx';
 import { GuideProvider } from './guide/GuideContext.jsx';
 import { setActiveOrg, setPrefs, usePrefs } from '../lib/prefs.js';
+import { brandHide, brandOrder, setBrand, useBrand } from '../lib/brand.js';
 import { BottomNav, Footer, Sidebar, TopBar } from './shell/Frame.jsx';
 import Palette from './shell/Palette.jsx';
 import Personalize, { sortMods } from './shell/Personalize.jsx';
@@ -90,7 +91,9 @@ function Shell() {
   const openSecurity = () => modal(t('Sécurité du compte'), () => <AccountSecurity />, { wide: true });
   const openFeedback = () => modal(t('Votre avis'), () => <FeedbackPanel orgId={orgId} />, { wide: true });
   const main = useRef(null);
-  const mods = sortMods(info.modules.filter((m) => hasModule(m.id)), p.order);
+  const cb = useBrand();
+  const mods = brandHide(sortMods(brandOrder(info.modules.filter((m) => hasModule(m.id)), cb), p.order), cb); // ordre et visibilité choisis par l'entreprise, puis ordre personnel
+  useEffect(() => () => setBrand(null), []); // en quittant l'espace de travail : affichage d'origine
   let cur = route ? route.mod : 'dashboard';
   if (!mods.some((m) => m.id === cur)) cur = 'dashboard';
   const Mod = moduleComponent(cur);
