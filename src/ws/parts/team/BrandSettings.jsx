@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { trBase, useT } from '../../../lib/i18n.jsx';
 import { brandVars } from '../../../lib/prefs.js';
 import { DASH_WIDGETS, assetUrl, contrastWhite, setBrand } from '../../../lib/brand.js';
+import { PRODUCT } from '../../../lib/product.js';
 import { hasModule } from '../../registry.js';
 import { Alert, Badge, Button, Field, Icon, Segmented } from '../../ui/index.jsx';
 import { Loaded, useLoad } from '../../ui.jsx';
@@ -46,8 +47,8 @@ function Editor({ data, reload }) {
   const ratio = cfg.color ? contrastWhite(cfg.color) : 0;
   const lowContrast = Boolean(cfg.color) && ratio < 4.5;
   const dirty = JSON.stringify(cfg) !== JSON.stringify(base) || logo || fav;
-  const name = cfg.productName || (cfg.mode === 'white' ? info.org.name : 'Brij-IA');
-  const shownName = cfg.mode === 'brij' && !cfg.productName ? 'Brij-IA' : name;
+  const name = cfg.productName || (cfg.mode === 'white' ? info.org.name : PRODUCT.name);
+  const shownName = cfg.mode === 'brij' && !cfg.productName ? PRODUCT.name : name;
 
   const pick = async (e, kind) => {
     const f = e.target.files && e.target.files[0]; e.target.value = '';
@@ -103,10 +104,10 @@ function Editor({ data, reload }) {
   const previewMods = modOrder.filter((id) => !hidden.has(id)).slice(0, 5);
   const voc = (k) => (cfg.vocab[k] && cfg.vocab[k].fr) || trBase(k);
   const prevTitle = (id) => { const m = mods.find((x) => x.id === id); return m ? voc(m.title) : id; };
-  const assistant = cfg.assistantName || 'Brij-IA';
-  const mailSig = cfg.mode === 'brij' ? 'Message envoyé avec Brij-IA' : cfg.mode === 'powered' ? `Message envoyé avec ${shownName}, propulsé par Brij-IA` : cfg.productName ? `Message envoyé avec ${shownName}` : '';
+  const assistant = cfg.assistantName || PRODUCT.assistantName;
+  const mailSig = cfg.mode === 'brij' ? 'Message envoyé avec ' + PRODUCT.name : cfg.mode === 'powered' ? `Message envoyé avec ${shownName}, propulsé par ${PRODUCT.name}` : cfg.productName ? `Message envoyé avec ${shownName}` : '';
   const pdfFoot = cfg.pdfFooter || info.org.name;
-  const pdfMention = cfg.mode === 'brij' ? ' · Brij-IA' : cfg.mode === 'powered' ? ' · Propulsé par Brij-IA' : '';
+  const pdfMention = cfg.mode === 'brij' ? ` · ${PRODUCT.name}` : cfg.mode === 'powered' ? ` · ${PRODUCT.poweredByLabel} ${PRODUCT.name}` : '';
 
   const ModeOpt = ({ id, title, text }) => (
     <label className={'br-mode' + (cfg.mode === id ? ' on' : '')}>
@@ -134,7 +135,7 @@ function Editor({ data, reload }) {
             {(p) => <input {...p} value={cfg.productName} maxLength={60} onChange={(e) => set({ productName: e.target.value, mode: e.target.value && cfg.mode === 'brij' ? 'powered' : cfg.mode })} placeholder={info.org.name} />}
           </Field>
           <Field label={t("Nom de l'assistant IA")} hint={t("L'assistant reste toujours une IA : il ne se fait jamais passer pour une personne.")}>
-            {(p) => <input {...p} value={cfg.assistantName} maxLength={40} onChange={(e) => set({ assistantName: e.target.value })} placeholder="Brij-IA" />}
+            {(p) => <input {...p} value={cfg.assistantName} maxLength={40} onChange={(e) => set({ assistantName: e.target.value })} placeholder={PRODUCT.assistantName} />}
           </Field>
           <div role="radiogroup" aria-label={t('Mention de la plateforme')} className="br-modes">
             <ModeOpt id="brij" title={t('Brij-IA, comme aujourd\'hui')} text={t('Le nom Brij-IA reste affiché.')} />
@@ -252,7 +253,7 @@ function Editor({ data, reload }) {
       <aside className="br-prev" aria-label={t('Aperçu en direct')} style={{ '--b': pv.brand, '--on-b': pv.onBrand }}>
         <h3>{t('Aperçu en direct')}</h3>
         <div className="br-card side">
-          <div className="br-pl"><span className="br-pi">{logoSrc ? <img src={logoSrc} alt="" /> : <img src="/favicon.svg" alt="" />}</span><b>{cfg.mode === 'brij' && !cfg.productName ? <>Brij<i>-IA</i></> : shownName}</b></div>
+          <div className="br-pl"><span className="br-pi">{logoSrc ? <img src={logoSrc} alt="" /> : <img src="/favicon.svg" alt="" />}</span><b>{cfg.mode === 'brij' && !cfg.productName ? <>{PRODUCT.logoMarkup[0]}<i>{PRODUCT.logoMarkup[1]}</i></> : shownName}</b></div>
           <ul>{previewMods.map((id, i) => <li key={id} className={i === 0 ? 'on' : ''}>{prevTitle(id)}</li>)}</ul>
         </div>
         <div className="br-card">
@@ -271,7 +272,7 @@ function Editor({ data, reload }) {
           <small className="muted">—<br />{info.org.name}{mailSig ? <><br />{mailSig}</> : null}</small>
         </div>
         <div className="br-card foot">
-          <small>© {new Date().getFullYear()} {shownName}{cfg.footerText ? ' · ' + cfg.footerText : ''}{cfg.mode === 'powered' ? ' · ' + t('Propulsé par {name}', { name: 'Brij-IA' }) : ''}{cfg.mode !== 'brij' ? ' · ' + t('Mentions légales') : ''}</small>
+          <small>© {new Date().getFullYear()} {shownName}{cfg.footerText ? ' · ' + cfg.footerText : ''}{cfg.mode === 'powered' ? ' · ' + t('Propulsé par {name}', { name: PRODUCT.name }) : ''}{cfg.mode !== 'brij' ? ' · ' + t('Mentions légales') : ''}</small>
         </div>
         <small className="muted">{t('Organisation : {n}', { n: info.org.name })} · #{orgId}</small>
       </aside>

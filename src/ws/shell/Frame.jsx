@@ -5,6 +5,7 @@ import { useT } from '../../lib/i18n.jsx';
 import { Icon } from '../../lib/fa.jsx';
 import { toggleFavorite, usePrefs } from '../../lib/prefs.js';
 import { assetUrl, useBrand } from '../../lib/brand.js';
+import { PRODUCT } from '../../lib/product.js';
 import { MODULE_ICONS } from '../registry.js';
 import { FeedbackLink } from '../Feedback.jsx';
 import { GuideButton } from '../guide/GuideContext.jsx';
@@ -43,7 +44,7 @@ export function Sidebar({ mods, cur, orgId, orgs, info, user, badgeOf, initials,
   return (
     <aside className="app-side" id="ws-side" aria-label={t('Menu principal')}>
       <div className="app-side-h">
-        <Link className="app-logo" to="/" aria-label={cb.customized && cb.mode !== 'brij' ? cb.name : 'Brij-IA'}><BrandMark brand={brand} /><span className="app-logo-t">{cb.customized && cb.mode !== 'brij' ? cb.name : brand && brand.logo ? info.org.name : cb.logoUrl && named ? info.org.name : <>Brij<b>-IA</b></>}</span></Link>
+        <Link className="app-logo" to="/" aria-label={cb.customized && cb.mode !== 'brij' ? cb.name : PRODUCT.name}><BrandMark brand={brand} /><span className="app-logo-t">{cb.customized && cb.mode !== 'brij' ? cb.name : brand && brand.logo ? info.org.name : cb.logoUrl && named ? info.org.name : <>{PRODUCT.logoMarkup[0]}<b>{PRODUCT.logoMarkup[1]}</b></>}</span></Link>
         <button type="button" className="ws-close app-x" aria-label={t('Fermer le menu')} onClick={onClose}><Icon name="close" /></button>
       </div>
       <div className="ws-org">
@@ -117,7 +118,7 @@ export function Footer({ orgId, onFeedback }) {
   const own = cb.customized && cb.mode !== 'brij'; // marque de l'entreprise : son nom, son texte de pied de page, « Propulsé par Brij-IA » si elle le souhaite
   return (
     <footer className="app-foot">
-      <span>© {new Date().getFullYear()} {own ? cb.name : 'Brij-IA'}{own && cb.footerText ? ' · ' + cb.footerText : ''}{own && cb.poweredBy ? <small className="muted"> · {t('Propulsé par {name}', { name: cb.platformName })}</small> : null}</span>
+      <span>© {new Date().getFullYear()} {own ? cb.name : PRODUCT.name}{own && cb.footerText ? ' · ' + cb.footerText : ''}{own && cb.poweredBy ? <small className="muted"> · {t('Propulsé par {name}', { name: cb.platformName })}</small> : null}</span>
       <nav aria-label={t('Informations légales')}>
         <Link to="/confidentialite">{t('Confidentialité')}</Link>
         <Link to="/conditions">{t('Conditions')}</Link>
