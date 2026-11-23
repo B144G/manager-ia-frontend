@@ -50,7 +50,7 @@ export default function MeetingForm({ meeting, detail, prefillDate, done, cancel
     place: meeting ? meeting.place : '', link: meeting ? meeting.link : '', objective: meeting ? meeting.objective : '', confidential: meeting ? meeting.confidential : false,
     reminderMin: meeting ? meeting.reminderMin : 60, secretaryId: meeting && meeting.secretaryId ? String(meeting.secretaryId) : '', projectId: meeting && meeting.projectId ? String(meeting.projectId) : '',
     freq: '', count: 4, send: true, notify: false, urgency: meeting ? meeting.urgency : 'normal', chairId: meeting && meeting.chairId ? String(meeting.chairId) : '', typeId: meeting && meeting.typeId ? String(meeting.typeId) : '',
-    branchId: meeting && meeting.branchId ? String(meeting.branchId) : '', departmentId: meeting && meeting.departmentId ? String(meeting.departmentId) : '', exceptions: [], skipHolidays: false, newExc: '', force: false,
+    branchId: meeting && meeting.branchId ? String(meeting.branchId) : '', departmentId: meeting && meeting.departmentId ? String(meeting.departmentId) : '', exceptions: [], skipHolidays: false, newExc: '', force: false, autoRoom: !meeting,
   }));
   const [sites, setSites] = useState(() => new Set(detail && detail.scope ? detail.scope.sites : []));
   const [depts, setDepts] = useState(() => new Set(detail && detail.scope ? detail.scope.depts : []));
@@ -113,7 +113,7 @@ export default function MeetingForm({ meeting, detail, prefillDate, done, cancel
     if (!f.title.trim()) { setErr(t('Indiquez le titre de la réunion.')); return; }
     const body = {
       title: f.title, type: f.type, date: f.date, time: f.time, durationMin: Number(f.durationMin), place: f.place, link: f.link, objective: f.objective, confidential: f.confidential, reminderMin: Number(f.reminderMin),
-      secretaryId: f.secretaryId || null, projectId: f.projectId || null, urgency: f.urgency, chairId: f.chairId || null, branchId: f.branchId || null, departmentId: f.departmentId || null, sites: [...sites], departments: [...depts], typeId: f.typeId || undefined, force: f.force || undefined,
+      secretaryId: f.secretaryId || null, projectId: f.projectId || null, urgency: f.urgency, chairId: f.chairId || null, branchId: f.branchId || null, departmentId: f.departmentId || null, sites: [...sites], departments: [...depts], typeId: f.typeId || undefined, force: f.force || undefined, autoRoom: !edit && !f.link && f.autoRoom ? true : undefined,
       participants: [...[...members].map((userId) => ({ userId })), ...guests.filter((g) => g.name.trim() || g.email.trim() || g.phone.trim()).map((g) => ({ name: g.name, email: g.email, phone: g.phone }))],
       agenda: agenda.filter((a) => a.title.trim()).map((a) => ({ id: a.id || undefined, title: a.title, ownerId: a.ownerId || null, ownerName: a.ownerName || '', durationMin: Number(a.durationMin) || 0, kind: a.kind || 'discuss' })),
     };
@@ -166,6 +166,7 @@ export default function MeetingForm({ meeting, detail, prefillDate, done, cancel
           ) : null}
           {branches.length > 1 ? <div><b>{t('Autres sites concernés (réunion multi-sites)')}</b><div className="mtg-row" role="group" aria-label={t('Autres sites concernés')}>{branches.filter((b) => String(b.id) !== f.branchId).map((b) => <label className="mtg-check" key={b.id}><input type="checkbox" checked={sites.has(b.id)} onChange={() => toggleSet(setSites, b.id)} />{b.name}</label>)}</div></div> : null}
           {departments.length > 1 ? <div><b>{t('Autres services concernés (réunion inter-services)')}</b><div className="mtg-row" role="group" aria-label={t('Autres services concernés')}>{departments.filter((b) => String(b.id) !== f.departmentId).map((b) => <label className="mtg-check" key={b.id}><input type="checkbox" checked={depts.has(b.id)} onChange={() => toggleSet(setDepts, b.id)} />{b.name}</label>)}</div></div> : null}
+          {!edit && !f.link ? <label className="mtg-check"><input type="checkbox" checked={f.autoRoom} onChange={(e) => set('autoRoom', e.target.checked)} />{t('Créer une salle de visioconférence avec partage d’écran (Jitsi Meet)')}</label> : null}
           <label className="mtg-check"><input type="checkbox" checked={f.confidential} onChange={(e) => set('confidential', e.target.checked)} />{t('Réunion confidentielle : visible seulement par ses participants')}</label>
           {!edit ? (
             <div className="mtg-grid2">

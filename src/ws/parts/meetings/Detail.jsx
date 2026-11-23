@@ -188,13 +188,27 @@ function Info({ j, reload, members, orgNames }) {
         {m.objective ? <p className="mtg-pre" style={{ marginTop: 12 }}>{m.objective}</p> : null}
       </Card>
 
+      {m.status !== 'cancelled' ? (
+        <Card title={t('Visioconférence et partage d’écran')}>
+          <div className="mtg-sec">
+            {m.link ? (
+              <>
+                <div className="mtg-row"><Button variant="primary" icon="video" href={m.link} target="_blank" rel="noopener noreferrer">{t("Rejoindre et partager l'écran")}</Button>{r.manage && m.linkKind !== 'jitsi' ? <small className="mtg-muted">{t('Lien {k}', { k: L.link[m.linkKind] || '' })}</small> : null}</div>
+                <p className="mtg-muted">{t("Une fois dans la salle, utilisez le bouton « Partager l'écran » de la barre d'outils : tous les participants voient votre écran, quel que soit leur nombre (limite du service de visioconférence choisi).")}</p>
+              </>
+            ) : <p className="mtg-muted">{t("Aucune salle de visioconférence. Créez-en une en un clic : elle permet le partage d'écran pendant la réunion.")}</p>}
+            {r.manage && !m.link ? <div><Button icon="video" onClick={() => oapi('POST', `/meetings/${m.id}/room`, {}).then(() => { toast(t('Salle créée : les participants sont prévenus.')); reload(); }).catch(fail)}>{t('Créer la salle (Jitsi Meet)')}</Button></div> : null}
+          </div>
+        </Card>
+      ) : null}
+
       {r.respond ? (
         <Alert tone={mine && mine.response === 'pending' ? 'warn' : 'info'} title={t('Votre réponse : {r}', { r: mine ? L.resp[mine.response] : '' })}>
           <div className="mtg-row" style={{ marginTop: 6 }}><Button size="sm" variant="primary" onClick={() => respond(null)}>{t('Répondre')}</Button>{mine && mine.reason ? <span className="mtg-muted">{mine.reason}</span> : null}</div>
         </Alert>
       ) : null}
 
-      <Card title={t('Participants ({n})', { n: j.participants.length })} actions={r.manage ? <Button size="sm" icon="user-plus" onClick={() => modal(t('Ajouter des participants'), (close) => <AddPeople close={close} detail={j} members={members} meeting={m} onDone={reload} />)}>{t('Ajouter')}</Button> : null}>
+      <Card title={t('Participants ({n})', { n: j.participants.length })} subtitle={j.participants.length >= j.maxParticipants * 0.9 ? t('Proche de la limite de {n} participants (réglable par le responsable du compte).', { n: j.maxParticipants }) : undefined} actions={r.manage ? <Button size="sm" icon="user-plus" onClick={() => modal(t('Ajouter des participants'), (close) => <AddPeople close={close} detail={j} members={members} meeting={m} onDone={reload} />)}>{t('Ajouter')}</Button> : null}>
         <ul className="mtg-list">{j.participants.map((p) => (
           <li className="mtg-person" key={p.id}>
             <span><b>{p.name}</b> {p.kind === 'guest' ? <Badge tone="outline">{t('Invité')}</Badge> : null}{!p.required ? <Badge tone="outline">{t('Facultatif')}</Badge> : null}

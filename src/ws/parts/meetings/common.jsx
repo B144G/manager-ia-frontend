@@ -33,7 +33,7 @@ export function useLabels() {
     role: { organizer: t('Organisateur'), secretary: t('Secrétaire de séance'), chair: t('Président de séance'), assignee: t('Responsable'), carrier: t('Porteur') },
     roles4: { member: t('Membre'), manager: t('Responsable'), admin: t('Administrateur'), owner: t('Propriétaire') },
     action: { open: t('À faire'), done: t('Faite'), cancelled: t('Annulée') },
-    link: { meet: 'Google Meet', zoom: 'Zoom', teams: 'Teams', whatsapp: 'WhatsApp', other: t('Lien') },
+    link: { meet: 'Google Meet', zoom: 'Zoom', teams: 'Teams', jitsi: 'Jitsi Meet', whatsapp: 'WhatsApp', other: t('Lien') },
   }), [t]);
 }
 export const REMINDERS = [0, 15, 30, 60, 120, 1440, 2880];

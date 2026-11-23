@@ -126,7 +126,7 @@ export default function SettingsScreen() {
   const c = cfg || s.config;
   const save = () => {
     setBusy(true);
-    oapi('PUT', '/meetings/settings', { convene: c.convene, validate: c.validate, distinct: c.distinct, quorum: c.quorum || {}, noticeH: c.noticeH, blockConflicts: c.blockConflicts, signOrdered: c.signOrdered }).then((r) => { setCfg(r.config); setWarn(r.warnings || []); toast(t('Réglages enregistrés.')); }).catch(fail).finally(() => setBusy(false));
+    oapi('PUT', '/meetings/settings', { convene: c.convene, validate: c.validate, distinct: c.distinct, quorum: c.quorum || {}, noticeH: c.noticeH, blockConflicts: c.blockConflicts, signOrdered: c.signOrdered, maxParticipants: Number(c.maxParticipants) || 60 }).then((r) => { setCfg(r.config); setWarn(r.warnings || []); toast(t('Réglages enregistrés.')); }).catch(fail).finally(() => setBusy(false));
   };
   return (
     <div className="mtg">
@@ -140,6 +140,9 @@ export default function SettingsScreen() {
       <QuorumEditor value={c.quorum} onChange={(v) => setCfg({ ...c, quorum: v })} />
       <Card title={t('Préavis minimal des convocations')} subtitle={t("Délai minimal entre la convocation et la réunion ; une réunion urgente ou critique a un préavis réduit. Un préavis trop court déclenche un avertissement.")}>
         <div className="mtg-grid2">{[['normal', t('Réunion normale (heures)')], ['urgent', t('Réunion urgente (heures)')], ['critical', t('Réunion critique (heures)')]].map(([k, lab]) => <Field key={k} label={lab}>{(p) => <input {...p} type="number" min="0" max="720" value={(c.noticeH || {})[k]} onChange={(e) => setCfg({ ...c, noticeH: { ...c.noticeH, [k]: num(e.target.value) } })} />}</Field>)}</div>
+      </Card>
+      <Card title={t('Limites')} subtitle={t('Nombre maximal de participants par réunion (de 10 à 500). Le partage d’écran se fait dans la salle de visioconférence, quel que soit le nombre de membres.')}>
+        <Field label={t('Participants par réunion')}>{(p) => <input {...p} type="number" min="10" max="500" value={c.maxParticipants || 60} onChange={(e) => setCfg({ ...c, maxParticipants: num(e.target.value) })} />}</Field>
       </Card>
       <Card title={t("Conflits d'agenda et signatures")}>
         <div className="mtg-sec">
