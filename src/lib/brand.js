@@ -16,7 +16,7 @@ export const BRAND_DEFAULT = Object.freeze({
 });
 
 /* Textes qui parlent de la plateforme elle-même (son éditeur, ses conditions, le partage de données avec elle) : le nom « Brij-IA » y reste. */
-const PLATFORM_ONLY = /partager la position|fondateur de Brij-IA|administration de Brij-IA|Informations et offres|Ils utilisent|ourni par Brij-IA|ournis par Brij-IA|Un utilisateur de Brij-IA|améliorer Brij-IA|Recommanderiez-vous|abonnement Brij-IA|Offre gratuite|Bienvenue sur Brij-IA|responsable de traitement|éditeur/;
+const PLATFORM_ONLY = /partager la position|fondateur de Brij-IA|administration de Brij-IA|Informations et offres|Ils utilisent|ourni par Brij-IA|ournis par Brij-IA|Un utilisateur de Brij-IA|améliorer Brij-IA|Recommanderiez-vous|abonnement Brij-IA|Offre gratuite|Bienvenue sur Brij-IA|responsable de traitement|éditeur|Propulsé par|comme aujourd'hui|reste affiché|Remplace « Brij-IA »|garder Brij-IA/;
 /* Textes où « Brij-IA » désigne l'assistant (et non le logiciel) : on y met le nom choisi pour l'assistant. */
 const ASSISTANT_TEXT = /^(Demandez à|Demander à|Point de situation de|Alertes de|Ce que) Brij-IA/;
 

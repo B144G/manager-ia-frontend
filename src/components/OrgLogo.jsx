@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import Logo from './Logo.jsx';
 import { useT } from '../lib/i18n.jsx';
 import { assetUrl, useBrand, usePublicBrand } from '../lib/brand.js';
+import '../styles/org-logo.css';
 
 /* En-tête et pied des pages publiques d'une entreprise (formulaire, suivi, devis, localisation, satisfaction, discussion) :
    logo et nom de l'entreprise si elle les a personnalisés ; sinon le logo Brij-IA d'origine, sans aucun changement. */
@@ -9,9 +10,9 @@ export default function OrgLogo({ kind, token, className = 'au-logo', style = { 
   const b = usePublicBrand(kind, token);
   if (!b.customized) return <Logo className={className} style={style} />;
   return (
-    <div className={('s-logo ' + className).trim()} style={style}>
+    <div className={('s-logo org-logo ' + className).trim()} style={style}>
       {b.logoUrl ? <img src={assetUrl(b.logoUrl)} alt="" width="38" height="38" style={{ objectFit: 'contain' }} /> : null}
-      <span>{b.name}</span>
+      <span style={{ minWidth: 0, overflowWrap: 'anywhere', lineHeight: 1.15 }}>{b.name}</span>
     </div>
   );
 }

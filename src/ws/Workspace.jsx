@@ -26,6 +26,7 @@ export default function Workspace() {
     const els = wsStyles.map((css) => { const el = document.createElement('style'); el.setAttribute('data-mia', 'ws-app'); el.textContent = css; document.head.appendChild(el); return el; });
     return () => els.forEach((e) => e.remove());
   }, []);
+  useEffect(() => () => setBrand(null), []); // en quittant l'espace de travail : affichage d'origine (la marque de l'entreprise est posée au chargement de l'organisation)
   return <WsProvider><Gate /></WsProvider>;
 }
 
@@ -93,7 +94,6 @@ function Shell() {
   const main = useRef(null);
   const cb = useBrand();
   const mods = brandHide(sortMods(brandOrder(info.modules.filter((m) => hasModule(m.id)), cb), p.order), cb); // ordre et visibilité choisis par l'entreprise, puis ordre personnel
-  useEffect(() => () => setBrand(null), []); // en quittant l'espace de travail : affichage d'origine
   let cur = route ? route.mod : 'dashboard';
   if (!mods.some((m) => m.id === cur)) cur = 'dashboard';
   const Mod = moduleComponent(cur);

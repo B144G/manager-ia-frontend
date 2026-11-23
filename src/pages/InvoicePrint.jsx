@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { api } from '../lib/api.js';
 import { useT, getLocale } from '../lib/i18n.jsx';
 import { dateFr } from '../lib/format.js';
+import { setBrand, useBrand } from '../lib/brand.js';
 
 /* Page d'impression d'une facture, d'un devis ou d'un avoir (sans dépendance : le navigateur produit le PDF via « Imprimer »).
    Document généré par Brij-IA. */
@@ -28,7 +29,12 @@ export default function InvoicePrint() {
     api('GET', `/orgs/${orgId}/crm/documents/${docId}/print`).then((data) => { if (!off) setSt({ loading: false, data, error: '' }); }, (e) => { if (!off) setSt({ loading: false, data: null, error: e.status === 401 ? 'login' : e.message }); });
     return () => { off = true; };
   }, [orgId, docId]);
-  useEffect(() => { if (st.data) document.title = `${t(KIND[st.data.document.kind] || 'Facture')} ${st.data.document.number}`; }, [st.data, t]);
+  const cb = useBrand();
+  useEffect(() => { // marque de l'entreprise (nom, en-tête et pied des documents) : la page d'impression est hors de l'espace de travail
+    api('GET', `/orgs/${orgId}/brand`).then((j) => setBrand(j.brand), () => {});
+    return () => setBrand(null);
+  }, [orgId]);
+  useEffect(() => { if (st.data) document.title = `${t(KIND[st.data.document.kind] || 'Facture')} ${st.data.document.number}`; }, [st.data, t, cb.name]); // le titre (nom du fichier à l'impression) reste celui du document
 
   const fmt = (n) => Number(n || 0).toLocaleString(getLocale()).replace(/[  ]/g, ' ');
   if (st.loading) return <div className="ip"><style>{CSS}</style><p>{t('Chargement…')}</p></div>;
@@ -43,6 +49,7 @@ export default function InvoicePrint() {
         <button className="btn" type="button" style={{ background: '#fff', color: '#111' }} onClick={() => window.close()}>{t('Fermer')}</button>
       </div>
       {p.missing.length ? <p className="warn">{t('Mentions à compléter avant usage officiel : {list}.', { list: p.missing.map((k) => warn[k]).join(', ') })}</p> : null}
+      {cb.customized && cb.pdfHeader ? <p className="small">{cb.pdfHeader}</p> : null}
       <div className="top">
         <div>
           <h1>{p.org.name}</h1>
@@ -75,6 +82,7 @@ export default function InvoicePrint() {
       ) : null}
       {p.org.payInfo ? <p className="small"><b>{t('Règlement')}</b><br />{p.org.payInfo.split('\n').map((l, i) => <span key={i}>{l}<br /></span>)}</p> : null}
       {p.org.footer ? <p className="small">{p.org.footer.split('\n').map((l, i) => <span key={i}>{l}<br /></span>)}</p> : null}
+      {cb.customized && cb.pdfFooter ? <p className="small">{cb.pdfFooter}</p> : null}
       <div className="wd">{t("Document généré par Brij-IA.")}</div>
     </div>
   );
