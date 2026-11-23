@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useT } from '../../../lib/i18n.jsx';
 import { tsrv } from '../../../lib/srv.js';
-import { Alert, Badge, Button, Card, EmptyState, Field } from '../../ui/index.jsx';
+import { Alert, Badge, Button, Card, EmptyState, Field, Icon } from '../../ui/index.jsx';
 import { ReasonForm, fmtShort, useDownload, useLabels, useMtg } from './common.jsx';
+import { NoQuorumAlert, QuorumCard } from './Quorum.jsx';
 
 /* Déroulé (présence réelle, notes point par point) et compte rendu (décisions, actions, soumission, validation, versions). */
 
@@ -114,39 +115,65 @@ export function Run({ j, reload }) {
   const [summary, setSummary] = useState(j.summary);
   const [next, setNext] = useState(j.nextMeeting);
   const [notes, setNotes] = useState(() => Object.fromEntries(j.agenda.map((a) => [a.id, { notes: a.notes, done: a.done }])));
-  const [att, setAtt] = useState(() => Object.fromEntries(j.participants.map((p) => [p.id, p.attended])));
+  const [pres, setPres] = useState(() => Object.fromEntries(j.participants.map((p) => [p.id, { attended: p.attended, lateMin: p.lateMin || 0, voteWeight: p.voteWeight }])));
+  const [quorum, setQuorum] = useState(j.quorum);
+  const [spent, setSpent] = useState(() => Object.fromEntries(j.agenda.map((a) => [a.id, a.spentMin || 0])));
   const [busy, setBusy] = useState(false);
   const [aiBusy, setAiBusy] = useState(false);
   const save = (quiet) => {
     setBusy(true);
-    return oapi('PUT', `/meetings/${m.id}/notes`, { summary, nextMeeting: next, agenda: j.agenda.map((a) => ({ id: a.id, notes: notes[a.id].notes, done: notes[a.id].done })), attendance: j.participants.map((p) => ({ id: p.id, attended: att[p.id] })) })
+    return oapi('PUT', `/meetings/${m.id}/notes`, { summary, nextMeeting: next, agenda: j.agenda.map((a) => ({ id: a.id, notes: notes[a.id].notes, done: notes[a.id].done })), attendance: j.participants.map((p) => ({ id: p.id, attended: pres[p.id].attended })) }).then(() => Promise.all(j.agenda.filter((a) => (spent[a.id] || 0) !== (a.spentMin || 0)).map((a) => oapi('PUT', `/meetings/${m.id}/agenda/${a.id}`, { spentMin: Number(spent[a.id]) || 0 }))))
       .then(() => { if (quiet !== true) { toast(t('Déroulé enregistré.')); reload(); } }).finally(() => setBusy(false));
   };
   const aiSummary = () => {
     setAiBusy(true);
     save(true).then(() => oapi('POST', `/meetings/${m.id}/ai/summary`, {})).then((r) => modal(t("Résumé proposé par l'IA"), (close) => <SummaryReview close={close} text={r.summary} onUse={setSummary} />, { wide: true })).catch(fail).finally(() => setAiBusy(false));
   };
+  const setP = (id, patch) => {
+    const cur = pres[id];
+    const next = { ...cur, ...patch };
+    if (patch.attended && patch.attended !== 'yes') next.lateMin = 0;
+    setPres((s) => ({ ...s, [id]: next }));
+    oapi('PUT', `/meetings/${m.id}/presence`, { items: [{ id, attended: next.attended, lateMin: Number(next.lateMin) || 0, voteWeight: next.voteWeight }] }).then((r) => setQuorum(r.quorum)).catch((e) => { setPres((s) => ({ ...s, [id]: cur })); fail(e); });
+  };
+  const startSession = () => oapi('POST', `/meetings/${m.id}/start`, {}).then((r) => { setQuorum(r.quorum); toast(t('Séance ouverte.')); reload(); }).catch(fail);
+  const endSession = () => confirm(t('Lever la séance ? L’heure de fin est enregistrée (durée réelle de la réunion).'), () => oapi('POST', `/meetings/${m.id}/end`, {}).then(() => { toast(t('Séance levée.')); reload(); }).catch(fail), t('Lever la séance'));
+  const noQuorum = () => modal(t("Déclarer l'absence de quorum"), (close) => <ReasonForm close={close} optional label={t('Constat (facultatif)')} submit={(reason) => oapi('POST', `/meetings/${m.id}/no-quorum`, { reason })} onDone={() => { toast(t('Réunion déclarée sans quorum.')); reload(); }} />);
   const hold = () => oapi('POST', `/meetings/${m.id}/hold`, {}).then(() => { toast(t('Réunion marquée comme tenue.')); reload(); }).catch(fail);
   return (
     <div className="mtg">
       {!canWrite ? <Alert tone="info">{m.minutesStatus === 'validated' ? t('Le compte rendu est validé : pour le modifier, créez une nouvelle version (onglet Compte rendu).') : m.minutesStatus === 'submitted' ? t('Le compte rendu est soumis à validation : le déroulé est verrouillé.') : t('Seules les personnes qui gèrent cette réunion rédigent le déroulé.')}</Alert> : null}
-      {canWrite && m.status === 'planned' ? <div><Button icon="check" onClick={hold}>{t('Marquer la réunion comme tenue')}</Button></div> : null}
-      <Card title={t('Présence réelle')} subtitle={t('Qui était vraiment là ? Cela alimente le taux de présence.')}>
-        <ul className="mtg-list">{j.participants.map((p) => (
-          <li className="mtg-person" key={p.id}>
-            <span><b>{p.name}</b><small>{L.resp[p.response]}{p.reason ? ' — ' + p.reason : ''}</small></span>
-            {canWrite ? (
-              <span className="ui-seg" role="group" aria-label={t('Présence de {name}', { name: p.name })}>
-                {[['yes', t('Présent')], ['no', t('Absent')]].map(([v, lab]) => <button key={v} type="button" aria-pressed={att[p.id] === v} onClick={() => setAtt((s) => ({ ...s, [p.id]: s[p.id] === v ? 'unknown' : v }))}>{lab}</button>)}
-              </span>
-            ) : <Badge tone={p.attended === 'yes' ? 'ok' : p.attended === 'no' ? 'danger' : 'neutral'}>{p.attended === 'yes' ? t('Présent') : p.attended === 'no' ? t('Absent') : '—'}</Badge>}
-          </li>
-        ))}</ul>
+      <NoQuorumAlert j={j} />
+      {canWrite && m.status !== 'no_quorum' ? (
+        <div className="mtg-row">
+          {!m.startedAt ? <Button variant="primary" icon="circle-play" onClick={startSession}>{t('Ouvrir la séance')}</Button> : !m.endedAt ? <Button icon="stopwatch" onClick={endSession}>{t('Lever la séance')}</Button> : null}
+          {m.status === 'planned' && !m.startedAt ? <Button icon="check" onClick={hold}>{t('Marquer la réunion comme tenue')}</Button> : null}
+          {quorum.required && !quorum.ok ? <Button variant="danger-outline" icon="triangle-exclamation" onClick={noQuorum}>{t("Déclarer l'absence de quorum")}</Button> : null}
+          {m.startedAt ? <Badge tone="info"><Icon name="clock" />{t('Ouverte à {h}', { h: new Date(m.startedAt).toLocaleTimeString(document.documentElement.lang || 'fr', { hour: '2-digit', minute: '2-digit' }) })}{m.endedAt ? ' · ' + t('levée à {h}', { h: new Date(m.endedAt).toLocaleTimeString(document.documentElement.lang || 'fr', { hour: '2-digit', minute: '2-digit' }) }) : ''}</Badge> : null}
+        </div>
+      ) : null}
+      <Card title={t('Présence réelle et quorum')} subtitle={t('Qui est vraiment là ? Cochez les présents : le quorum se calcule en direct et le vote n’est ouvert qu’aux présents.')}>
+        <div className="mtg-sec">
+          <QuorumCard q={quorum} />
+          <ul className="mtg-list">{j.participants.map((p) => (
+            <li className="mtg-person" key={p.id}>
+              <span><b>{p.name}</b><small>{L.resp[p.response]}{p.reason ? ' — ' + p.reason : ''}{p.voteWeight !== 1 ? ' · ' + (p.voteWeight ? t('poids de vote {n}', { n: p.voteWeight }) : t('sans droit de vote')) : ''}</small></span>
+              {canWrite ? (
+                <span className="mtg-row">
+                  <span className="ui-seg" role="group" aria-label={t('Présence de {name}', { name: p.name })}>
+                    {[['yes', t('Présent')], ['no', t('Absent')]].map(([v, lab]) => <button key={v} type="button" aria-pressed={pres[p.id].attended === v} onClick={() => setP(p.id, { attended: pres[p.id].attended === v ? 'unknown' : v })}>{lab}</button>)}
+                  </span>
+                  {pres[p.id].attended === 'yes' ? <label className="mtg-mini">{t('Retard (min)')}<input type="number" min="0" max="600" value={pres[p.id].lateMin} onChange={(e) => setPres((s) => ({ ...s, [p.id]: { ...s[p.id], lateMin: e.target.value } }))} onBlur={() => setP(p.id, {})} aria-label={t('Retard de {name} en minutes', { name: p.name })} /></label> : null}
+                </span>
+              ) : <Badge tone={p.attended === 'yes' ? 'ok' : p.attended === 'no' ? 'danger' : 'neutral'}>{p.attended === 'yes' ? t('Présent') : p.attended === 'no' ? t('Absent') : '—'}{p.lateMin ? ' · ' + t('retard {n} min', { n: p.lateMin }) : ''}</Badge>}
+            </li>
+          ))}</ul>
+        </div>
       </Card>
       <Card title={t('Notes point par point')}>
         {j.agenda.length ? <div className="mtg-sec">{j.agenda.map((a, i) => (
           <div className="mtg-point" key={a.id}>
-            <div className="mtg-point-h"><b>{i + 1}. {a.title}</b>{a.owner ? <Badge tone="outline">{a.owner}</Badge> : null}{a.durationMin ? <Badge tone="neutral">{t('{n} min', { n: a.durationMin })}</Badge> : null}</div>
+            <div className="mtg-point-h"><b>{i + 1}. {a.title}</b><Badge tone={a.kind === 'decide' ? 'brand' : 'outline'}>{L.agendaKind[a.kind || 'discuss']}</Badge>{a.owner ? <Badge tone="outline">{a.owner}</Badge> : null}{a.durationMin ? <Badge tone="neutral">{t('{n} min', { n: a.durationMin })}</Badge> : null}{canWrite ? <label className="mtg-mini">{t('Durée réelle (min)')}<input type="number" min="0" max="1440" value={spent[a.id]} onChange={(e) => setSpent((s) => ({ ...s, [a.id]: e.target.value }))} /></label> : a.spentMin ? <Badge tone="neutral">{t('réel {n} min', { n: a.spentMin })}</Badge> : null}</div>
             {canWrite
               ? (
                 <>

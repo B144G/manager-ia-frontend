@@ -1,0 +1,22 @@
+/* Réunions avancées : quorum, résolutions et votes, procès-verbal, conflits d'agenda. Uniquement des jetons du thème (clair / sombre), 375 px et plus. */
+.mtg-quorum{display:grid;gap:var(--sp-2);padding:var(--sp-3);border:1px solid var(--border);border-left:4px solid var(--ok);border-radius:var(--radius-md);background:var(--surface-2)}
+.mtg-quorum.bad{border-left-color:var(--danger)}
+.mtg-meter{height:8px;border-radius:99px;background:var(--border);overflow:hidden}
+.mtg-meter i{display:block;height:100%;background:var(--ok);border-radius:99px}
+.mtg-quorum.bad .mtg-meter i{background:var(--danger)}
+.mtg-bar{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--border);margin-bottom:var(--sp-2)}
+.mtg-bar i{display:block;height:100%}
+.mtg-bar .for{background:var(--ok)}.mtg-bar .against{background:var(--danger)}.mtg-bar .abstain{background:var(--muted)}
+.mtg-voting{display:grid;gap:var(--sp-3);padding:var(--sp-3);border:1px dashed var(--accent);border-radius:var(--radius-md);background:var(--accent-soft)}
+.mtg-votebtns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-2)}
+.mtg-votebtns .ui-btn{min-height:48px;justify-content:center}
+.mtg-block{align-items:flex-start}
+.mtg-block>span{overflow-wrap:anywhere}
+.mtg-mini{display:inline-flex;align-items:center;gap:var(--sp-2);font-size:var(--fs-sm);color:var(--muted)}
+.mtg-mini input{width:72px;min-height:var(--touch)}
+.mtg-conf{display:grid;gap:var(--sp-1);margin:0;padding:0;list-style:none}
+.mtg-conf li{overflow-wrap:anywhere}
+.mtg-slot{min-height:var(--touch);padding:0 var(--sp-3);border:1px solid var(--accent);border-radius:99px;background:var(--surface);color:var(--accent);font:inherit;cursor:pointer}
+.mtg-slot:hover{background:var(--accent-soft)}
+.mtg-x{border:0;background:none;color:inherit;font:inherit;cursor:pointer;min-width:24px;min-height:24px}
+@media (max-width:480px){.mtg-votebtns{grid-template-columns:minmax(0,1fr)}.mtg-mini input{width:64px}}

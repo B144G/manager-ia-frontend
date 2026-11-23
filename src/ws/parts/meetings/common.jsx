@@ -9,6 +9,10 @@ import { Badge, Button, Field, Icon, Segmented } from '../../ui/index.jsx';
 
 export const TYPE_IDS = ['direction', 'team', 'site', 'client', 'committee', 'other'];
 export const ROLE_IDS = ['member', 'manager', 'admin'];
+export const ROLE_IDS_Q = ['member', 'manager', 'admin', 'owner'];
+export const URGENCY_IDS = ['normal', 'urgent', 'critical'];
+export const MAJORITY_IDS = ['simple', 'qualified', 'unanimity'];
+export const VOTE_MODE_IDS = ['named', 'secret', 'hand'];
 
 export function useLabels() {
   const t = useT();
@@ -16,10 +20,18 @@ export function useLabels() {
     types: { direction: t('Direction'), team: t('Équipe'), site: t('Chantier'), client: t('Client'), committee: t('Comité'), other: t('Autre') },
     roles: { member: t('Membres'), manager: t('Responsables'), admin: t('Administrateurs') },
     role1: { member: t('Membre'), manager: t('Responsable'), admin: t('Administrateur') },
-    status: { planned: t('Prévue'), held: t('Tenue'), cancelled: t('Annulée') },
+    status: { planned: t('Prévue'), held: t('Tenue'), cancelled: t('Annulée'), no_quorum: t('Sans quorum') },
     minutes: { none: t('Pas de compte rendu'), draft: t('Brouillon'), submitted: t('À valider'), validated: t('Validé') },
     resp: { pending: t('Sans réponse'), present: t('Présent'), absent: t('Absent'), excused: t('Excusé') },
-    freq: { weekly: t('Chaque semaine'), biweekly: t('Toutes les 2 semaines'), monthly: t('Chaque mois') },
+    freq: { weekly: t('Chaque semaine'), biweekly: t('Toutes les 2 semaines'), monthly: t('Chaque mois'), quarterly: t('Chaque trimestre') },
+    urgency: { normal: t('Normale'), urgent: t('Urgente'), critical: t('Critique') },
+    resStatus: { pending: t('En attente'), adopted: t('Adoptée'), rejected: t('Rejetée'), postponed: t('Reportée'), no_quorum: t('Sans quorum') },
+    majority: { simple: t('Majorité simple'), qualified: t('Majorité qualifiée'), unanimity: t('Unanimité') },
+    voteMode: { named: t('Nominatif'), secret: t('Secret'), hand: t('À main levée') },
+    choice: { for: t('Pour'), against: t('Contre'), abstain: t('Abstention') },
+    agendaKind: { info: t('Information'), discuss: t('Discussion'), decide: t('Décision') },
+    role: { organizer: t('Organisateur'), secretary: t('Secrétaire de séance'), chair: t('Président de séance'), assignee: t('Responsable'), carrier: t('Porteur') },
+    roles4: { member: t('Membre'), manager: t('Responsable'), admin: t('Administrateur'), owner: t('Propriétaire') },
     action: { open: t('À faire'), done: t('Faite'), cancelled: t('Annulée') },
     link: { meet: 'Google Meet', zoom: 'Zoom', teams: 'Teams', whatsapp: 'WhatsApp', other: t('Lien') },
   }), [t]);
@@ -51,7 +63,9 @@ export function StatusBadges({ m }) {
   const mt = { none: null, draft: 'warn', submitted: 'info', validated: 'ok' }[m.minutesStatus];
   return (
     <>
-      <Badge tone={m.status === 'cancelled' ? 'danger' : m.status === 'held' ? 'ok' : 'brand'}>{L.status[m.status]}</Badge>
+      <Badge tone={m.status === 'cancelled' || m.status === 'no_quorum' ? 'danger' : m.status === 'held' ? 'ok' : 'brand'}>{L.status[m.status]}</Badge>
+      {m.urgency && m.urgency !== 'normal' ? <Badge tone={m.urgency === 'critical' ? 'danger' : 'warn'}><Icon name="bolt" />{L.urgency[m.urgency]}</Badge> : null}
+      {m.archivedAt ? <Badge tone="outline"><Icon name="folder-open" />{t('Archivée')}</Badge> : null}
       {mt ? <Badge tone={mt}>{L.minutes[m.minutesStatus]}</Badge> : null}
       {m.confidential ? <Badge tone="outline"><Icon name="lock" />{t('Confidentielle')}</Badge> : null}
     </>

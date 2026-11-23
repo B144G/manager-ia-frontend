@@ -4,6 +4,7 @@ import { useT } from '../../lib/i18n.jsx';
 import ModuleShell from '../ModuleShell.jsx';
 import { useLoad } from '../ui.jsx';
 import '../../styles/ws-meetings.css';
+import '../../styles/ws-meetings-adv.css';
 import Home from '../parts/meetings/Home.jsx';
 import CalendarView from '../parts/meetings/Calendar.jsx';
 import MeetingForm from '../parts/meetings/Form.jsx';
@@ -11,6 +12,10 @@ import Detail from '../parts/meetings/Detail.jsx';
 import TemplatesScreen from '../parts/meetings/Templates.jsx';
 import SettingsScreen from '../parts/meetings/Settings.jsx';
 import { ActionsScreen, SearchScreen } from '../parts/meetings/Lists.jsx';
+import TypesScreen from '../parts/meetings/Types.jsx';
+import Stats from '../parts/meetings/Stats.jsx';
+import People from '../parts/meetings/People.jsx';
+import { Registry, Archives } from '../parts/meetings/Registry.jsx';
 
 /* Réunions : convocation, réponses, déroulé, compte rendu validé, actions suivies dans Projets. Le responsable du compte (propriétaire) désigne
    qui convoque et qui valide (écran « Réglages des réunions ») ; le serveur applique ces droits à chaque action. */
@@ -32,7 +37,10 @@ export default function Meetings() {
   const GROUPS = [
     { id: 'pilot', icon: 'chart-pie', label: t('Pilotage'), items: [
       { id: 'home', label: t('Tableau de bord'), hint: t('Réunions du mois, actions en retard, présence et comptes rendus à valider.') },
-      { id: 'actions', label: t('Suivi des actions'), hint: t('Les actions décidées en réunion, leur responsable et leur échéance.') }] },
+      { id: 'actions', label: t('Suivi des actions'), hint: t('Les actions décidées en réunion, leur responsable et leur échéance.') },
+      { id: 'resolutions', label: t('Résolutions'), hint: t('Registre des résolutions : numéro, porteur, échéance, résultat du vote.') },
+      { id: 'stats', label: t('Statistiques'), hint: t('Taux de décision, présence, durée, tâches : par type, service et site.') },
+      { id: 'people', label: t('Suivi des personnes'), hint: t('Engagements tenus, présence et ponctualité ; historique des responsabilités.') }] },
     { id: 'meet', icon: 'calendar-days', label: t('Réunions'), items: [
       { id: 'calendar', label: t('Calendrier'), hint: t('Vos réunions par mois, par semaine ou en liste.') },
       ...(canConvene ? [{ id: 'new', label: t('Convoquer une réunion'), hint: t("Date, participants, ordre du jour, lien de visioconférence et invitations.") }] : []),
@@ -40,8 +48,10 @@ export default function Meetings() {
       ...(editId ? [{ id: 'edit', label: t('Modifier la convocation'), hint: t('Date, lieu, participants et ordre du jour.') }] : [])] },
     { id: 'hist', icon: 'folder-open', label: t('Historique'), items: [
       { id: 'search', label: t('Recherche et exports'), hint: t("Retrouvez une décision ou une action, exportez en CSV.") },
+      { id: 'archives', label: t('Archives'), hint: t('Réunions archivées : compte rendu validé, procès-verbal signé, résolutions.') },
       { id: 'templates', label: t("Modèles d'ordre du jour"), hint: t('Modèles intégrés et modèles de votre organisation.') }] },
     { id: 'ctl', icon: 'gear', label: t('Réglages'), items: [
+      { id: 'types', label: t('Types de réunions'), hint: t('Catégories et types propres à votre organisation.') },
       { id: 'settings', label: t('Réglages des réunions'), hint: me.isOwner ? t('Choisissez qui peut convoquer et qui peut valider un compte rendu.') : t("Vos droits de convocation et de validation.") }] },
   ];
 
@@ -56,6 +66,11 @@ export default function Meetings() {
   else if (tab === 'new' && canConvene) content = <MeetingForm key={'new' + prefill} prefillDate={prefill} cancel={() => setTab('calendar')} done={(id) => open(id)} />;
   else if (tab === 'edit' && editData) content = <MeetingForm key={'edit' + editId} meeting={editData.meeting} detail={editData} cancel={() => open(editId)} done={(id) => open(id)} />;
   else if (tab === 'detail' && openId) content = <Detail key={openId} id={openId} back={() => setTab('calendar')} edit={startEdit} members={members} />;
+  else if (tab === 'resolutions') content = <Registry openMeeting={open} />;
+  else if (tab === 'stats') content = <Stats openMeeting={open} />;
+  else if (tab === 'people') content = <People openMeeting={open} />;
+  else if (tab === 'archives') content = <Archives openMeeting={open} />;
+  else if (tab === 'types') content = <TypesScreen />;
   else if (tab === 'search') content = <SearchScreen openMeeting={open} />;
   else if (tab === 'templates') content = <TemplatesScreen canConvene={canConvene} />;
   else if (tab === 'settings') content = <SettingsScreen />;
