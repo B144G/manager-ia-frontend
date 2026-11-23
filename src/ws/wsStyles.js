@@ -12,5 +12,6 @@ import shell from '../styles/shell.css?inline';
 import commercial from '../styles/commercial.css?inline';
 import wsFeedback from '../styles/ws-feedback.css?inline';
 import wsWaportee from '../styles/ws-waportee.css?inline';
+import wsSpaces from '../styles/ws-spaces.css?inline';
 
-export default [ui, ws, wsPlus, wsGuide, wsAifollow, composer, wsResponsive, wsPro, charts, shell, commercial, wsFeedback, wsWaportee];
+export default [ui, ws, wsPlus, wsGuide, wsAifollow, composer, wsResponsive, wsPro, charts, shell, commercial, wsFeedback, wsWaportee, wsSpaces];

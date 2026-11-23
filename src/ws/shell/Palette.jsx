@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT } from '../../lib/i18n.jsx';
+import { tsrv } from '../../lib/srv.js';
 import { Icon } from '../../lib/fa.jsx';
 import { MODULE_ICONS } from '../registry.js';
 import { toggleTheme } from '../../lib/theme.js';
@@ -8,7 +9,7 @@ import { trap } from '../ui/index.jsx';
 import { useScreens } from './screens.js';
 
 /* Recherche d'écran (Ctrl K / Cmd K) : sous-applications, écrans de la sous-application ouverte, actions rapides. Clavier : ↑ ↓ Entrée Échap. */
-export default function Palette({ mods, orgId, onClose, onPersonalize, onAsk }) {
+export default function Palette({ mods, spaces, curSpace, orgId, onClose, onPersonalize, onAsk }) {
   const t = useT();
   const nav = useNavigate();
   const sc = useScreens();
@@ -20,14 +21,18 @@ export default function Palette({ mods, orgId, onClose, onPersonalize, onAsk }) 
   const items = useMemo(() => {
     const all = [];
     sc.items.forEach((s) => all.push({ key: 's' + s.id, icon: 'list', label: s.label, sub: `${sc.title} › ${s.group}`, run: () => (s.to ? nav(`/app/${orgId}/${s.to}`) : sc.onSelect && sc.onSelect(s.id)) }));
-    mods.forEach((m) => all.push({ key: 'm' + m.id, icon: MODULE_ICONS[m.id] || m.id, label: t(m.title), sub: t('Sous-application'), run: () => nav(`/app/${orgId}/${m.id}`) }));
+    // Espaces par rôle : seuls les écrans des espaces accordés apparaissent (jamais d'écran non autorisé) ; l'espace courant d'abord, les autres en consultation / par espace.
+    const spOf = (id) => (spaces ? spaces.spaces.find((s) => s.modules.some((x) => x.id === id)) : null);
+    const ordered = spaces ? [...mods].sort((a, b) => Number(!(curSpace && spOf(a.id) === curSpace)) - Number(!(curSpace && spOf(b.id) === curSpace))) : mods;
+    ordered.forEach((m) => { const s = spOf(m.id); all.push({ key: 'm' + m.id, icon: MODULE_ICONS[m.id] || m.id, label: t(m.title), sub: s ? `${tsrv(s.title)}${s.level === 'view' ? ' · ' + t('consultation seule') : ''}` : t('Sous-application'), run: () => nav(`/app/${orgId}/${m.id}`) }); });
+    if (spaces) spaces.spaces.forEach((s) => all.push({ key: 'sp' + s.id, icon: s.icon, label: t("Aller à l'espace {space}", { space: tsrv(s.title) }), sub: t('Changer d\'espace'), run: () => nav(`/app/${orgId}/home/${s.id}`) }));
     all.push({ key: 'a-theme', icon: 'theme', label: t('Changer de thème (clair / sombre)'), sub: t('Action'), run: toggleTheme });
     all.push({ key: 'a-pers', icon: 'brand', label: t('Personnaliser l\'affichage'), sub: t('Action'), run: onPersonalize });
     const s = q.trim().toLowerCase();
     const found = s ? all.filter((x) => (x.label + ' ' + x.sub).toLowerCase().includes(s)) : all.filter((x) => x.key[0] !== 'a' || true).slice(0, 14);
     if (s) found.push({ key: 'ask', icon: 'ai', label: t('Demander à Brij-IA : « {q} »', { q: q.trim() }), sub: t('Assistant'), run: () => onAsk(q.trim()) });
     return found.slice(0, 40);
-  }, [q, sc, mods, orgId, nav, t, onPersonalize, onAsk]);
+  }, [q, sc, mods, spaces, curSpace, orgId, nav, t, onPersonalize, onAsk]);
   useEffect(() => { setI(0); }, [q]);
   useEffect(() => { if (input.current) input.current.focus(); const prev = document.activeElement; return () => { if (prev && prev.focus && prev !== document.body) prev.focus(); }; }, []);
   useEffect(() => { const el = list.current && list.current.querySelector('[aria-selected="true"]'); if (el) el.scrollIntoView({ block: 'nearest' }); }, [i]);
