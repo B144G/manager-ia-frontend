@@ -7,6 +7,7 @@ import { CHANNELS, Pill, TEMP, useOrgUrl } from './util.jsx';
 import { AiStateBar, DraftCard } from '../aifollow/AiState.jsx';
 import { Thread, useLiveThread } from '../aifollow/Thread.jsx';
 import { CHANNEL_LABEL } from '../aifollow/util.jsx';
+import { HeldActions, HeldPill } from './WaScope.jsx';
 
 const APPT_ST = { pending: 'à confirmer', confirmed: 'confirmé', cancelled: 'annulé', done: 'terminé' };
 const FILTERS = [['all', 'Toutes'], ['free', 'Non attribuées'], ['mine', 'Les miennes'], ['hot', 'Chaudes']];
@@ -76,6 +77,13 @@ function ChatBody({ j, prefix, x, team, canAssign, done }) {
         <span className={'th-live' + (live.online ? '' : ' off')}>{live.online ? t('En direct') : t('Connexion perdue, nouvel essai…')}</span>
       </div>
       {j.contact ? <p className="muted small" style={{ margin: '0 0 6px' }}>{t('Canal : {channel} · destinataire : {to}', { channel: t(CHANNEL_LABEL[j.channel] || j.channel), to: '+' + j.contact })}</p> : null}
+      {j.scope && j.scope.held ? (
+        <div className="wsc-bar" role="status">
+          <p><HeldPill reasonText={j.scope.reasonText} /></p>
+          <p className="small">{t("Le message est enregistré et vous êtes prévenu, mais l'assistant n'envoie rien tout seul. Raison : {reason}.", { reason: j.scope.reasonText ? t(j.scope.reasonText) : t("réglage de l'assistant") })}</p>
+          {canAct ? <HeldActions chatId={x.id} after={() => { live.refresh(); done(); }} /> : null}
+        </div>
+      ) : null}
       <AiStateBar live={live} target={target} label={label} canAct={canAct} onChange={live.refresh} />
       {live.drafts.map((d) => <DraftCard key={d.id} d={d} canAct={canAct} web={j.channel === 'web'} after={live.refresh} />)}
       {j.campaign ? <p className="muted small">{t('Campagne : {name}', { name: j.campaign })}</p> : null}
@@ -242,9 +250,13 @@ export function Chats({ filter, setFilter, onChange }) {
             {x.channel !== 'web' ? <Pill t={[CHANNELS[x.channel] || x.channel, 'good']} /> : null}
             {x.status === 'handoff' && !x.assigneeId ? <Pill t={['À reprendre', 'bad']} /> : null}
             {x.assignee ? <Pill t={['→ ' + x.assignee, '']} /> : null}
+            {x.outOfScope ? <HeldPill /> : null}
             <small>{' ' + (x.campaign ? t('campagne « {name} » · ', { name: x.campaign }) : '') + dateFr(x.at) + ' · ' + t('{n} messages', { n: x.messages }) + lastTextOf(x)}</small>
           </span>
-          <button className="link" type="button" onClick={() => openChat(ws, '/sales', x, team, true, onChange)}>{t('Lire')}</button>
+          <span className="wsc-actions">
+            {x.outOfScope ? <HeldActions chatId={x.id} after={() => { st.reload(); onChange(); }} /> : null}
+            <button className="link" type="button" onClick={() => openChat(ws, '/sales', x, team, true, onChange)}>{t('Lire')}</button>
+          </span>
         </div>
       ))}
     </div>

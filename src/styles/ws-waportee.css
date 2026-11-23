@@ -1,0 +1,22 @@
+/* Portée des réponses automatiques WhatsApp : réglage (onglet « Portée ») et étiquettes dans les conversations. */
+.wsc-modes{display:grid;gap:10px;margin:10px 0}
+.wsc-mode{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer;min-height:44px}
+.wsc-mode.on{border-color:var(--accent);background:var(--pale,#f1f5fd)}
+.wsc-mode input{margin-top:4px;flex:none;width:20px;height:20px}
+.wsc-mode b{display:block}
+.wsc-mode small{display:block;color:var(--muted);margin-top:2px;line-height:1.45}
+.wsc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.wsc-grid .fld{display:grid;gap:4px;min-width:0}
+.wsc-grid select,.wsc-grid input,.wsc-grid textarea,.wsc-add input,.wsc-add select{min-height:44px;font-size:16px;width:100%;box-sizing:border-box}
+.wsc-defs dt{font-weight:700;margin-top:10px}.wsc-defs dd{margin:2px 0 0;color:var(--muted);line-height:1.5}
+.wsc-add{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;align-items:end;margin:10px 0}
+.wsc-actions{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.wsc-held{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;min-height:22px;border-radius:999px;font-size:12px;font-weight:700;background:var(--warn-soft,#fff3d6);color:var(--warn-text,#7a4b00);margin:0 4px 0 6px;white-space:normal;line-height:1.35}
+.wsc-bar{display:grid;gap:8px;padding:10px 12px;margin:8px 0;border:1px solid var(--warn-text,#b7791f);border-radius:12px;background:var(--warn-soft,#fff8e6)}
+.wsc-bar p{margin:0}
+.wsc-stats{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.wsc-stats .stat{min-width:120px}
+.wsc-log{font-size:13.5px}
+.wsc-log .line{gap:8px;flex-wrap:wrap}
+.wsc-note{border-left:3px solid var(--accent);padding:2px 0 2px 10px;color:var(--muted);margin:8px 0}
+@media (max-width:760px){.wsc-actions .link,.wsc-actions .btn{min-height:44px}.wsc-mode{padding:12px}}

@@ -9,6 +9,7 @@ import { Chats, MineView } from '../parts/sales/Chats.jsx';
 import { Negotiation, NegoLog } from '../parts/sales/Negotiation.jsx';
 import { Relances } from '../parts/sales/Relances.jsx';
 import { Relay } from '../parts/sales/Relay.jsx';
+import { WaScope } from '../parts/sales/WaScope.jsx';
 import { OST, Pill } from '../parts/sales/util.jsx';
 
 /* Assistant commercial : l'IA répond aux prospects (web, WhatsApp), les enregistre et prend les commandes. */
@@ -22,7 +23,7 @@ function SalesAdmin() {
   const ws = useWs();
   const { oapi, can, money, modal } = ws;
   const admin = can('admin');
-  const [tab, setTab] = useState(() => { const q = new URLSearchParams(window.location.search).get('tab'); return ['followup', 'negotiation'].includes(q) ? q : 'orders'; });
+  const [tab, setTab] = useState(() => { const q = new URLSearchParams(window.location.search).get('tab'); return ['followup', 'negotiation', 'scope', 'chats'].includes(q) ? q : 'orders'; });
   const [chatFilter, setChatFilter] = useState('all');
   const [apptFilter, setApptFilter] = useState('open');
   const [ver, setVer] = useState(0);
@@ -32,7 +33,7 @@ function SalesAdmin() {
   const pick = (k) => { setTab(k); load(); };
   const data = st.data;
 
-  const tabs = [['orders', t('Commandes')], ['chats', t('Conversations')], ['catalog', t('Catalogue')], ['appts', t('Rendez-vous') + (data && data.stats && data.stats.appointments ? ' (' + data.stats.appointments + ')' : '')], ['campaigns', t('Campagnes')], ['negotiation', t('Négociation')], ['followup', t('Relances')]].concat(admin ? [['whatsapp', t('Canaux')], ['relay', t('Relais')]] : []);
+  const tabs = [['orders', t('Commandes')], ['chats', t('Conversations')], ['catalog', t('Catalogue')], ['appts', t('Rendez-vous') + (data && data.stats && data.stats.appointments ? ' (' + data.stats.appointments + ')' : '')], ['campaigns', t('Campagnes')], ['negotiation', t('Négociation')], ['followup', t('Relances')]].concat(admin ? [['whatsapp', t('Canaux')], ['scope', t('Périmètre')], ['relay', t('Relais')]] : []);
 
   let area;
   if (tab === 'orders') area = <Orders onChange={load} />;
@@ -42,6 +43,7 @@ function SalesAdmin() {
   else if (tab === 'followup') area = <Relances admin={admin} />;
   else if (tab === 'negotiation') area = <Negotiation admin={admin} />;
   else if (tab === 'relay') area = <Relay />;
+  else if (tab === 'scope') area = <WaScope />;
   else if (tab === 'appts') area = <Appts admin={admin} filter={apptFilter} setFilter={setApptFilter} onChange={load} />;
   else area = <Campaigns />;
 
