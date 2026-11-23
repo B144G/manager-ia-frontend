@@ -32,7 +32,7 @@ export default function Hero({ onPlay }) {
         <div className="vt-grid vt-herogrid">
           <div className="vt-herotxt">
             <span className="vt-badge"><i />{t('Fait au Cameroun · en français, en FCFA')}</span>
-            <h1 className="vt-h1" id="vt-h1">{t('Toute votre entreprise,')} <em>{t('enfin au même endroit.')}</em></h1>
+            <h1 className="vt-h1" id="vt-h1">{t('Pilotez toute votre entreprise,')} <em>{t('avec un seul outil.')}</em></h1>
             <p className="vt-lead">{t('Brij-IA réunit ventes, stock, factures, comptabilité, paie et équipe. Son assistant répond à vos clients sur WhatsApp.')} <b style={{ color: 'var(--vt-ink)' }}>{t('Il propose, vous validez.')}</b></p>
             <div className="vt-cta">
               <Link to="/inscription" className="vt-btn vt-btn--primary vt-btn--lg">{t('Essai gratuit')}<Fa name="arrow-right" /></Link>
