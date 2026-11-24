@@ -21,7 +21,7 @@ import Personalize, { sortMods } from './shell/Personalize.jsx';
 import { bindPalette } from './shell/screens.js';
 import { WsProvider, useWs } from './WsContext.jsx';
 // Espaces par rôle (réglage d'entreprise) : nouvelle navigation, active seulement si le serveur renvoie info.spaces.enabled.
-import { SpaceBottomNav, SpaceChooser, SpaceDenied, SpaceHome, SpaceSidebar, VisitorBanner, VisitorGuard, resolveSpaces } from './spaces/SpaceFrame.jsx';
+import { SpaceBottomNav, SpaceChooser, SpaceDenied, SpaceHome, SpaceSidebar, SpacesNotice, VisitorBanner, VisitorGuard, resolveSpaces } from './spaces/SpaceFrame.jsx';
 import { Navigate } from 'react-router-dom';
 
 /** Espace de travail : connexion vérifiée, choix de l'organisation, menu des sous-applications, assistant IA. */
@@ -169,6 +169,7 @@ function Shell() {
         <TopBar spaceTitle={spaces && sr.cur ? tsrv(sr.cur.title) : ''} modTitle={spaces && cur === 'home' ? t('Tableau de bord') : curMod ? t(curMod.title) : ''} navOpen={navOpen} onNav={() => setNavOpen(!navOpen)} onAsk={askAI} orgId={orgId} bell={bell} user={user}
           role={t(info.me.roleLabel)} initials={ws.initials} onSecurity={openSecurity} onPersonalize={personalize} />
         <UserNotices orgId={orgId} />
+        {spaces ? <SpacesNotice orgId={orgId} userId={user && user.id} fallback={spaces.fallback} /> : null}
         <main className="ws-main" id="ws-main" ref={main} tabIndex={-1}>
           <div className="ws-mod" key={`${orgId}-${cur}-${route ? route.sub : ''}-${refreshKey}`}>
             {spaces ? (

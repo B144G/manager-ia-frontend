@@ -22,16 +22,17 @@ export default function SpaceAdmin() {
   const set = (patch, msg) => { setBusy(true); oapi('PUT', '/spaces/settings', patch).then(() => { toast(msg || t('Réglage enregistré.')); cfg.reload(); asg.reload(); reloadOrg(); }).catch(fail).finally(() => setBusy(false)); };
   const toggle = () => (on
     ? confirm(t("Désactiver les espaces par rôle ? Tout le monde retrouve le menu général."), () => set({ enabled: false }), t('Désactiver'))
-    : confirm(t("Activer les espaces par rôle ? Chaque personne arrivera dans son espace. Vérifiez d'abord les affectations ci-dessous : une personne sans affectation n'a que « Projets et réunions »."), () => set({ enabled: true }), t('Activer')));
+    : confirm(t("Réactiver les espaces par rôle ? Chaque personne retrouvera son espace. Une personne sans affectation garde ses accès actuels, regroupés par espace."), () => set({ enabled: true }), t('Activer')));
   const names = (ids) => (ids || []).map((id) => { const f = cfg.data.funcRoles.find((x) => x.id === id); return f ? tsrv(f.title) : id; }).join(', ');
   const edit = (m) => modal(t('Espaces de {name}', { name: m.name }), (close) => <AssignBox m={m} cfg={cfg.data} done={() => { close(); asg.reload(); }} />, { wide: true });
   return (
     <div className="ws-card" id="spaces-admin">
       <h2>{t('Espaces par rôle')}</h2>
       <p className="muted">{t("Chaque personne arrive dans son espace de travail (comptabilité, commercial, stock…) au lieu d'un menu général. Les autres espaces ne s'ouvrent qu'en consultation seule, selon ce que vous accordez.")}</p>
+      {cfg.data.globalOff ? <p className="muted"><b>{t("Les espaces par rôle sont suspendus pour toutes les entreprises par un réglage du service.")}</b> {t("Ils reviendront automatiquement ; vos affectations sont conservées.")}</p> : null}
       <div className="line">
         <span><b>{on ? t('Activés') : t('Désactivés')}</b><small> {on ? t('Chaque personne voit son espace.') : t('Menu général habituel pour tout le monde.')}</small></span>
-        {owner ? <button className={'btn small' + (on ? '' : ' primary')} type="button" disabled={busy} onClick={toggle}>{on ? t('Désactiver') : t('Activer les espaces par rôle')}</button> : <small>{t('Seul le propriétaire peut les activer.')}</small>}
+        {owner ? <button className={'btn small' + (on ? '' : ' primary')} type="button" disabled={busy} onClick={toggle}>{on ? t('Désactiver') : t('Réactiver les espaces par rôle')}</button> : <small>{t('Seul le propriétaire peut modifier ce réglage.')}</small>}
       </div>
       {on && owner ? (
         <label className="sp-check"><input type="checkbox" checked={cfg.data.openRead} disabled={busy} onChange={(e) => set({ openRead: e.target.checked })} /> {t('Consultation ouverte : chacun peut lire les autres espaces autorisés par son rôle (jamais les modifier)')}</label>

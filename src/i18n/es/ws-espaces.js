@@ -107,5 +107,14 @@ export default {
   "Vue d'ensemble réservée à la direction.": "Vista general reservada a la dirección.",
   "Cet espace ne fait pas partie de vos espaces.": "Este espacio no es uno de sus espacios.",
   "Espace inconnu ou non accordé.": "Espacio desconocido o no concedido.",
-  "Seul le propriétaire peut nommer un responsable de l'espace compte.": "Solo el propietario puede nombrar un responsable del espacio de cuenta."
+  "Seul le propriétaire peut nommer un responsable de l'espace compte.": "Solo el propietario puede nombrar un responsable del espacio de cuenta.",
+  "Réactiver les espaces par rôle ? Chaque personne retrouvera son espace. Une personne sans affectation garde ses accès actuels, regroupés par espace.": "¿Volver a activar los espacios por rol? Cada persona recupera su espacio. Quien no tiene espacio asignado conserva su acceso actual, agrupado por espacio.",
+  "Réactiver les espaces par rôle": "Volver a activar los espacios por rol",
+  "Seul le propriétaire peut modifier ce réglage.": "Solo el propietario puede cambiar este ajuste.",
+  "Les espaces par rôle sont suspendus pour toutes les entreprises par un réglage du service.": "Los espacios por rol están suspendidos para todas las empresas por un ajuste del servicio.",
+  "Ils reviendront automatiquement ; vos affectations sont conservées.": "Volverán automáticamente; sus asignaciones se conservan.",
+  "Votre menu est maintenant organisé par espaces de travail.": "Su menú ahora está organizado por espacios de trabajo.",
+  "Vous gardez les mêmes accès qu'avant, regroupés par espace (Commercial, Stock, Comptabilité…). Le propriétaire peut vous affecter un espace précis ; changez d'espace à tout moment depuis le menu.": "Conserva el mismo acceso que antes, agrupado por espacio (Ventas, Stock, Contabilidad…). El propietario puede asignarle un espacio concreto; cambie de espacio en cualquier momento desde el menú.",
+  "Vous arrivez dans votre espace ; les autres espaces restent accessibles selon ce que le propriétaire vous accorde. Changez d'espace à tout moment depuis le menu.": "Entra en su propio espacio; los demás siguen disponibles según lo que le conceda el propietario. Cambie de espacio en cualquier momento desde el menú.",
+  "J'ai compris": "Entendido"
 };

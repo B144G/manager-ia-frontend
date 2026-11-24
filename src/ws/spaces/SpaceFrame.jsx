@@ -143,6 +143,27 @@ export function SpaceBottomNav({ cur, curMod, orgId, onMenu, onAi, alerts }) {
   );
 }
 
+/**
+ * Message d'information au premier passage : les espaces par rôle sont activés pour tout le monde. Affiché une seule fois par personne, par
+ * entreprise et par navigateur (le choix est retenu localement ; si le stockage est indisponible, le message s'affiche à chaque visite et se ferme).
+ */
+export function SpacesNotice({ orgId, userId, fallback }) {
+  const t = useT();
+  const key = `mabah-seen:spaces-notice:${orgId}:${userId}`;
+  const [open, setOpen] = useState(() => { try { return !localStorage.getItem(key); } catch { return true; } });
+  if (!open) return null;
+  const close = () => { try { localStorage.setItem(key, '1'); } catch { /* stockage indisponible */ } setOpen(false); };
+  return (
+    <div className="sp-notice" role="status">
+      <Icon name="info" />
+      <p><b>{t('Votre menu est maintenant organisé par espaces de travail.')}</b> {fallback
+        ? t("Vous gardez les mêmes accès qu'avant, regroupés par espace (Commercial, Stock, Comptabilité…). Le propriétaire peut vous affecter un espace précis ; changez d'espace à tout moment depuis le menu.")
+        : t("Vous arrivez dans votre espace ; les autres espaces restent accessibles selon ce que le propriétaire vous accorde. Changez d'espace à tout moment depuis le menu.")}</p>
+      <button className="btn small primary" type="button" onClick={close}>{t("J'ai compris")}</button>
+    </div>
+  );
+}
+
 /** Bandeau clair « consultation seule » + désactivation de l'apparence des boutons d'écriture (le serveur refuse de toute façon). */
 export function VisitorBanner({ space, orgId, home }) {
   const t = useT();

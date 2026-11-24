@@ -107,5 +107,14 @@ export default {
   "Vue d'ensemble réservée à la direction.": "Übersicht der Geschäftsleitung vorbehalten.",
   "Cet espace ne fait pas partie de vos espaces.": "Dieser Bereich gehört nicht zu Ihren Bereichen.",
   "Espace inconnu ou non accordé.": "Unbekannter oder nicht freigegebener Bereich.",
-  "Seul le propriétaire peut nommer un responsable de l'espace compte.": "Nur der Inhaber kann eine Leitung für den Kontobereich ernennen."
+  "Seul le propriétaire peut nommer un responsable de l'espace compte.": "Nur der Inhaber kann eine Leitung für den Kontobereich ernennen.",
+  "Réactiver les espaces par rôle ? Chaque personne retrouvera son espace. Une personne sans affectation garde ses accès actuels, regroupés par espace.": "Rollenbasierte Bereiche wieder aktivieren? Alle landen wieder in ihrem Bereich. Wer keinem Bereich zugewiesen ist, behält den bisherigen Zugriff, nach Bereichen gruppiert.",
+  "Réactiver les espaces par rôle": "Rollenbasierte Bereiche wieder aktivieren",
+  "Seul le propriétaire peut modifier ce réglage.": "Nur der Inhaber kann diese Einstellung ändern.",
+  "Les espaces par rôle sont suspendus pour toutes les entreprises par un réglage du service.": "Die rollenbasierten Bereiche sind für alle Unternehmen durch eine Diensteinstellung ausgesetzt.",
+  "Ils reviendront automatiquement ; vos affectations sont conservées.": "Sie kehren automatisch zurück; Ihre Zuweisungen bleiben erhalten.",
+  "Votre menu est maintenant organisé par espaces de travail.": "Ihr Menü ist jetzt nach Arbeitsbereichen gegliedert.",
+  "Vous gardez les mêmes accès qu'avant, regroupés par espace (Commercial, Stock, Comptabilité…). Le propriétaire peut vous affecter un espace précis ; changez d'espace à tout moment depuis le menu.": "Sie behalten den bisherigen Zugriff, nach Bereichen gruppiert (Vertrieb, Lager, Buchhaltung …). Der Inhaber kann Ihnen einen bestimmten Bereich zuweisen; den Bereich wechseln Sie jederzeit im Menü.",
+  "Vous arrivez dans votre espace ; les autres espaces restent accessibles selon ce que le propriétaire vous accorde. Changez d'espace à tout moment depuis le menu.": "Sie landen in Ihrem eigenen Bereich; die übrigen Bereiche stehen je nach Freigabe des Inhabers offen. Den Bereich wechseln Sie jederzeit im Menü.",
+  "J'ai compris": "Verstanden"
 };

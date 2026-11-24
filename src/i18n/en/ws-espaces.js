@@ -107,5 +107,14 @@ export default {
   "Vue d'ensemble réservée à la direction.": "Overview reserved for management.",
   "Cet espace ne fait pas partie de vos espaces.": "This space is not one of your spaces.",
   "Espace inconnu ou non accordé.": "Unknown space or not granted.",
-  "Seul le propriétaire peut nommer un responsable de l'espace compte.": "Only the owner can appoint a manager of the account space."
+  "Seul le propriétaire peut nommer un responsable de l'espace compte.": "Only the owner can appoint a manager of the account space.",
+  "Réactiver les espaces par rôle ? Chaque personne retrouvera son espace. Une personne sans affectation garde ses accès actuels, regroupés par espace.": "Turn role-based spaces back on? Everyone gets their space again. A person with no assigned space keeps their current access, grouped by space.",
+  "Réactiver les espaces par rôle": "Turn role-based spaces back on",
+  "Seul le propriétaire peut modifier ce réglage.": "Only the owner can change this setting.",
+  "Les espaces par rôle sont suspendus pour toutes les entreprises par un réglage du service.": "Role-based spaces are paused for all companies by a service setting.",
+  "Ils reviendront automatiquement ; vos affectations sont conservées.": "They will come back automatically; your assignments are kept.",
+  "Votre menu est maintenant organisé par espaces de travail.": "Your menu is now organised by workspace.",
+  "Vous gardez les mêmes accès qu'avant, regroupés par espace (Commercial, Stock, Comptabilité…). Le propriétaire peut vous affecter un espace précis ; changez d'espace à tout moment depuis le menu.": "You keep the same access as before, grouped by space (Sales, Stock, Accounting…). The owner can assign you a specific space; switch space at any time from the menu.",
+  "Vous arrivez dans votre espace ; les autres espaces restent accessibles selon ce que le propriétaire vous accorde. Changez d'espace à tout moment depuis le menu.": "You land in your own space; the other spaces stay available according to what the owner grants you. Switch space at any time from the menu.",
+  "J'ai compris": "Got it"
 };

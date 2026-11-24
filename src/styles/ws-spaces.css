@@ -51,3 +51,5 @@ body.nav-mini .sp-rail{justify-content:center;padding:0}
 .sp-assign fieldset{border:1px solid var(--border);border-radius:var(--radius-lg);margin:0 0 var(--sp-4);padding:var(--sp-3) var(--sp-4)}
 .sp-sum{display:block}
 @media (max-width:480px){.sp-hello{gap:var(--sp-3)}.sp-n{font-size:var(--fs-2xl)}.sp-cards{grid-template-columns:1fr}}
+.sp-notice{display:flex;align-items:center;gap:var(--sp-3);flex-wrap:wrap;margin:var(--sp-3) var(--sp-4) 0;padding:var(--sp-3) var(--sp-4);border-radius:var(--radius-lg);background:var(--info-soft);color:var(--text);border:1px solid var(--line)}
+.sp-notice p{margin:0;flex:1 1 240px;font-size:var(--fs-md)}
