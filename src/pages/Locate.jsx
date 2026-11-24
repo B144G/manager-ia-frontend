@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Logo from '../components/Logo.jsx';
+import OrgLogo, { PublicFoot } from '../components/OrgLogo.jsx';
 import LangSwitch from '../components/LangSwitch.jsx';
 import { Icon } from '../lib/fa.jsx';
 import { rq } from '../lib/api.js';
@@ -38,7 +38,7 @@ export default function Locate() {
   return (
     <div className="au-main" style={{ minHeight: '100vh' }}>
       <div style={{ position: 'absolute', top: 10, right: 12, zIndex: 3 }}><LangSwitch /></div>
-      <Logo className="au-logo" style={{ display: 'flex' }} />
+      <OrgLogo kind="geo" token={token} />
       <div className="au-card loc-card">
         <h1>{t('Où devons-nous vous livrer ?')}</h1>
         {info ? <p className="au-sub">{t('{org} · bonjour {name}', { org: info.org, name: info.name })}</p> : null}
@@ -66,6 +66,7 @@ export default function Locate() {
           </>
         ) : null}
       </div>
+      <PublicFoot />
     </div>
   );
 }

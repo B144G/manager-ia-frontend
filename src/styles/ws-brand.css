@@ -1,0 +1,45 @@
+/* Personnalisation de l'entreprise (src/ws/parts/team/BrandSettings.jsx). Jetons : tokens.css ; seule couleur propre = celle de marque aperçue (--b / --on-b). */
+.br{display:grid;gap:var(--sp-5);grid-template-columns:minmax(0,1fr)}
+@media (min-width:980px){.br{grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);align-items:start}.br-prev{position:sticky;top:0}}
+.br-main{display:grid;gap:var(--sp-4);min-width:0}
+.br-sec{display:grid;gap:var(--sp-3);padding:var(--sp-4);border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface)}
+.br-sec h3{margin:0;font-size:var(--fs-lg)}
+.br-row{display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-3);align-items:center}
+.br-2{display:grid;gap:var(--sp-3);grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.br-modes{display:grid;gap:var(--sp-2)}
+.br-mode{display:flex;gap:var(--sp-3);align-items:flex-start;padding:var(--sp-3);border:2px solid var(--border);border-radius:var(--radius-md);cursor:pointer;min-height:var(--touch)}
+.br-mode.on{border-color:var(--accent)}
+.br-mode input{width:auto;min-height:0;margin-top:3px}
+.br-mode span{display:grid;gap:2px}.br-mode small{color:var(--muted)}
+.br-logo{display:inline-grid;place-items:center;width:56px;height:56px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface-3);overflow:hidden;flex:none}
+.br-logo.sm{width:40px;height:40px}.br-logo img{max-width:100%;max-height:100%;object-fit:contain}
+.br-list{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.br-list li{display:flex;align-items:center;gap:var(--sp-1);padding:4px 6px;border:1px solid var(--border);border-radius:var(--radius-md)}
+.br-list li span{flex:1;min-width:0;overflow-wrap:anywhere}.br-list li.off span{color:var(--muted);text-decoration:line-through}
+.br-vocab{display:grid;gap:var(--sp-2)}
+.br-vocab details{border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--sp-2) var(--sp-3)}
+.br-vocab summary{cursor:pointer;display:flex;gap:var(--sp-2);align-items:center;min-height:var(--touch);flex-wrap:wrap}
+.br-vocab summary>span{color:var(--text-2)}
+.br-bar{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center;position:sticky;bottom:0;padding:var(--sp-3) 0;background:var(--surface)}
+.br-log{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:var(--fs-sm)}
+.br-prev{display:grid;gap:var(--sp-3);min-width:0}
+.br-prev h3{margin:0;font-size:var(--fs-lg)}
+.br-card{display:grid;gap:var(--sp-2);padding:var(--sp-3);border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);min-width:0}
+.br-card p{margin:0}
+.br-pl{display:flex;gap:var(--sp-2);align-items:center}.br-pl b{font-size:var(--fs-lg)}.br-pl i{font-style:normal;color:var(--b)}
+.br-pi{display:inline-grid;place-items:center;width:28px;height:28px;flex:none}.br-pi img{max-width:100%;max-height:100%;object-fit:contain}
+.br-card.side ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.br-card.side li{padding:6px 10px;border-radius:var(--radius-md);color:var(--text-2)}
+.br-card.side li.on{background:var(--b);color:var(--on-b)}
+.br-pa{display:flex;gap:var(--sp-2);align-items:center;flex-wrap:wrap}
+.br-btn{border:0;border-radius:var(--radius-md);padding:6px 12px;background:var(--b);color:var(--on-b);font:inherit;font-weight:var(--fw-bold)}
+.br-bub{display:flex;gap:var(--sp-2);align-items:flex-start;padding:var(--sp-2) var(--sp-3);border-radius:var(--radius-md);background:var(--surface-3)}
+.br-doc-o{color:var(--b)}.br-doc-f{color:var(--muted);border-top:1px solid var(--border);padding-top:var(--sp-2)}
+.br-card.foot small{color:var(--muted);overflow-wrap:anywhere}
+.team-brand{display:flex;gap:var(--sp-3);align-items:center;flex-wrap:wrap}
+.team-brand>div{flex:1 1 260px;min-width:0}
+/* Tableau de bord personnalisé (ordre ou éléments masqués par l'entreprise) : grille simple ; sans réglage, la disposition d'origine est inchangée. */
+.dash-custom{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));margin-bottom:18px}
+.dash-custom>.dash-w{min-width:0}
+.dash-custom>.dash-kpis,.dash-custom>.dash-brief,.dash-custom>.dash-chart{grid-column:1/-1}
+.dash-custom .dc{height:100%}

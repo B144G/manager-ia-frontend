@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api as wsApi, rq } from '../lib/api.js';
 import { dateFr, firstName, formatMoney, initials, today } from '../lib/format.js';
+import { setBrand } from '../lib/brand.js';
 import { useLang, useT } from '../lib/i18n.jsx';
 import { tsrv } from '../lib/srv.js';
 import { Loading, ModalBox } from './ui.jsx';
@@ -102,6 +103,7 @@ export function WsProvider({ children }) {
       const i = await wsApi('GET', '/orgs/' + id);
       if (orgRef.current !== id) setDash(null); // évite d'afficher les chiffres d'une autre organisation
       orgRef.current = id;
+      setBrand(i.brand || null); // marque de l'entreprise (nom, assistant, logo, couleur, menu, vocabulaire) ; absente = affichage d'origine
       // Espaces par rôle (si l'entreprise les a activés) : à l'ouverture, la personne arrive dans SON espace, ou choisit entre ses espaces.
       let target = mod || 'dashboard';
       const sp = i.spaces;

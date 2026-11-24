@@ -3,6 +3,9 @@ import { useT } from '../../lib/i18n.jsx';
 import { ACCENTS, resetPrefs, setBrand, setOrder, setPrefs, toggleFavorite, usePrefs } from '../../lib/prefs.js';
 import { Alert, Button, Icon, Segmented } from '../ui/index.jsx';
 import { MODULE_ICONS } from '../registry.js';
+import { useBrand } from '../../lib/brand.js';
+import { useWs } from '../WsContext.jsx';
+import { openBrandSettings } from '../parts/team/BrandCard.jsx';
 
 /* Panneau « Personnaliser » : thème, couleur d'accent, marque de l'entreprise (logo + couleur), densité, favoris et ordre du menu.
    Tout est enregistré dans le navigateur (src/lib/prefs.js). */
@@ -26,6 +29,9 @@ export default function Personalize({ mods, orgId, orgName, canBrand }) {
   const t = useT();
   const p = usePrefs();
   const file = useRef(null);
+  const cb = useBrand();
+  const { modal } = useWs();
+  const company = cb.customized && (cb.color || cb.logoUrl); // la marque vient alors de l'entreprise (écran « Personnalisation de mon entreprise »)
   const ordered = sortMods(mods, p.order);
   const brand = p.brand[orgId] || {};
   const move = (id, d) => {
@@ -53,6 +59,8 @@ export default function Personalize({ mods, orgId, orgName, canBrand }) {
       </section>
       <section>
         <h3>{t('Marque de l\'entreprise')}</h3>
+        {company ? <Alert tone="info">{t("Le logo et la couleur viennent de la personnalisation de l'entreprise.")}</Alert> : null}
+        {canBrand ? <Button size="sm" icon="brand" onClick={() => openBrandSettings(modal, t)}>{t('Personnalisation de mon entreprise')}</Button> : null}
         <p className="muted small">{t('Logo et couleur de {org} : affichés dans le menu et utilisés comme couleur principale sur cet appareil.', { org: orgName })}</p>
         <div className="row">
           <span className="pz-logo">{brand.logo ? <img src={brand.logo} alt="" /> : <Icon name="building" />}</span>

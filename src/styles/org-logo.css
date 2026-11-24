@@ -1,0 +1,3 @@
+/* En-tête des pages publiques d'une entreprise personnalisée : sur téléphone, le nom reste à gauche du sélecteur de langue (jamais dessous). */
+.org-logo{max-width:calc(100% - 170px)}
+@media (max-width:520px){.org-logo{margin-left:14px;margin-right:auto;justify-content:flex-start}}

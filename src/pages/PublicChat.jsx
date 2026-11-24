@@ -4,6 +4,7 @@ import { API_BASE } from '../lib/api.js';
 import { getLocale, useT } from '../lib/i18n.jsx';
 import LangSwitch from '../components/LangSwitch.jsx';
 import { serverMsg } from '../components/serverMsg.js';
+import { assetUrl, usePublicBrand } from '../lib/brand.js';
 
 const LANG_CSS = '.chat-lang{position:relative;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 8px 0 12px;border:1px solid rgba(255,255,255,.45);border-radius:99px;background:rgba(255,255,255,.16);color:#fff;flex:none}.chat-lang svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}.chat-lang select{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:inherit;font:inherit;font-size:16px;font-weight:600;padding:8px 4px 8px 0;min-height:44px;cursor:pointer;max-width:100px}.chat-lang select option{color:#111}.chat-lang .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}';
 
@@ -15,6 +16,7 @@ export default function PublicChat() {
   const token = params.get('o') || '';
   const campaign = (params.get('c') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 40);
   const key = 'mi_chat_' + token;
+  const pbrand = usePublicBrand('chat', token); // logo de l'entreprise si elle l'a personnalisé (le titre de la page reste celui de la discussion)
   const [org, setOrg] = useState({ name: '', ready: false });
   const [off, setOff] = useState('');
   const [msgs, setMsgs] = useState([]);
@@ -127,7 +129,7 @@ export default function PublicChat() {
   return (
     <main className="chat" id="app">
       <style>{LANG_CSS}</style>
-      <header className="top"><div className="av" aria-hidden="true">{(orgName || '?').trim().charAt(0).toUpperCase()}</div><div style={{ minWidth: 0, flex: 1 }}><h1 style={{ overflowWrap: 'anywhere' }}>{orgName}</h1><p>{t('Assistant commercial · répond tout de suite')}</p></div><LangSwitch className="chat-lang" /></header>
+      <header className="top"><div className="av" aria-hidden="true">{pbrand.customized && pbrand.logoUrl ? <img src={assetUrl(pbrand.logoUrl)} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /> : (orgName || '?').trim().charAt(0).toUpperCase()}</div><div style={{ minWidth: 0, flex: 1 }}><h1 style={{ overflowWrap: 'anywhere' }}>{orgName}</h1><p>{t('Assistant commercial · répond tout de suite')}</p></div><LangSwitch className="chat-lang" /></header>
       <div className="log" ref={log} aria-live="polite">{msgs.map((m) => <div key={m.id} className={m.cls === 'order' ? 'order' : 'b ' + m.cls}>{m.tx ? (m.vars ? t(m.content, m.vars) : serverMsg(t, m.content)) : m.content}</div>)}</div>
       {off ? <p className="off">{serverMsg(t, off)}</p> : null}
       <form className="bar" hidden={Boolean(off)} autoComplete="off" onSubmit={send}>

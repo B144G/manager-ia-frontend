@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Logo from '../components/Logo.jsx';
+import OrgLogo, { PublicFoot } from '../components/OrgLogo.jsx';
 import LangSwitch from '../components/LangSwitch.jsx';
 import { rq } from '../lib/api.js';
 import { useT } from '../lib/i18n.jsx';
@@ -28,7 +28,7 @@ export default function ContactForm() {
   return (
     <div className="au-main" style={{ minHeight: '100vh' }}>
       <div style={{ position: 'absolute', top: 10, right: 12, zIndex: 3 }}><LangSwitch /></div>
-      <Logo className="au-logo" style={{ display: 'flex' }} />
+      <OrgLogo kind="intake" token={token} />
       <div className="au-card">
         <h1>{t('Nous écrire')}</h1>
         <p className="au-sub">{t("Décrivez votre demande : l'équipe vous répond le plus vite possible.")}</p>
@@ -44,6 +44,7 @@ export default function ContactForm() {
         ) : <p id="ok" className="s-ok">{t('Merci ! Votre message a bien été envoyé. Nous revenons vers vous très vite.')}{sent !== 'ok' ? ' ' + t('Votre référence : {ref}', { ref: sent }) : ''}</p>}
         {!sent && faq.length ? (<><h2>{t('Questions fréquentes')}</h2>{faq.slice(0, 8).map((q, i) => <details key={i}><summary>{q.question}</summary><p>{q.answer}</p></details>)}</>) : null}
       </div>
+      <PublicFoot />
     </div>
   );
 }

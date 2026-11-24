@@ -6,6 +6,7 @@ import { Empty, Form, Loading, useLoad } from '../ui.jsx';
 import { Audit, Transfer } from '../parts/w3/TeamExtras.jsx';
 import SpaceAdmin from '../spaces/SpaceAdmin.jsx';
 import OrgPosition from '../parts/geo/OrgPosition.jsx';
+import BrandCard from '../parts/team/BrandCard.jsx';
 import '../../styles/ws-geo.css';
 
 /* Sous-application : Équipe et antennes (rôles, invitations, extensions de l'organisation). */
@@ -32,6 +33,7 @@ export default function Team() {
         <div><Branches />{can('admin') ? <Invites ver={iv} /> : null}</div>
       </div>
       {can('admin') ? <SpaceAdmin /> : null}
+      {can('admin') ? <BrandCard /> : null}
       {can('admin') ? <OrgPosition /> : null}
       {can('owner') ? <Transfer /> : null}
       {can('admin') ? <Audit /> : null}

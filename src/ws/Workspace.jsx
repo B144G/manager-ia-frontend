@@ -14,6 +14,7 @@ import { hasModule, moduleComponent } from './registry.js';
 import { Empty, Form, Icon, Loading } from './ui.jsx';
 import { GuideProvider } from './guide/GuideContext.jsx';
 import { setActiveOrg, setPrefs, usePrefs } from '../lib/prefs.js';
+import { brandHide, brandOrder, setBrand, useBrand } from '../lib/brand.js';
 import { BottomNav, Footer, Sidebar, TopBar } from './shell/Frame.jsx';
 import Palette from './shell/Palette.jsx';
 import Personalize, { sortMods } from './shell/Personalize.jsx';
@@ -29,6 +30,7 @@ export default function Workspace() {
     const els = wsStyles.map((css) => { const el = document.createElement('style'); el.setAttribute('data-mia', 'ws-app'); el.textContent = css; document.head.appendChild(el); return el; });
     return () => els.forEach((e) => e.remove());
   }, []);
+  useEffect(() => () => setBrand(null), []); // en quittant l'espace de travail : affichage d'origine (la marque de l'entreprise est posée au chargement de l'organisation)
   return <WsProvider><Gate /></WsProvider>;
 }
 
@@ -99,9 +101,10 @@ function Shell() {
   const [lastSpace, setLastSpace] = useState(null);
   const sr = spaces ? resolveSpaces(spaces, route, lastSpace) : null;
   const allMods = spaces ? spaces.spaces.flatMap((s) => s.modules) : null;
-  const mods = spaces
-    ? sortMods((sr.cur ? sr.cur.modules : []).filter((m) => hasModule(m.id)), p.order)
-    : sortMods(info.modules.filter((m) => hasModule(m.id)), p.order);
+  const cb = useBrand();
+  // Ordre et visibilité choisis par l'entreprise (marque), puis ordre personnel ; dans un espace, on part des modules de l'espace.
+  const baseMods = (spaces ? (sr.cur ? sr.cur.modules : []) : info.modules).filter((m) => hasModule(m.id));
+  const mods = brandHide(sortMods(brandOrder(baseMods, cb), p.order), cb);
   let cur = route ? route.mod : 'dashboard';
   if (!spaces && !mods.some((m) => m.id === cur)) cur = 'dashboard';
   const Mod = moduleComponent(spaces ? (sr.kind === 'module' ? cur : 'dashboard') : cur);
