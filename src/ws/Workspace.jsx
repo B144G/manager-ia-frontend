@@ -1,6 +1,6 @@
 import './icons.js';
 import wsStyles from './wsStyles.js';
-import { Component, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Component, Suspense, lazy, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import InstallPrompt from '../components/InstallPrompt.jsx';
 import { useT } from '../lib/i18n.jsx';
@@ -18,6 +18,8 @@ import Palette from './shell/Palette.jsx';
 import Personalize, { sortMods } from './shell/Personalize.jsx';
 import { bindPalette } from './shell/screens.js';
 import { WsProvider, useWs } from './WsContext.jsx';
+import { useChatUnread } from './parts/chat/unread.js';
+const ChatBeacon = lazy(() => import('./parts/chat/Beacon.jsx')); // position en direct (si activée) et pastille « non lus » du chat
 
 /** Espace de travail : connexion vérifiée, choix de l'organisation, menu des sous-applications, assistant IA. */
 export default function Workspace() {
@@ -130,7 +132,8 @@ function Shell() {
   const tickets = dash ? dash.stats.tickets.open : 0;
   const alerts = dash ? dash.alerts.filter((a) => a.level !== 'info').length : 0;
   const bell = dash ? dash.alerts.filter((a) => a.level === 'high').length : 0;
-  const badgeOf = (id) => (id === 'support' ? tickets : id === 'alerts' ? alerts : 0);
+  const chatUnread = useChatUnread();
+  const badgeOf = (id) => (id === 'support' ? tickets : id === 'alerts' ? alerts : id === 'chat' ? chatUnread : 0);
   const onOrg = (e) => { const v = e.target.value; if (v === 'new') ws.setOnboarding({ code: '' }); else loadOrg(Number(v), 'dashboard'); };
 
   return (
@@ -144,6 +147,7 @@ function Shell() {
         <TopBar modTitle={curMod ? t(curMod.title) : ''} navOpen={navOpen} onNav={() => setNavOpen(!navOpen)} onAsk={askAI} orgId={orgId} bell={bell} user={user}
           role={t(info.me.roleLabel)} initials={ws.initials} onSecurity={openSecurity} onPersonalize={personalize} />
         <UserNotices orgId={orgId} />
+        <Suspense fallback={null}><ChatBeacon /></Suspense>
         <main className="ws-main" id="ws-main" ref={main} tabIndex={-1}>
           <div className="ws-mod" key={`${orgId}-${cur}-${refreshKey}`}>
             <Suspense fallback={<Loading />}><ModBoundary><Mod /></ModBoundary></Suspense>
