@@ -265,6 +265,7 @@ function LogTab({ id }) {
   );
 }
 
+import { DiscussButton } from '../chat/ObjectUI.jsx';
 export default function Detail({ id, back, edit, members }) {
   const t = useT();
   const { oapi, modal, confirm, toast, fail } = useMtg();
@@ -294,6 +295,7 @@ export default function Detail({ id, back, edit, members }) {
         <h2>{m.title}</h2>
         <div className="mtg-row"><StatusBadges m={m} /></div>
         <div className="mtg-row">
+          <DiscussButton type="meeting" id={m.id} />
           {r.manage ? <Button size="sm" icon="pen" onClick={() => edit(m.id)}>{t('Modifier')}</Button> : null}
           {r.manage && m.status !== 'cancelled' ? <Button size="sm" icon="paper-plane" onClick={() => modal(t('Envoyer les invitations'), (close) => <InviteBox close={close} meeting={m} onDone={st.reload} />)}>{t('Inviter')}</Button> : null}
           {r.manage && m.status !== 'cancelled' ? <Button size="sm" icon="whatsapp" onClick={() => modal(t('Message WhatsApp'), (close) => <WhatsApp close={close} meeting={m} />)}>WhatsApp</Button> : null}

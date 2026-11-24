@@ -1,6 +1,6 @@
 import './icons.js';
 import wsStyles from './wsStyles.js';
-import { Component, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Component, Suspense, lazy, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import InstallPrompt from '../components/InstallPrompt.jsx';
 import { useT } from '../lib/i18n.jsx';
@@ -23,6 +23,8 @@ import { WsProvider, useWs } from './WsContext.jsx';
 // Espaces par rôle (réglage d'entreprise) : nouvelle navigation, active seulement si le serveur renvoie info.spaces.enabled.
 import { SpaceBottomNav, SpaceChooser, SpaceDenied, SpaceHome, SpaceSidebar, SpacesNotice, VisitorBanner, VisitorGuard, resolveSpaces } from './spaces/SpaceFrame.jsx';
 import { Navigate } from 'react-router-dom';
+import { useChatUnread } from './parts/chat/unread.js';
+const ChatBeacon = lazy(() => import('./parts/chat/Beacon.jsx')); // position en direct (si activée) et pastille « non lus » du chat
 
 /** Espace de travail : connexion vérifiée, choix de l'organisation, menu des sous-applications, assistant IA. */
 export default function Workspace() {
@@ -150,7 +152,8 @@ function Shell() {
   const tickets = dash ? dash.stats.tickets.open : 0;
   const alerts = dash ? dash.alerts.filter((a) => a.level !== 'info').length : 0;
   const bell = dash ? dash.alerts.filter((a) => a.level === 'high').length : 0;
-  const badgeOf = (id) => (id === 'support' ? tickets : id === 'alerts' ? alerts : 0);
+  const chatUnread = useChatUnread();
+  const badgeOf = (id) => (id === 'support' ? tickets : id === 'alerts' ? alerts : id === 'chat' ? chatUnread : 0);
   const onOrg = (e) => { const v = e.target.value; if (v === 'new') ws.setOnboarding({ code: '' }); else loadOrg(Number(v), 'dashboard'); };
 
   return (
@@ -170,6 +173,7 @@ function Shell() {
           role={t(info.me.roleLabel)} initials={ws.initials} onSecurity={openSecurity} onPersonalize={personalize} />
         <UserNotices orgId={orgId} />
         {spaces ? <SpacesNotice orgId={orgId} userId={user && user.id} fallback={spaces.fallback} /> : null}
+        <Suspense fallback={null}><ChatBeacon /></Suspense>
         <main className="ws-main" id="ws-main" ref={main} tabIndex={-1}>
           <div className="ws-mod" key={`${orgId}-${cur}-${route ? route.sub : ''}-${refreshKey}`}>
             {spaces ? (

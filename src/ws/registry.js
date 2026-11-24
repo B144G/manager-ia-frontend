@@ -4,7 +4,7 @@ import { lazy } from 'react';
 // Pour en ajouter une : créez le fichier, puis ajoutez son identifiant et son icône ici.
 export const MODULE_ICONS = {
   dashboard: 'dashboard', alerts: 'alerts', support: 'support', projects: 'projects', budget: 'budget', stock: 'stock', crm: 'crm', hr: 'hr', talents: 'seedling',
-  accounting: 'accounting', library: 'library', purchasing: 'purchasing', meetings: 'calendar-check', integrations: 'integrations', billing: 'billing', sales: 'sales', aifollow: 'aifollow', structure: 'structure', processes: 'processes', team: 'team', treasury: 'sack-dollar',
+  accounting: 'accounting', library: 'library', purchasing: 'purchasing', meetings: 'calendar-check', chat: 'comments', integrations: 'integrations', billing: 'billing', sales: 'sales', aifollow: 'aifollow', structure: 'structure', processes: 'processes', team: 'team', treasury: 'sack-dollar',
   payroll: 'payroll', fiscal: 'fiscal', administration: 'building-columns', marketing: 'marketing', logistics: 'logistics', production: 'production', construction: 'construction', maintenance: 'maintenance', legal: 'legal', memory: 'memory', agents: 'agents', commercial: 'chart-line', parties: 'address-book',
 };
 
