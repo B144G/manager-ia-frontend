@@ -333,4 +333,6 @@ export default {
   "Ouvrir l'objet": "Objekt öffnen",
   "Objet introuvable.": "Objekt nicht gefunden.",
   "Le partage d'un objet n'est pas disponible dans une conversation chiffrée de bout en bout : le serveur ne peut pas lire son contenu.": "Das Teilen eines Objekts ist in einer Ende-zu-Ende-verschlüsselten Unterhaltung nicht verfügbar: Der Server kann ihren Inhalt nicht lesen.",
+  "Procès-verbal verrouillé : signatures demandées": "Protokoll gesperrt: Unterschriften angefordert",
+  "Procès-verbal signé": "Protokoll unterschrieben"
 };

@@ -6,6 +6,7 @@ import { Alert, Badge, Button, Card, EmptyState, Field, Icon, Skeleton } from '.
 import { useLoad } from '../../ui.jsx';
 import { MAJORITY_IDS, VOTE_MODE_IDS, useLabels, useMtg } from './common.jsx';
 import { NoQuorumAlert, QuorumCard } from './Quorum.jsx';
+import { DiscussButton } from '../chat/ObjectUI.jsx';
 
 /* Résolutions et vote électronique : décision soumise au vote (numéro, texte, porteur, échéance), vote à main levée saisi par le secrétaire, nominatif
    ou secret, majorité simple / qualifiée / unanimité, pondération facultative. En vote secret, le résultat agrégé est visible mais jamais le détail. */
@@ -234,6 +235,7 @@ export default function Resolutions({ j, reload, members }) {
     <div className="mtg">
       <NoQuorumAlert j={j} />
       <Card title={t('Quorum en direct')}><QuorumCard q={j.quorum} /></Card>
+      <div className="mtg-row"><DiscussButton type="meeting" id={m.id} /></div>
       <div className="mtg-row between">
         <p className="mtg-muted" style={{ margin: 0 }}>{t("Une résolution adoptée devient une décision du compte rendu ; avec un porteur ou une échéance, elle crée aussi l'action correspondante.")}</p>
         {canCreate ? <div className="mtg-row"><Button size="sm" icon="wand-magic-sparkles" loading={aiBusy} onClick={ai}>{t("Proposer avec l'IA")}</Button><Button size="sm" variant="primary" icon="plus" onClick={add}>{t('Nouvelle résolution')}</Button></div> : null}

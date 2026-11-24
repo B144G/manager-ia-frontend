@@ -13,6 +13,7 @@ import { PdfActions } from '../parts/share/Share.jsx';
 import { useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
+import { DiscussButton } from '../parts/chat/ObjectUI.jsx';
 import { Badge, Button, Card, EmptyState, Form, Loaded, Loading, PageHeader, Tabs, useLoad } from '../ui.jsx';
 
 /* Sous-application : Projets et tâches (liste des projets, tableau des tâches, plan par l'IA). */
@@ -164,6 +165,7 @@ function TaskModal({ task, tasks, close, again, actions }) {
         <Badge tone={task.status === 'done' ? 'ok' : task.status === 'doing' ? 'brand' : 'neutral'} dot>{t(TS[task.status])}</Badge>
         <span className="grow" />
         <Button size="sm" variant="primary" onClick={() => { setStatus(task, NEXT[task.status], () => { close(); again(); }); }}>{t(NEXT_LABEL[task.status])}</Button>
+        <DiscussButton type="task" id={task.id} />
         <Button size="sm" icon="edit" onClick={() => { close(); editTask(task, again); }}>{t('Modifier')}</Button>
         {can('manager') && task.projectId && task.due ? <Button size="sm" icon="arrows-left-right" onClick={() => { close(); modal(task.title, (c) => <ShiftModal task={task} close={c} done={again} />); }}>{t('Décaler')}</Button> : null}
       </div>

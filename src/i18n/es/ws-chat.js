@@ -333,4 +333,6 @@ export default {
   "Ouvrir l'objet": "Abrir el elemento",
   "Objet introuvable.": "Elemento no encontrado.",
   "Le partage d'un objet n'est pas disponible dans une conversation chiffrée de bout en bout : le serveur ne peut pas lire son contenu.": "Compartir un elemento no está disponible en una conversación cifrada de extremo a extremo: el servidor no puede leer su contenido.",
+  "Procès-verbal verrouillé : signatures demandées": "Acta bloqueada: firmas solicitadas",
+  "Procès-verbal signé": "Acta firmada"
 };

@@ -333,4 +333,6 @@ export default {
   "Ouvrir l'objet": "Open the item",
   "Objet introuvable.": "Item not found.",
   "Le partage d'un objet n'est pas disponible dans une conversation chiffrée de bout en bout : le serveur ne peut pas lire son contenu.": "Sharing an item is not available in an end-to-end encrypted conversation: the server cannot read its content.",
+  "Procès-verbal verrouillé : signatures demandées": "Minutes locked: signatures requested",
+  "Procès-verbal signé": "Minutes signed"
 };

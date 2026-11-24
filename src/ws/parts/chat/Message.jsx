@@ -137,6 +137,13 @@ export function SystemLine({ m }) {
     obj_meeting_submitted: t('Compte rendu soumis à validation'),
     obj_meeting_validated: t('Compte rendu validé (les tâches sont créées dans Projets et tâches)'),
     obj_meeting_returned: t('Compte rendu renvoyé pour correction'),
+    obj_meeting_started: t('Séance ouverte'),
+    obj_meeting_ended: t('Séance levée'),
+    obj_meeting_no_quorum: t('Séance déclarée sans quorum'),
+    obj_meeting_vote_open: t('Vote ouvert'),
+    obj_meeting_vote_close: t('Vote clos'),
+    obj_meeting_pv_locked: t('Procès-verbal verrouillé : signatures demandées'),
+    obj_meeting_pv_signed: t('Procès-verbal signé'),
   }[e.event] || '';
   const items = Array.isArray(e.items) ? e.items : e.agenda || [];
   return txt ? <div className="ci-sys"><span>{txt}{items.length > 0 && <ul className="ci-sys-list">{items.map((x, i) => <li key={i}>{x}</li>)}</ul>}</span></div> : null;
