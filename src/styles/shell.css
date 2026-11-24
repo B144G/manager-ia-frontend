@@ -17,7 +17,7 @@ body.ai-open.nav-mini .app{grid-template-columns:var(--side-w-mini) minmax(0,1fr
 .app-side-h{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-2);padding:0 var(--sp-2)}
 .app-logo{display:flex;align-items:center;gap:var(--sp-3);min-width:0;color:#fff;text-decoration:none;font-weight:var(--fw-bold);font-size:var(--fs-xl);letter-spacing:-.02em}
 .app-logo b{color:var(--brand-dk)}
-.app-logo-img{width:32px;height:32px;border-radius:var(--radius-md);object-fit:contain;flex:none;background:rgba(255,255,255,.06)}
+.app-logo-img{width:32px;height:32px;border-radius:var(--radius-md);object-fit:contain;flex:none;background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(255,255,255,.18)}
 .app-logo-t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ws-org{display:flex;gap:var(--sp-3);align-items:center;padding:var(--sp-3);border-radius:var(--radius-lg);background:var(--nav-bg-2);border:1px solid var(--nav-line)}
 .ws-org select{background:transparent;border:0;color:#fff;font-weight:var(--fw-semibold);padding:0;min-height:0;width:100%;font-size:var(--fs-md);box-shadow:none}

@@ -1,7 +1,7 @@
 // Traductions des messages du serveur : vague 7 (partage de documents).
 export default {
   "brouillon : validez d'abord le bulletin": "Entwurf: Zuerst die Abrechnung validieren",
-  "pas de compte Brij-IA lié à ce salarié : téléchargez le PDF pour le lui remettre": "kein Brij-IA-Konto mit diesem Mitarbeiter verknüpft: PDF herunterladen und übergeben",
+  "pas de compte MABAH lié à ce salarié : téléchargez le PDF pour le lui remettre": "kein MABAH-Konto mit diesem Mitarbeiter verknüpft: PDF herunterladen und übergeben",
   "c'est vous : téléchargez le PDF": "das sind Sie: PDF herunterladen",
   "déjà envoyé": "bereits gesendet",
   "Choisissez au moins un destinataire (une personne, un poste, une antenne ou un rôle).": "Wählen Sie mindestens einen Empfänger (Person, Stelle, Filiale oder Rolle).",

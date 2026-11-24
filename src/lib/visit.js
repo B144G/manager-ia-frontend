@@ -12,7 +12,7 @@ export function trackVisit(pathname) {
     if (!COUNTED.has(path)) return;
     if (!hasAnalyticsConsent()) return; // aucune mesure sans consentement explicite (bandeau de cookies)
     if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
-    const key = 'brij-seen:' + path;
+    const key = 'mabah-seen:' + path;
     try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch { /* stockage indisponible : on compte quand même */ }
     const q = new URLSearchParams(window.location.search);
     const utm = q.get('utm_source') || q.get('src') || '';

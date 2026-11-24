@@ -1,4 +1,4 @@
-# Interface Brij-IA : système de design, cadre d'application, Projets et Budget
+# Interface MABAH : système de design, cadre d'application, Projets et Budget
 
 Ce dossier documente le travail « interface professionnelle et uniforme ». Les captures de référence sont dans `captures/`, les mesures dans `taille-*.txt` et `verif-responsive.txt`, l'audit de départ dans `audit-avant.md` (régénérable : `node scripts/audit-ui.mjs`).
 

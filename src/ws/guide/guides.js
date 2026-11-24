@@ -26,7 +26,7 @@ export function buildGuides(t, { admin, mods }) {
 
   const G1 = t('Prise en main');
   add({ id: 'welcome', group: G1, title: t("Visite de l'espace de travail"), keys: 'bienvenue découvrir démarrer menu', steps: [
-    { title: t('Bienvenue sur Brij-IA'), text: t("En une minute, vous allez voir où se trouve chaque chose. Utilisez « Suivant », ou les flèches du clavier. « Échap » quitte le guide à tout moment.") },
+    { title: t('Bienvenue sur MABAH'), text: t("En une minute, vous allez voir où se trouve chaque chose. Utilisez « Suivant », ou les flèches du clavier. « Échap » quitte le guide à tout moment.") },
     { at: css('.ws-nav'), nav: true, title: t('Vos sous-applications'), text: t("Chaque métier a sa sous-application : clients, stock, budget, équipe… Cliquez sur l'une d'elles pour l'ouvrir. Le menu ne montre que ce que votre rôle permet.") },
     { at: css('.org-sel'), nav: true, optional: true, title: t('Votre organisation'), text: t("Ici, vous changez d'organisation ou vous en créez une nouvelle. Tout ce que vous voyez appartient à l'organisation choisie.") },
     { at: css('.ws-ask'), title: t("Demandez à l'IA"), text: t("Écrivez une question en français : « Quelles factures relancer ? », « Qu'est-ce qui manque en stock ? ». L'IA lit vos données et vous répond.") },
@@ -83,7 +83,7 @@ export function buildGuides(t, { admin, mods }) {
     ] });
     add({ id: 'budget-limits', group: G, title: t('Fixer des limites de dépenses'), keys: 'budget limite plafond trésorerie validation', steps: [
       open('budget', t('Ouvrez le Budget'), t('Les limites se règlent depuis cet écran.')),
-      { at: btn('Limites'), click: true, optional: true, title: t('Limites mensuelles'), text: t("Fixez un montant maximum par catégorie. Brij-IA vous alerte quand vous approchez de la limite.") },
+      { at: btn('Limites'), click: true, optional: true, title: t('Limites mensuelles'), text: t("Fixez un montant maximum par catégorie. MABAH vous alerte quand vous approchez de la limite.") },
       { at: tab('Trésorerie'), optional: true, title: t('La trésorerie'), text: t("Cet onglet montre l'argent disponible aujourd'hui et ce qui est prévu dans les prochaines semaines.") },
       { at: tab('Validations'), optional: true, title: t('Les validations'), text: t('Les dépenses importantes peuvent demander l\'accord d\'un responsable : elles attendent ici.') },
     ] });
@@ -95,7 +95,7 @@ export function buildGuides(t, { admin, mods }) {
       open('accounting', t('Ouvrez la Comptabilité'), t('Le plan comptable OHADA est préparé : les factures et les paiements y créent des écritures automatiquement.')),
       { at: tab('Journal'), click: true, optional: true, title: t('Le journal'), text: t("Toutes les écritures, de la plus récente à la plus ancienne. Une écriture validée n'est plus modifiable : on la corrige par une écriture inverse.") },
       { at: btn('Nouvelle écriture'), optional: true, title: t('Une écriture à la main'), text: t('Pour une opération sans facture : choisissez les comptes au débit et au crédit. Le total doit être équilibré.') },
-      { at: tab('Rapprochement'), click: true, optional: true, title: t('Le rapprochement bancaire'), text: t("Importez le relevé de la banque ou du Mobile Money : Brij-IA liste les lignes à pointer. Pour chacune, vous pointez, écrivez en comptabilité ou ignorez.") },
+      { at: tab('Rapprochement'), click: true, optional: true, title: t('Le rapprochement bancaire'), text: t("Importez le relevé de la banque ou du Mobile Money : MABAH liste les lignes à pointer. Pour chacune, vous pointez, écrivez en comptabilité ou ignorez.") },
       { at: tab('Résultat et bilan'), optional: true, title: t('Résultat et bilan'), text: t("Les états de fin d'exercice se calculent à partir des écritures. Ce sont des documents de travail.") },
       { at: tab('Clôture'), optional: true, title: t('La clôture'), text: t("En fin de période, vérifiez puis clôturez : les écritures de la période sont alors verrouillées.") },
     ] });
@@ -113,9 +113,9 @@ export function buildGuides(t, { admin, mods }) {
     ] });
     add({ id: 'stock-order', group: G, title: t('Commander ce qui manque'), keys: 'stock commande fournisseur achat réception rupture', steps: [
       open('stock', t('Ouvrez Stock et achats'), t('Les commandes se préparent à partir des alertes de stock.')),
-      { at: btn('Commander ce qui manque'), click: true, optional: true, title: t('Commandes proposées'), text: t("Brij-IA regroupe les articles sous le seuil par fournisseur et crée des commandes à valider. Rien n'est commandé sans votre accord.") },
+      { at: btn('Commander ce qui manque'), click: true, optional: true, title: t('Commandes proposées'), text: t("MABAH regroupe les articles sous le seuil par fournisseur et crée des commandes à valider. Rien n'est commandé sans votre accord.") },
       { at: btn('Fournisseurs'), optional: true, title: t('Vos fournisseurs'), text: t("Gardez ici leurs contacts, leurs prix et leurs délais. L'onglet « fiabilité » note leurs retards.") },
-      { at: tab('Inventaire'), optional: true, title: t("L'inventaire"), text: t('Comptez vos articles réels, saisissez les quantités : Brij-IA montre les écarts et ajuste le stock après votre validation.') },
+      { at: tab('Inventaire'), optional: true, title: t("L'inventaire"), text: t('Comptez vos articles réels, saisissez les quantités : MABAH montre les écarts et ajuste le stock après votre validation.') },
     ] });
   }
 
@@ -144,7 +144,7 @@ export function buildGuides(t, { admin, mods }) {
     ] });
     add({ id: 'hr-planning', group: G, title: t('Planning, congés et pointage'), keys: 'planning congé absence pointage présence horaire', steps: [
       open('hr', t('Ouvrez les Ressources humaines'), t('Le planning et les congés sont dans les onglets.')),
-      { at: tab('Planning'), click: true, optional: true, title: t('Le planning'), text: t("Qui travaille quand. Brij-IA signale les trous et les jours où trop de personnes sont absentes.") },
+      { at: tab('Planning'), click: true, optional: true, title: t('Le planning'), text: t("Qui travaille quand. MABAH signale les trous et les jours où trop de personnes sont absentes.") },
       { at: tab('Soldes'), optional: true, title: t('Les soldes de congés'), text: t('Combien de jours chacun a pris et lui reste. Les demandes de congé arrivent chez le responsable, qui accepte ou refuse.') },
       { at: tab('Pointage'), optional: true, title: t('Le pointage'), text: t("Les heures d'arrivée et de départ servent ensuite au calcul des heures supplémentaires.") },
     ] });
@@ -154,7 +154,7 @@ export function buildGuides(t, { admin, mods }) {
     const G = t('Équipe et paie');
     add({ id: 'payroll-run', group: G, title: t('Lancer la paie du mois'), keys: 'paie bulletin salaire cnps virement', steps: [
       open('payroll', t('Ouvrez la Paie'), t('Réservé aux administrateurs : les bulletins se préparent mois par mois.')),
-      { at: btn('Lancer la paie du mois'), click: true, optional: true, title: t('Lancer la paie'), text: t("Brij-IA calcule un bulletin par employé à partir de sa fiche. Vérifiez chaque bulletin avant de le valider.") },
+      { at: btn('Lancer la paie du mois'), click: true, optional: true, title: t('Lancer la paie'), text: t("MABAH calcule un bulletin par employé à partir de sa fiche. Vérifiez chaque bulletin avant de le valider.") },
       { at: tab('Bulletins'), optional: true, title: t('Les bulletins'), text: t("Après validation, chaque salarié ne reçoit que le sien. Ce sont des documents de travail.") },
       { at: tab('Déclarations et virements'), optional: true, title: t('Déclarations et virements'), text: t('Préparez ici le fichier de virement et les montants à déclarer.') },
     ] });
@@ -166,7 +166,7 @@ export function buildGuides(t, { admin, mods }) {
       open('projects', t('Ouvrez Projets et tâches'), t("Découpez vos objectifs en tâches et suivez l'avancement.")),
       { at: btn('Nouveau projet'), click: true, optional: true, title: t('Nouveau projet'), text: t('Cliquez pour créer un projet.') },
       { at: fld('name'), title: t('Son nom'), text: t('Donnez-lui le nom du résultat attendu : « Ouverture de la boutique », « Chantier Bastos ».') },
-      { at: fld('due'), optional: true, title: t('Sa date de fin'), text: t("Brij-IA s'en sert pour signaler les retards.") },
+      { at: fld('due'), optional: true, title: t('Sa date de fin'), text: t("MABAH s'en sert pour signaler les retards.") },
       { at: send, title: t('Créer'), text: t('Le projet s\'ouvre. Ajoutez maintenant ses tâches, avec une personne responsable et une date pour chacune.') },
       { at: btn('Ajouter une tâche'), optional: true, title: t('Ajouter une tâche'), text: t("Une tâche = une action avec un responsable et une date. Dans la frise du planning, une tâche en retard décale celles qui en dépendent.") },
     ] });
@@ -178,7 +178,7 @@ export function buildGuides(t, { admin, mods }) {
       open('marketing', t('Ouvrez le Marketing'), t('Vos campagnes, publications et offres.')),
       { at: tab('Campagnes'), click: true, optional: true, title: t('Les campagnes'), text: t('Chaque campagne a un canal, un budget et des dates. Ouvrez cet onglet pour les voir et en créer.') },
       { at: btn('Nouvelle campagne'), click: true, optional: true, title: t('Nouvelle campagne'), text: t("Choisissez le canal (WhatsApp, Facebook, affiche, radio…), le budget et les dates.") },
-      { at: send, optional: true, title: t('Enregistrer'), text: t("Pendant la campagne, notez les résultats : Brij-IA compare ce que chaque canal rapporte.") },
+      { at: send, optional: true, title: t('Enregistrer'), text: t("Pendant la campagne, notez les résultats : MABAH compare ce que chaque canal rapporte.") },
       { at: tab('Calendrier'), click: true, optional: true, title: t('Le calendrier'), text: t('Vos publications planifiées, jour après jour.') },
       { at: btn('Nouvelle publication'), optional: true, title: t('Calendrier des publications'), text: t('Planifiez vos publications à l\'avance : idée, prête, publiée.') },
     ] });
@@ -222,9 +222,9 @@ export function buildGuides(t, { admin, mods }) {
     const G = t('Stock et production');
     add({ id: 'production-order', group: G, title: t('Fabriquer : nomenclature et ordre de fabrication'), keys: 'production fabrication recette nomenclature coût de revient matière', steps: [
       open('production', t('Ouvrez la Production'), t('Vos recettes, leur coût de revient et vos ordres de fabrication.')),
-      { at: tab('Nomenclatures'), click: true, optional: true, title: t('La nomenclature'), text: t("La recette d'un produit : les matières premières et leurs quantités. Brij-IA en déduit le coût de revient.") },
+      { at: tab('Nomenclatures'), click: true, optional: true, title: t('La nomenclature'), text: t("La recette d'un produit : les matières premières et leurs quantités. MABAH en déduit le coût de revient.") },
       { at: btn('Nouvelle nomenclature'), optional: true, title: t('Nouvelle recette'), text: t('Créez-la une fois ; elle sert ensuite à chaque fabrication.') },
-      { at: tab('Ordres de fabrication'), optional: true, title: t('Les ordres de fabrication'), text: t("Un ordre consomme les matières du stock et ajoute le produit fini. Brij-IA vous dit s'il manque quelque chose avant de commencer.") },
+      { at: tab('Ordres de fabrication'), optional: true, title: t('Les ordres de fabrication'), text: t("Un ordre consomme les matières du stock et ajoute le produit fini. MABAH vous dit s'il manque quelque chose avant de commencer.") },
     ] });
   }
 
@@ -257,7 +257,7 @@ export function buildGuides(t, { admin, mods }) {
 
   if (has('structure')) add({ id: 'structure-tour', group: t('Équipe et paie'), title: t("Organiser les postes de l'entreprise"), keys: 'organisation poste organigramme responsable', steps: [
     open('structure', t("Ouvrez l'Organisation"), t('Qui fait quoi, et qui rend compte à qui.')),
-    { at: btn('Ajouter un poste'), click: true, optional: true, title: t('Ajouter un poste'), text: t("Un poste a un nom, une mission et un responsable. Brij-IA signale les zones floues et les postes sans titulaire.") },
+    { at: btn('Ajouter un poste'), click: true, optional: true, title: t('Ajouter un poste'), text: t("Un poste a un nom, une mission et un responsable. MABAH signale les zones floues et les postes sans titulaire.") },
   ] });
 
   if (has('team')) add({ id: 'team-invite', group: t('Équipe et paie'), title: t('Inviter quelqu\'un et gérer les antennes'), keys: 'équipe inviter membre rôle antenne accès code', steps: [
@@ -278,15 +278,15 @@ export function buildGuides(t, { admin, mods }) {
   ] });
 
   if (has('alerts')) add({ id: 'alerts-tour', group: G1, title: t('Comprendre les alertes'), keys: 'alerte urgent que faire retard', steps: [
-    open('alerts', t('Ouvrez les Alertes'), t("Ce que Brij-IA a repéré dans votre organisation.")),
+    open('alerts', t('Ouvrez les Alertes'), t("Ce que MABAH IA a repéré dans votre organisation.")),
     { at: css('.ws-mod .ws-card, .ws-mod .alert'), optional: true, title: t('Classées par urgence'), text: t("Les plus urgentes sont en haut. Chaque alerte dit ce qui se passe, et un bouton « Que faire ? » propose la suite.") },
     { at: css('.bell'), title: t('Aussi dans la cloche'), text: t("Un point rouge sur la cloche signale une alerte urgente. Vous pouvez aussi recevoir un résumé du matin par e-mail.") },
   ] });
 
-  if (has('integrations') && admin) add({ id: 'integrations-tour', group: t('Autres sous-applications'), title: t('Relier Brij-IA à vos autres outils'), keys: 'intégration api clé webhook zapier', steps: [
+  if (has('integrations') && admin) add({ id: 'integrations-tour', group: t('Autres sous-applications'), title: t('Relier MABAH à vos autres outils'), keys: 'intégration api clé webhook zapier', steps: [
     open('integrations', t('Ouvrez les Intégrations'), t('Zapier, webhooks et clés pour relier vos autres outils.')),
     { at: btn('Créer une clé'), click: true, optional: true, title: t('Une clé d\'accès'), text: t("Elle permet à un autre outil de lire (ou d'ajouter) des données. Gardez-la secrète : elle ne s'affiche qu'une fois.") },
-    { at: btn('Ajouter un webhook'), optional: true, title: t('Un webhook'), text: t('Brij-IA prévient un autre service dès qu\'un événement arrive (nouvelle facture, nouveau client…).') },
+    { at: btn('Ajouter un webhook'), optional: true, title: t('Un webhook'), text: t('MABAH prévient un autre service dès qu\'un événement arrive (nouvelle facture, nouveau client…).') },
   ] });
 
   if (has('agents')) add({ id: 'agents-tour', group: t('Autres sous-applications'), title: t("Votre équipe d'agents IA"), keys: 'agent ia assistant digest automatique', steps: [

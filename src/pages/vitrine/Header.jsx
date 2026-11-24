@@ -8,8 +8,8 @@ import { useT } from '../../lib/i18n.jsx';
 export function VtLogo() {
   const t = useT();
   return (
-    <Link className="vt-logo" to="/" aria-label={t('Brij-IA, accueil')}>
-      <img src="/logo.svg" alt="" width="36" height="36" /><span>Brij<b>-IA</b></span>
+    <Link className="vt-logo" to="/" aria-label={t('MABAH, accueil')}>
+      <img src="/logo.svg" alt="" width="36" height="36" /><span>MABAH</span>
     </Link>
   );
 }

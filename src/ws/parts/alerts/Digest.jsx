@@ -57,7 +57,7 @@ function Body({ j, reload, oapi, toast, fail, dateFr }) {
 
   return (
     <>
-      <p className="muted small">{t("Recevez chaque matin un court point (impayés, stock, tâches en retard, échéances, conversations en attente) et, si vous le souhaitez, une alerte quand quelque chose d'urgent arrive. Le message est préparé par Brij-IA, sans IA.")}</p>
+      <p className="muted small">{t("Recevez chaque matin un court point (impayés, stock, tâches en retard, échéances, conversations en attente) et, si vous le souhaitez, une alerte quand quelque chose d'urgent arrive. Le message est préparé par MABAH, sans IA.")}</p>
       {!j.mailEnabled ? <p className="ws-err" role="alert">{t("L'envoi d'e-mails n'est pas encore activé sur ce serveur : le résumé et les alertes ne partiront pas tant que l'administrateur n'a pas configuré le service d'e-mail.")}</p> : null}
 
       <form className="ws-form" onSubmit={save}>

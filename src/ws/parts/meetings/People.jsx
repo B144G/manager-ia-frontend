@@ -66,7 +66,7 @@ function Performance({ openMeeting }) {
     oapi('POST', '/meetings/ai/commitments', {}).then((j) => setAi({ busy: false, items: j.reminders || [], error: '', info: '' }))
       .catch((e) => {
         if (e && e.status === 401) { fail(e); setAi({ busy: false, items: null, error: '', info: '' }); return; }
-        if (e && e.status === 503) setAi({ busy: false, items: null, error: '', info: t("Brij-IA n'est pas encore activée sur ce serveur. Vous pouvez relancer l'équipe avec le bouton « Relancer l'équipe », ou écrire les messages vous-même.") });
+        if (e && e.status === 503) setAi({ busy: false, items: null, error: '', info: t("MABAH n'est pas encore activée sur ce serveur. Vous pouvez relancer l'équipe avec le bouton « Relancer l'équipe », ou écrire les messages vous-même.") });
         else setAi({ busy: false, items: null, error: tsrv((e && e.message) || 'Erreur'), info: '' });
       });
   };
@@ -130,7 +130,7 @@ function Performance({ openMeeting }) {
       ) : <EmptyState icon="user-group" title={t('Aucune donnée sur cette période')}>{t('Les engagements, présences et résolutions apparaîtront ici dès que des réunions auront eu lieu.')}</EmptyState>}
 
       <Card title={t('Engagements non tenus')} subtitle={t('Actions décidées en réunion dont l\'échéance est dépassée.')}
-        actions={team ? <div className="mtg-row"><Button icon="bell" onClick={remind} disabled={!lateList.length}>{t("Relancer l'équipe")}</Button><Button icon="wand-magic-sparkles" onClick={draft} loading={ai.busy} disabled={!lateList.length}>{t('Rédiger les relances avec Brij-IA')}</Button></div> : null}>
+        actions={team ? <div className="mtg-row"><Button icon="bell" onClick={remind} disabled={!lateList.length}>{t("Relancer l'équipe")}</Button><Button icon="wand-magic-sparkles" onClick={draft} loading={ai.busy} disabled={!lateList.length}>{t('Rédiger les relances avec MABAH')}</Button></div> : null}>
         {late.error ? <Failed e={late.error} /> : null}
         {late.loading && !late.data ? <Skeleton lines={3} /> : null}
         {late.data && !lateList.length ? <EmptyState icon="circle-check" title={t('Aucun engagement en retard')}>{t('Tous les engagements échus ont été tenus.')}</EmptyState> : null}
@@ -141,13 +141,13 @@ function Performance({ openMeeting }) {
             <Badge tone="danger">{t('{n} jour(s) de retard', { n: a.daysLate })}</Badge>
           </button></li>
         ))}</ul>
-        {team ? <p className="mtg-muted">{t("« Relancer l'équipe » envoie une notice dans l'application (et un e-mail si le serveur d'e-mails est configuré). Brij-IA ne propose que des brouillons : rien n'est envoyé sans vous.")}</p> : null}
+        {team ? <p className="mtg-muted">{t("« Relancer l'équipe » envoie une notice dans l'application (et un e-mail si le serveur d'e-mails est configuré). MABAH ne propose que des brouillons : rien n'est envoyé sans vous.")}</p> : null}
       </Card>
 
-      {ai.info ? <Alert tone="info" title={t('Brij-IA indisponible')}>{ai.info}</Alert> : null}
+      {ai.info ? <Alert tone="info" title={t('MABAH indisponible')}>{ai.info}</Alert> : null}
       {ai.error ? <Alert tone="danger">{ai.error}</Alert> : null}
       {ai.items ? (
-        <Card className="mtg-ai" title={t('Relances proposées par Brij-IA')} subtitle={t("Brouillons à relire et à corriger. Copiez-les puis envoyez-les vous-même : rien n'est envoyé automatiquement.")}>
+        <Card className="mtg-ai" title={t('Relances proposées par MABAH')} subtitle={t("Brouillons à relire et à corriger. Copiez-les puis envoyez-les vous-même : rien n'est envoyé automatiquement.")}>
           {ai.items.length ? <ul className="mtg-list">{ai.items.map((r, i) => (
             <li key={i} className="mtg-adv-msg">
               <b>{r.assignee || t('Responsable à définir')}</b>

@@ -1,14 +1,14 @@
 {
-  "name": "Brij-IA",
-  "short_name": "Brij-IA",
-  "description": "L'agent IA qui gère votre activité avec vous : stock, clients, ventes, équipe, comptabilité.",
+  "name": "MABAH",
+  "short_name": "MABAH",
+  "description": "L'outil de gestion de votre entreprise, avec MABAH IA en renfort : ventes, stock, factures, équipe, comptabilité.",
   "lang": "fr",
   "start_url": "/app",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#0a101e",
-  "theme_color": "#4f46e5",
+  "theme_color": "#0b5fd6",
   "icons": [
     {
       "src": "/assets/icons/icon-192.png",

@@ -6,7 +6,7 @@ import AccountSecurity from '../ws/AccountSecurity.jsx';
 import { useWs } from '../ws/WsContext.jsx';
 
 const BOX = { position: 'fixed', left: 12, bottom: 12, zIndex: 80, background: '#0b1322', color: '#fff', borderRadius: 14, padding: '12px 14px', boxShadow: '0 8px 30px rgba(0,0,0,.35)', maxWidth: 440, display: 'grid', gap: 10 };
-const noteKey = 'brij-2fa-nudge';
+const noteKey = 'mabah-2fa-nudge';
 // Lu au chargement du module : le routeur retire ensuite ?securite=1 de l'adresse.
 let wantSecurity = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('securite') === '1';
 
@@ -27,8 +27,8 @@ export default function SecurityNudge() {
   }, []);
   useEffect(() => {
     const on = (e) => setRequired((e.detail && e.detail.message) || '');
-    window.addEventListener('brij:twofa-required', on);
-    return () => window.removeEventListener('brij:twofa-required', on);
+    window.addEventListener('mabah:twofa-required', on);
+    return () => window.removeEventListener('mabah:twofa-required', on);
   }, []);
   useEffect(() => {
     if (wantSecurity) { wantSecurity = false; open(); }

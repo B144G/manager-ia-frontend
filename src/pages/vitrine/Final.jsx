@@ -13,7 +13,7 @@ export default function Final() {
         <p>{t("Créez votre espace gratuit en quelques minutes, sans carte bancaire. Une question ? Écrivez-nous sur WhatsApp : nous vous répondons.")}</p>
         <div className="vt-cta">
           <Link to="/inscription" className="vt-btn vt-btn--dark vt-btn--lg">{t('Essai gratuit')}<Fa name="arrow-right" /></Link>
-          <a className="vt-btn vt-btn--secondary vt-btn--lg" href={waLink(t('Bonjour, je voudrais en savoir plus sur Brij-IA.'))} target="_blank" rel="noopener noreferrer"><Fa name="whatsapp" />{t('Écrire sur WhatsApp')}</a>
+          <a className="vt-btn vt-btn--secondary vt-btn--lg" href={waLink(t('Bonjour, je voudrais en savoir plus sur MABAH.'))} target="_blank" rel="noopener noreferrer"><Fa name="whatsapp" />{t('Écrire sur WhatsApp')}</a>
         </div>
       </div>
     </section>

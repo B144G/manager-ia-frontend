@@ -51,7 +51,7 @@ export default function Footer({ onPlay }) {
           </div>
         </div>
         <div className="vt-legalrow">
-          <span>© {new Date().getFullYear()} Brij-IA</span>
+          <span>© {new Date().getFullYear()} MABAH</span>
           <span>{t('Français · English · Deutsch · Español')}</span>
         </div>
       </div>

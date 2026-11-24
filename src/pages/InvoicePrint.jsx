@@ -6,7 +6,7 @@ import { dateFr } from '../lib/format.js';
 import { setBrand, useBrand } from '../lib/brand.js';
 
 /* Page d'impression d'une facture, d'un devis ou d'un avoir (sans dépendance : le navigateur produit le PDF via « Imprimer »).
-   Document généré par Brij-IA. */
+   Document généré par MABAH. */
 
 const CSS = `
 .ip{font:14px/1.45 Arial,Helvetica,sans-serif;color:#111;background:#fff;max-width:800px;margin:0 auto;padding:24px 16px}
@@ -83,7 +83,7 @@ export default function InvoicePrint() {
       {p.org.payInfo ? <p className="small"><b>{t('Règlement')}</b><br />{p.org.payInfo.split('\n').map((l, i) => <span key={i}>{l}<br /></span>)}</p> : null}
       {p.org.footer ? <p className="small">{p.org.footer.split('\n').map((l, i) => <span key={i}>{l}<br /></span>)}</p> : null}
       {cb.customized && cb.pdfFooter ? <p className="small">{cb.pdfFooter}</p> : null}
-      <div className="wd">{t("Document généré par Brij-IA.")}</div>
+      <div className="wd">{t("Document généré par MABAH.")}</div>
     </div>
   );
 }

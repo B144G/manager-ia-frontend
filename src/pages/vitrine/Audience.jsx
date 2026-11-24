@@ -11,17 +11,17 @@ export default function Audience() {
   const [k, setK] = useState(0);
   const list = useRef(null);
   const jobs = [
-    { icon: 'store', fa: false, tab: t('Commerce'), title: t('Vendre plus, sans courir après les clients'), img: 'crm', alt: t("Écran « Clients et ventes » de Brij-IA (données d'exemple)"),
+    { icon: 'store', fa: false, tab: t('Commerce'), title: t('Vendre plus, sans courir après les clients'), img: 'crm', alt: t("Écran « Clients et ventes » de MABAH (données d'exemple)"),
       pts: [t("Réponses WhatsApp à toute heure, avec vos vrais prix"), t('Devis, factures et relances des impayés'), t('Stock à jour et alertes de rupture')] },
-    { icon: 'industry', fa: true, tab: t('Atelier et fabrication'), title: t('Savoir ce que coûte vraiment ce que vous fabriquez'), img: 'production', alt: t("Écran « Production » de Brij-IA (données d'exemple)"),
+    { icon: 'industry', fa: true, tab: t('Atelier et fabrication'), title: t('Savoir ce que coûte vraiment ce que vous fabriquez'), img: 'production', alt: t("Écran « Production » de MABAH (données d'exemple)"),
       pts: [t('Nomenclatures et coût de revient'), t('Ordres de fabrication suivis'), t('Matières premières reliées au stock et aux achats')] },
-    { icon: 'school', fa: false, tab: t('École et formation'), title: t("Moins d'administratif, plus de temps pour enseigner"), img: 'hr', alt: t("Écran « Ressources humaines » de Brij-IA (données d'exemple)"),
+    { icon: 'school', fa: false, tab: t('École et formation'), title: t("Moins d'administratif, plus de temps pour enseigner"), img: 'hr', alt: t("Écran « Ressources humaines » de MABAH (données d'exemple)"),
       pts: [t('Frais et impayés suivis, avec des relances déjà rédigées'), t('Personnel, congés et planning de la semaine'), t('Budget et paie du personnel au même endroit')] },
-    { icon: 'food', fa: false, tab: t('Restaurant'), title: t('Ne plus tomber en rupture au mauvais moment'), img: 'stock', alt: t("Écran « Stock et entrepôt » de Brij-IA (données d'exemple)"),
+    { icon: 'food', fa: false, tab: t('Restaurant'), title: t('Ne plus tomber en rupture au mauvais moment'), img: 'stock', alt: t("Écran « Stock et entrepôt » de MABAH (données d'exemple)"),
       pts: [t('Stock et alertes de rupture'), t('Fournisseurs comparés et bons de commande'), t("Planning de l'équipe et paie")] },
-    { icon: 'truck', fa: true, tab: t('Transport et logistique'), title: t('Des livraisons suivies, des clients prévenus'), img: 'logistics', alt: t("Écran « Logistique et transport » de Brij-IA (données d'exemple)"),
+    { icon: 'truck', fa: true, tab: t('Transport et logistique'), title: t('Des livraisons suivies, des clients prévenus'), img: 'logistics', alt: t("Écran « Logistique et transport » de MABAH (données d'exemple)"),
       pts: [t('Livraisons, retards et tournées'), t('Lien de suivi pour le client'), t('Zones, transporteurs et coûts de transport')] },
-    { icon: 'helmet', fa: true, tab: t('BTP'), title: t('Des chantiers qui respectent le budget'), img: 'construction', alt: t("Écran « Chantiers (BTP) » de Brij-IA (données d'exemple)"),
+    { icon: 'helmet', fa: true, tab: t('BTP'), title: t('Des chantiers qui respectent le budget'), img: 'construction', alt: t("Écran « Chantiers (BTP) » de MABAH (données d'exemple)"),
       pts: [t('Phases, budget et pointages'), t('Rapports et situations de travaux'), t('Achats de matériaux et maintenance du matériel')] },
   ];
   const onKey = (e) => {

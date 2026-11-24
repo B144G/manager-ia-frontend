@@ -114,9 +114,9 @@ function FeedbackForm({ orgId, onDone }) {
   }
   return (
     <form className="ws-form fb-form" noValidate onSubmit={submit}>
-      <p className="muted">{t("Votre avis aide à améliorer Brij-IA. Il est lu par le fondateur ; il n'est jamais publié sans votre accord.")}</p>
+      <p className="muted">{t("Votre avis aide à améliorer MABAH. Il est lu par le fondateur ; il n'est jamais publié sans votre accord.")}</p>
       <div className="fld"><span id="fb-s">{t('Votre note')}</span><Stars value={v.stars} onChange={(n) => set('stars', n)} /></div>
-      <div className="fld"><span>{t('Recommanderiez-vous Brij-IA à un ami ou un collègue ?')}</span><Nps value={v.nps} onChange={(n) => set('nps', n)} /></div>
+      <div className="fld"><span>{t('Recommanderiez-vous MABAH à un ami ou un collègue ?')}</span><Nps value={v.nps} onChange={(n) => set('nps', n)} /></div>
       <div className="fb-two">
         <label className="fld" htmlFor="fb-kind"><span>{t('Type de message')}</span><select id="fb-kind" value={v.kind} onChange={(e) => set('kind', e.target.value)}>{KINDS.map(([k, l]) => <option key={k} value={k}>{t(l)}</option>)}</select></label>
         <label className="fld" htmlFor="fb-mod"><span>{t('Module concerné')}</span><select id="fb-mod" value={v.module} onChange={(e) => set('module', e.target.value)}><option value="general">{t('Ensemble du logiciel')}</option>{mods.map(([id, l]) => <option key={id} value={id}>{l}</option>)}</select></label>
@@ -147,7 +147,7 @@ export function FeedbackPanel({ orgId }) {
         <button role="tab" type="button" aria-selected={tab === 'mine'} className={tab === 'mine' ? 'on' : ''} onClick={() => setTab('mine')}>{t('Mes avis')}</button>
       </div>
       {tab === 'mine' ? <Mine orgId={orgId} onNew={() => setTab('new')} /> : done
-        ? <div className="fb-thanks" role="status"><Icon name="circle-check" /><h3>{t('Merci pour votre avis !')}</h3><p className="muted">{t('Il a été transmis au fondateur de Brij-IA. Vous pouvez le retrouver, le retirer ou le supprimer dans « Mes avis ».')}</p><Button onClick={() => setTab('mine')}>{t('Voir mes avis')}</Button></div>
+        ? <div className="fb-thanks" role="status"><Icon name="circle-check" /><h3>{t('Merci pour votre avis !')}</h3><p className="muted">{t('Il a été transmis au fondateur de MABAH. Vous pouvez le retrouver, le retirer ou le supprimer dans « Mes avis ».')}</p><Button onClick={() => setTab('mine')}>{t('Voir mes avis')}</Button></div>
         : <FeedbackForm orgId={orgId} onDone={() => setDone(true)} />}
     </div>
   );

@@ -11,7 +11,7 @@ const KINDS = {
   terms: "Conditions d'utilisation",
   privacy: 'Politique de confidentialité',
   cookies: "Cookies et mesure d'audience",
-  marketing: 'Informations et offres de Brij-IA',
+  marketing: 'Informations et offres de MABAH',
   ai_processing: "Traitement par l'intelligence artificielle",
 };
 const KIND_HELP = {
@@ -31,11 +31,11 @@ export default function PrivacyCenter() {
   const orgs = useData(() => api('GET', '/orgs').then((j) => j.orgs || []), []);
   const adminOrgs = (orgs.data || []).filter((o) => o.role === 'admin' || o.role === 'owner');
   const orgTab = tab === 'organisation';
-  useEffect(() => { document.title = t('Confidentialité et mes données') + ' · Brij-IA'; }, [t]);
+  useEffect(() => { document.title = t('Confidentialité et mes données') + ' · MABAH'; }, [t]);
   useEffect(() => { if (tab && tab !== 'organisation') navigate('/app/confidentialite', { replace: true }); }, [tab, navigate]);
   return (
     <div className="ws-center" style={{ alignContent: 'start' }}>
-      <Link className="logo" to="/app">Brij<b>-IA</b></Link>
+      <Link className="logo" to="/app">MABAH</Link>
       <div className="ws-card">
         <p className="small"><Link to="/app">{t('← Retour à mon espace')}</Link></p>
         <h1>{t('Confidentialité et mes données')}</h1>
@@ -141,7 +141,7 @@ function ExportBox() {
   const [busy, setBusy] = useState(false);
   const go = async () => {
     clear(); setBusy(true);
-    try { await downloadFile('/api/privacy/export', 'mes-donnees-brij-ia.json'); ok(t('Votre export a été téléchargé.')); } catch (e) { bad(e); }
+    try { await downloadFile('/api/privacy/export', 'mes-donnees-mabah.json'); ok(t('Votre export a été téléchargé.')); } catch (e) { bad(e); }
     setBusy(false);
   };
   return (

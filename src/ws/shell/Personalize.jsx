@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useT } from '../../lib/i18n.jsx';
-import { ACCENTS, resetPrefs, setBrand, setOrder, setPrefs, toggleFavorite, usePrefs } from '../../lib/prefs.js';
+import { ACCENTS, defaultBrandHex, resetPrefs, setBrand, setOrder, setPrefs, toggleFavorite, usePrefs } from '../../lib/prefs.js';
 import { Alert, Button, Icon, Segmented } from '../ui/index.jsx';
 import { MODULE_ICONS } from '../registry.js';
 import { useBrand } from '../../lib/brand.js';
@@ -38,7 +38,7 @@ export default function Personalize({ mods, orgId, orgName, canBrand }) {
     const ids = ordered.map((m) => m.id); const i = ids.indexOf(id); const j = i + d;
     if (j < 0 || j >= ids.length) return; [ids[i], ids[j]] = [ids[j], ids[i]]; setOrder(ids);
   };
-  const custom = /^#[0-9a-f]{6}$/i.test(p.accent) ? p.accent : '#4f46e5';
+  const custom = /^#[0-9a-f]{6}$/i.test(p.accent) ? p.accent : defaultBrandHex();
   return (
     <div className="pz">
       <section>

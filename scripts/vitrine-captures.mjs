@@ -14,12 +14,15 @@ const ONLY = (process.env.ONLY || '').split(',').filter(Boolean); // ex. ONLY=pr
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 async function clean(p) {
   await p.evaluate(() => {
+    document.querySelectorAll('button').forEach((b) => { if (/^C.est noté$/.test(b.textContent.trim())) b.click(); });
     document.querySelectorAll('button').forEach((b) => { if (/^(Plus tard|Fermer|Passer)$/.test(b.textContent.trim()) && b.closest('[role=dialog],[class*=tour],[class*=toast],[class*=install],[class*=guide],[class*=notice]')) b.click(); });
     document.querySelectorAll('body *').forEach((e) => { const s = getComputedStyle(e); if (s.position === 'fixed' && !e.querySelector('nav') && e.offsetWidth < 520 && e.offsetHeight < 260 && e.getBoundingClientRect().top > innerHeight * 0.4) e.style.display = 'none'; });
   });
 }
 const b = await puppeteer.launch({ executablePath: CHROME, headless: 'new', args: ['--no-sandbox'] });
 const p = await b.newPage();
+// Pas de bandeau de cookies, de guide ni de rappel de sécurité sur les captures (choix « refuser » déjà enregistré).
+await p.evaluateOnNewDocument(() => { try { localStorage.setItem('mabah-cookies', JSON.stringify({ v: '2026-11-16', at: new Date().toISOString(), analytics: false })); localStorage.setItem('mabah-guide-seen', 'true'); localStorage.setItem('mabah-guide-done', 'true'); sessionStorage.setItem('mabah-2fa-nudge', '1'); } catch (e) { /* ignoré */ } });
 await p.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
 await p.goto(BASE + '/connexion?stay=1', { waitUntil: 'networkidle0' });
 await p.evaluate(() => fetch('/api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ contact: 'proprietaire@exemple.com', pass: 'Essai-2026-brij' }) }));

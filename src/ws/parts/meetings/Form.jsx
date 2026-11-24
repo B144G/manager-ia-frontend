@@ -151,7 +151,7 @@ export default function MeetingForm({ meeting, detail, prefillDate, done, cancel
           </div>
           <div className="mtg-grid2">
             <Field label={t('Lieu')}>{(p) => <input {...p} value={f.place} onChange={(e) => set('place', e.target.value)} maxLength={200} placeholder={t('Salle, adresse…')} />}</Field>
-            <Field label={t('Lien de visioconférence')} hint={t('Collez un lien Meet, Zoom, Teams ou WhatsApp : Brij-IA ne fait que le transmettre aux participants.')}>{(p) => <input {...p} type="url" inputMode="url" value={f.link} onChange={(e) => set('link', e.target.value)} placeholder="https://" />}</Field>
+            <Field label={t('Lien de visioconférence')} hint={t('Collez un lien Meet, Zoom, Teams ou WhatsApp : MABAH ne fait que le transmettre aux participants.')}>{(p) => <input {...p} type="url" inputMode="url" value={f.link} onChange={(e) => set('link', e.target.value)} placeholder="https://" />}</Field>
           </div>
           <Field label={t('Objet de la réunion')}>{(p) => <textarea {...p} rows={2} value={f.objective} onChange={(e) => set('objective', e.target.value)} maxLength={2000} />}</Field>
           <div className="mtg-grid2">

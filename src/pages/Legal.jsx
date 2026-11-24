@@ -15,7 +15,7 @@ const CONTACT_MAIL = 'tendabrandon9@gmail.com';
 function Shell({ title, children }) {
   const t = useT();
   const ttl = t(title);
-  useEffect(() => { document.title = ttl + ' · Brij-IA'; }, [ttl]);
+  useEffect(() => { document.title = ttl + ' · MABAH'; }, [ttl]);
   useEffect(() => { window.scrollTo(0, 0); }, [title]);
   const updated = new Intl.DateTimeFormat(getLocale(), { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(Date.UTC(UPDATED_ISO[0], UPDATED_ISO[1], UPDATED_ISO[2], 12)));
   return (
@@ -43,7 +43,7 @@ export function Privacy() {
   return (
     <Shell title="Politique de confidentialité">
       <h2>{t('Qui sommes-nous')}</h2>
-      <p>{rich(t("Brij-IA est une plateforme de gestion d'activité assistée par l'intelligence artificielle, éditée par BrandX Creation (Cameroun). Contact : {mail}."), { mail })}</p>
+      <p>{rich(t("MABAH est une plateforme de gestion d'activité assistée par l'intelligence artificielle, éditée par BrandX Creation (Cameroun). Contact : {mail}."), { mail })}</p>
       <h2>{t('Les données que nous traitons')}</h2>
       <ul>
         <li>{rich(t('{b} nom, adresse e-mail ou numéro de téléphone, mot de passe (conservé sous forme chiffrée, jamais en clair) et offre choisie.'), { b: <b>{t('Votre compte :')}</b> })}</li>
@@ -64,7 +64,7 @@ export function Privacy() {
       <h2>{t('Sécurité')}</h2>
       <p>{t("Mots de passe chiffrés, jetons d'accès aux canaux chiffrés, séparation des données de chaque organisation, droits par rôle, double authentification disponible et journal d'audit des actions sensibles. Aucun système n'est infaillible : en cas d'incident touchant vos données, nous vous en informons.")}</p>
       <h2>{t('Cookies et stockage local')}</h2>
-      <p>{t("Brij-IA utilise un cookie de session indispensable pour vous maintenir connecté, et le stockage du navigateur pour mémoriser le thème clair ou sombre et accélérer le chargement. Nous n'utilisons pas de cookies publicitaires.")}</p>
+      <p>{t("MABAH utilise un cookie de session indispensable pour vous maintenir connecté, et le stockage du navigateur pour mémoriser le thème clair ou sombre et accélérer le chargement. Nous n'utilisons pas de cookies publicitaires.")}</p>
       <h2>{t('Statistiques de visite et demandes de contact')}</h2>
       <p>{t("Pour savoir combien de personnes lisent nos pages, un compteur anonyme enregistre la page vue, le site d'où vient la visite et le type d'appareil (téléphone ou ordinateur). Il n'enregistre ni adresse IP, ni cookie, ni identifiant : nous ne pouvons pas savoir qui vous êtes. Il respecte le réglage « Ne pas me suivre » de votre navigateur.")}</p>
       <p>{t("Si vous laissez vos coordonnées dans un formulaire (« Être contacté », contact), nous les utilisons pour vous répondre. Si vous cochez la case prévue et laissez une adresse e-mail, vous recevez au plus trois e-mails de conseils, chacun avec un lien pour vous désinscrire. Pour effacer vos coordonnées, écrivez-nous depuis cette adresse.")}</p>
@@ -86,7 +86,7 @@ export function Terms() {
   return (
     <Shell title="Conditions d'utilisation">
       <h2>{t('Le service')}</h2>
-      <p>{t("Brij-IA aide à gérer une activité (ventes, stock, comptabilité, équipe, etc.) et à répondre aux clients sur des canaux de messagerie, avec l'aide d'une intelligence artificielle. L'IA propose, vous validez : vous restez responsable de vos décisions.")}</p>
+      <p>{t("MABAH aide à gérer une activité (ventes, stock, comptabilité, équipe, etc.) et à répondre aux clients sur des canaux de messagerie, avec l'aide d'une intelligence artificielle. L'IA propose, vous validez : vous restez responsable de vos décisions.")}</p>
       <h2>{t('Votre compte')}</h2>
       <p>{t("Vous devez fournir des informations exactes, protéger votre mot de passe et nous prévenir en cas d'usage non autorisé. Vous êtes responsable des personnes que vous invitez dans votre organisation et des droits que vous leur donnez.")}</p>
       <h2>{t('Utilisation acceptable')}</h2>

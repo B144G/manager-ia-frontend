@@ -9,12 +9,12 @@ const TARGETS = ['es2019', 'chrome64', 'edge88', 'firefox78', 'safari13', 'ios13
 
 // Adresse publique du site : UNE seule source. Variable SITE_URL (ou VITE_SITE_URL) à la construction ; sinon la valeur par défaut ci-dessous.
 // Elle remplace %SITE_URL% dans index.html (canonical, og, JSON-LD) et dans seo/sitemap.xml et seo/robots.txt (publiés à la racine du site).
-const DEFAULT_SITE_URL = 'https://manager-ia-frontend.vercel.app';
+const DEFAULT_SITE_URL = 'https://mabah.vercel.app';
 function siteUrlPlugin(raw) {
   const url = String(raw || DEFAULT_SITE_URL).trim().replace(/\/+$/, '');
   const fill = (s) => s.replace(/%SITE_URL%/g, url);
   return {
-    name: 'brij-site-url',
+    name: 'mabah-site-url',
     transformIndexHtml: { order: 'pre', handler: fill },
     generateBundle() {
       for (const f of ['sitemap.xml', 'robots.txt']) this.emitFile({ type: 'asset', fileName: f, source: fill(fs.readFileSync(new URL('./seo/' + f, import.meta.url), 'utf8')) });
@@ -25,7 +25,7 @@ function siteUrlPlugin(raw) {
 // Précharge la police Inter (sous-ensemble latin) : le texte du premier écran s'affiche dans la bonne police sans attendre la fin du chargement des styles.
 function preloadFontPlugin() {
   return {
-    name: 'brij-preload-font',
+    name: 'mabah-preload-font',
     transformIndexHtml: {
       order: 'post',
       handler(html, ctx) {

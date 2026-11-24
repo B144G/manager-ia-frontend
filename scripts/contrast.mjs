@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer-core');
 const [mods = 'dashboard', theme = 'clair', w = '1280'] = process.argv.slice(2);
 const b = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new' });
 const p = await b.newPage(); await p.setViewport({ width: Number(w), height: 900 });
-await p.evaluateOnNewDocument((th) => { localStorage.setItem('mi_prefs_v1', JSON.stringify({ theme: th === 'sombre' ? 'dark' : 'light' })); localStorage.setItem('brij-guide-seen', 'true'); }, theme);
+await p.evaluateOnNewDocument((th) => { localStorage.setItem('mi_prefs_v1', JSON.stringify({ theme: th === 'sombre' ? 'dark' : 'light' })); localStorage.setItem('mabah-guide-seen', 'true'); }, theme);
 await p.goto((process.env.BASE || 'http://localhost:5184') + '/connexion', { waitUntil: 'networkidle0' });
 if (await p.$('#contact')) { await p.type('#contact', 'proprietaire@exemple.com'); await p.type('#pass', 'Essai-2026-brij'); await Promise.all([p.waitForFunction(() => location.pathname.startsWith('/app'), { timeout: 20000 }).catch(() => {}), p.click('#go')]); }
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));

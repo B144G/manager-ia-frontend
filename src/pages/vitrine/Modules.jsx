@@ -55,7 +55,7 @@ export default function Modules({ mods }) {
                     <div className="m out">{t('Bonjour ! Oui, elle est disponible : 45 000 FCFA. Voulez-vous que je prépare une commande ?')}</div>
                   </div>
                 ) : (
-                  <div className="vt-bimg"><img src={shot(id, 720)} srcSet={`${shot(id, 480)} 480w, ${shot(id, 720)} 720w, ${shot(id, 1280)} 1280w`} sizes={sizes} width="1280" height="760" loading="lazy" decoding="async" alt={t("Écran « {title} » de Brij-IA (données d'exemple)", { title: m.title })} /></div>
+                  <div className="vt-bimg"><img src={shot(id, 720)} srcSet={`${shot(id, 480)} 480w, ${shot(id, 720)} 720w, ${shot(id, 1280)} 1280w`} sizes={sizes} width="1280" height="760" loading="lazy" decoding="async" alt={t("Écran « {title} » de MABAH (données d'exemple)", { title: m.title })} /></div>
                 )}
               </article>
             );

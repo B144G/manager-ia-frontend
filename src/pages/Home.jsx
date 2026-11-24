@@ -31,10 +31,10 @@ function VideoModal({ onClose }) {
     return () => { document.removeEventListener('keydown', key); document.body.style.overflow = ''; if (last.current && last.current.focus) last.current.focus(); };
   }, [onClose]);
   return (
-    <div className="vt-modal" role="dialog" aria-modal="true" aria-label={t('Vidéo de présentation de Brij-IA')} onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+    <div className="vt-modal" role="dialog" aria-modal="true" aria-label={t('Vidéo de présentation de MABAH')} onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="box">
         <button type="button" className="x" aria-label={t('Fermer')} autoFocus onClick={onClose}>×</button>
-        <video controls autoPlay playsInline preload="none" poster="/video/poster.jpg" aria-label={t('Vidéo de présentation de Brij-IA')}><source src="/video/manager-ia.mp4" type="video/mp4" /></video>
+        <video controls autoPlay playsInline preload="none" poster="/video/poster.jpg" aria-label={t('Vidéo de présentation de MABAH')}><source src="/video/manager-ia.mp4" type="video/mp4" /></video>
       </div>
     </div>
   );

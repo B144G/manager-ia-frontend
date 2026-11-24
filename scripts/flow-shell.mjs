@@ -9,7 +9,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const b = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: 'new' });
 const p = await b.newPage(); await p.setViewport({ width: 1280, height: 800 });
 const log = [];
-await p.evaluateOnNewDocument(() => { localStorage.setItem('brij-guide-seen', 'true'); });
+await p.evaluateOnNewDocument(() => { localStorage.setItem('mabah-guide-seen', 'true'); });
 await p.goto((process.env.BASE || 'http://localhost:5184') + '/connexion', { waitUntil: 'networkidle0' });
 await p.type('#contact', 'proprietaire@exemple.com'); await p.type('#pass', 'Essai-2026-brij');
 await Promise.all([p.waitForFunction(() => location.pathname.startsWith('/app'), { timeout: 20000 }), p.click('#go')]);

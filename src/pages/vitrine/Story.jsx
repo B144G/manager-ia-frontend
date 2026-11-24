@@ -22,7 +22,7 @@ export default function Story({ chat }) {
     refs.current.forEach((n) => n && io.observe(n));
     return () => io.disconnect();
   }, []);
-  const alts = [t("Écran « Clients et ventes » de Brij-IA : liste des factures et montants à encaisser (données d'exemple)"), t("Écran « Stock et entrepôt » de Brij-IA (données d'exemple)")];
+  const alts = [t("Écran « Clients et ventes » de MABAH : liste des factures et montants à encaisser (données d'exemple)"), t("Écran « Stock et entrepôt » de MABAH (données d'exemple)")];
   return (
     <section className="vt-sec vt-dark vt-glow" id="parcours" aria-labelledby="vt-story">
       <div className="vt-wrap">

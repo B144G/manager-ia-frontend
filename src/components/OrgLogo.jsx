@@ -5,7 +5,7 @@ import { assetUrl, useBrand, usePublicBrand } from '../lib/brand.js';
 import '../styles/org-logo.css';
 
 /* En-tête et pied des pages publiques d'une entreprise (formulaire, suivi, devis, localisation, satisfaction, discussion) :
-   logo et nom de l'entreprise si elle les a personnalisés ; sinon le logo Brij-IA d'origine, sans aucun changement. */
+   logo et nom de l'entreprise si elle les a personnalisés ; sinon le logo MABAH d'origine, sans aucun changement. */
 export default function OrgLogo({ kind, token, className = 'au-logo', style = { display: 'flex' } }) {
   const b = usePublicBrand(kind, token);
   if (!b.customized) return <Logo className={className} style={style} />;
@@ -17,7 +17,7 @@ export default function OrgLogo({ kind, token, className = 'au-logo', style = { 
   );
 }
 
-/** Pied discret : texte de l'entreprise, « Propulsé par Brij-IA » si elle le souhaite, et toujours les liens légaux de la plateforme. */
+/** Pied discret : texte de l'entreprise, « Propulsé par MABAH » si elle le souhaite, et toujours les liens légaux de la plateforme. */
 export function PublicFoot() {
   const t = useT();
   const b = useBrand();

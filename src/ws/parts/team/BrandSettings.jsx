@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { trBase, useT } from '../../../lib/i18n.jsx';
-import { brandVars } from '../../../lib/prefs.js';
+import { brandVars, defaultBrandHex } from '../../../lib/prefs.js';
 import { DASH_WIDGETS, assetUrl, contrastWhite, setBrand } from '../../../lib/brand.js';
 import { PRODUCT } from '../../../lib/product.js';
 import { hasModule } from '../../registry.js';
@@ -64,7 +64,7 @@ function Editor({ data, reload }) {
   const save = async () => {
     setBusy(true); setErr('');
     try {
-      // Le nom choisi remplace « Brij-IA » : sans nom, le mode reste celui d'origine (ou la marque blanche).
+      // Le nom choisi remplace « MABAH » : sans nom, le mode reste celui d'origine (ou la marque blanche).
       let j = await oapi('PUT', '/brand', cfg);
       for (const [kind, v] of [['logo', logo], ['favicon', fav]]) {
         if (!v) continue;
@@ -98,7 +98,7 @@ function Editor({ data, reload }) {
   };
 
   // ----- Aperçu en direct (jamais enregistré tant qu'on n'a pas cliqué sur « Enregistrer ») -----
-  const pv = brandVars(cfg.color || '#4f46e5');
+  const pv = brandVars(cfg.color || defaultBrandHex());
   const logoSrc = logo ? (logo.remove ? '' : logo.url) : data.brand.logoUrl ? assetUrl(data.brand.logoUrl) : '';
   const hidden = new Set(cfg.menu.hidden);
   const previewMods = modOrder.filter((id) => !hidden.has(id)).slice(0, 5);
@@ -131,15 +131,15 @@ function Editor({ data, reload }) {
 
         <section className="br-sec">
           <h3>{t('Nom et assistant')}</h3>
-          <Field label={t("Nom affiché de l'entreprise ou du produit")} hint={t('Remplace « Brij-IA » dans le menu, les e-mails, les documents et les messages. Laissez vide pour garder Brij-IA.')}>
+          <Field label={t("Nom affiché de l'entreprise ou du produit")} hint={t('Remplace « MABAH » dans le menu, les e-mails, les documents et les messages. Laissez vide pour garder MABAH.')}>
             {(p) => <input {...p} value={cfg.productName} maxLength={60} onChange={(e) => set({ productName: e.target.value, mode: e.target.value && cfg.mode === 'brij' ? 'powered' : cfg.mode })} placeholder={info.org.name} />}
           </Field>
           <Field label={t("Nom de l'assistant IA")} hint={t("L'assistant reste toujours une IA : il ne se fait jamais passer pour une personne.")}>
             {(p) => <input {...p} value={cfg.assistantName} maxLength={40} onChange={(e) => set({ assistantName: e.target.value })} placeholder={PRODUCT.assistantName} />}
           </Field>
           <div role="radiogroup" aria-label={t('Mention de la plateforme')} className="br-modes">
-            <ModeOpt id="brij" title={t('Brij-IA, comme aujourd\'hui')} text={t('Le nom Brij-IA reste affiché.')} />
-            <ModeOpt id="powered" title={t('Mon nom + « Propulsé par Brij-IA »')} text={t('Votre nom en premier, une mention discrète de la plateforme.')} />
+            <ModeOpt id="brij" title={t('MABAH, comme aujourd\'hui')} text={t('Le nom MABAH reste affiché.')} />
+            <ModeOpt id="powered" title={t('Mon nom + « Propulsé par MABAH »')} text={t('Votre nom en premier, une mention discrète de la plateforme.')} />
             <ModeOpt id="white" title={t('Marque blanche')} text={t('Seul votre nom apparaît. Les conditions, la confidentialité et les mentions légales restent accessibles.')} />
           </div>
         </section>

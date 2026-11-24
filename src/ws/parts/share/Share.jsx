@@ -54,7 +54,7 @@ export function ShareDialog({ kind, sourceId, close, canCosts }) {
       <div>
         <p><b>{t('Envoyé à {n} personne(s).', { n: done.recipients })}</b></p>
         <p className="muted small">{done.names.join(', ')}</p>
-        {done.noAccount.length ? <p className="small late">{t("Pas de compte Brij-IA pour : {names}. Téléchargez le PDF pour le leur remettre.", { names: done.noAccount.map((x) => x.name).join(', ') })}</p> : null}
+        {done.noAccount.length ? <p className="small late">{t("Pas de compte MABAH pour : {names}. Téléchargez le PDF pour le leur remettre.", { names: done.noAccount.map((x) => x.name).join(', ') })}</p> : null}
         <p className="muted small">{t("Chacun est prévenu dans l'application (et par e-mail si son contact est une adresse) et ouvre le document après connexion, depuis « Documents reçus » du tableau de bord.")}</p>
         <button className="btn primary small" type="button" onClick={close}>{t('Fermer')}</button>
       </div>
@@ -87,7 +87,7 @@ export function ShareDialog({ kind, sourceId, close, canCosts }) {
       <label className="fld"><span>{t('Message (facultatif)')}</span>
         <textarea rows={2} maxLength={500} value={message} onChange={(e) => setMessage(e.target.value)} /></label>
       {prev ? <p className="small"><b>{t('{n} personne(s) recevront ce document : {names}', { n: prev.count, names: prev.names.slice(0, 8).join(', ') + (prev.count > 8 ? '…' : '') })}</b></p> : null}
-      {prev && prev.noAccount.length ? <p className="small late">{t("Sans compte Brij-IA, ils ne le recevront pas : {names}.", { names: prev.noAccount.map((x) => x.name).join(', ') })}</p> : null}
+      {prev && prev.noAccount.length ? <p className="small late">{t("Sans compte MABAH, ils ne le recevront pas : {names}.", { names: prev.noAccount.map((x) => x.name).join(', ') })}</p> : null}
       <div className="row">
         <button className="btn primary small" type="button" style={BTN} disabled={busy || empty || (prev && !prev.count)} onClick={send}>{t('Envoyer le PDF')}</button>
       </div>
@@ -154,7 +154,7 @@ export function SharedDocs() {
 export function SendSlips({ month, onDone }) {
   const t = useT();
   const { oapi, modal, confirm, fail } = useWs();
-  const run = () => confirm(t('Envoyer à chaque salarié son bulletin de paie validé de ce mois ? Chacun reçoit seulement le sien, dans son espace Brij-IA.'), () => {
+  const run = () => confirm(t('Envoyer à chaque salarié son bulletin de paie validé de ce mois ? Chacun reçoit seulement le sien, dans son espace MABAH.'), () => {
     oapi('POST', '/share/payslips', { month }).then((r) => {
       modal(t('Bulletins envoyés'), (close) => (
         <div>

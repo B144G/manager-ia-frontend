@@ -8,8 +8,13 @@ import { useSyncExternalStore } from 'react';
 
 const KEY = 'mi_prefs_v1';
 export const ACCENTS = [
-  ['indigo', '#4f46e5'], ['blue', '#1d4ed8'], ['teal', '#0f766e'], ['green', '#15803d'], ['orange', '#c2410c'], ['rose', '#be123c'], ['slate', '#334155'],
+  ['indigo', 'var(--brand-base)'], ['blue', '#1d4ed8'], ['teal', '#0f766e'], ['green', '#15803d'], ['orange', '#c2410c'], ['rose', '#be123c'], ['slate', '#334155'],
 ];
+/* « indigo » = la couleur de MABAH, lue dans src/styles/tokens.css (--brand-base) : changer la palette = changer ce fichier seul. */
+const FALLBACK_BRAND = '#4f46e5';
+const accentHex = (v) => { if (!/^var\(/.test(v)) return v; try { return getComputedStyle(document.documentElement).getPropertyValue(v.slice(4, -1)).trim(); } catch { return ''; } }; // '' = feuille de styles pas encore chargée : les jetons de tokens.css s'appliquent seuls
+/** Couleur de marque de MABAH (tokens.css) en hexadécimal, pour les sélecteurs de couleur ; repli seulement si la feuille de styles n'est pas chargée. */
+export const defaultBrandHex = () => { const v = accentHex('var(--brand-base)'); return /^#[0-9a-f]{6}$/i.test(v) ? v : FALLBACK_BRAND; };
 const DEFAULTS = { theme: 'auto', accent: 'indigo', density: 'comfortable', favorites: [], order: [], views: {}, brand: {}, navMini: false };
 let state = { ...DEFAULTS };
 const subs = new Set();
@@ -31,7 +36,7 @@ const WHITE = [255, 255, 255], DARKPAGE = [18, 26, 44], INK = [11, 18, 32];
 
 /** Calcule les 4 valeurs de marque : clair, texte sur clair, sombre (éclairci), texte sur sombre. */
 export function brandVars(hex) {
-  let c = hexRgb(hex) || hexRgb('#4f46e5');
+  let c = hexRgb(hex) || hexRgb(FALLBACK_BRAND);
   let guard = 0;
   while (contrast(c, WHITE) < 4.6 && guard++ < 40) c = mix(c, [0, 0, 0], 0.08); // assez foncé pour porter du texte blanc et servir de lien sur fond clair
   let d = c; guard = 0;
@@ -47,7 +52,8 @@ export function applyPrefs() {
   root.setAttribute('data-density', state.density);
   const org = currentOrgBrand();
   const pre = ACCENTS.find((a) => a[0] === state.accent);
-  const hex = serverColor || (org && org.color ? org.color : pre ? pre[1] : /^#[0-9a-f]{6}$/i.test(state.accent) ? state.accent : '#4f46e5');
+  const hex = serverColor || (org && org.color ? org.color : pre ? accentHex(pre[1]) : /^#[0-9a-f]{6}$/i.test(state.accent) ? state.accent : FALLBACK_BRAND);
+  if (!hex) { ['--brand', '--on-brand', '--brand-dk', '--on-brand-dk'].forEach((k) => root.style.removeProperty(k)); return; } // couleur de MABAH lue plus tard : les valeurs de tokens.css font foi
   const v = brandVars(hex);
   root.style.setProperty('--brand', v.brand); root.style.setProperty('--on-brand', v.onBrand);
   root.style.setProperty('--brand-dk', v.brandDk); root.style.setProperty('--on-brand-dk', v.onBrandDk);

@@ -71,7 +71,7 @@ function WhatsApp({ close, meeting }) {
   const j = st.data;
   return (
     <div className="ws-form">
-      <p className="mtg-muted">{t("Message prêt à copier. Brij-IA ne l'envoie pas lui-même : copiez-le dans WhatsApp, ou ouvrez le lien d'une personne pour lui écrire directement.")}</p>
+      <p className="mtg-muted">{t("Message prêt à copier. MABAH ne l'envoie pas lui-même : copiez-le dans WhatsApp, ou ouvrez le lien d'une personne pour lui écrire directement.")}</p>
       <textarea rows={9} readOnly value={j.text} aria-label={t('Message WhatsApp')} />
       <div className="mtg-row"><Button variant="primary" icon="copy" onClick={() => copy(j.text, t('Message copié.'))}>{t('Copier le message')}</Button></div>
       {j.targets.length ? <><b>{t('Écrire à une personne')}</b><ul className="mtg-list">{j.targets.map((x) => <li key={x.participantId}><a className="ui-btn block" href={x.url} target="_blank" rel="noopener noreferrer"><Icon name="whatsapp" />{x.name}</a></li>)}</ul></> : <p className="mtg-muted">{t("Aucun participant n'a de numéro de téléphone.")}</p>}

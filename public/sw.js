@@ -1,13 +1,13 @@
-/* Service worker de Brij-IA : garde les fichiers du site (styles, scripts, images) pour un démarrage rapide et affiche une page claire
+/* Service worker de MABAH : garde les fichiers du site (styles, scripts, images) pour un démarrage rapide et affiche une page claire
    quand il n'y a pas de connexion. Il ne garde JAMAIS de données de l'entreprise : aucune requête vers l'API n'est interceptée ni mise en cache.
    Règles de sécurité : il ne doit jamais empêcher le site de s'ouvrir.
    - pages : RÉSEAU D'ABORD (toujours la version la plus récente) ; la page « hors connexion » n'apparaît que si le réseau est réellement coupé ;
    - fichiers (scripts, styles, images) : réseau d'abord avec cache de secours (jamais l'inverse : un vieux fichier en cache ne bloque pas une mise à jour) ;
    - toute erreur du cache est ignorée : en cas de doute, on laisse le navigateur faire sa requête normale ;
    - changer CACHE_VERSION supprime les anciens caches à l'activation. */
-var CACHE_VERSION = 5;
+var CACHE_VERSION = 6;
 var CACHE = "mia-shell-v" + CACHE_VERSION;
-var SHELL = ["/offline.html", "/favicon.svg", "/assets/icons/icon-192.png"];
+var SHELL = ["/offline.html", "/favicon.svg", "/assets/icons/icon-192.png", "/assets/icons/favicon-32.png"];
 
 self.addEventListener("install", function (e) {
   // si le cache est inutilisable (stockage plein, mode privé), l'installation continue quand même

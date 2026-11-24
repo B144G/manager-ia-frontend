@@ -44,7 +44,7 @@ export default function LegalCenter({ slug, legacy: Legacy }) {
   const blocks = useMemo(() => parse(state.md), [state.md]);
   const toc = useMemo(() => outline(blocks), [blocks]);
   const ttl = page ? t(page.title) : '';
-  useEffect(() => { if (page) document.title = ttl + ' · Brij-IA'; }, [ttl, page]);
+  useEffect(() => { if (page) document.title = ttl + ' · MABAH'; }, [ttl, page]);
   useEffect(() => { window.scrollTo(0, 0); }, [slug]);
   if (!page) return <Fallback />;
   if (!state.loading && !state.md) return Legacy ? <Legacy /> : <Fallback />;

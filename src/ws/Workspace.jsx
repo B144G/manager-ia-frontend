@@ -48,7 +48,7 @@ function Gate() {
 }
 
 const Center = ({ children }) => (
-  <div className="ws-center"><Link className="logo" to="/">Brij<b>-IA</b></Link>{children}</div>
+  <div className="ws-center"><Link className="logo" to="/">MABAH</Link>{children}</div>
 );
 
 /** Premier pas : créer son organisation ou rejoindre celle d'un collègue avec un code. */

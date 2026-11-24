@@ -5,7 +5,7 @@ import { setServerBrand } from './prefs.js';
 
 /* Marque de l'entreprise : nom affiché, nom de l'assistant IA, logo, couleur, pied de page, menu, tableau de bord, vocabulaire.
    Point d'accès unique pour toute l'interface : `useBrand()` (composants) ou `getBrand()` (hors composant). Le serveur est la source (GET /orgs/:id → `brand`) ;
-   tant que l'entreprise n'a rien personnalisé, tout reste exactement comme avant (« Brij-IA », logo et couleurs d'origine).
+   tant que l'entreprise n'a rien personnalisé, tout reste exactement comme avant (« MABAH », logo et couleurs d'origine).
    Aucun texte de l'entreprise n'est jamais injecté comme HTML : React échappe tout. */
 
 import { PRODUCT } from './product.js';
@@ -16,10 +16,10 @@ export const BRAND_DEFAULT = Object.freeze({
   poweredBy: false, whiteLabel: false, platformName: PLATFORM, hasLogo: false, hasFavicon: false, logoUrl: '', faviconUrl: '', version: 0,
 });
 
-/* Textes qui parlent de la plateforme elle-même (son éditeur, ses conditions, le partage de données avec elle) : le nom « Brij-IA » y reste. */
-const PLATFORM_ONLY = /partager la position|fondateur de Brij-IA|administration de Brij-IA|Informations et offres|Ils utilisent|ourni par Brij-IA|ournis par Brij-IA|Un utilisateur de Brij-IA|améliorer Brij-IA|Recommanderiez-vous|abonnement Brij-IA|Offre gratuite|Bienvenue sur Brij-IA|responsable de traitement|éditeur|Propulsé par|comme aujourd'hui|reste affiché|Remplace « Brij-IA »|garder Brij-IA/;
-/* Textes où « Brij-IA » désigne l'assistant (et non le logiciel) : on y met le nom choisi pour l'assistant. */
-const ASSISTANT_TEXT = new RegExp('^(Demandez à|Demander à|Point de situation de|Alertes de|Ce que) ' + PRODUCT.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+/* Textes qui parlent de la plateforme elle-même (son éditeur, ses conditions, le partage de données avec elle) : le nom « MABAH » y reste. */
+const PLATFORM_ONLY = /partager la position|fondateur de MABAH|administration de MABAH|Informations et offres|Ils utilisent|ourni par MABAH|ournis par MABAH|Un utilisateur de MABAH|améliorer MABAH|Recommanderiez-vous|abonnement MABAH|Offre gratuite|Bienvenue sur MABAH|responsable de traitement|éditeur|Propulsé par|comme aujourd'hui|reste affiché|Remplace « MABAH »|garder MABAH/;
+/* Textes où « MABAH » désigne l'assistant (et non le logiciel) : on y met le nom choisi pour l'assistant. */
+const ASSISTANT_TEXT = new RegExp('^(Demandez à|Demander à|Point de situation de|Alertes de|Ce que) ' + PRODUCT.assistantName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
 
 let state = BRAND_DEFAULT;
 const subs = new Set();
@@ -27,9 +27,9 @@ const emit = () => subs.forEach((f) => f());
 export const getBrand = () => state;
 export const assetUrl = (u) => (u ? (/^https?:/i.test(u) ? u : API_BASE + u) : '');
 
-/** Nom du produit affiché (menu, pied de page, titre) : « Brij-IA » par défaut. */
+/** Nom du produit affiché (menu, pied de page, titre) : « MABAH » par défaut. */
 export const brandName = (b = state) => b.name || PLATFORM;
-/** Nom de l'assistant IA affiché : celui choisi par l'entreprise, sinon « Brij-IA » (comme avant) ou « Assistant IA » selon le texte. */
+/** Nom de l'assistant IA affiché : celui choisi par l'entreprise, sinon « MABAH » (comme avant) ou « Assistant IA » selon le texte. */
 export const assistantLabel = (b = state) => b.assistantName || '';
 
 function hook(s, out, lang) {
@@ -39,7 +39,7 @@ function hook(s, out, lang) {
   if (v && v[lang]) return v[lang]; // vocabulaire de l'entreprise (exact, par langue ; sans entrée pour la langue : traduction d'origine)
   if (b.assistantName) {
     if (s === 'Assistant IA') return b.assistantName;
-    if (ASSISTANT_TEXT.test(s) && out.includes(PLATFORM)) return out.split(PLATFORM).join(b.assistantName);
+    if (ASSISTANT_TEXT.test(s) && out.includes(PRODUCT.assistantName)) return out.split(PRODUCT.assistantName).join(b.assistantName);
   }
   if (b.mode !== 'brij' && out.includes(PLATFORM) && !PLATFORM_ONLY.test(s)) return out.split(PLATFORM).join(b.name);
   return out;

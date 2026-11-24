@@ -19,8 +19,8 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--accent);box
 @media (max-width:760px){.ws-card{border-radius:18px;padding:18px}.stat{border-radius:16px}}
 
 /* finitions */
-.brief{border-radius:24px;background:radial-gradient(80% 120% at 100% 0,rgba(167,139,250,.55),transparent 60%),linear-gradient(135deg,#4f46e5,#2e1a8a);box-shadow:0 30px 60px -36px rgba(79,70,229,.9)}
-.bt.white{color:#4f46e5}.bt{border-radius:999px}
+.brief{border-radius:24px;background:radial-gradient(80% 120% at 100% 0,rgba(167,139,250,.55),transparent 60%),linear-gradient(135deg,var(--brand-base),var(--brand-deep));box-shadow:0 30px 60px -36px rgba(var(--brand-rgb,79,70,229),.9)}
+.bt.white{color:var(--brand-base)}.bt{border-radius:999px}
 
 /* sélecteur de langue de l'espace de travail (les feuilles du site public ne sont pas chargées ici) : barre du haut dès 700 px, tiroir de navigation en dessous */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
@@ -33,10 +33,10 @@ input:focus,select:focus,textarea:focus{outline:0;border-color:var(--accent);box
 .pfcard{display:grid;gap:12px;margin-bottom:16px}
 .pfcard .pq{font-size:19px;font-weight:700;margin:4px 0 0}
 .pbar{height:8px;border-radius:999px;background:var(--line);overflow:hidden}
-.pbar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#4f46e5,#7c3aed);transition:width .3s}
+.pbar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--brand-base),var(--brand-2));transition:width .3s}
 .popts{display:flex;flex-wrap:wrap;gap:10px}
 .pbtn{padding:13px 18px;min-height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);font-weight:600;font-size:15px;color:inherit;text-align:left}
-.pbtn:hover{border-color:#4f46e5}.pbtn.on{border-color:#4f46e5;background:rgba(79,70,229,.1)}.pbtn:disabled{opacity:.6}
+.pbtn:hover{border-color:var(--brand-base)}.pbtn.on{border-color:var(--brand-base);background:color-mix(in srgb,var(--brand-base) 10%,transparent)}.pbtn:disabled{opacity:.6}
 .pfcard.done .popts b{width:100%}
 .punl{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:8px}
 .punl li{display:grid;gap:2px;padding:10px 12px;border:1px solid var(--line);border-radius:12px}

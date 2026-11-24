@@ -1,5 +1,5 @@
 /* =====================================================================================================================
-   BRIJ-IA : JETONS DE DESIGN (fichier unique). Toute couleur, police, taille, espacement, rayon, ombre et durée vient d'ici.
+   MABAH : JETONS DE DESIGN (fichier unique). Toute couleur, police, taille, espacement, rayon, ombre et durée vient d'ici.
    - UNE seule famille de caractères : Inter (variable). Les chiffres utilisent les chiffres tabulaires (colonnes alignées).
    - Thèmes : clair (défaut), sombre ; « automatique » = suit le système (aucun attribut data-theme).
    - Personnalisation (posée par src/lib/prefs.js) : --brand (couleur d'accent ou de marque), data-density, data-theme.
@@ -26,7 +26,15 @@
   --z-sticky:20; --z-nav:80; --z-drawer:90; --z-modal:100; --z-toast:200;
 
   /* --- Couleur de marque (personnalisable) : --brand ; le reste en découle --- */
-  --brand:#4f46e5; --on-brand:#ffffff; --brand-dk:#8b93ff; --on-brand-dk:#0b1220;
+  /*PALETTE:logo*/
+  /* PALETTE DE MARQUE : LE SEUL BLOC À CHANGER pour modifier les couleurs de MABAH (palette actuelle : violet).
+     Variante prête : la palette du logo (bleu et orange). Pour l'activer : node scripts/apply-palette.mjs logo (ou remplacer ce bloc par celui de docs/renommage-mabah/palette-logo.css).
+     --brand-base / --brand-dk-base : couleur d'accent par défaut (clair / sombre) ; lue aussi par src/lib/prefs.js (choix « couleur de MABAH » du menu Personnaliser).
+     --brand-2 : seconde couleur des dégradés ; --brand-deep : fond profond des bandeaux ; --brand-mid / --brand-ink : teintes de la page de présentation. */
+  --brand-base:#0b5fd6; --brand-dk-base:#5da4ff; --brand-2:#0a8bf0; --brand-deep:#0a1f5c; --brand-mid:#0a4fbf; --brand-ink:#0a3f9e; --brand-rgb:11,95,214;
+  --theme-color:#0b5fd6; --theme-color-dark:#0a101e;
+  /*FIN-PALETTE*/
+  --brand:var(--brand-base); --on-brand:#ffffff; --brand-dk:var(--brand-dk-base); --on-brand-dk:#0b1220;
   --accent:var(--brand); --on-accent:var(--on-brand);
   --accent-hover:color-mix(in srgb,var(--accent) 86%,#000);
   --accent-press:color-mix(in srgb,var(--accent) 74%,#000);

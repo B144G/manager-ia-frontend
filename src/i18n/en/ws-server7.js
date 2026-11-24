@@ -1,7 +1,7 @@
 // Traductions des messages du serveur : vague 7 (partage de documents).
 export default {
   "brouillon : validez d'abord le bulletin": "draft: validate the payslip first",
-  "pas de compte Brij-IA lié à ce salarié : téléchargez le PDF pour le lui remettre": "no Brij-IA account linked to this employee: download the PDF to hand it over",
+  "pas de compte MABAH lié à ce salarié : téléchargez le PDF pour le lui remettre": "no MABAH account linked to this employee: download the PDF to hand it over",
   "c'est vous : téléchargez le PDF": "it is you: download the PDF",
   "déjà envoyé": "already sent",
   "Choisissez au moins un destinataire (une personne, un poste, une antenne ou un rôle).": "Choose at least one recipient (a person, a job title, a branch or a role).",

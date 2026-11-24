@@ -56,7 +56,7 @@ export default {
   'pièce, kg, litre, carton…': 'piece, kg, litre, carton…',
   'Quantité en stock': 'Quantity in stock',
   'Seuil d\'alerte': 'Alert threshold',
-  'Sous cette quantité, Brij-IA vous alerte et propose de commander. 0 = pas d\'alerte.': 'Below this quantity, Brij-IA alerts you and suggests ordering. 0 = no alert.',
+  'Sous cette quantité, MABAH vous alerte et propose de commander. 0 = pas d\'alerte.': 'Below this quantity, MABAH alerts you and suggests ordering. 0 = no alert.',
   'Coût d\'achat habituel ({currency})': 'Usual purchase cost ({currency})',
   'Ajoutez d\'abord un fournisseur (bouton « Fournisseurs »).': 'Add a supplier first ("Suppliers" button).',
   '{name} : prix unitaire ({currency})': '{name}: unit price ({currency})',

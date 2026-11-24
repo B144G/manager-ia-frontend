@@ -1,4 +1,4 @@
-/* Brij-IA : page de présentation (accueil public), direction artistique « nuit et or ».
+/* MABAH : page de présentation (accueil public), direction artistique « nuit et or ».
    Feuille autonome : classes « vt- », variables « --vt- ». Pour la relier au système de design de l'application,
    redéfinissez uniquement le bloc « Jetons ». Une seule famille de police : Inter. Espacements en multiples de 8. */
 
@@ -6,9 +6,9 @@
 :root{
   /* sections claires */
   --vt-bg:#ffffff; --vt-soft:#f3f4fa; --vt-card:#ffffff; --vt-ink:#0b0e2e; --vt-muted:#4a5278; --vt-line:#e1e4f0; --vt-line-strong:#b9bfdc;
-  --vt-brand:#3730a3; --vt-link:#3730a3; --vt-tint:#eceefc; --vt-ok:#0c7a4a; --vt-ok-tint:#e1f5ec; --vt-warn:#b42318; --vt-warn-tint:#fdecea;
+  --vt-brand:var(--brand-ink,#3730a3); --vt-link:var(--brand-ink,#3730a3); --vt-tint:#eceefc; --vt-ok:#0c7a4a; --vt-ok-tint:#e1f5ec; --vt-warn:#b42318; --vt-warn-tint:#fdecea;
   /* identité : bleu nuit du logo + or de l'étoile */
-  --vt-night:#080b26; --vt-night-2:#10154a; --vt-indigo:#4338ca; --vt-violet:#7c3aed;
+  --vt-night:#080b26; --vt-night-2:#10154a; --vt-indigo:var(--brand-mid,#4338ca); --vt-violet:var(--brand-2,#7c3aed);
   --vt-gold:#f5a623; --vt-gold-hover:#ffb93d; --vt-gold-soft:#ffd27a; --vt-on-gold:#1a1200;
   --vt-wa:#0e7a43; --vt-wa-tint:#e3f5ec; --vt-glass:rgba(8,11,38,.95);
   --vt-shadow-1:0 1px 2px rgba(11,14,46,.06),0 8px 24px -12px rgba(11,14,46,.18);

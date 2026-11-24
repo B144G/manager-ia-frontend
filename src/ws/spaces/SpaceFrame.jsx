@@ -71,7 +71,7 @@ export function SpaceSidebar({ spaces, cur, curMod, orgId, orgs, info, user, ini
   return (
     <aside className="app-side sp-side" id="ws-side" aria-label={t('Menu de mon espace')}>
       <div className="app-side-h">
-        <Link className="app-logo" to="/" aria-label="Brij-IA"><BrandMark brand={brand} /><span className="app-logo-t">{brand && brand.logo ? info.org.name : <>Brij<b>-IA</b></>}</span></Link>
+        <Link className="app-logo" to="/" aria-label="MABAH"><BrandMark brand={brand} /><span className="app-logo-t">{brand && brand.logo ? info.org.name : <>MABAH</>}</span></Link>
         <button type="button" className="ws-close app-x" aria-label={t('Fermer le menu')} onClick={onClose}><Icon name="close" /></button>
       </div>
       <div className="ws-org">

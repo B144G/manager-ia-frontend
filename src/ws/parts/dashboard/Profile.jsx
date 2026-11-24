@@ -47,10 +47,10 @@ export default function Profile() {
     const s = p.skipped[0];
     return (
       <section className="dc pfcard done">
-        <div className="ch"><h2>{t('Brij-IA connaît votre entreprise à {n} %', { n: p.score })}</h2>
+        <div className="ch"><h2>{t('MABAH connaît votre entreprise à {n} %', { n: p.score })}</h2>
           <button className="link" type="button" onClick={() => setOpen(!open)}>{open ? t('Masquer') : t('Voir ce que cela débloque')}</button></div>
         {bar}
-        {s ? <><p className="muted small">{t('{n} question(s) passée(s) : répondez-y pour que Brij-IA automatise mieux.', { n: p.skipped.length })}</p>
+        {s ? <><p className="muted small">{t('{n} question(s) passée(s) : répondez-y pour que MABAH automatise mieux.', { n: p.skipped.length })}</p>
           <Ask key={s.id} q={s} busy={busy} t={t} onAnswer={(value) => send('answer', { id: s.id, value })} /></> : null}
         {open ? <Unlocks p={p} t={t} /> : null}
       </section>

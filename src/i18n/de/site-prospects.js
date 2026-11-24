@@ -1,6 +1,6 @@
 // Traductions : formulaire « Être contacté », statistiques de visite anonymes et confidentialité.
 export default {
-  "Essayer Brij-IA gratuitement": "Brij-IA kostenlos testen",
+  "Essayer MABAH gratuitement": "MABAH kostenlos testen",
   "Laissez votre numéro WhatsApp ou votre e-mail : nous vous aidons à démarrer, sans engagement et sans carte bancaire.": "Hinterlassen Sie Ihre WhatsApp-Nummer oder E-Mail-Adresse: Wir helfen Ihnen beim Einstieg, unverbindlich und ohne Kreditkarte.",
   "Votre numéro WhatsApp ou e-mail": "Ihre WhatsApp-Nummer oder E-Mail-Adresse",
   "Votre activité (facultatif)": "Ihr Geschäft (optional)",

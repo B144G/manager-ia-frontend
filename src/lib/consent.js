@@ -6,9 +6,9 @@ import { rq } from './api.js';
    - Connecté, le choix est aussi enregistré côté serveur (échec silencieux). */
 
 export const COOKIES_VERSION = '2026-11-16';
-const KEY = 'brij-cookies';
-const OPEN_EVENT = 'brij:cookies-open';
-const CHANGE_EVENT = 'brij:cookies-change';
+const KEY = 'mabah-cookies';
+const OPEN_EVENT = 'mabah:cookies-open';
+const CHANGE_EVENT = 'mabah:cookies-change';
 
 /** Choix enregistré { v, at, analytics } ou null (aucun choix, ou texte modifié depuis). */
 export function readConsent() {

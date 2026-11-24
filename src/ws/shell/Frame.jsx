@@ -25,7 +25,7 @@ export function Sidebar({ mods, cur, orgId, orgs, info, user, badgeOf, initials,
   const p = usePrefs();
   const brand = p.brand[orgId];
   const cb = useBrand();
-  const named = cb.customized && (cb.mode !== 'brij' || cb.logoUrl); // nom et/ou logo de l'entreprise à la place de « Brij-IA »
+  const named = cb.customized && (cb.mode !== 'brij' || cb.logoUrl); // nom et/ou logo de l'entreprise à la place de « MABAH »
   const fav = mods.filter((m) => p.favorites.includes(m.id));
   const rest = mods.filter((m) => !p.favorites.includes(m.id));
   const link = (m) => {
@@ -107,7 +107,7 @@ function AskBar({ onAsk }) {
   return (
     <form className="ws-ask" role="search" onSubmit={(ev) => { ev.preventDefault(); const q = ref.current.value.trim(); if (q) { ref.current.value = ''; onAsk(q); } }}>
       <Icon name="ai" />
-      <input ref={ref} type="text" placeholder={t('Demandez à Brij-IA…')} aria-label={t('Demandez à Brij-IA')} autoComplete="off" />
+      <input ref={ref} type="text" placeholder={t('Demandez à MABAH IA…')} aria-label={t('Demandez à MABAH IA')} autoComplete="off" />
     </form>
   );
 }
@@ -115,7 +115,7 @@ function AskBar({ onAsk }) {
 export function Footer({ orgId, onFeedback }) {
   const t = useT();
   const cb = useBrand();
-  const own = cb.customized && cb.mode !== 'brij'; // marque de l'entreprise : son nom, son texte de pied de page, « Propulsé par Brij-IA » si elle le souhaite
+  const own = cb.customized && cb.mode !== 'brij'; // marque de l'entreprise : son nom, son texte de pied de page, « Propulsé par MABAH » si elle le souhaite
   return (
     <footer className="app-foot">
       <span>© {new Date().getFullYear()} {own ? cb.name : PRODUCT.name}{own && cb.footerText ? ' · ' + cb.footerText : ''}{own && cb.poweredBy ? <small className="muted"> · {t('Propulsé par {name}', { name: cb.platformName })}</small> : null}</span>

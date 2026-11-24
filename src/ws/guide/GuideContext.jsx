@@ -12,8 +12,8 @@ import { buildGuides } from './guides.js';
 const Ctx = createContext(null);
 export const useGuide = () => useContext(Ctx);
 
-const SEEN = 'brij-guide-seen';
-const DONE = 'brij-guide-done';
+const SEEN = 'mabah-guide-seen';
+const DONE = 'mabah-guide-done';
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* stockage indisponible : le guide marche quand même */ } },
@@ -78,7 +78,7 @@ function Offer({ onStart, onLater }) {
   const t = useT();
   return (
     <div className="gd-offer" role="dialog" aria-label={t('Guide de prise en main')} data-guide-ui>
-      <b>{t('Bienvenue sur Brij-IA !')}</b>
+      <b>{t('Bienvenue sur MABAH !')}</b>
       <p>{t('Voulez-vous une visite guidée d\'une minute ? Des flèches vous montrent où cliquer et quoi faire. Vous pourrez la relancer à tout moment avec le bouton « Guide ».')}</p>
       <div className="gd-row"><button type="button" className="btn primary small" onClick={onStart}>{t('Commencer la visite')}</button><button type="button" className="btn small" onClick={onLater}>{t('Plus tard')}</button></div>
     </div>

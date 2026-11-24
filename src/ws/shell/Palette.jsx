@@ -30,7 +30,7 @@ export default function Palette({ mods, spaces, curSpace, orgId, onClose, onPers
     all.push({ key: 'a-pers', icon: 'brand', label: t('Personnaliser l\'affichage'), sub: t('Action'), run: onPersonalize });
     const s = q.trim().toLowerCase();
     const found = s ? all.filter((x) => (x.label + ' ' + x.sub).toLowerCase().includes(s)) : all.filter((x) => x.key[0] !== 'a' || true).slice(0, 14);
-    if (s) found.push({ key: 'ask', icon: 'ai', label: t('Demander à Brij-IA : « {q} »', { q: q.trim() }), sub: t('Assistant'), run: () => onAsk(q.trim()) });
+    if (s) found.push({ key: 'ask', icon: 'ai', label: t('Demander à MABAH IA : « {q} »', { q: q.trim() }), sub: t('Assistant'), run: () => onAsk(q.trim()) });
     return found.slice(0, 40);
   }, [q, sc, mods, spaces, curSpace, orgId, nav, t, onPersonalize, onAsk]);
   useEffect(() => { setI(0); }, [q]);

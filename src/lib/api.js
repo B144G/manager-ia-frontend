@@ -15,7 +15,7 @@ export async function rq(method, path, body, opts = {}) {
   const j = await r.json().catch(() => ({}));
   if (!r.ok) { const e = new Error(j.error || 'Une erreur est survenue. Réessayez.'); e.status = r.status; if (j.code) e.code = j.code;
     // Organisation qui exige la double authentification : un message clair renvoie vers la sécurité du compte (voir TwoFaRequired).
-    if (j.code === 'twofa_required' && typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('brij:twofa-required', { detail: { message: e.message } }));
+    if (j.code === 'twofa_required' && typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('mabah:twofa-required', { detail: { message: e.message } }));
     throw e; }
   return j;
 }

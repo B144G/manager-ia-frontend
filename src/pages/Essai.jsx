@@ -15,7 +15,7 @@ export default function Essai() {
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
-  useEffect(() => { document.title = t('Essayer Brij-IA gratuitement') + ' · Brij-IA'; }, [t]);
+  useEffect(() => { document.title = t('Essayer MABAH gratuitement') + ' · MABAH'; }, [t]);
   const set = (k) => (e) => setV((s) => ({ ...s, [k]: e.target.value }));
   const isMail = v.contact.includes('@');
   async function submit(e) {
@@ -35,7 +35,7 @@ export default function Essai() {
       <div style={{ position: 'absolute', top: 10, right: 12, zIndex: 3 }}><LangSwitch /></div>
       <Logo className="au-logo" style={{ display: 'flex' }} />
       <div className="au-card">
-        <h1>{t('Essayer Brij-IA gratuitement')}</h1>
+        <h1>{t('Essayer MABAH gratuitement')}</h1>
         {!done ? (
           <>
             <p className="au-sub">{t("Laissez votre numéro WhatsApp ou votre e-mail : nous vous aidons à démarrer, sans engagement et sans carte bancaire.")}</p>

@@ -45,7 +45,7 @@ export default function Billing() {
         {b.automatic && b.testMode ? <TestBanner /> : null}
         <div className="ws-card">
           <h2>{t('Offre actuelle : {plan}', { plan: planName(b.plan, b.plan) })}</h2>
-          <p>{paid ? (b.daysLeft > 1 ? t("Active jusqu'au {date} ({n} jours restants).", { date: fr(dateFr, b.expiresAt), n: b.daysLeft }) : t("Active jusqu'au {date} ({n} jour restant).", { date: fr(dateFr, b.expiresAt), n: b.daysLeft })) : t('Offre gratuite : essayez Brij-IA, puis passez à une offre payante quand vous êtes prêt.')}</p>
+          <p>{paid ? (b.daysLeft > 1 ? t("Active jusqu'au {date} ({n} jours restants).", { date: fr(dateFr, b.expiresAt), n: b.daysLeft }) : t("Active jusqu'au {date} ({n} jour restant).", { date: fr(dateFr, b.expiresAt), n: b.daysLeft })) : t('Offre gratuite : essayez MABAH, puis passez à une offre payante quand vous êtes prêt.')}</p>
           {paid && b.daysLeft <= 7 ? <p className="pill mid">{t('Votre abonnement se termine bientôt : renouvelez pour ne pas perdre vos quotas.')}</p> : null}
           {paid ? <p className="muted small">{t("Le changement d'offre n'est possible qu'à la fin de l'abonnement. Vous pouvez renouveler votre offre à tout moment : les jours s'ajoutent.")}</p> : null}
         </div>

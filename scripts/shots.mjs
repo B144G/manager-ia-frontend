@@ -15,7 +15,7 @@ for (const w of widths.split(',').map(Number)) {
   const page = await browser.newPage();
   const mobile = w < 768;
   await page.setViewport({ width: land ? 812 : w, height: land ? 375 : (mobile ? 800 : 900), deviceScaleFactor: mobile ? 2 : 1, isMobile: mobile, hasTouch: mobile });
-  await page.evaluateOnNewDocument((th) => { try { localStorage.setItem('mi_prefs_v1', JSON.stringify({ theme: th === 'sombre' ? 'dark' : 'light' })); localStorage.setItem('brij-guide-seen', 'true'); } catch (e) { /* */ } }, theme);
+  await page.evaluateOnNewDocument((th) => { try { localStorage.setItem('mi_prefs_v1', JSON.stringify({ theme: th === 'sombre' ? 'dark' : 'light' })); localStorage.setItem('mabah-guide-seen', 'true'); } catch (e) { /* */ } }, theme);
   await page.goto(BASE + '/connexion', { waitUntil: 'networkidle0' });
   await page.evaluate(() => { const b = [...document.querySelectorAll('#cookie-banner button')].find((x) => /refuser/i.test(x.textContent)); if (b) b.click(); });
   if (await page.$('#contact')) { await page.type('#contact', 'proprietaire@exemple.com');

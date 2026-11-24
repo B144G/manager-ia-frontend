@@ -9,7 +9,7 @@ const b = await puppeteer.launch({ executablePath: '/Applications/Google Chrome.
 const p = await b.newPage(); const mobile = Number(w) < 768;
 await p.setViewport({ width: Number(w), height: mobile ? 800 : 900, deviceScaleFactor: mobile ? 2 : 1, isMobile: mobile, hasTouch: mobile });
 const errs = []; p.on('pageerror', (e) => errs.push(e.message.slice(0, 200)));
-await p.evaluateOnNewDocument((th) => { localStorage.setItem('mi_prefs_v1', JSON.stringify({ theme: th === 'sombre' ? 'dark' : 'light' })); localStorage.setItem('brij-guide-seen', 'true'); }, theme);
+await p.evaluateOnNewDocument((th) => { localStorage.setItem('mi_prefs_v1', JSON.stringify({ theme: th === 'sombre' ? 'dark' : 'light' })); localStorage.setItem('mabah-guide-seen', 'true'); }, theme);
 await p.goto((process.env.BASE || 'http://localhost:5184') + '/connexion', { waitUntil: 'networkidle0' });
 if (await p.$('#contact')) { await p.type('#contact', 'proprietaire@exemple.com'); await p.type('#pass', 'Essai-2026-brij'); await Promise.all([p.waitForFunction(() => location.pathname.startsWith('/app'), { timeout: 20000 }).catch(() => {}), p.click('#go')]); }
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));

@@ -16,13 +16,13 @@ export default function Testimonials() {
   return (
     <section className="vt-testi" aria-labelledby="vt-testi">
       <div className="vt-wrap">
-        <h2 className="vt-h2" id="vt-testi">{t('Ils utilisent Brij-IA')}</h2>
+        <h2 className="vt-h2" id="vt-testi">{t('Ils utilisent MABAH')}</h2>
         <ul className="vt-testi-list">
           {items.map((x) => (
             <li key={x.id} className="vt-testi-card">
               <p className="vt-testi-stars" aria-label={t('{n} sur 5', { n: x.stars })}>{'★'.repeat(x.stars)}{'☆'.repeat(5 - x.stars)}</p>
               <blockquote>{x.text}</blockquote>
-              <footer>{x.name ? <b>{x.name}</b> : <b>{t('Un utilisateur de Brij-IA')}</b>} · {tsrv(x.moduleTitle)}</footer>
+              <footer>{x.name ? <b>{x.name}</b> : <b>{t('Un utilisateur de MABAH')}</b>} · {tsrv(x.moduleTitle)}</footer>
             </li>
           ))}
         </ul>

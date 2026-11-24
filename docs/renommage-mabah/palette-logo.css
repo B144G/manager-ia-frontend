@@ -1,0 +1,5 @@
+/* Palette « logo » (bleu du logo MABAH) : à coller dans src/styles/tokens.css À LA PLACE des lignes de couleurs situées entre les repères PALETTE et FIN-PALETTE,
+   ou plus simplement : node scripts/apply-palette.mjs logo   (retour : node scripts/apply-palette.mjs violet). */
+--brand-base:#0b5fd6; --brand-dk-base:#5da4ff; --brand-2:#0a8bf0; --brand-deep:#0a1f5c; --brand-mid:#0a4fbf; --brand-ink:#0a3f9e; --brand-rgb:11,95,214;
+--theme-color:#0b5fd6; --theme-color-dark:#0a101e;
+/* Contrastes : #0b5fd6 sur blanc = 5,8:1 ; #5da4ff sur le fond sombre de l'application = 6,8:1 (AA). L'orange du logo (#ff7a00) reste réservé aux accents : la page de présentation utilise déjà un or proche (#f5a623). */

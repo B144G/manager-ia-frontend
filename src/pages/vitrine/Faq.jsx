@@ -16,9 +16,9 @@ export default function Faq() {
     [t('Mes données sont-elles en sécurité ?'), t("Chaque entreprise est isolée, les accès dépendent du rôle, les mots de passe sont chiffrés et les actions sensibles sont inscrites dans un journal d'audit. Vous pouvez aussi activer la double authentification.")],
     [t("L'IA peut-elle modifier mes données toute seule ?"), t("Non. Elle propose un plan, une écriture, une commande ou une relance ; rien n'est enregistré ni envoyé tant que vous n'avez pas validé.")],
     [t("Comment connecter WhatsApp ?"), t("Vous scannez un QR code avec le WhatsApp de votre entreprise, comme pour WhatsApp Web. Ensuite l'assistant répond à vos clients, enregistre les prospects et prend les commandes, que vous validez.")],
-    [t('La TVA et la paie du Cameroun sont-elles gérées ?'), t("Oui : Brij-IA propose une TVA estimée, des bulletins de paie avec les retenues du Cameroun (paramétrables) et des écritures comptables. C'est un outil d'aide : il ne produit pas la liasse fiscale officielle, que votre comptable prépare à partir de votre export.")],
+    [t('La TVA et la paie du Cameroun sont-elles gérées ?'), t("Oui : MABAH propose une TVA estimée, des bulletins de paie avec les retenues du Cameroun (paramétrables) et des écritures comptables. C'est un outil d'aide : il ne produit pas la liasse fiscale officielle, que votre comptable prépare à partir de votre export.")],
     [t('La comptabilité remplace-t-elle mon comptable ?'), t("Non. Vos factures, paiements et achats deviennent des écritures, avec résultat, bilan simplifié et TVA estimée. Votre comptable garde son rôle et peut travailler à partir de vos exports.")],
-    [t('Puis-je utiliser Brij-IA sans Internet ?'), t("Non : Brij-IA a besoin d'une connexion pour afficher et enregistrer vos données en sécurité. Si la connexion se coupe, une page vous l'indique et rien n'est perdu. Vous pouvez l'installer sur l'écran d'accueil de votre téléphone.")],
+    [t('Puis-je utiliser MABAH sans Internet ?'), t("Non : MABAH a besoin d'une connexion pour afficher et enregistrer vos données en sécurité. Si la connexion se coupe, une page vous l'indique et rien n'est perdu. Vous pouvez l'installer sur l'écran d'accueil de votre téléphone.")],
     [t('Puis-je importer mes données existantes ?'), t("Certains écrans acceptent l'import de fichiers, par exemple les relevés bancaires, ou vos listes de clients et de fournisseurs. Pour le reste, écrivez-nous : nous vous aidons à démarrer.")],
     [t('Comment joindre un humain ?'), <>{t('Par WhatsApp au')} <a href={waLink()} target="_blank" rel="noopener noreferrer">{WA_DISPLAY}</a> {t('ou par e-mail à')} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>. {t("Vous pouvez aussi demander à être contacté :")} <Link to="/essai">{t('Être contacté gratuitement')}</Link>.</>],
   ];
@@ -32,7 +32,7 @@ export default function Faq() {
     <section className="vt-sec" id="faq" aria-labelledby="vt-faq">
       <div className="vt-wrap">
         <div className="vt-faqgrid">
-        <div className="vt-head"><span className="vt-eyebrow">{t('Questions fréquentes')}</span><h2 className="vt-h2" id="vt-faq">{t("Ce que l'on nous demande souvent")}</h2><p className="vt-p">{t('Une autre question ? Écrivez-nous, nous vous répondons.')}</p><a className="vt-btn vt-btn--secondary" href={waLink(t('Bonjour, je voudrais en savoir plus sur Brij-IA.'))} target="_blank" rel="noopener noreferrer"><Fa name="whatsapp" />{t('Écrire sur WhatsApp')}</a></div>
+        <div className="vt-head"><span className="vt-eyebrow">{t('Questions fréquentes')}</span><h2 className="vt-h2" id="vt-faq">{t("Ce que l'on nous demande souvent")}</h2><p className="vt-p">{t('Une autre question ? Écrivez-nous, nous vous répondons.')}</p><a className="vt-btn vt-btn--secondary" href={waLink(t('Bonjour, je voudrais en savoir plus sur MABAH.'))} target="_blank" rel="noopener noreferrer"><Fa name="whatsapp" />{t('Écrire sur WhatsApp')}</a></div>
         <div className="vt-faq">
           {qs.map(([q, a], k) => (
             <div className={'vt-q' + (open === k ? ' is-open' : '')} key={k}>

@@ -1,3 +1,4 @@
+import './lib/legacy-keys.js'; // migration douce des clés de stockage (ancien nom -> MABAH)
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';

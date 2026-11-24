@@ -88,7 +88,7 @@ export default {
   "Protégez votre compte : activez la double authentification": "Proteja su cuenta: active la autenticación en dos pasos",
   "Un mot de passe volé ne suffira plus à entrer dans votre compte. Cela prend deux minutes.": "Una contraseña robada ya no bastará para entrar en su cuenta. Lleva dos minutos.",
   "Activer maintenant": "Activar ahora",
-  "Informations et offres de Brij-IA": "Novedades y ofertas de Brij-IA",
+  "Informations et offres de MABAH": "Novedades y ofertas de MABAH",
   "Traitement par l'intelligence artificielle": "Tratamiento por inteligencia artificial",
   "Compteur de visites anonyme du site public. Désactivé tant que vous ne l'acceptez pas.": "Contador de visitas anónimo del sitio público. Desactivado mientras no lo acepte.",
   "Nouveautés et conseils par e-mail. Vous pouvez les retirer à tout moment.": "Novedades y consejos por correo. Puede retirarlo en cualquier momento.",
