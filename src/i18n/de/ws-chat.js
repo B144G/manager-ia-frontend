@@ -306,4 +306,11 @@ export default {
   "Les deux personnes doivent d'abord activer le chiffrement (ouvrir le chat une fois sur leur appareil).": "Beide Personen müssen zuerst die Verschlüsselung aktivieren (den Chat einmal auf ihrem Gerät öffnen).",
   "Trop de recherches à la suite. Patientez un instant.": "Zu viele Suchen hintereinander. Warten Sie einen Moment.",
   "Confirmez que vous acceptez que vos collègues de l'entreprise voient votre position tant que vous êtes connecté(e) au chat.": "Bestätigen Sie, dass Ihre Kollegen Ihren Standort sehen dürfen, solange Sie mit dem Chat verbunden sind.",
+  "Aucune conversation ouverte : commencez par écrire à un collègue dans le chat.": "Keine offene Unterhaltung: Schreiben Sie zuerst einer Kollegin oder einem Kollegen im Chat.",
+  "Envoyer par le chat": "Per Chat senden",
+  "Fichier envoyé dans « {name} »": "Datei in „{name}“ gesendet",
+  "« {name} » sera envoyé dans la conversation choisie : seuls ses participants pourront le lire.": "„{name}“ wird in der gewählten Unterhaltung gesendet: Nur deren Teilnehmer können es lesen.",
+  "Conversation": "Unterhaltung",
+  "Message (facultatif)": "Nachricht (optional)",
+  "Envoyer": "Senden",
 };

@@ -5,6 +5,7 @@ import { Icon } from '../../lib/fa.jsx';
 import { useWs } from '../WsContext.jsx';
 import { Button } from '../ui.jsx';
 import '../../styles/ws-chat.css';
+import '../../styles/ws-geo.css'; // épingles de la carte (GeoMap)
 import '../parts/chat/chatIcons.js';
 import { useChatApi } from '../parts/chat/api.js';
 import { useChatLive } from '../parts/chat/live.js';

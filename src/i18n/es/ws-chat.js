@@ -306,4 +306,11 @@ export default {
   "Les deux personnes doivent d'abord activer le chiffrement (ouvrir le chat une fois sur leur appareil).": "Ambas personas deben activar primero el cifrado (abrir el chat una vez en su dispositivo).",
   "Trop de recherches à la suite. Patientez un instant.": "Demasiadas búsquedas seguidas. Espere un momento.",
   "Confirmez que vous acceptez que vos collègues de l'entreprise voient votre position tant que vous êtes connecté(e) au chat.": "Confirme que acepta que sus colegas vean su ubicación mientras esté conectado al chat.",
+  "Aucune conversation ouverte : commencez par écrire à un collègue dans le chat.": "Ninguna conversación abierta: empiece escribiendo a un colega en el chat.",
+  "Envoyer par le chat": "Enviar por el chat",
+  "Fichier envoyé dans « {name} »": "Archivo enviado en «{name}»",
+  "« {name} » sera envoyé dans la conversation choisie : seuls ses participants pourront le lire.": "«{name}» se enviará a la conversación elegida: solo sus participantes podrán leerlo.",
+  "Conversation": "Conversación",
+  "Message (facultatif)": "Mensaje (opcional)",
+  "Envoyer": "Enviar",
 };
