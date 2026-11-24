@@ -72,11 +72,11 @@ export function Sidebar({ mods, cur, orgId, orgs, info, user, badgeOf, initials,
 }
 
 /** En-tête : bouton menu, fil d'Ariane, question à l'IA, outils. */
-export function TopBar({ modTitle, navOpen, onNav, onAsk, orgId, bell, user, role, initials, onSecurity, onPersonalize }) {
+export function TopBar({ spaceTitle, modTitle, navOpen, onNav, onAsk, orgId, bell, user, role, initials, onSecurity, onPersonalize }) {
   const t = useT();
   const sc = useScreens();
   const cur = sc.items.find((i) => i.id === sc.active);
-  const crumbs = [modTitle].concat(cur && sc.title === modTitle ? [cur.group, cur.label] : []).filter(Boolean);
+  const crumbs = [spaceTitle, modTitle].concat(cur && sc.title === modTitle ? [cur.group, cur.label] : []).filter(Boolean);
   return (
     <header className="app-top ws-top2">
       <button type="button" className="app-burger ws-burger" aria-label={t('Ouvrir le menu')} aria-expanded={navOpen} aria-controls="ws-side" onClick={onNav}><Icon name="menu" /></button>

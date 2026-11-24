@@ -12,11 +12,12 @@ export const useWs = () => useContext(Ctx);
 
 const RANK = { member: 1, manager: 2, admin: 3, owner: 4 };
 
-/** Lit l'adresse : /app/<organisation>/<module>. */
+/** Lit l'adresse : /app/<organisation>/<module>. Espaces par rôle : /app/<organisation>/home/<espace> (accueil d'un espace) et /app/<organisation>/espaces (choix de l'espace). */
 export function parseRoute(pathname) {
-  const m = /^\/app(?:\.html)?(?:\/(\d+)(?:\/([a-z]+))?)?/.exec(pathname || '');
-  return m && m[1] ? { org: Number(m[1]), mod: m[2] || 'dashboard' } : null;
+  const m = /^\/app(?:\.html)?(?:\/(\d+)(?:\/([a-z]+)(?:\/([a-z]+))?)?)?/.exec(pathname || '');
+  return m && m[1] ? { org: Number(m[1]), mod: m[2] || 'dashboard', sub: m[3] || '' } : null;
 }
+const routePath = (r) => (r ? (r.sub ? `${r.mod}/${r.sub}` : r.mod) : 'dashboard');
 
 export function WsProvider({ children }) {
   const navigate = useNavigate();
@@ -79,7 +80,16 @@ export function WsProvider({ children }) {
 
   /* ---------- Serveur ---------- */
   const api = wsApi;
-  const oapi = useCallback((method, path, body) => wsApi(method, '/orgs/' + orgRef.current + path, body), []);
+  // Espaces par rôle · mode visiteur : l'interface n'envoie aucune écriture (le serveur les refuse de toute façon : space_readonly). Seules les demandes à l'IA et aux espaces restent permises.
+  const roRef = useRef(false);
+  const [readOnly, setReadOnlyState] = useState(false);
+  const setReadOnly = useCallback((v) => { roRef.current = Boolean(v); setReadOnlyState(Boolean(v)); }, []);
+  const oapi = useCallback((method, path, body) => {
+    if (roRef.current && method !== 'GET' && !/^\/(ai|spaces)(\/|$)/.test(path)) {
+      return Promise.reject(Object.assign(new Error('Consultation seule : vous êtes visiteur dans cet espace, aucune modification n\'est possible.'), { status: 403, code: 'space_readonly' }));
+    }
+    return wsApi(method, '/orgs/' + orgRef.current + path, body);
+  }, []);
 
   /* ---------- Chargement ---------- */
   const refreshBadges = useCallback(() => {
@@ -92,8 +102,12 @@ export function WsProvider({ children }) {
       const i = await wsApi('GET', '/orgs/' + id);
       if (orgRef.current !== id) setDash(null); // évite d'afficher les chiffres d'une autre organisation
       orgRef.current = id;
+      // Espaces par rôle (si l'entreprise les a activés) : à l'ouverture, la personne arrive dans SON espace, ou choisit entre ses espaces.
+      let target = mod || 'dashboard';
+      const sp = i.spaces;
+      if (sp && sp.enabled && target === 'dashboard') target = sp.choose || !sp.landing ? 'espaces' : `home/${sp.landing}`;
       setOrgId(id); setInfo(i); setOnboarding(null);
-      navigate(`/app/${id}/${mod || 'dashboard'}`, { replace: Boolean(replace) });
+      navigate(`/app/${id}/${target}`, { replace: Boolean(replace) });
       oapi('GET', '/dashboard').then(setDash, () => {});
     } catch (e) { fail(e); }
   }, [navigate, fail, oapi]);
@@ -107,7 +121,7 @@ export function WsProvider({ children }) {
       if (!j.orgs.length) { setOnboarding({ code: '' }); return; }
       const r = parseRoute(window.location.pathname);
       const pick = (r && j.orgs.find((o) => o.id === r.org)) || j.orgs.find((o) => o.id === orgRef.current) || j.orgs[0];
-      await loadOrg(pick.id, r && r.org === pick.id ? r.mod : 'dashboard', true);
+      await loadOrg(pick.id, r && r.org === pick.id ? routePath(r) : 'dashboard', true);
     } catch (e) { fail(e); }
   }, [loadOrg, fail]);
 
@@ -123,7 +137,7 @@ export function WsProvider({ children }) {
   const route = parseRoute(loc.pathname);
   useEffect(() => {
     if (!user || !route || route.org === orgRef.current) return;
-    loadOrg(route.org, route.mod, true);
+    loadOrg(route.org, routePath(route), true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loc.pathname, user]);
 
@@ -158,11 +172,11 @@ export function WsProvider({ children }) {
     // outils
     money, dateFr, today, can, copy, memberName, firstName: () => firstName(user && user.name), initials,
     // navigation / rafraîchissement
-    refresh: () => setRefreshKey((k) => k + 1), refreshKey, reloadOrg: () => loadOrg(orgId, route ? route.mod : 'dashboard', true), loadOrg, refreshBadges, logout, setOrgs, setUser,
+    refresh: () => setRefreshKey((k) => k + 1), refreshKey, reloadOrg: () => loadOrg(orgId, routePath(route), true), readOnly, setReadOnly, spaces: info && info.spaces && info.spaces.enabled ? info.spaces : null, loadOrg, refreshBadges, logout, setOrgs, setUser,
     // IA
     askAI, openAI, propose, aiOpen, setAiOpen, pendingAsk, setPendingAsk,
     onboarding, setOnboarding, booting, boot,
-  }), [user, orgs, orgId, info, dash, route, oapi, toast, fail, modal, confirm, money, can, copy, memberName, refreshKey, loadOrg, refreshBadges, logout, askAI, openAI, propose, aiOpen, pendingAsk, onboarding, booting, boot, lang, t]); // eslint-disable-line react-hooks/exhaustive-deps
+  }), [user, orgs, orgId, info, dash, route, oapi, toast, fail, modal, confirm, money, can, copy, memberName, refreshKey, loadOrg, refreshBadges, logout, readOnly, setReadOnly, askAI, openAI, propose, aiOpen, pendingAsk, onboarding, booting, boot, lang, t]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Ctx.Provider value={value}>

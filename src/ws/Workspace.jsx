@@ -4,6 +4,7 @@ import { Component, Suspense, useCallback, useEffect, useLayoutEffect, useRef, u
 import { Link } from 'react-router-dom';
 import InstallPrompt from '../components/InstallPrompt.jsx';
 import { useT } from '../lib/i18n.jsx';
+import { tsrv } from '../lib/srv.js';
 import AccountSecurity from './AccountSecurity.jsx';
 import { FeedbackPanel } from './Feedback.jsx';
 import AIPanel from './AIPanel.jsx';
@@ -18,6 +19,9 @@ import Palette from './shell/Palette.jsx';
 import Personalize, { sortMods } from './shell/Personalize.jsx';
 import { bindPalette } from './shell/screens.js';
 import { WsProvider, useWs } from './WsContext.jsx';
+// Espaces par rôle (réglage d'entreprise) : nouvelle navigation, active seulement si le serveur renvoie info.spaces.enabled.
+import { SpaceBottomNav, SpaceChooser, SpaceDenied, SpaceHome, SpaceSidebar, VisitorBanner, VisitorGuard, resolveSpaces } from './spaces/SpaceFrame.jsx';
+import { Navigate } from 'react-router-dom';
 
 /** Espace de travail : connexion vérifiée, choix de l'organisation, menu des sous-applications, assistant IA. */
 export default function Workspace() {
@@ -90,12 +94,25 @@ function Shell() {
   const openSecurity = () => modal(t('Sécurité du compte'), () => <AccountSecurity />, { wide: true });
   const openFeedback = () => modal(t('Votre avis'), () => <FeedbackPanel orgId={orgId} />, { wide: true });
   const main = useRef(null);
-  const mods = sortMods(info.modules.filter((m) => hasModule(m.id)), p.order);
+  // ----- Espaces par rôle : si l'entreprise les a activés, le menu général est remplacé par le menu de l'espace courant (voir ./spaces). -----
+  const spaces = ws.spaces; // null = ancien menu général
+  const [lastSpace, setLastSpace] = useState(null);
+  const sr = spaces ? resolveSpaces(spaces, route, lastSpace) : null;
+  const allMods = spaces ? spaces.spaces.flatMap((s) => s.modules) : null;
+  const mods = spaces
+    ? sortMods((sr.cur ? sr.cur.modules : []).filter((m) => hasModule(m.id)), p.order)
+    : sortMods(info.modules.filter((m) => hasModule(m.id)), p.order);
   let cur = route ? route.mod : 'dashboard';
-  if (!mods.some((m) => m.id === cur)) cur = 'dashboard';
-  const Mod = moduleComponent(cur);
+  if (!spaces && !mods.some((m) => m.id === cur)) cur = 'dashboard';
+  const Mod = moduleComponent(spaces ? (sr.kind === 'module' ? cur : 'dashboard') : cur);
   const curMod = mods.find((m) => m.id === cur);
   const canBrand = ws.can('admin');
+  const homeSpace = spaces ? (spaces.landing || (spaces.spaces[0] && spaces.spaces[0].id)) : null; // « Retour à mon espace »
+  useEffect(() => { if (sr && sr.cur) setLastSpace(sr.cur.id); }, [sr && sr.cur && sr.cur.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Le dernier espace ouvert est mémorisé côté serveur (d'un appareil à l'autre) quand la personne ouvre l'accueil d'un espace.
+  useEffect(() => { if (spaces && route && route.mod === 'home' && sr.cur && spaces.last !== sr.cur.id) ws.oapi('PUT', '/spaces/last', { space: sr.cur.id }).catch(() => {}); }, [spaces && route && route.mod === 'home' ? route.sub : '']); // eslint-disable-line react-hooks/exhaustive-deps
+  const visitor = Boolean(sr && sr.visitor);
+  useEffect(() => { ws.setReadOnly(visitor); return () => ws.setReadOnly(false); }, [visitor]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { setActiveOrg(orgId); }, [orgId]);
   const personalize = useCallback(() => modal(t("Personnaliser l'affichage"), () => <Personalize mods={mods} orgId={orgId} orgName={info.org.name} canBrand={canBrand} />, { wide: true }), [modal, t, mods, orgId, info.org.name, canBrand]);
@@ -138,25 +155,52 @@ function Shell() {
     <div className={'ws-shell app' + (navOpen ? ' nav-open' : '')}>
       <a className="skip-link" href="#ws-main">{t('Aller au contenu')}</a>
       <div className="ws-scrim" onClick={() => setNavOpen(false)} aria-hidden="true" />
+      {spaces ? (
+        <SpaceSidebar spaces={spaces} cur={sr.cur} curMod={cur === 'home' ? 'home' : cur} orgId={orgId} orgs={orgs} info={info} user={user} badgeOf={badgeOf} initials={ws.initials} onOrg={onOrg} onClose={() => setNavOpen(false)}
+          onSecurity={openSecurity} onLogout={logout} onPersonalize={personalize} mini={p.navMini} onMini={() => setPrefs({ navMini: !p.navMini })} />
+      ) : (
       <Sidebar mods={mods} cur={cur} orgId={orgId} orgs={orgs} info={info} user={user} badgeOf={badgeOf} initials={ws.initials} onOrg={onOrg} onClose={() => setNavOpen(false)}
         onSecurity={openSecurity} onLogout={logout} onPersonalize={personalize} mini={p.navMini} onMini={() => setPrefs({ navMini: !p.navMini })} members={info.limits.membersUsed} />
+      )}
       <div className="ws-col app-col">
-        <TopBar modTitle={curMod ? t(curMod.title) : ''} navOpen={navOpen} onNav={() => setNavOpen(!navOpen)} onAsk={askAI} orgId={orgId} bell={bell} user={user}
+        <TopBar spaceTitle={spaces && sr.cur ? tsrv(sr.cur.title) : ''} modTitle={spaces && cur === 'home' ? t('Tableau de bord') : curMod ? t(curMod.title) : ''} navOpen={navOpen} onNav={() => setNavOpen(!navOpen)} onAsk={askAI} orgId={orgId} bell={bell} user={user}
           role={t(info.me.roleLabel)} initials={ws.initials} onSecurity={openSecurity} onPersonalize={personalize} />
         <UserNotices orgId={orgId} />
         <main className="ws-main" id="ws-main" ref={main} tabIndex={-1}>
-          <div className="ws-mod" key={`${orgId}-${cur}-${refreshKey}`}>
-            <Suspense fallback={<Loading />}><ModBoundary><Mod /></ModBoundary></Suspense>
+          <div className="ws-mod" key={`${orgId}-${cur}-${route ? route.sub : ''}-${refreshKey}`}>
+            {spaces ? (
+              <SpaceBody sr={sr} spaces={spaces} cur={cur} orgId={orgId} homeSpace={homeSpace} Mod={Mod} />
+            ) : (
+              <Suspense fallback={<Loading />}><ModBoundary><Mod /></ModBoundary></Suspense>
+            )}
           </div>
         </main>
         <Footer orgId={orgId} onFeedback={openFeedback} />
       </div>
       <AIPanel mod={AI_MODULES.has(cur) ? cur : 'general'} />
       <button className="ws-fab" id="aiBtn" type="button" onClick={() => setAiOpen(!aiOpen)}><Icon name="ai" /><span>{t('Assistant IA')}</span></button>
-      <BottomNav mods={mods} cur={cur} orgId={orgId} onMenu={() => setNavOpen(true)} onAi={() => setAiOpen(!aiOpen)} alerts={bell} />
-      {palette ? <Palette mods={mods} orgId={orgId} onClose={() => setPalette(false)} onPersonalize={personalize} onAsk={askAI} /> : null}
+      {spaces ? <SpaceBottomNav cur={sr.cur} curMod={cur} orgId={orgId} onMenu={() => setNavOpen(true)} onAi={() => setAiOpen(!aiOpen)} alerts={bell} />
+        : <BottomNav mods={mods} cur={cur} orgId={orgId} onMenu={() => setNavOpen(true)} onAi={() => setAiOpen(!aiOpen)} alerts={bell} />}
+      {palette ? <Palette mods={spaces ? allMods.filter((m, i, a) => hasModule(m.id) && a.findIndex((x) => x.id === m.id) === i) : mods} spaces={spaces} curSpace={sr && sr.cur} orgId={orgId} onClose={() => setPalette(false)} onPersonalize={personalize} onAsk={askAI} /> : null}
     </div>
     </GuideProvider>
+  );
+}
+
+/** Contenu en mode « Espaces par rôle » : choix de l'espace, accueil de l'espace, écran d'un module (avec bandeau visiteur) ou refus clair. */
+function SpaceBody({ sr, spaces, cur, orgId, homeSpace, Mod }) {
+
+  if (sr.kind === 'choose') return <SpaceChooser spaces={spaces} orgId={orgId} />;
+  if (sr.kind === 'home') return <SpaceHome space={sr.cur} orgId={orgId} />;
+  if (cur === 'dashboard' && !(sr.cur && sr.cur.id === 'direction')) return <Navigate to={`/app/${orgId}/home/${homeSpace || ''}`} replace />; // plus de tableau de bord général
+  if (sr.kind === 'denied') return <SpaceDenied orgId={orgId} home={homeSpace} />;
+  return (
+    <>
+      {sr.visitor ? <VisitorBanner space={sr.cur} orgId={orgId} home={homeSpace} /> : null}
+      <VisitorGuard on={sr.visitor} key={cur}>
+        <Suspense fallback={<Loading />}><ModBoundary><Mod /></ModBoundary></Suspense>
+      </VisitorGuard>
+    </>
   );
 }
 

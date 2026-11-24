@@ -4,6 +4,7 @@ import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
 import { Empty, Form, Loading, useLoad } from '../ui.jsx';
 import { Audit, Transfer } from '../parts/w3/TeamExtras.jsx';
+import SpaceAdmin from '../spaces/SpaceAdmin.jsx';
 import OrgPosition from '../parts/geo/OrgPosition.jsx';
 import '../../styles/ws-geo.css';
 
@@ -30,6 +31,7 @@ export default function Team() {
         <div><TeamBox /></div>
         <div><Branches />{can('admin') ? <Invites ver={iv} /> : null}</div>
       </div>
+      {can('admin') ? <SpaceAdmin /> : null}
       {can('admin') ? <OrgPosition /> : null}
       {can('owner') ? <Transfer /> : null}
       {can('admin') ? <Audit /> : null}
