@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useT } from '../../../lib/i18n.jsx';
 import { Failed } from './Failed.jsx';
-import { Alert, Badge, Button, Card, Skeleton } from '../../ui/index.jsx';
+import { Alert, Badge, Button, Card, Field, Skeleton } from '../../ui/index.jsx';
 import { useLoad } from '../../ui.jsx';
-import { ROLE_IDS, TYPE_IDS, useLabels, useMtg } from './common.jsx';
+import { ROLE_IDS, ROLE_IDS_Q, TYPE_IDS, useLabels, useMtg } from './common.jsx';
 
 /* Réglages des réunions : le responsable du compte décide qui peut convoquer et qui peut valider un compte rendu, par personne, par rôle
    et, s'il le souhaite, par type de réunion. Par défaut, seul le propriétaire fait les deux. Le serveur applique ces réglages à chaque action. */
@@ -58,6 +58,45 @@ function Side({ side, value, onChange, members, title, subtitle }) {
   );
 }
 
+const num = (v) => (v === '' || v === undefined ? 0 : Number(v));
+function QuorumEditor({ value, onChange }) {
+  const t = useT();
+  const L = useLabels();
+  const q = value || {};
+  const on = (ty) => Boolean(q[ty]);
+  const upd = (ty, patch) => onChange({ ...q, [ty]: { ...q[ty], ...patch } });
+  const empty = { minCount: 0, minPercent: 0, roles: {}, reduced: { allowed: false, minCount: 0, minPercent: 0, delayDays: 7 } };
+  return (
+    <Card title={t('Quorum par type de réunion')} subtitle={t("Nombre ou pourcentage de présents requis, et présences minimales par rôle. Calculé en direct pendant la séance ; sans quorum, aucune décision n'est valable.")}>
+      <div className="mtg-sec">
+        {TYPE_IDS.map((ty) => (
+          <div className="mtg-rule" key={ty}>
+            <label className="mtg-check"><input type="checkbox" checked={on(ty)} onChange={(e) => { const n = { ...q }; if (e.target.checked) n[ty] = { ...empty, minCount: 2 }; else delete n[ty]; onChange(n); }} /><b>{L.types[ty]}</b>{on(ty) ? null : <span className="mtg-muted"> — {t('quorum non exigé')}</span>}</label>
+            {on(ty) ? (
+              <div className="mtg-sec">
+                <div className="mtg-grid2">
+                  <Field label={t('Nombre minimal de présents')}>{(p) => <input {...p} type="number" min="0" max="100" value={q[ty].minCount} onChange={(e) => upd(ty, { minCount: num(e.target.value) })} />}</Field>
+                  <Field label={t('Pourcentage minimal des convoqués (%)')}>{(p) => <input {...p} type="number" min="0" max="100" value={q[ty].minPercent} onChange={(e) => upd(ty, { minPercent: num(e.target.value) })} />}</Field>
+                </div>
+                <b>{t('Présences minimales par rôle')}</b>
+                <div className="mtg-grid2">{ROLE_IDS_Q.map((r) => <Field key={r} label={L.roles4[r]}>{(p) => <input {...p} type="number" min="0" max="100" value={(q[ty].roles || {})[r] || 0} onChange={(e) => upd(ty, { roles: { ...q[ty].roles, [r]: num(e.target.value) } })} />}</Field>)}</div>
+                <label className="mtg-check"><input type="checkbox" checked={Boolean(q[ty].reduced && q[ty].reduced.allowed)} onChange={(e) => upd(ty, { reduced: { ...empty.reduced, ...q[ty].reduced, allowed: e.target.checked } })} />{t("Autoriser une 2ᵉ convocation à quorum réduit si le quorum n'est pas atteint")}</label>
+                {q[ty].reduced && q[ty].reduced.allowed ? (
+                  <div className="mtg-grid2">
+                    <Field label={t('Quorum réduit : nombre minimal')}>{(p) => <input {...p} type="number" min="0" max="100" value={q[ty].reduced.minCount} onChange={(e) => upd(ty, { reduced: { ...q[ty].reduced, minCount: num(e.target.value) } })} />}</Field>
+                    <Field label={t('Quorum réduit : pourcentage (%)')}>{(p) => <input {...p} type="number" min="0" max="100" value={q[ty].reduced.minPercent} onChange={(e) => upd(ty, { reduced: { ...q[ty].reduced, minPercent: num(e.target.value) } })} />}</Field>
+                    <Field label={t('Délai avant la nouvelle convocation (jours)')}>{(p) => <input {...p} type="number" min="1" max="60" value={q[ty].reduced.delayDays} onChange={(e) => upd(ty, { reduced: { ...q[ty].reduced, delayDays: num(e.target.value) } })} />}</Field>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
 export default function SettingsScreen() {
   const t = useT();
   const L = useLabels();
@@ -77,6 +116,7 @@ export default function SettingsScreen() {
         <Card title={t('Vos droits')}>
           <div className="mtg-sec">
             <div><b>{t('Vous pouvez convoquer :')}</b><div className="mtg-row" style={{ marginTop: 6 }}>{s.me.convene.length ? s.me.convene.map((x) => <Badge key={x} tone="brand">{L.types[x]}</Badge>) : <span className="mtg-muted">{t('aucun type de réunion')}</span>}</div></div>
+            <div><b>{t('Quorum exigé :')}</b><div className="mtg-row" style={{ marginTop: 6 }}>{Object.keys(s.quorum || {}).length ? Object.entries(s.quorum).map(([ty, q]) => <Badge key={ty} tone="outline">{L.types[ty]} : {[q.minCount ? t('{n} présent(s)', { n: q.minCount }) : '', q.minPercent ? q.minPercent + ' %' : ''].filter(Boolean).join(' / ')}</Badge>) : <span className="mtg-muted">{t('aucune règle de quorum')}</span>}</div></div>
             <div><b>{t('Vous pouvez valider les comptes rendus :')}</b><div className="mtg-row" style={{ marginTop: 6 }}>{s.me.validate.length ? s.me.validate.map((x) => <Badge key={x} tone="ok">{L.types[x]}</Badge>) : <span className="mtg-muted">{t('aucun type de réunion')}</span>}</div></div>
           </div>
         </Card>
@@ -86,7 +126,7 @@ export default function SettingsScreen() {
   const c = cfg || s.config;
   const save = () => {
     setBusy(true);
-    oapi('PUT', '/meetings/settings', { convene: c.convene, validate: c.validate, distinct: c.distinct }).then((r) => { setCfg(r.config); setWarn(r.warnings || []); toast(t('Réglages enregistrés.')); }).catch(fail).finally(() => setBusy(false));
+    oapi('PUT', '/meetings/settings', { convene: c.convene, validate: c.validate, distinct: c.distinct, quorum: c.quorum || {}, noticeH: c.noticeH, blockConflicts: c.blockConflicts, signOrdered: c.signOrdered, maxParticipants: Number(c.maxParticipants) || 60 }).then((r) => { setCfg(r.config); setWarn(r.warnings || []); toast(t('Réglages enregistrés.')); }).catch(fail).finally(() => setBusy(false));
   };
   return (
     <div className="mtg">
@@ -96,6 +136,19 @@ export default function SettingsScreen() {
       <Card title={t('Contrôle')}>
         <label className="mtg-check"><input type="checkbox" checked={c.distinct} onChange={(e) => setCfg({ ...c, distinct: e.target.checked })} />{t("Exiger un validateur distinct de l'auteur du compte rendu")}</label>
         <p className="mtg-muted">{t("La personne qui soumet le compte rendu ne peut pas le valider elle-même : une autre personne autorisée doit le faire.")}</p>
+      </Card>
+      <QuorumEditor value={c.quorum} onChange={(v) => setCfg({ ...c, quorum: v })} />
+      <Card title={t('Préavis minimal des convocations')} subtitle={t("Délai minimal entre la convocation et la réunion ; une réunion urgente ou critique a un préavis réduit. Un préavis trop court déclenche un avertissement.")}>
+        <div className="mtg-grid2">{[['normal', t('Réunion normale (heures)')], ['urgent', t('Réunion urgente (heures)')], ['critical', t('Réunion critique (heures)')]].map(([k, lab]) => <Field key={k} label={lab}>{(p) => <input {...p} type="number" min="0" max="720" value={(c.noticeH || {})[k]} onChange={(e) => setCfg({ ...c, noticeH: { ...c.noticeH, [k]: num(e.target.value) } })} />}</Field>)}</div>
+      </Card>
+      <Card title={t('Limites')} subtitle={t('Nombre maximal de participants par réunion (de 10 à 500). Le partage d’écran se fait dans la salle de visioconférence, quel que soit le nombre de membres.')}>
+        <Field label={t('Participants par réunion')}>{(p) => <input {...p} type="number" min="10" max="500" value={c.maxParticipants || 60} onChange={(e) => setCfg({ ...c, maxParticipants: num(e.target.value) })} />}</Field>
+      </Card>
+      <Card title={t("Conflits d'agenda et signatures")}>
+        <div className="mtg-sec">
+          <label className="mtg-check"><input type="checkbox" checked={Boolean(c.blockConflicts)} onChange={(e) => setCfg({ ...c, blockConflicts: e.target.checked })} />{t("Bloquer la convocation en cas de conflit d'agenda (sinon : simple avertissement)")}</label>
+          <label className="mtg-check"><input type="checkbox" checked={Boolean(c.signOrdered)} onChange={(e) => setCfg({ ...c, signOrdered: e.target.checked })} />{t('Procès-verbaux : signatures dans l’ordre de la liste par défaut')}</label>
+        </div>
       </Card>
       {warn.map((w) => <Alert key={w.code} tone="warn" title={t("Attention : un seul validateur possible")}>{t("Pour ces types de réunion, une seule personne peut valider : {types}. Désignez-en une deuxième, sinon aucun compte rendu rédigé par elle ne pourra être validé.", { types: w.types.map((x) => L.types[x]).join(', ') })}</Alert>)}
       <div className="mtg-row"><Button variant="primary" icon="check" loading={busy} onClick={save}>{t('Enregistrer les réglages')}</Button></div>

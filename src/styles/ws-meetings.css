@@ -66,7 +66,7 @@ button.mtg-item:hover{border-color:var(--border-strong);background:var(--surface
 .mtg-point-h b{flex:1 1 180px;overflow-wrap:anywhere}
 .mtg-check{display:inline-flex;gap:var(--sp-2);align-items:center;min-height:var(--touch);font-size:var(--fs-md);cursor:pointer}
 .mtg-banner{display:flex;gap:var(--sp-3);flex-wrap:wrap;align-items:center;justify-content:space-between}
-.mtg-edit-row{display:grid;gap:var(--sp-2);grid-template-columns:minmax(0,2fr) minmax(0,1fr) 88px auto;align-items:end;padding:var(--sp-2);border:1px solid var(--border);border-radius:var(--radius-md)}
+.mtg-edit-row{display:grid;gap:var(--sp-2);grid-template-columns:minmax(0,2fr) minmax(0,1fr) 88px 130px auto;align-items:end;padding:var(--sp-2);border:1px solid var(--border);border-radius:var(--radius-md)}
 @media (max-width:700px){.mtg-edit-row{grid-template-columns:minmax(0,1fr)}}
 .mtg-picks{display:grid;gap:var(--sp-1);max-height:240px;overflow:auto;padding:var(--sp-2);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface)}
 .mtg-picks label{display:flex;gap:var(--sp-2);align-items:center;min-height:var(--touch);cursor:pointer}

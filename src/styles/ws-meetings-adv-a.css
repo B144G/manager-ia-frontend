@@ -1,0 +1,54 @@
+/* Réunions avancées (statistiques, suivi des personnes, registre, archives). Uniquement des jetons du thème : clair et sombre, 375 px et plus. */
+.mtg-adv-filters{display:grid;gap:var(--sp-3)}
+.mtg-adv-filters input[type=search],.mtg-adv-filters input[type=date],.mtg-adv-filters select{min-height:var(--touch)}
+.mtg-adv-filters .ui-seg{max-width:100%;overflow-x:auto}
+.mtg-adv-filters .ui-seg button{min-height:var(--touch)}
+.mtg .ui-tabs{max-width:100%;overflow-x:auto}
+.mtg .ui-tab{min-height:var(--touch)}
+.mtg-adv-link{display:inline-flex;gap:var(--sp-1);align-items:center;min-height:var(--touch);padding:0;border:0;background:none;color:var(--accent);font:inherit;text-align:left;cursor:pointer;overflow-wrap:anywhere}
+.mtg-adv-link:hover{text-decoration:underline}
+.mtg-adv-link:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.mtg-adv-msg{display:grid;gap:var(--sp-2);padding:var(--sp-3);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface)}
+.mtg-adv-cur{display:grid;gap:2px;padding:var(--sp-3);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);overflow-wrap:anywhere}
+.mtg-adv-cur span{color:var(--text-2);font-size:var(--fs-sm)}
+
+/* Tableau des performances : lignes de tableau sur grand écran, cartes empilées sous 640 px */
+.mtg-ptable-wrap{border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);overflow:hidden}
+.mtg-ptable{width:100%;border-collapse:collapse;font-size:var(--fs-md)}
+.mtg-ptable th,.mtg-ptable td{padding:var(--sp-2) var(--sp-3);text-align:left;vertical-align:top;border-bottom:1px solid var(--border);overflow-wrap:anywhere}
+.mtg-ptable thead th{font-size:var(--fs-xs);font-weight:var(--fw-semibold);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--surface-2)}
+.mtg-ptable tbody th{font-weight:var(--fw-semibold)}
+.mtg-ptable tbody tr:last-child>*{border-bottom:0}
+.mtg-ptable small{display:block}
+@media (max-width:1100px) and (min-width:641px){.mtg-ptable-wrap{overflow-x:auto}.mtg-ptable{min-width:900px}}
+@media (max-width:640px){
+  .mtg-ptable-wrap{border:0;background:none;overflow:visible}
+  .mtg-ptable,.mtg-ptable tbody,.mtg-ptable tr,.mtg-ptable th,.mtg-ptable td{display:block}
+  .mtg-ptable thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .mtg-ptable tbody{display:grid;gap:var(--sp-3)}
+  .mtg-ptable tr{border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);padding:var(--sp-2) 0}
+  .mtg-ptable tbody th{font-size:var(--fs-lg);padding:var(--sp-2) var(--sp-3);border-bottom:1px solid var(--border)}
+  .mtg-ptable td{display:flex;justify-content:space-between;gap:var(--sp-3);align-items:baseline;padding:var(--sp-1) var(--sp-3);border-bottom:0;text-align:right}
+  .mtg-ptable td::before{content:attr(data-label);flex:none;max-width:50%;text-align:left;color:var(--muted);font-size:var(--fs-sm)}
+  .mtg-ptable small{display:inline}
+}
+
+/* Frise chronologique des responsabilités */
+.mtg-timeline{display:grid;gap:0;margin:0;padding:0;list-style:none}
+.mtg-timeline>li{position:relative;display:grid;grid-template-columns:32px minmax(0,1fr);gap:var(--sp-3);padding-bottom:var(--sp-4)}
+.mtg-timeline>li:not(:last-child)::before{content:"";position:absolute;left:15px;top:32px;bottom:0;width:2px;background:var(--border)}
+.mtg-tl-dot{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent)}
+.mtg-timeline>li.gone .mtg-tl-dot{background:var(--surface-3);color:var(--muted)}
+.mtg-tl-body{display:grid;gap:var(--sp-1);align-content:start}
+.mtg-tl-h{display:flex;gap:var(--sp-2);flex-wrap:wrap;align-items:center}
+.mtg-tl-sub{margin:0;overflow-wrap:anywhere}
+
+/* Registre des résolutions */
+.mtg-adv-res{display:grid;gap:var(--sp-2);padding:var(--sp-3);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface)}
+.mtg-adv-res-h{display:flex;gap:var(--sp-2);flex-wrap:wrap;align-items:center;justify-content:space-between}
+.mtg-adv-num{font-variant-numeric:tabular-nums;color:var(--accent)}
+.mtg-adv-res-t{margin:0;overflow-wrap:anywhere}
+.mtg-adv-clamp{margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.mtg-adv-facts{display:grid;gap:var(--sp-2);grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));margin:0}
+.mtg-adv-facts dt{color:var(--muted);font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.04em}
+.mtg-adv-facts dd{margin:0;overflow-wrap:anywhere}
