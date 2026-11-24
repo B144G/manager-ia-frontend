@@ -16,6 +16,7 @@ import Composer from '../parts/chat/Composer.jsx';
 import CallLayer from '../parts/chat/Call.jsx';
 import { CallsPanel, FilesPanel, InfoPanel, LaterPanel, MapPanel, Picker, SearchPanel, SettingsPanel } from '../parts/chat/Panels.jsx';
 import { setChatUnread } from '../parts/chat/unread.js';
+import { ObjectPicker, SaveToLibrary } from '../parts/chat/ObjectUI.jsx';
 
 /* Chat interne : conversations privées et groupes, fichiers, appels, assistante. Le serveur contrôle les droits de chaque action
    (une conversation n'est lisible que par ses participants). Mise en page : 3 colonnes sur ordinateur, une colonne à la fois sur mobile. */
@@ -246,7 +247,10 @@ export default function Chat() {
     jump: (id) => setJumpTo({ id, k: Date.now() }),
     joinCall: (callId, kind) => callRef.current && callRef.current.join(callId, kind, conv.id, conv.name),
     openMeeting: () => navigate(`/app/${orgId}/meetings`),
+    openObject: (o) => navigate(o.path),
+    saveLib: (m) => modal(t('Enregistrer dans la Bibliothèque'), (close) => <SaveToLibrary api={api} file={m.file} close={close} getBytes={() => api.fetchBytes(m.file.id)} />),
   };
+  const pickObject = () => modal(t("Partager un objet d'un module"), (close) => <ObjectPicker api={api} close={close} onPick={async (type, id) => { const j = await api.c('POST', '/objects/share', { convId: conv.id, type, id }).catch(fail); if (j) { add(conv.id, j.message); bump(conv.id, j.message); } }} />);
   const sendPoll = async (v) => { const j = await api.c('POST', `/conversations/${conv.id}/polls`, v).catch(fail); if (j) { add(conv.id, j.message); bump(conv.id, j.message); } };
   const sendLoc = async (lat, lng, accuracy) => { const j = await api.c('POST', `/conversations/${conv.id}/location`, { lat, lng, accuracy, consent: true }).catch(fail); if (j) { add(conv.id, j.message); bump(conv.id, j.message); } };
   const schedule = async (v) => { await api.c('POST', `/conversations/${conv.id}/scheduled`, v).then(() => toast(t('Message programmé')), fail); };
@@ -265,6 +269,11 @@ export default function Chat() {
   const openDirect = async (uid) => { try { const j = await api.c('POST', '/conversations/direct', { userId: uid }); await loadConvs(); setPanel(null); open(j.conversation.id); } catch (e) { fail(e); } };
   const jumpTo2 = async (convId, msgId, userId) => { if (userId) return openDirect(userId); if (!convId) return; if (!convsRef.current.some((c) => c.id === convId)) await loadConvs(); await open(convId, msgId); };
   const planMeeting = () => modal(t('Planifier une réunion'), (close) => <MeetingForm t={t} api={api} conv={conv} members={members} meId={meId} orgId={orgId} oapi={ws.oapi} onDone={async (id) => { const j = await api.c('POST', '/calls/meeting-link', { convId: conv.id, meetingId: id }).catch(fail); if (j) { add(conv.id, j.message); bump(conv.id, j.message); } close(); toast(t('Réunion planifiée')); }} />, { wide: true });
+
+  // ---------- Fil rattaché à un objet d'un module : carte de l'objet (droits du lecteur) et ouverture directe (?conv=ID) ----------
+  const [objCard, setObjCard] = useState(null);
+  useEffect(() => { setObjCard(null); if (conv && conv.objectType) api.c('GET', `/objects/${conv.objectType}/${conv.objectId}`).then((j) => setObjCard(j.object), () => {}); }, [conv && conv.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { const p = new URLSearchParams(window.location.search); const c = Number(p.get('conv')); if (c && boot) { window.history.replaceState({}, '', window.location.pathname); loadConvs().then(() => open(c)); } }, [boot]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ---------- Appels : lien de salle (?room=ID) ----------
   useEffect(() => { const p = new URLSearchParams(window.location.search); const room = Number(p.get('room')); if (room && boot && callRef.current) { open(room).then(() => callRef.current && callRef.current.start(room, 'video', '')); window.history.replaceState({}, '', window.location.pathname); } }, [boot]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -306,10 +315,10 @@ export default function Chat() {
         )}
         {conv && (
           <>
-            <ThreadHeader conv={conv} detail={detail[conv.id]} presence={presence} typingText={typingNow} onBack={() => { setActiveId(null); setPanel(null); }} onCall={(k) => callRef.current.start(conv.id, k, conv.name)} onPanel={setPanel} panel={panel} callsOn={boot.settings.callsEnabled} geoCount={geoCount} />
+            <ThreadHeader conv={conv} detail={detail[conv.id]} presence={presence} typingText={typingNow} onBack={() => { setActiveId(null); setPanel(null); }} onCall={(k) => callRef.current.start(conv.id, k, conv.name)} onPanel={setPanel} panel={panel} callsOn={boot.settings.callsEnabled} geoCount={geoCount} onOpenObject={(o) => navigate(o.path)} objCard={objCard} />
             {conv.e2ee && <p className="ci-e2e-note"><Icon name="c-lock" /> {t('Chiffrée de bout en bout')}{!kk && e2eInfo.ok ? ` — ${t("clé en cours de préparation…")}` : ''}{!e2eInfo.ok && e2eInfo.why ? ` — ${e2eInfo.why}` : ''}</p>}
             <Thread conv={conv} state={msgs[conv.id]} meId={meId} names={names} texts={texts} plainNames={plainNames} api={api} e2e={e2e} act={act} group={group} isAdmin={group && conv.myRole === 'admin'} loadMore={() => { const l = msgs[conv.id].list; if (l.length) loadMessages(conv.id, { before: l[0].id }); }} firstUnread={firstUnread} typingNow={typingNow} jumpTo={jumpTo} />
-            <Composer conv={conv} members={members} meId={meId} settings={boot.settings} disabled={readOnly} disabledText={t('Seuls les administrateurs du groupe peuvent écrire ici.')} reply={reply} edit={edit} onCancelContext={() => { setReply(null); setEdit(null); }} onSend={send} onFile={sendFile} onVoice={sendVoice} onPoll={sendPoll} onLocation={sendLoc} onSchedule={schedule} onTyping={sendTyping} e2ee={conv.e2ee} />
+            <Composer conv={conv} members={members} meId={meId} settings={boot.settings} disabled={readOnly} disabledText={t('Seuls les administrateurs du groupe peuvent écrire ici.')} reply={reply} edit={edit} onCancelContext={() => { setReply(null); setEdit(null); }} onSend={send} onFile={sendFile} onVoice={sendVoice} onPoll={sendPoll} onLocation={sendLoc} onSchedule={schedule} onTyping={sendTyping} e2ee={conv.e2ee} onObject={pickObject} />
           </>
         )}
       </main>

@@ -21,7 +21,7 @@ const preview = (c, t, typing) => {
   if (l.deleted) return t('Message supprimé');
   if (l.encrypted) return `🔒 ${t('Message chiffré')}`;
   const who = c.kind === 'group' && l.senderName ? `${l.senderName.split(' ')[0]} : ` : '';
-  const body = l.kind === 'voice' ? `🎤 ${t('Message vocal')}` : l.kind === 'file' ? `📎 ${l.text}` : l.kind === 'poll' ? `📊 ${l.text}` : l.kind === 'location' ? `📍 ${t('Position partagée')}` : l.kind === 'call' ? `📞 ${t('Appel')}` : l.kind === 'meeting' ? `📅 ${l.text}` : l.kind === 'system' ? '' : l.text;
+  const body = l.kind === 'voice' ? `🎤 ${t('Message vocal')}` : l.kind === 'file' ? `📎 ${l.text}` : l.kind === 'poll' ? `📊 ${l.text}` : l.kind === 'location' ? `📍 ${t('Position partagée')}` : l.kind === 'call' ? `📞 ${t('Appel')}` : l.kind === 'meeting' ? `📅 ${l.text}` : l.kind === 'object' ? `🔗 ${t('Objet partagé')}` : l.kind === 'system' ? '' : l.text;
   return who + body;
 };
 

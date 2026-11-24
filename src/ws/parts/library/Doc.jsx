@@ -7,6 +7,7 @@ import { saveBlob } from '../sales/util.jsx';
 import { fileUrl } from './api.js';
 import { Badge } from '../../ui.jsx';
 import { bytes, when } from './util.jsx';
+import { DiscussButton } from '../chat/ObjectUI.jsx';
 
 /** Aperçu : une image est lue avec la session puis affichée ; un PDF s'ouvre dans un cadre de la même origine. Les autres types se téléchargent. */
 function Preview({ L, d }) {
@@ -104,6 +105,7 @@ export function DocModal({ L, id, close, onChange }) {
           </dl>
           <div className="row lib-actions">
             <button className="btn primary small" type="button" onClick={() => download(d)}>{t('Télécharger')}</button>
+            <DiscussButton type="library_doc" id={d.id} variant="secondary" />
             <button className="btn small" type="button" aria-pressed={d.favorite} onClick={() => fav(d)}>{d.favorite ? t('★ Retirer des favoris') : t('☆ Ajouter aux favoris')}</button>
             {p.delete ? <button className="btn small" type="button" onClick={() => remove(d)}>{t('Mettre à la corbeille')}</button> : null}
             {p.edit ? <button className="btn small" type="button" onClick={() => lock(d, !j.lock)}>{j.lock ? t('Déverrouiller') : t('Verrouiller pour modification')}</button> : null}

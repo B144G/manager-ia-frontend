@@ -139,7 +139,7 @@
 .ci-composer{position:relative;padding:var(--sp-2) var(--sp-3) calc(var(--sp-2) + env(safe-area-inset-bottom,0px));border-top:1px solid var(--border);background:var(--surface)}
 .ci-composer.off{text-align:center}
 .ci-row{display:flex;align-items:flex-end;gap:var(--sp-1)}
-.ci-row textarea{flex:1;resize:none;min-height:var(--touch);max-height:160px;padding:11px var(--sp-3);border:1px solid var(--border);border-radius:22px;background:var(--surface-2);color:var(--text);font:inherit;font-size:16px;line-height:1.4;outline:none}
+.ci-row textarea{flex:1;resize:none;height:var(--touch);min-height:var(--touch);overflow-y:auto;max-height:160px;padding:11px var(--sp-3);border:1px solid var(--border);border-radius:22px;background:var(--surface-2);color:var(--text);font:inherit;font-size:16px;line-height:1.4;outline:none}
 .ci-row textarea:focus{border-color:var(--accent);box-shadow:var(--ring)}
 .ci-row textarea.urgent{border-color:var(--danger)}
 .ci-send{display:grid;place-items:center;flex:none;width:var(--touch);height:var(--touch);border:0;border-radius:50%;background:var(--accent);color:var(--on-accent);cursor:pointer}
@@ -227,3 +227,12 @@
   .ci-call footer .ui-btn{width:52px;height:52px}
 }
 @media (min-width:1100px){.ci-wrap{--ci-h:calc(100dvh - var(--top-h) - var(--sp-12))}}
+
+/* Objets des modules (cartes, fils rattachés) et événements des réunions */
+.ci-obj{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-2) var(--sp-3);min-width:min(280px,100%);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius-md);background:var(--surface-2)}
+.ci-obj.lock{border-left-color:var(--muted);color:var(--muted)}
+.ci-obj>span:nth-child(2){display:grid;gap:1px;flex:1}
+.ci-obj small{color:var(--muted);font-size:var(--fs-xs)}
+.ci-obj-chip{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:767px){.ci-obj-chip{display:none}}
+.ci-sys-list{margin:4px 0 0;padding:0 0 0 16px;text-align:left;display:grid;gap:2px}

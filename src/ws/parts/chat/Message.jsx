@@ -5,6 +5,7 @@ import { useWs } from '../../WsContext.jsx';
 import { Button } from '../../ui.jsx';
 import { fmtDur, fmtSize, fmtTime, renderText } from './text.jsx';
 import { decryptBytes } from './crypto.js';
+import { ObjectCard } from './ObjectUI.jsx';
 
 const FILE_ICON = { image: 'c-image', pdf: 'c-pdf', word: 'c-word', excel: 'c-excel', presentation: 'c-ppt', video: 'c-film', audio: 'c-audio', text: 'c-file', encrypted: 'c-lock' };
 
@@ -129,8 +130,16 @@ export function SystemLine({ m }) {
     demoted: t("{name} n'est plus administrateur du groupe", { name: e.name }),
     ai_on: t("{a} a invité l'assistante {ai} dans la conversation", { a, ai: e.aiName || '' }),
     ai_off: t("{a} a retiré l'assistante de la conversation", { a }),
+    obj_meeting_convened: t('Réunion convoquée le {date} à {time}', { date: e.date || '', time: e.time || '' }),
+    obj_meeting_agenda: t("Ordre du jour mis à jour"),
+    obj_meeting_decision: t('Décision(s) enregistrée(s)'),
+    obj_meeting_action: t('Action(s) ajoutée(s)'),
+    obj_meeting_submitted: t('Compte rendu soumis à validation'),
+    obj_meeting_validated: t('Compte rendu validé (les tâches sont créées dans Projets et tâches)'),
+    obj_meeting_returned: t('Compte rendu renvoyé pour correction'),
   }[e.event] || '';
-  return txt ? <div className="ci-sys"><span>{txt}</span></div> : null;
+  const items = Array.isArray(e.items) ? e.items : e.agenda || [];
+  return txt ? <div className="ci-sys"><span>{txt}{items.length > 0 && <ul className="ci-sys-list">{items.map((x, i) => <li key={i}>{x}</li>)}</ul>}</span></div> : null;
 }
 
 /** Une bulle de message. Les actions (répondre, épingler…) arrivent par `act`. */
@@ -153,10 +162,11 @@ export default function Message({ m, text, names, meId, api, e2e, plainName, act
     if (mine && m.kind === 'text') items.push(['pen', t('Modifier'), () => act.edit(m)]);
     if (!m.privateToMe) items.push(['c-pin', m.pinned ? t('Désépingler') : t('Épingler'), () => act.pin(m)]);
     items.push(['bell', t('Me rappeler'), () => act.remind(m)]);
-    if (m.kind !== 'poll' && m.kind !== 'call') items.push(['c-tasks', t('Créer une tâche'), () => act.task(m, text)]);
+    if (!['poll', 'call', 'object', 'meeting'].includes(m.kind)) items.push(['c-tasks', t('Créer une tâche'), () => act.task(m, text)]);
     if (!convE2ee && (m.kind === 'text' || (m.kind === 'voice' && m.meta.transcript))) items.push(['c-lang', t('Traduire'), async () => { const r = await act.translate(m, 'fr'); setTr(r); }]);
     if (!convE2ee && m.kind === 'voice' && !m.meta.transcript) items.push(['c-lang', t('Transcrire'), () => act.transcribe(m)]);
     if (m.kind === 'ai' && m.privateToMe && !(m.meta.companyData || []).length) items.push(['share', t('Partager avec la conversation'), () => act.share(m)]);
+    if (m.kind === 'file' && !convE2ee && m.file && !m.file.removed) items.push(['c-folder', t('Enregistrer dans la Bibliothèque'), () => act.saveLib(m)]);
     if (mine || isAdmin) items.push(['trash', t('Supprimer'), () => act.del(m)]);
   }
   const cls = 'ci-msg' + (mine ? ' mine' : ' theirs') + (m.kind === 'ai' ? ' ai' : '') + (m.urgent ? ' urgent' : '') + (m.pinned ? ' pinned' : '') + (m.privateToMe ? ' priv' : '');
@@ -185,6 +195,7 @@ export default function Message({ m, text, names, meId, api, e2e, plainName, act
         )}
         {!m.deleted && m.kind === 'poll' && <Poll m={m} vote={act.vote} close={act.closePoll} meId={meId} />}
         {!m.deleted && m.kind === 'call' && <CallCard m={m} join={act.joinCall} />}
+        {!m.deleted && m.kind === 'object' && <ObjectCard obj={m.object} onOpen={act.openObject} />}
         {!m.deleted && m.kind === 'meeting' && (
           <div className="ci-callcard"><span className="ci-callico"><Icon name="calendar-check" /></span><span><b>{m.meta.title}</b><small>{m.meta.date} · {m.meta.time}</small></span>
             <Button size="sm" variant="ghost" onClick={() => act.openMeeting(m.meta.meetingId)} label={t('Ouvrir')}>{t('Ouvrir')}</Button></div>

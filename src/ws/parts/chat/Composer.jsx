@@ -8,7 +8,7 @@ import { EMOJIS, fmtDur } from './text.jsx';
 const pickMime = () => { for (const m of ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus']) { try { if (window.MediaRecorder && MediaRecorder.isTypeSupported(m)) return m; } catch { /* essai suivant */ } } return ''; };
 
 /** Zone d'écriture : texte, émojis, @mentions, pièce jointe, message vocal, urgent, sondage, position, message programmé. */
-export default function Composer({ conv, members, meId, settings, disabled, disabledText, reply, edit, onCancelContext, onSend, onFile, onVoice, onPoll, onLocation, onSchedule, onTyping, e2ee }) {
+export default function Composer({ conv, members, meId, settings, disabled, disabledText, reply, edit, onCancelContext, onSend, onFile, onVoice, onPoll, onLocation, onSchedule, onTyping, e2ee, onObject }) {
   const t = useT();
   const { modal, toast, confirm } = useWs();
   const [text, setText] = useState('');
@@ -24,7 +24,7 @@ export default function Composer({ conv, members, meId, settings, disabled, disa
   useEffect(() => { if (edit) { setText(edit.body); ta.current && ta.current.focus(); } }, [edit]);
   useEffect(() => { if (reply && ta.current) ta.current.focus(); }, [reply]);
   useEffect(() => { setText(''); setUrgent(false); setEmoji(false); setPlus(false); }, [conv && conv.id]);
-  useEffect(() => { if (!ta.current) return; ta.current.style.height = 'auto'; ta.current.style.height = Math.min(ta.current.scrollHeight, 160) + 'px'; }, [text]);
+  useEffect(() => { if (!ta.current) return; ta.current.style.height = 'auto'; ta.current.style.height = Math.min(ta.current.scrollHeight, 160) + 'px'; }, [text, conv && conv.id]);
   useEffect(() => () => { if (recRef.current) { try { recRef.current.cancel(); } catch { /* arrêté */ } } }, []);
 
   // @mentions : suggestions à partir du mot en cours
@@ -103,6 +103,7 @@ export default function Composer({ conv, members, meId, settings, disabled, disa
           {plus && (
             <ul className="ci-plus" role="menu">
               <li><button type="button" role="menuitem" onClick={() => fileIn.current.click()}><Icon name="clip" /> {t('Fichier ou image')}</button></li>
+              {!e2ee && <li><button type="button" role="menuitem" onClick={() => { setPlus(false); onObject(); }}><Icon name="layer-group" /> {t("Objet d'un module")}</button></li>}
               {!e2ee && <li><button type="button" role="menuitem" onClick={pollForm}><Icon name="c-poll" /> {t('Sondage')}</button></li>}
               {!e2ee && <li><button type="button" role="menuitem" onClick={sharePos}><Icon name="c-pos" /> {t('Ma position (une fois)')}</button></li>}
               {!e2ee && <li><button type="button" role="menuitem" onClick={schedForm}><Icon name="clock" /> {t('Programmer ce message')}</button></li>}

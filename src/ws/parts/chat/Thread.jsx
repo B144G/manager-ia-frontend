@@ -50,7 +50,7 @@ export default function Thread({ conv, state, meId, names, texts, plainNames, ap
 }
 
 /** En-tête de la conversation. */
-export function ThreadHeader({ conv, detail, presence, typingText, onBack, onCall, onPanel, panel, callsOn, geoCount }) {
+export function ThreadHeader({ conv, detail, presence, typingText, onBack, onCall, onPanel, panel, callsOn, geoCount, onOpenObject, objCard }) {
   const t = useT();
   const pr = conv.kind === 'direct' ? presence[conv.otherUserId] : null;
   const sub = typingText || (conv.kind === 'direct'
@@ -64,6 +64,7 @@ export function ThreadHeader({ conv, detail, presence, typingText, onBack, onCal
         <b>{conv.e2ee && <Icon name="c-lock" />} {conv.name}</b>
         <small className={typingText ? 'typing' : ''}>{sub}</small>
       </button>
+      {conv.objectType && objCard && objCard.accessible && <Button size="sm" variant="ghost" icon={objCard.icon || 'layer-group'} onClick={() => onOpenObject(objCard)} label={t("Ouvrir l'objet")}><span className="ci-obj-chip">{t('Ouvrir')} : {objCard.label}</span></Button>}
       <span className="ci-head-act">
         {callsOn && <Button size="sm" variant="ghost" iconOnly icon="c-phone" label={t('Appel audio')} onClick={() => onCall('audio')} />}
         {callsOn && <Button size="sm" variant="ghost" iconOnly icon="c-video" label={t('Appel vidéo')} onClick={() => onCall('video')} />}
