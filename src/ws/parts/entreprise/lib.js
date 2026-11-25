@@ -16,5 +16,5 @@ export const MODULE_TITLES = {
   aifollow: "Suivi de l'IA", hr: 'Ressources humaines', talents: 'Talents et compétences', payroll: 'Paie', fiscal: 'Fiscalité et liasse', marketing: 'Marketing', logistics: 'Logistique', production: 'Production',
   construction: 'Chantiers (BTP)', maintenance: 'Maintenance', legal: 'Juridique et conformité', memory: "Mémoire de l'entreprise", agents: 'Agents spécialisés', accounting: 'Comptabilité', treasury: 'Trésorerie',
   library: 'Bibliothèque', purchasing: 'Achats', parties: 'Clients et fournisseurs', meetings: 'Réunions', chat: 'Chat interne', structure: 'Organisation', history: "Histoire de l'entreprise",
-  integrations: 'Intégrations', administration: 'Administration', billing: 'Abonnement', profil: 'Mon espace de travail', entreprise: 'Entreprise et organigramme',
+  integrations: 'Intégrations', administration: 'Administration', billing: 'Abonnement', profil: 'Mon espace de travail', partners: 'Partenaires et espaces partagés', entreprise: 'Entreprise et organigramme',
 };

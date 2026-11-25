@@ -103,3 +103,13 @@
 .layout-compact .ent-blocks{gap:var(--sp-3)}
 @media (min-width:900px){.layout-standard .ent-blocks{grid-template-columns:repeat(2,minmax(0,1fr))}.layout-standard .ent-blocks .sp-tiles{grid-column:1/-1}}
 .ent-modgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:2px var(--sp-3)}
+
+/* Espaces partagés */
+.ent-space{display:grid;gap:var(--sp-4);min-width:0}
+.ent-talk{display:grid;gap:var(--sp-3)}
+.ent-msgs{display:grid;gap:var(--sp-2);max-height:55vh;overflow:auto;padding-right:var(--sp-2)}
+.ent-msg{max-width:min(560px,92%);padding:var(--sp-2) var(--sp-3);border-radius:var(--radius-lg);background:var(--surface-3);justify-self:start}
+.ent-msg.mine{justify-self:end;background:var(--accent-soft-2)}
+.ent-msg p{margin:2px 0 0;overflow-wrap:anywhere;white-space:pre-wrap}.ent-msg small{color:var(--muted)}
+.ent-compose{display:flex;gap:var(--sp-2)}.ent-compose input{flex:1;min-width:0;font-size:16px}
+.ent-pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:var(--sp-3);border-radius:var(--radius-md);background:var(--surface-2);border:1px solid var(--border);max-height:50vh;overflow:auto}
