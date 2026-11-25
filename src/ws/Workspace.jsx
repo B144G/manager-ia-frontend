@@ -120,6 +120,7 @@ function Shell() {
   useEffect(() => { if (sr && sr.cur) { setLastSpace(sr.cur.id); saveLastSpace(orgId, info.me.userId, sr.cur.id); } }, [sr && sr.cur && sr.cur.id]); // eslint-disable-line react-hooks/exhaustive-deps
   // Le dernier espace ouvert est mémorisé côté serveur (d'un appareil à l'autre) quand la personne ouvre l'accueil d'un espace.
   useEffect(() => { if (spaces && route && route.mod === 'home' && sr.cur && spaces.last !== sr.cur.id) ws.oapi('PUT', '/spaces/last', { space: sr.cur.id }).catch(() => {}); }, [spaces && route && route.mod === 'home' ? route.sub : '']); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!spaces) return undefined; document.body.classList.add('sp-merged'); return () => document.body.classList.remove('sp-merged'); }, [Boolean(spaces)]); // eslint-disable-line react-hooks/exhaustive-deps
   const visitor = Boolean(sr && sr.visitor);
   useEffect(() => { ws.setReadOnly(visitor); return () => ws.setReadOnly(false); }, [visitor]); // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -7,7 +7,7 @@ import { rq, API_BASE } from '../../lib/api.js';
 import { usePrefs } from '../../lib/prefs.js';
 import { MODULE_ICONS } from '../registry.js';
 import { BrandMark } from '../shell/Frame.jsx';
-import { openPalette } from '../shell/screens.js';
+import { openPalette, useScreens } from '../shell/screens.js';
 import { useWs } from '../WsContext.jsx';
 import { Empty, Loading, useLoad } from '../ui.jsx';
 
@@ -54,8 +54,30 @@ export function SpaceSidebar({ cur, curMod, orgId, orgs, info, user, initials, o
   const t = useT();
   const p = usePrefs();
   const brand = p.brand[orgId];
+  const sc = useScreens();
+  const [fold, setFold] = useState({}); // rubriques repliées / dépliées à la main (clé = module:rubrique)
   const mods = cur ? cur.modules.filter((m) => m.id !== 'dashboard') : [];
   const hasDash = cur && cur.modules.some((m) => m.id === 'dashboard');
+  const inSpace = new Set(cur ? cur.modules.map((m) => m.id) : []);
+  // Rubriques de l'écran affiché (publiées par le cadre du module) ; un renvoi vers un module d'un AUTRE espace n'est pas proposé ici.
+  const rubs = (sc.groups || []).map((g) => ({ ...g, items: g.items.filter((i) => !i.to || inSpace.has(i.to)) })).filter((g) => g.items.length);
+  const single = mods.length === 1;
+  const pickScreen = (id) => { if (sc.pick) sc.pick(id); if (onClose) onClose(); };
+  const rubrics = (m) => rubs.map((g) => {
+    const key = `${m.id}:${g.id}`;
+    const has = g.items.some((i) => i.id === sc.active);
+    const open = key in fold ? fold[key] : has;
+    return (
+      <li key={g.id} className="sp-grp">
+        <button type="button" className="sp-gh" aria-expanded={open} onClick={() => setFold({ ...fold, [key]: !open })}>
+          <span className="nl">{g.label}</span><Icon name={open ? 'down' : 'right'} />
+        </button>
+        {open ? <ul>{g.items.map((i) => (
+          <li key={i.id} className="app-li"><button type="button" className={'sp-it' + (i.id === sc.active && !i.to ? ' on' : '')} aria-current={i.id === sc.active ? 'page' : undefined} onClick={() => pickScreen(i.id)}><span className="nl">{i.label}</span></button></li>
+        ))}</ul> : null}
+      </li>
+    );
+  });
   const item = (m) => {
     const n = badgeOf(m.id);
     return (
@@ -64,6 +86,16 @@ export function SpaceSidebar({ cur, curMod, orgId, orgs, info, user, initials, o
           <Icon name={MODULE_ICONS[m.id] || m.id} fixedWidth /><span className="nl">{t(m.title)}</span>
           {n ? <span className="nbadge">{n}</span> : null}
         </Link>
+      </li>
+    );
+  };
+  // Un seul module dans l'espace : ses rubriques (Pilotage, CRM, Prospection…) directement dans le menu. Plusieurs : un groupe repliable par module.
+  const moduleBlock = (m) => {
+    const here = m.id === curMod && rubs.length > 0;
+    if (single) return here ? rubrics(m) : item(m);
+    return (
+      <li key={m.id} className="sp-mod">
+        <ul>{item(m)}{here ? <li><ul className="sp-subs">{rubrics(m)}</ul></li> : null}</ul>
       </li>
     );
   };
@@ -97,7 +129,7 @@ export function SpaceSidebar({ cur, curMod, orgId, orgs, info, user, initials, o
             <li className="app-li"><Link to={`/app/${orgId}/home/${cur.id}`} className={curMod === 'home' ? 'on' : ''} aria-current={curMod === 'home' ? 'page' : undefined} title={mini ? t('Tableau de bord') : undefined}><Icon name="house" fixedWidth /><span className="nl">{t('Tableau de bord')}</span></Link></li>
           ) : null}
           {hasDash ? item(cur.modules.find((m) => m.id === 'dashboard')) : null}
-          {mods.map(item)}
+          {mods.map(moduleBlock)}
         </ul>
       </nav>
       <div className="app-side-f">

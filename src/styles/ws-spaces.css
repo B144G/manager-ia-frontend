@@ -36,6 +36,20 @@ body.has-dock .ws-fab{bottom:calc(var(--touch) + var(--sp-2) * 2 + 20px)}
 @media (max-width:767px) and (orientation:landscape){.sp-dock{--bottom-nav-h:48px}.sp-dock-a{flex-direction:row;gap:6px;font-size:12px}}
 @media print{.sp-dock{display:none!important}}
 
+/* Rubriques du module dans le menu latéral (le panneau intérieur du module est alors masqué : un seul menu). */
+body.sp-merged .msh-nav,body.sp-merged .msh-burger{display:none!important}
+body.sp-merged .msh-body{grid-template-columns:minmax(0,1fr)}
+.sp-side .sp-grp>ul,.sp-side .sp-mod ul,.sp-side .sp-subs{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.sp-gh{display:flex;align-items:center;gap:var(--sp-2);width:100%;min-height:var(--ctl-h-sm,36px);padding:0 var(--sp-3);border:0;border-radius:var(--radius-md);background:transparent;color:var(--nav-muted);font:var(--fw-semibold) var(--fs-xs)/1 var(--font);letter-spacing:.08em;text-transform:uppercase;text-align:left;cursor:pointer}
+.sp-gh:hover{background:var(--nav-bg-2);color:#fff}
+.sp-gh .ui-ico{font-size:11px}
+.app-li>.sp-it{flex:1;display:flex;align-items:center;gap:var(--sp-3);min-height:var(--ctl-h);padding:0 var(--sp-3) 0 var(--sp-5);border:0;border-radius:var(--radius-md);background:transparent;text-align:left;font:var(--fw-medium) var(--fs-md)/1.2 var(--font);color:var(--nav-text);cursor:pointer}
+.app-li>.sp-it:hover{background:var(--nav-bg-2);color:#fff}
+.app-li>.sp-it.on{background:var(--nav-active);color:var(--nav-on-active);font-weight:var(--fw-semibold)}
+.sp-subs{padding-left:var(--sp-3)!important}
+body.nav-mini .sp-gh .nl,body.nav-mini .sp-it .nl,body.nav-mini .sp-gh{display:none}
+@media (max-width:1099px){body.nav-mini .sp-gh,body.nav-mini .sp-gh .nl,body.nav-mini .sp-it .nl{display:revert}body.nav-mini .sp-gh{display:flex}}
+
 /* Bandeau « consultation seule » */
 .sp-banner{display:flex;align-items:center;gap:var(--sp-3);flex-wrap:wrap;margin:0 0 var(--sp-4);padding:var(--sp-3) var(--sp-4);border-radius:var(--radius-lg);background:var(--warn-soft);color:var(--warn-text);border:1px solid color-mix(in srgb,var(--warn) 45%,transparent)}
 .sp-banner p{margin:0;flex:1 1 220px;font-size:var(--fs-md)}
