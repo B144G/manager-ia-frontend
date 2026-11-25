@@ -74,6 +74,7 @@ function Onboarding() {
               { k: 'sector', label: t("Secteur d'activité"), placeholder: t('Commerce, restauration, services…') },
               { k: 'description', label: t('Décrivez votre activité'), type: 'textarea', rows: 3, hint: t("L'IA s'en sert pour mieux vous conseiller.") },
               { k: 'currency', label: t('Monnaie'), value: 'FCFA' },
+              { k: 'associationCode', label: t("Code d'association (facultatif)"), placeholder: 'ASSO-XXXXXX-…', hint: t("Pour une filiale ou un site : collez le code donné par la direction générale. L'organisation rejoint alors l'entreprise.") },
             ]} />
           </div>
           <div className="ws-sub">

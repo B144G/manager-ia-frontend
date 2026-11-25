@@ -87,12 +87,13 @@ export default function People({ chart, reload }) {
   const edit = can('admin');
   const people = chart.people;
   const add = () => modal(t('Ajouter une personne'), (close) => <AddPerson chart={chart} done={(fin) => { reload(); if (fin) close(); }} />, { wide: true });
+  const enroll = () => oapi('GET', '/entreprise/people-elsewhere').then((j) => modal(t("Personne d'une autre organisation de l'entreprise"), (close) => <Enroll people={j.people} done={() => { close(); reload(); }} />)).catch(fail);
   const assign = (p) => modal(t('Affecter {name} à un poste', { name: p.name }), (close) => <PickPost chart={chart} person={p} done={() => { close(); reload(); }} />);
   const code = (p) => oapi('POST', '/entreprise/people/' + p.id + '/invite').then((j) => { reload(); modal(t('Nouveau code pour {name}', { name: p.name }), () => <CodeBox code={j.code} name={p.name} />); }).catch(fail);
   const del = (p) => confirm(t('Retirer {name} de la liste ? Son code d’invitation sera supprimé.', { name: p.name }), () => oapi('DELETE', '/entreprise/people/' + p.id).then(() => { toast(t('Personne retirée.')); reload(); }).catch(fail), t('Retirer'));
   return (
     <div className="ent-people">
-      {edit ? <div className="row"><Button variant="primary" icon="user-plus" onClick={add}>{t('Ajouter une personne')}</Button></div> : null}
+      {edit ? <div className="row"><Button variant="primary" icon="user-plus" onClick={add}>{t('Ajouter une personne')}</Button><Button icon="users" onClick={enroll}>{t("Faire entrer une personne de l'entreprise")}</Button></div> : null}
       {people.length === 0 ? <EmptyState icon="users" title={t('Aucune personne pour le moment')}>{t("Ajoutez les employés : chacun garde sa propre identité (traçabilité, droits par personne).")}</EmptyState> : null}
       <ul className="ent-list">
         {people.map((p) => (
@@ -133,6 +134,21 @@ function PickPost({ chart, person, done }) {
     <div className="ws-form">
       <label className="fld"><span>{t('Poste')}</span><select value={pid} onChange={(e) => setPid(e.target.value)}>{groups.map((g) => <optgroup key={g} label={g}>{posts.filter((p) => p.group === g).map((p) => <option key={p.id} value={p.id}>{tsrv(p.title)}</option>)}</optgroup>)}</select></label>
       <div className="row"><Button variant="primary" loading={busy} onClick={go}>{t('Affecter')}</Button></div>
+    </div>
+  );
+}
+
+function Enroll({ people, done }) {
+  const { oapi, fail, toast } = useWs();
+  const t = useT();
+  const [pid, setPid] = useState(people[0] ? String(people[0].id) : ''); const [role, setRole] = useState('member'); const [busy, setBusy] = useState(false);
+  if (!people.length) return <p className="muted">{t("Toutes les personnes de l'entreprise font déjà partie de cette organisation, ou seule la direction générale peut en faire entrer.")}</p>;
+  return (
+    <div className="ws-form">
+      <label className="fld"><span>{t('Personne')}</span><select value={pid} onChange={(e) => setPid(e.target.value)}>{people.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}</select></label>
+      <label className="fld"><span>{t('Rôle')}</span><select value={role} onChange={(e) => setRole(e.target.value)}><option value="member">{t('Membre')}</option><option value="manager">{t('Responsable')}</option></select></label>
+      <p className="muted small">{t("Ses affectations restent propres à chaque organisation : affectez-la ensuite à un poste de celle-ci.")}</p>
+      <div className="row"><Button variant="primary" loading={busy} onClick={() => { setBusy(true); oapi('POST', '/entreprise/people/' + pid + '/enroll', { role }).then(() => { toast(t('Personne ajoutée à l\'organisation.')); done(); }).catch(fail).finally(() => setBusy(false)); }}>{t('Faire entrer')}</Button></div>
     </div>
   );
 }
