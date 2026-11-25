@@ -64,6 +64,7 @@ export default {
   "Livraisons du jour, flotte, tournées, interventions.": "Heutige Lieferungen, Flotte, Touren, Einsätze.",
   "Tournées et livraisons à répartir aujourd'hui.": "Heute zu verteilende Touren und Lieferungen.",
   "Écran mobile : missions du jour, itinéraire, preuve de livraison, carburant, incidents.": "Mobilbildschirm: heutige Aufträge, Route, Liefernachweis, Kraftstoff, Vorfälle.",
+  "Mes missions du jour": "Meine heutigen Aufträge",
   "Mes missions": "Meine Aufträge",
   "Commandes à valider et articles sous le seuil.": "Zu genehmigende Bestellungen und Artikel unter dem Schwellenwert.",
   "Stock, réceptions, articles sous le seuil.": "Lager, Wareneingänge, Artikel unter dem Schwellenwert.",

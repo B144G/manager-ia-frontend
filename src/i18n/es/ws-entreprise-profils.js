@@ -64,6 +64,7 @@ export default {
   "Livraisons du jour, flotte, tournées, interventions.": "Entregas del día, flota, rutas, intervenciones.",
   "Tournées et livraisons à répartir aujourd'hui.": "Rutas y entregas por repartir hoy.",
   "Écran mobile : missions du jour, itinéraire, preuve de livraison, carburant, incidents.": "Pantalla móvil: misiones del día, itinerario, prueba de entrega, combustible, incidencias.",
+  "Mes missions du jour": "Mis misiones de hoy",
   "Mes missions": "Mis misiones",
   "Commandes à valider et articles sous le seuil.": "Pedidos por validar y artículos bajo el umbral.",
   "Stock, réceptions, articles sous le seuil.": "Existencias, recepciones, artículos bajo el umbral.",

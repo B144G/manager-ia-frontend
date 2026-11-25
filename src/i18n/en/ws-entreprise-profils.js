@@ -64,6 +64,7 @@ export default {
   "Livraisons du jour, flotte, tournées, interventions.": "Today's deliveries, fleet, rounds, interventions.",
   "Tournées et livraisons à répartir aujourd'hui.": "Rounds and deliveries to dispatch today.",
   "Écran mobile : missions du jour, itinéraire, preuve de livraison, carburant, incidents.": "Mobile screen: today's missions, route, proof of delivery, fuel, incidents.",
+  "Mes missions du jour": "My missions today",
   "Mes missions": "My missions",
   "Commandes à valider et articles sous le seuil.": "Orders to approve and items below threshold.",
   "Stock, réceptions, articles sous le seuil.": "Stock, receipts, items below threshold.",
