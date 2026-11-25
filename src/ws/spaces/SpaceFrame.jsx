@@ -50,11 +50,10 @@ export function Avatar({ person, orgId, size = 56 }) {
 }
 
 /** Menu latéral de l'espace courant : les écrans de CET espace, puis une barre compacte pour les autres espaces (consultation seule). */
-export function SpaceSidebar({ spaces, cur, curMod, orgId, orgs, info, user, initials, onOrg, onClose, onSecurity, onLogout, onPersonalize, badgeOf, mini, onMini }) {
+export function SpaceSidebar({ cur, curMod, orgId, orgs, info, user, initials, onOrg, onClose, onSecurity, onLogout, onPersonalize, badgeOf, mini, onMini }) {
   const t = useT();
   const p = usePrefs();
   const brand = p.brand[orgId];
-  const others = spaces.spaces.filter((s) => !cur || s.id !== cur.id);
   const mods = cur ? cur.modules.filter((m) => m.id !== 'dashboard') : [];
   const hasDash = cur && cur.modules.some((m) => m.id === 'dashboard');
   const item = (m) => {
@@ -92,7 +91,7 @@ export function SpaceSidebar({ spaces, cur, curMod, orgId, orgs, info, user, ini
       ) : null}
       <button type="button" className="app-find" onClick={openPalette} aria-label={t('Rechercher un écran…')}><Icon name="search" /><span>{t('Rechercher un écran…')}</span><kbd>Ctrl K</kbd></button>
       <nav className="ws-nav" aria-label={t('Écrans de mon espace')}>
-        {cur ? <div className="ws-label">{t('MON ESPACE')}</div> : null}
+        {!cur ? <p className="sp-hint">{t('Choisissez un espace dans la barre en bas de l\'écran : le menu affichera ses écrans.')}</p> : null}
         <ul>
           {cur ? (
             <li className="app-li"><Link to={`/app/${orgId}/home/${cur.id}`} className={curMod === 'home' ? 'on' : ''} aria-current={curMod === 'home' ? 'page' : undefined} title={mini ? t('Tableau de bord') : undefined}><Icon name="house" fixedWidth /><span className="nl">{t('Tableau de bord')}</span></Link></li>
@@ -101,19 +100,6 @@ export function SpaceSidebar({ spaces, cur, curMod, orgId, orgs, info, user, ini
           {mods.map(item)}
         </ul>
       </nav>
-      <div className="sp-others">
-        <div className="ws-label">{spaces.spaces.length > 1 ? t('MES ESPACES') : ''}</div>
-        <ul className="sp-rail">
-          {others.map((s) => (
-            <li key={s.id}>
-              <Link to={`/app/${orgId}/home/${s.id}`} className="sp-rail-a" title={`${tsrv(s.title)} · ${t(LEVEL_SHORT[s.level])}`} aria-label={`${tsrv(s.title)} · ${t(LEVEL_SHORT[s.level])}`}>
-                <Icon name={s.icon} fixedWidth />{s.level === 'view' ? <i className="sp-eye" aria-hidden="true"><Icon name="eye" /></i> : null}
-              </Link>
-            </li>
-          ))}
-          {spaces.spaces.length > 1 ? <li><Link to={`/app/${orgId}/espaces`} className="sp-rail-a sp-rail-all" title={t('Changer d\'espace')} aria-label={t('Changer d\'espace')}><Icon name="menu" fixedWidth /></Link></li> : null}
-        </ul>
-      </div>
       <div className="app-side-f">
         <button type="button" className="app-mini-btn" onClick={onMini} aria-pressed={mini} aria-label={mini ? t('Agrandir le menu') : t('Réduire le menu')}><Icon name={mini ? 'right' : 'left'} /><span>{t('Réduire le menu')}</span></button>
         <div className="ws-me">
@@ -128,17 +114,43 @@ export function SpaceSidebar({ spaces, cur, curMod, orgId, orgs, info, user, ini
   );
 }
 
-/** Barre basse (téléphone) : suit l'espace courant (accueil, ses deux premiers écrans), assistant, menu. */
-export function SpaceBottomNav({ cur, curMod, orgId, onMenu, onAi, alerts }) {
+// Libellés courts des espaces (la barre du bas est étroite) ; le serveur ne renvoie que le titre complet.
+const SHORT = { direction: 'Direction', commercial: 'Commercial', finances: 'Finances', stock: 'Stock', rh: 'RH', operations: 'Opérations', projets: 'Projets', gestion: 'Juridique', compte: 'Compte' };
+
+/**
+ * Pied de page de navigation : Accueil, puis un bouton par espace de la personne (icône + libellé court, espace actif en surbrillance, œil =
+ * consultation seule). Défilable à l'horizontale ; sur téléphone elle prend la place de l'ancienne barre basse (avec l'assistant et le menu).
+ */
+export function SpaceDock({ spaces, cur, kind, orgId, onMenu, onAi, alerts }) {
   const t = useT();
-  useEffect(() => { document.body.classList.add('has-bottom'); return () => document.body.classList.remove('has-bottom'); }, []);
-  const mods = cur ? cur.modules.filter((m) => m.id !== 'dashboard').slice(0, 2) : [];
+  useEffect(() => { document.body.classList.add('has-bottom', 'has-dock'); return () => document.body.classList.remove('has-bottom', 'has-dock'); }, []);
+  const on = (id) => cur && cur.id === id && kind !== 'choose';
+  const list = useRef(null);
+  useEffect(() => { // l'espace actif reste visible quand la barre défile (téléphone, beaucoup d'espaces)
+    const ul = list.current; const a = ul && ul.querySelector('.on');
+    if (a) ul.scrollTo({ left: Math.max(0, a.offsetLeft - (ul.clientWidth - a.offsetWidth) / 2) });
+  }, [cur && cur.id, kind]);
   return (
-    <nav className="app-bottom" aria-label={t('Navigation rapide')}>
-      {cur ? <Link to={`/app/${orgId}/home/${cur.id}`} className={curMod === 'home' ? 'on' : ''} aria-current={curMod === 'home' ? 'page' : undefined}><Icon name="house" /><span>{t('Accueil')}</span></Link> : <Link to={`/app/${orgId}/espaces`}><Icon name="house" /><span>{t('Espaces')}</span></Link>}
-      {mods.map((m) => <Link key={m.id} to={`/app/${orgId}/${m.id}`} className={m.id === curMod ? 'on' : ''} aria-current={m.id === curMod ? 'page' : undefined}><Icon name={MODULE_ICONS[m.id] || m.id} /><span>{t(m.title)}</span></Link>)}
-      <button type="button" onClick={onAi} className="ws-fab-b"><Icon name="ai" /><span>{t('Assistant IA')}</span></button>
-      <button type="button" onClick={onMenu} aria-label={t('Ouvrir le menu')}><Icon name="menu" />{alerts ? <i className="dot" /> : null}<span>{t('Menu')}</span></button>
+    <nav className="sp-dock" aria-label={t('Mes espaces')}>
+      <ul className="sp-dock-list" ref={list}>
+        <li><Link to={`/app/${orgId}/espaces`} className={'sp-dock-a' + (kind === 'choose' ? ' on' : '')} aria-current={kind === 'choose' ? 'page' : undefined}><Icon name="table-cells" fixedWidth /><span>{t('Accueil')}</span></Link></li>
+        {spaces.spaces.map((s) => {
+          const name = SHORT[s.id] ? t(SHORT[s.id]) : tsrv(s.title);
+          const full = `${tsrv(s.title)}${s.level === 'view' ? ' · ' + t('Consultation seule') : ''}`;
+          return (
+            <li key={s.id}>
+              <Link to={`/app/${orgId}/home/${s.id}`} className={'sp-dock-a' + (on(s.id) ? ' on' : '')} aria-current={on(s.id) ? 'page' : undefined} title={full} aria-label={full}>
+                <Icon name={s.icon} fixedWidth /><span>{name}</span>
+                {s.level === 'view' ? <i className="sp-eye" aria-hidden="true"><Icon name="eye" /></i> : null}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+      <div className="sp-dock-tools">
+        <button type="button" className="sp-dock-a" onClick={onAi}><Icon name="ai" fixedWidth /><span>{t('Assistant IA')}</span></button>
+        <button type="button" className="sp-dock-a" onClick={onMenu} aria-label={t('Ouvrir le menu')}><Icon name="menu" fixedWidth />{alerts ? <i className="dot" /> : null}<span>{t('Menu')}</span></button>
+      </div>
     </nav>
   );
 }

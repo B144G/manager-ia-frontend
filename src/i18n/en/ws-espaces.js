@@ -116,5 +116,6 @@ export default {
   "Votre menu est maintenant organisé par espaces de travail.": "Your menu is now organised by workspace.",
   "Vous gardez les mêmes accès qu'avant, regroupés par espace (Commercial, Stock, Comptabilité…). Le propriétaire peut vous affecter un espace précis ; changez d'espace à tout moment depuis le menu.": "You keep the same access as before, grouped by space (Sales, Stock, Accounting…). The owner can assign you a specific space; switch space at any time from the menu.",
   "Vous arrivez dans votre espace ; les autres espaces restent accessibles selon ce que le propriétaire vous accorde. Changez d'espace à tout moment depuis le menu.": "You land in your own space; the other spaces stay available according to what the owner grants you. Switch space at any time from the menu.",
+  "Choisissez un espace dans la barre en bas de l'écran : le menu affichera ses écrans.": "Pick a space in the bar at the bottom of the screen: the menu will then show its screens.",
   "J'ai compris": "Got it"
 };

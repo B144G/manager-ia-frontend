@@ -116,5 +116,6 @@ export default {
   "Votre menu est maintenant organisé par espaces de travail.": "Su menú ahora está organizado por espacios de trabajo.",
   "Vous gardez les mêmes accès qu'avant, regroupés par espace (Commercial, Stock, Comptabilité…). Le propriétaire peut vous affecter un espace précis ; changez d'espace à tout moment depuis le menu.": "Conserva el mismo acceso que antes, agrupado por espacio (Ventas, Stock, Contabilidad…). El propietario puede asignarle un espacio concreto; cambie de espacio en cualquier momento desde el menú.",
   "Vous arrivez dans votre espace ; les autres espaces restent accessibles selon ce que le propriétaire vous accorde. Changez d'espace à tout moment depuis le menu.": "Entra en su propio espacio; los demás siguen disponibles según lo que le conceda el propietario. Cambie de espacio en cualquier momento desde el menú.",
+  "Choisissez un espace dans la barre en bas de l'écran : le menu affichera ses écrans.": "Elija un espacio en la barra de la parte inferior: el menú mostrará sus pantallas.",
   "J'ai compris": "Entendido"
 };

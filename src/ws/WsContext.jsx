@@ -1,3 +1,4 @@
+import { getLastSpace } from './spaces/lastSpace.js';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api as wsApi, rq } from '../lib/api.js';
@@ -108,7 +109,10 @@ export function WsProvider({ children }) {
       let target = mod || 'dashboard';
       if (target === 'dashboard' && i.profile && i.profile.landing) target = 'profil'; // personne affectée à un poste : elle arrive sur son profil de rôle
       const sp = i.spaces;
-      if (sp && sp.enabled && target === 'dashboard') target = sp.choose || !sp.landing ? 'espaces' : `home/${sp.landing}`;
+      if (sp && sp.enabled && target === 'dashboard') {
+        const mine = getLastSpace(id, i.me && i.me.userId); // dernier espace retenu sur cet appareil (personne + entreprise), s'il est toujours accordé
+        target = mine && sp.spaces.some((x) => x.id === mine) ? `home/${mine}` : sp.choose || !sp.landing ? 'espaces' : `home/${sp.landing}`;
+      }
       setOrgId(id); setInfo(i); setOnboarding(null);
       navigate(`/app/${id}/${target}`, { replace: Boolean(replace) });
       oapi('GET', '/dashboard').then(setDash, () => {});
