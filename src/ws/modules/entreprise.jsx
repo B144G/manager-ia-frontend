@@ -9,6 +9,7 @@ import People from '../parts/entreprise/People.jsx';
 import Wizard from '../parts/entreprise/Wizard.jsx';
 import Links from '../parts/entreprise/Links.jsx';
 import Usage from '../parts/entreprise/Usage.jsx';
+import DirectionCard from '../parts/direction/DirectionCard.jsx';
 import ProfileEditor from '../parts/entreprise/ProfileEditor.jsx';
 import { CompanyAccess } from '../parts/entreprise/EmployeeAccess.jsx';
 import '../../styles/ws-entreprise.css';
@@ -67,7 +68,7 @@ export default function Entreprise() {
       <div className="ent-tabbody">
         {tab === 'chart' ? <Chart chart={chart} reload={load} people={chart.people} /> : null}
         {tab === 'people' ? <People chart={chart} reload={load} /> : null}
-        {tab === 'info' ? <><Card title={t("Informations de l'entreprise")}><InfoForm ov={ov} onSaved={load} /></Card>{can('admin') ? <CompanyAccess ov={ov} reload={load} /> : null}{can('owner') ? <RightsCard ov={ov} reload={() => { load(); reloadOrg(); }} /> : null}</> : null}
+        {tab === 'info' ? <><Card title={t("Informations de l'entreprise")}><InfoForm ov={ov} onSaved={load} /></Card>{can('admin') ? <DirectionCard ov={ov} reload={load} /> : null}{can('admin') ? <CompanyAccess ov={ov} reload={load} /> : null}{can('owner') ? <RightsCard ov={ov} reload={() => { load(); reloadOrg(); }} /> : null}</> : null}
         {tab === 'links' ? <Links /> : null}
         {tab === 'usage' ? <Usage /> : null}
         {tab === 'profiles' ? <ProfileEditor /> : null}

@@ -107,7 +107,7 @@ export function Icon({ name, spin, fixedWidth, className, title, style, size }) 
 /** Icônes des modules (menu principal) : nom de module → icône. Les noms sont enregistrés par src/ws/icons.js. */
 export const MODULE_FA = {
   dashboard: 'gauge', support: 'headset', projects: 'list-check', budget: 'wallet', stock: 'stock', crm: 'address-book', parties: 'address-card', hr: 'users', talents: 'seedling', sales: 'handshake',
-  aifollow: 'eye', structure: 'sitemap', processes: 'gears', team: 'people-group', entreprise: 'building', profil: 'briefcase', partners: 'handshake', payroll: 'money-check', fiscal: 'file-invoice', marketing: 'bullhorn',
+  aifollow: 'eye', structure: 'sitemap', processes: 'gears', team: 'people-group', entreprise: 'building', profil: 'briefcase', partners: 'handshake', dir_commercial: 'gauge', dir_finances: 'gauge', dir_rh: 'gauge', dir_production: 'gauge', dir_logistique: 'gauge', dir_stock: 'gauge', dir_marketing: 'gauge', dir_it: 'gauge', dir_securite: 'gauge', payroll: 'money-check', fiscal: 'file-invoice', marketing: 'bullhorn',
   logistics: 'truck', production: 'industry', construction: 'helmet', maintenance: 'tools', legal: 'scale', memory: 'brain', agents: 'robot',
   accounting: 'calculator', treasury: 'sack-dollar', library: 'book-open', purchasing: 'cart', billing: 'card', integrations: 'plug', alerts: 'bell', out: 'logout', shield: 'shield', ai: 'magic',
 };

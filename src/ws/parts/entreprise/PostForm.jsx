@@ -3,7 +3,7 @@ import { useT } from '../../../lib/i18n.jsx';
 import { tsrv } from '../../../lib/srv.js';
 import { Button, useLoad } from '../../ui.jsx';
 import { useWs } from '../../WsContext.jsx';
-import { SPACE_ORDER, SPACE_TITLE } from './lib.js';
+import { DIR_SPACES, SPACE_ORDER, SPACE_TITLE } from './lib.js';
 
 /* Fenêtre : créer ou modifier un poste (titre, type, nombre de places, accès aux espaces). Le serveur applique les droits ; ici on les reflète. */
 export default function PostForm({ post, departmentId, directionId, done }) {
@@ -47,7 +47,7 @@ export default function PostForm({ post, departmentId, directionId, done }) {
       <fieldset className="ent-access">
         <legend>{t('Ce que la personne affectée peut ouvrir')}</legend>
         <p className="muted small">{t("Visiteur : lecture seule. Membre : travaille avec ses droits habituels. Responsable : gère l'espace. Sans affectation, personne ne reçoit rien de plus.")}</p>
-        {SPACE_ORDER.map((sp) => (
+        {(kind === 'director' ? [...SPACE_ORDER, ...DIR_SPACES] : SPACE_ORDER).map((sp) => (
           <label className="ent-acc-row" key={sp}><span>{tsrv(SPACE_TITLE[sp])}</span>
             <select value={spaces[sp] || ''} onChange={(e) => set(sp, e.target.value)} aria-label={tsrv(SPACE_TITLE[sp])}>
               <option value="">{t('Aucun accès')}</option><option value="view">{t('Visiteur (lecture seule)')}</option><option value="write">{t("Membre de l'espace")}</option>

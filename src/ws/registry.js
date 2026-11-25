@@ -5,7 +5,7 @@ import { lazy } from 'react';
 export const MODULE_ICONS = {
   dashboard: 'dashboard', alerts: 'alerts', support: 'support', projects: 'projects', budget: 'budget', stock: 'stock', crm: 'crm', hr: 'hr', talents: 'seedling',
   accounting: 'accounting', library: 'library', purchasing: 'purchasing', meetings: 'calendar-check', chat: 'comments', integrations: 'integrations', billing: 'billing', sales: 'sales', aifollow: 'aifollow', structure: 'structure', processes: 'processes', team: 'team', treasury: 'sack-dollar',
-  payroll: 'payroll', fiscal: 'fiscal', administration: 'building-columns', marketing: 'marketing', logistics: 'logistics', production: 'production', construction: 'construction', maintenance: 'maintenance', legal: 'legal', memory: 'memory', agents: 'agents', commercial: 'chart-line', parties: 'address-book', entreprise: 'building', profil: 'briefcase', partners: 'handshake',
+  payroll: 'payroll', fiscal: 'fiscal', administration: 'building-columns', marketing: 'marketing', logistics: 'logistics', production: 'production', construction: 'construction', maintenance: 'maintenance', legal: 'legal', memory: 'memory', agents: 'agents', commercial: 'chart-line', parties: 'address-book', entreprise: 'building', profil: 'briefcase', partners: 'handshake', dir_commercial: 'crm', dir_finances: 'accounting', dir_rh: 'hr', dir_production: 'production', dir_logistique: 'logistics', dir_stock: 'stock', dir_marketing: 'marketing', dir_it: 'maintenance', dir_securite: 'legal',
 };
 
 const loaders = import.meta.glob('./modules/*.jsx');

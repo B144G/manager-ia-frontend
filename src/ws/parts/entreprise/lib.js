@@ -1,8 +1,11 @@
 /* Compte d'entreprise : aides communes (espaces, niveaux, copie d'un code d'invitation). */
 export const SPACE_ORDER = ['direction', 'commercial', 'finances', 'stock', 'rh', 'operations', 'projets', 'gestion', 'compte'];
+/** Espaces de direction de département : proposés seulement pour un poste de directeur. */
+export const DIR_SPACES = ['dir_commercial', 'dir_finances', 'dir_rh', 'dir_production', 'dir_logistique', 'dir_stock', 'dir_marketing', 'dir_it', 'dir_securite'];
 export const SPACE_TITLE = {
   direction: 'Direction et pilotage', commercial: 'Commercial', finances: 'Comptabilité et finances', stock: 'Stock et achats', rh: 'Ressources humaines',
   operations: 'Opérations', projets: 'Projets et réunions', gestion: 'Administration et juridique', compte: 'Administration du compte',
+  dir_commercial: 'Direction commerciale', dir_finances: 'Direction administrative et financière', dir_rh: 'Direction des ressources humaines', dir_production: 'Direction de la production', dir_logistique: 'Direction de la logistique', dir_stock: 'Direction du stockage et des achats', dir_marketing: 'Direction marketing', dir_it: 'Direction informatique et maintenance', dir_securite: 'Direction de la sécurité',
 };
 export const LEVELS = ['view', 'write', 'manage'];
 export const KIND_LABEL = { director: 'Directeur', head: 'Responsable', staff: 'Équipe' };
@@ -16,5 +19,5 @@ export const MODULE_TITLES = {
   aifollow: "Suivi de l'IA", hr: 'Ressources humaines', talents: 'Talents et compétences', payroll: 'Paie', fiscal: 'Fiscalité et liasse', marketing: 'Marketing', logistics: 'Logistique', production: 'Production',
   construction: 'Chantiers (BTP)', maintenance: 'Maintenance', legal: 'Juridique et conformité', memory: "Mémoire de l'entreprise", agents: 'Agents spécialisés', accounting: 'Comptabilité', treasury: 'Trésorerie',
   library: 'Bibliothèque', purchasing: 'Achats', parties: 'Clients et fournisseurs', meetings: 'Réunions', chat: 'Chat interne', structure: 'Organisation', history: "Histoire de l'entreprise",
-  integrations: 'Intégrations', administration: 'Administration', billing: 'Abonnement', profil: 'Mon espace de travail', partners: 'Partenaires et espaces partagés', entreprise: 'Entreprise et organigramme',
+  integrations: 'Intégrations', administration: 'Administration', billing: 'Abonnement', profil: 'Mon espace de travail', partners: 'Partenaires et espaces partagés', dir_commercial: 'Direction commerciale', dir_finances: 'Direction administrative et financière', dir_rh: 'Direction des ressources humaines', dir_production: 'Direction de la production', dir_logistique: 'Direction de la logistique', dir_stock: 'Direction du stockage et des achats', dir_marketing: 'Direction marketing', dir_it: 'Direction informatique et maintenance', dir_securite: 'Direction de la sécurité', entreprise: 'Entreprise et organigramme',
 };
