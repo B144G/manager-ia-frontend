@@ -121,3 +121,14 @@
 .ent-bar{height:10px;border-radius:var(--radius-full);background:var(--surface-3);overflow:hidden}
 .ent-bar span{display:block;height:100%;background:var(--accent);border-radius:inherit}
 .ent-bar span.warn{background:var(--warn)}.ent-bar span.full{background:var(--danger)}
+
+/* Cockpits de direction : indicateurs clés */
+.dir-kpis{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:var(--sp-3)}
+.dir-kpi>a,.dir-kpi>div{display:grid;gap:2px;height:100%;padding:var(--sp-3) var(--sp-4);border-radius:var(--radius-lg);background:var(--surface-2);border:1px solid var(--border);color:var(--text);text-decoration:none;min-width:0}
+.dir-kpi>a:hover,.dir-kpi>a:focus-visible{border-color:var(--accent)}
+.dir-kpi.na>div,.dir-kpi.na>a{background:var(--surface);border-style:dashed}
+.dir-kv{font-size:var(--fs-2xl);font-weight:var(--fw-bold);line-height:1.1;overflow-wrap:anywhere}
+.dir-kv.warn{color:var(--warn-text)}.dir-kv.bad{color:var(--danger-text)}.dir-kv.ok{color:var(--ok-text)}
+.dir-kv.na{font-size:var(--fs-md);color:var(--muted);font-weight:var(--fw-semibold)}
+.dir-kl{font-size:var(--fs-sm);color:var(--text-2)}
+.ent-steps-list{margin:var(--sp-2) 0;padding-left:var(--sp-5);display:grid;gap:4px}

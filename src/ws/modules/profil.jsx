@@ -4,6 +4,7 @@ import { tsrv } from '../../lib/srv.js';
 import { Badge, EmptyState, Icon, Loaded, useLoad } from '../ui.jsx';
 import { useWs } from '../WsContext.jsx';
 import { COMPONENTS, ListBlock, TasksBlock, Tiles } from '../parts/entreprise/ProfileBlocks.jsx';
+import { StartCard } from '../parts/direction/Workflows.jsx';
 import { MODULE_TITLES } from '../parts/entreprise/lib.js';
 import '../../styles/ws-entreprise.css';
 
@@ -37,6 +38,7 @@ export default function Profil() {
               return C ? <C key={i} /> : null;
             })}
           </div>
+          <StartCard />
           {j.modules.length ? (
             <section className="ws-card ent-block">
               <h2>{t('Mes écrans')}</h2>

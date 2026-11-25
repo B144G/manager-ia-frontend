@@ -37,9 +37,20 @@ export default function DirectionHome({ space }) {
 function Pilot({ space, j, reload, canEdit }) {
   const { oapi, orgId, modal, fail, toast, confirm } = useWs();
   const t = useT();
+  const kp = useLoad(() => oapi('GET', `/${space}/kpis`), [space, orgId]);
   const add = () => modal(t('Nouvel objectif'), (close) => <ObjForm space={space} done={() => { close(); reload(); }} />);
   return (
     <>
+      <Loaded state={kp}>{(k) => (
+        <>
+          <Card title={t('Indicateurs clés')} subtitle={t("Calculés à partir des données réelles de vos écrans. Un indicateur sans donnée est « non disponible » : on vous dit quoi renseigner.")}>
+            <ul className="dir-kpis">{k.kpis.map((x) => <KpiCard key={x.key} k={x} />)}</ul>
+          </Card>
+          <Card title={t('Mes missions')} subtitle={t("Les actions de votre direction, qui ouvrent les écrans de votre équipe (en consultation).")}>
+            <div className="ent-holders">{k.missions.map((m, i) => <Link className="ent-chip" key={i} to={`/app/${orgId}/${m.module}`}>{tsrv(m.label)}</Link>)}</div>
+          </Card>
+        </>
+      )}</Loaded>
       <ul className="sp-tiles" aria-label={t('Indicateurs du département')}>
         {j.tiles.map((x) => { const body = <><span className="sp-n">{x.value}</span><span className="sp-l">{tsrv(x.label)}</span></>; return <li key={x.id} className={'sp-tile ' + (x.value && x.tone ? x.tone : 'plain')}>{x.to ? <Link to={`/app/${orgId}/${x.to}`}>{body}</Link> : <div>{body}</div>}</li>; })}
       </ul>
@@ -61,6 +72,29 @@ function Pilot({ space, j, reload, canEdit }) {
     </>
   );
 }
+function KpiCard({ k }) {
+  const t = useT();
+  const { orgId, info } = useWs();
+  const fmt = () => {
+    const v = k.value;
+    if (k.unit === 'money') return `${Math.round(v).toLocaleString(getLocale())} ${info && info.org ? info.org.currency : ''}`.trim();
+    if (k.unit === 'pct') return `${v.toLocaleString(getLocale())} %`;
+    if (k.unit === 'days') return t('{n} j', { n: v.toLocaleString(getLocale()) });
+    if (k.unit === 'score') return `${v.toLocaleString(getLocale())} / 5`;
+    return v.toLocaleString(getLocale());
+  };
+  const body = k.available ? (
+    <>
+      <span className={'dir-kv ' + (k.tone || '')}>{fmt()}</span><span className="dir-kl">{tsrv(k.label)}</span>{k.sub ? <small className="muted">{k.sub}</small> : null}
+    </>
+  ) : (
+    <>
+      <span className="dir-kv na">{t('Non disponible')}</span><span className="dir-kl">{tsrv(k.label)}</span><small className="muted">{tsrv(k.hint)}</small>
+    </>
+  );
+  return <li className={'dir-kpi' + (k.available ? '' : ' na')}>{k.module && k.module !== 'qhse' && k.module !== 'audit_interne' && !k.module.startsWith('dir_') ? <Link to={`/app/${orgId}/${k.module}`}>{body}</Link> : <div>{body}</div>}</li>;
+}
+
 function ObjForm({ space, o, done }) {
   const { oapi, fail } = useWs();
   const t = useT();
@@ -77,11 +111,22 @@ function ObjForm({ space, o, done }) {
 }
 
 function Valid({ space, canEdit }) {
-  const { oapi, orgId, fail, toast } = useWs();
+  const { oapi, orgId, fail, toast, modal } = useWs();
   const t = useT();
   const st = useLoad(() => oapi('GET', `/${space}/validations`), [space]);
+  const wf = useLoad(() => oapi('GET', `/${space}/workflows`), [space]);
+  const decide2 = (x, dec) => (dec === 'approve' ? oapi('POST', `/${space}/workflows/requests/${x.id}/approve`, {}).then(() => { toast(t('Demande approuvée.')); wf.reload(); }).catch(fail) : modal(t('Refuser : {t}', { t: x.title }), (close) => <RejectForm space={space} x={x} done={() => { close(); wf.reload(); }} />));
   const decide = (id, decision) => oapi('PUT', `/${space}/validations/leave/${id}`, { decision }).then(() => { toast(t('Décision enregistrée.')); st.reload(); }).catch(fail);
   return (
+    <>
+    <Loaded state={wf}>{(w) => w.inbox.length ? (
+      <Card title={t('Circuits de validation')} subtitle={t("Demandes de votre entreprise qui attendent VOTRE décision. Une demande lancée par vous ne vous est jamais adressée.")}>
+        {w.inbox.map((x) => (
+          <div className="line" key={x.id}><span><b>{x.title}</b> <small className="muted">· {x.ref} · {x.flow} · {t('étape : {s}', { s: tsrv(x.step) })} · {t('demandé par {n}', { n: x.requester || '—' })}{x.amount ? ' · ' + x.amount.toLocaleString(getLocale()) : ''}</small></span>
+            {canEdit ? <span className="ent-actions"><Button size="sm" variant="primary" onClick={() => decide2(x, 'approve')}>{t('Approuver')}</Button><Button size="sm" onClick={() => decide2(x, 'reject')}>{t('Refuser')}</Button></span> : null}</div>
+        ))}
+      </Card>
+    ) : null}</Loaded>
     <Loaded state={st}>{(j) => j.queues.length === 0 ? <EmptyState icon="circle-check" title={t('Rien à valider')}>{t("Les demandes de votre département à approuver apparaissent ici.")}</EmptyState> : j.queues.map((q) => (
       <Card key={q.kind} title={tsrv(q.title)} subtitle={q.items.length ? t('{n} en attente', { n: q.items.length }) : t('Rien en attente.')}>
         {q.items.map((x) => (
@@ -90,6 +135,19 @@ function Valid({ space, canEdit }) {
         ))}
       </Card>
     ))}</Loaded>
+    </>
+  );
+}
+
+function RejectForm({ space, x, done }) {
+  const { oapi, fail, toast } = useWs();
+  const t = useT();
+  const [c, setC] = useState('');
+  return (
+    <div className="ws-form">
+      <label className="fld"><span>{t('Motif du refus')}</span><input value={c} onChange={(e) => setC(e.target.value)} autoFocus /></label>
+      <div className="row"><Button variant="primary" onClick={() => oapi('POST', `/${space}/workflows/requests/${x.id}/reject`, { comment: c }).then(() => { toast(t('Demande refusée.')); done(); }).catch(fail)}>{t('Refuser la demande')}</Button></div>
+    </div>
   );
 }
 
