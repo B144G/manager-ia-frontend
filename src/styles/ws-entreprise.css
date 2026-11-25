@@ -78,7 +78,7 @@
 @media (max-width:640px){
   .ent-two{grid-template-columns:1fr}
   .ent-acc-row{grid-template-columns:1fr}
-  .ent-steps{gap:4px}.ent-sl{font-size:10px}
+  .ent-steps{gap:4px}.ent-sl{display:none}
   .ent-sub{margin-left:var(--sp-2)}
   .ent-dir,.ent-dg{padding:var(--sp-3)}
   .ent-actions .ui-btn{flex:1 1 auto}

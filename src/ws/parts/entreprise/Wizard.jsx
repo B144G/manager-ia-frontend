@@ -46,7 +46,7 @@ export default function Wizard({ close, onChange }) {
       <p className="muted">{t("Cinq étapes, toutes facultatives : passez celles que vous ne voulez pas faire maintenant, vous pourrez revenir à tout moment. Chaque changement est enregistré tout de suite.")}</p>
       <ol className="ent-steps" aria-label={t('Étapes')}>
         {STEPS.map((s, i) => (
-          <li key={s}><button type="button" className={'ent-step' + (s === step ? ' cur' : '') + (st[s] === 'done' ? ' done' : st[s] === 'skipped' ? ' skip' : '')} aria-current={s === step ? 'step' : undefined} onClick={() => setStep(s)}>
+          <li key={s}><button type="button" className={'ent-step' + (s === step ? ' cur' : '') + (st[s] === 'done' ? ' done' : st[s] === 'skipped' ? ' skip' : '')} aria-current={s === step ? 'step' : undefined} aria-label={label[s]} title={label[s]} onClick={() => setStep(s)}>
             <span className="ent-n">{st[s] === 'done' ? <Icon name="check" /> : st[s] === 'skipped' ? <Icon name="minus" /> : i + 1}</span><span className="ent-sl">{label[s]}</span></button></li>
         ))}
       </ol>
