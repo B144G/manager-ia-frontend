@@ -113,3 +113,11 @@
 .ent-msg p{margin:2px 0 0;overflow-wrap:anywhere;white-space:pre-wrap}.ent-msg small{color:var(--muted)}
 .ent-compose{display:flex;gap:var(--sp-2)}.ent-compose input{flex:1;min-width:0;font-size:16px}
 .ent-pre{white-space:pre-wrap;overflow-wrap:anywhere;padding:var(--sp-3);border-radius:var(--radius-md);background:var(--surface-2);border:1px solid var(--border);max-height:50vh;overflow:auto}
+
+/* Usage de l'abonnement */
+.ent-usage{display:grid;gap:4px;padding:var(--sp-2) 0}
+.ent-usage-h{display:flex;justify-content:space-between;gap:var(--sp-3)}
+.ent-over{color:var(--danger-text);font-weight:var(--fw-bold)}
+.ent-bar{height:10px;border-radius:var(--radius-full);background:var(--surface-3);overflow:hidden}
+.ent-bar span{display:block;height:100%;background:var(--accent);border-radius:inherit}
+.ent-bar span.warn{background:var(--warn)}.ent-bar span.full{background:var(--danger)}

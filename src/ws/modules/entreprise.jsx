@@ -8,6 +8,7 @@ import InfoForm from '../parts/entreprise/InfoForm.jsx';
 import People from '../parts/entreprise/People.jsx';
 import Wizard from '../parts/entreprise/Wizard.jsx';
 import Links from '../parts/entreprise/Links.jsx';
+import Usage from '../parts/entreprise/Usage.jsx';
 import ProfileEditor from '../parts/entreprise/ProfileEditor.jsx';
 import { CompanyAccess } from '../parts/entreprise/EmployeeAccess.jsx';
 import '../../styles/ws-entreprise.css';
@@ -40,6 +41,7 @@ export default function Entreprise() {
     { id: 'info', label: t('Entreprise'), icon: 'building' },
   ];
   if (can('admin')) tabs.push({ id: 'links', label: t('Organisations liées'), icon: 'link' });
+  if (can('admin')) tabs.push({ id: 'usage', label: t('Abonnement et usage'), icon: 'gauge' });
   tabs.push({ id: 'profiles', label: t('Profils'), icon: 'briefcase' });
   if (can('admin')) tabs.push({ id: 'log', label: t('Journal'), icon: 'history' });
   return (
@@ -67,6 +69,7 @@ export default function Entreprise() {
         {tab === 'people' ? <People chart={chart} reload={load} /> : null}
         {tab === 'info' ? <><Card title={t("Informations de l'entreprise")}><InfoForm ov={ov} onSaved={load} /></Card>{can('admin') ? <CompanyAccess ov={ov} reload={load} /> : null}{can('owner') ? <RightsCard ov={ov} reload={() => { load(); reloadOrg(); }} /> : null}</> : null}
         {tab === 'links' ? <Links /> : null}
+        {tab === 'usage' ? <Usage /> : null}
         {tab === 'profiles' ? <ProfileEditor /> : null}
         {tab === 'log' ? <Log /> : null}
       </div>
