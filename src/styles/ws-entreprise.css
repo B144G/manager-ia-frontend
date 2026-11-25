@@ -83,3 +83,8 @@
   .ent-dir,.ent-dg{padding:var(--sp-3)}
   .ent-actions .ui-btn{flex:1 1 auto}
 }
+.ent .ui-btn,.ent-wiz .ui-btn{max-width:100%}
+@media (max-width:640px){
+  .ent .ws-head .row{width:100%}
+  .ent .ws-head .ui-btn,.ent-foot .ui-btn{flex:1 1 auto;justify-content:center;white-space:normal;text-align:center}
+}
