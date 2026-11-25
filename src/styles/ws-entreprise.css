@@ -88,3 +88,4 @@
   .ent .ws-head .row{width:100%}
   .ent .ws-head .ui-btn,.ent-foot .ui-btn{flex:1 1 auto;justify-content:center;white-space:normal;text-align:center}
 }
+.ent-bigcode{font-size:var(--fs-2xl);letter-spacing:.12em}

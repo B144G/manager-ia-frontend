@@ -7,6 +7,7 @@ import PrivacyGlobal from './privacy/PrivacyGlobal.jsx';
 // Chaque groupe de pages ne charge que son code et ses styles.
 const Home = lazy(() => import('./pages/Home.jsx'));
 const Login = lazy(() => import('./pages/Login.jsx'));
+const EmployeeLogin = lazy(() => import('./pages/EmployeeLogin.jsx'));
 const Register = lazy(() => import('./pages/Register.jsx'));
 const Reset = lazy(() => import('./pages/Reset.jsx'));
 const ContactForm = lazy(() => import('./pages/ContactForm.jsx'));
@@ -55,6 +56,7 @@ export default function App() {
         </Route>
         <Route element={<StyleLayout group="auth" body="site au" mode="login" />}>
           <Route path="/connexion" element={<Login />} />
+          <Route path="/connexion-entreprise" element={<EmployeeLogin />} />
           <Route path="/connexion.html" element={<Navigate to="/connexion" replace />} />
         </Route>
         <Route element={<StyleLayout group="auth" body="site au" mode="register" />}>

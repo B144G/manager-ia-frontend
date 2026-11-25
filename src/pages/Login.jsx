@@ -92,6 +92,7 @@ export default function Login() {
               <button className="s-btn pri big au-go" type="submit" id="go" disabled={busy}>{t('Se connecter')}</button>
             </form>
             <p className="au-alt"><a href="#oubli" id="forgotLink" onClick={(e) => { e.preventDefault(); setForgot(true); }}>{t('Mot de passe oublié ?')}</a></p>
+            <p className="au-alt">{t('Employé d\'une entreprise ?')} <Link to="/connexion-entreprise">{t("Connexion avec le code de l'entreprise")}</Link></p>
             <p className="au-alt">{t('Pas encore de compte ?')} <Link to="/inscription">{t('Créer un compte')}</Link></p>
             <p className="au-back"><Link to="/">{t("← Retour à l'accueil")}</Link></p>
           </section>

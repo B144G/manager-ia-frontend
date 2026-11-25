@@ -6,6 +6,7 @@ import { tsrv } from '../lib/srv.js';
 import { Form, Loading, useLoad } from './ui.jsx';
 import { useWs } from './WsContext.jsx';
 import PrivacyLinks from '../privacy/PrivacyLinks.jsx';
+import { MyAccess } from './parts/entreprise/EmployeeAccess.jsx';
 
 const sec = (method, path, body) => rq(method, '/api/security' + path, body);
 const when = (iso) => { try { return new Date(iso).toLocaleString(getLocale(), { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch { return iso; } };
@@ -21,6 +22,7 @@ export default function AccountSecurity() {
   const others = sessions.filter((s) => !s.current);
   return (
     <div>
+      <MyAccess />
       <section className="ws-sub" style={{ marginBottom: 18 }}>
         <h2>{t('Mot de passe')}</h2>
         <p className="muted small">{t('En le changeant, tous vos autres appareils sont déconnectés tout de suite.')}</p>
