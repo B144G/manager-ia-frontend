@@ -23,7 +23,7 @@ import { WsProvider, useWs } from './WsContext.jsx';
 // Espaces par rôle (réglage d'entreprise) : nouvelle navigation, active seulement si le serveur renvoie info.spaces.enabled.
 import { SpaceChooser, SpaceDenied, SpaceDock, SpaceHome, SpaceSidebar, SpacesNotice, VisitorBanner, VisitorGuard, resolveSpaces } from './spaces/SpaceFrame.jsx';
 import { Navigate } from 'react-router-dom';
-import { setLastSpace as saveLastSpace } from './spaces/lastSpace.js';
+import { getLastSpace, setLastSpace as saveLastSpace } from './spaces/lastSpace.js';
 import { useChatUnread } from './parts/chat/unread.js';
 const ChatBeacon = lazy(() => import('./parts/chat/Beacon.jsx')); // position en direct (si activée) et pastille « non lus » du chat
 
@@ -104,7 +104,7 @@ function Shell() {
   const main = useRef(null);
   // ----- Espaces par rôle : si l'entreprise les a activés, le menu général est remplacé par le menu de l'espace courant (voir ./spaces). -----
   const spaces = ws.spaces; // null = ancien menu général
-  const [lastSpace, setLastSpace] = useState(null);
+  const [lastSpace, setLastSpace] = useState(() => getLastSpace(orgId, info.me.userId));
   const sr = spaces ? resolveSpaces(spaces, route, lastSpace) : null;
   const allMods = spaces ? spaces.spaces.flatMap((s) => s.modules) : null;
   const cb = useBrand();

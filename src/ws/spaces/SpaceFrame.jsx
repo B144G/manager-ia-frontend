@@ -26,7 +26,9 @@ export function resolveSpaces(spaces, route, lastSpace) {
   if (mod === 'espaces') kind = 'choose';
   else if (mod === 'home') { cur = byId(route.sub); kind = cur ? 'home' : 'denied'; }
   else {
-    cur = list.find((s) => s.modules.some((m) => m.id === mod)) || null;
+    // Un même module peut figurer dans plusieurs espaces de la personne : on garde celui du dernier usage, à défaut le premier.
+    const having = list.filter((s) => s.modules.some((m) => m.id === mod));
+    cur = having.find((s) => s.id === lastSpace) || having[0] || null;
     if (!cur && mod === 'alerts') { cur = byId(lastSpace) || list[0] || null; } // les alertes (cloche) sont ouvertes à tous
     if (!cur) kind = 'denied';
   }
@@ -158,31 +160,60 @@ export function SpaceDock({ spaces, cur, kind, orgId, onMenu, onAi, alerts }) {
   useEffect(() => { document.body.classList.add('has-bottom', 'has-dock'); return () => document.body.classList.remove('has-bottom', 'has-dock'); }, []);
   const on = (id) => cur && cur.id === id && kind !== 'choose';
   const list = useRef(null);
+  const [over, setOver] = useState(false); // la barre déborde : bouton « Plus » avec la liste complète
+  const [more, setMore] = useState(false);
   useEffect(() => { // l'espace actif reste visible quand la barre défile (téléphone, beaucoup d'espaces)
     const ul = list.current; const a = ul && ul.querySelector('.on');
     if (a) ul.scrollTo({ left: Math.max(0, a.offsetLeft - (ul.clientWidth - a.offsetWidth) / 2) });
   }, [cur && cur.id, kind]);
+  useEffect(() => {
+    const ul = list.current;
+    if (!ul) return undefined;
+    const check = () => setOver(ul.scrollWidth > ul.clientWidth + 2);
+    check();
+    const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(check) : null;
+    if (ro) ro.observe(ul);
+    window.addEventListener('resize', check);
+    return () => { if (ro) ro.disconnect(); window.removeEventListener('resize', check); };
+  }, [spaces.spaces.length]);
+  useEffect(() => { setMore(false); }, [cur && cur.id, kind]);
+  useEffect(() => {
+    if (!more) return undefined;
+    const act = document.querySelector('.sp-more .on'); if (act) act.scrollIntoView({ block: 'nearest' });
+    const esc = (e) => { if (e.key === 'Escape') setMore(false); };
+    document.addEventListener('keydown', esc);
+    return () => document.removeEventListener('keydown', esc);
+  }, [more]);
+  const label = (s) => s.short || (SHORT[s.id] ? t(SHORT[s.id]) : tsrv(s.title));
+  const full = (s) => `${tsrv(s.title)}${s.level === 'view' ? ' · ' + t('Consultation seule') : ''}`;
   return (
     <nav className="sp-dock" aria-label={t('Mes espaces')}>
       <ul className="sp-dock-list" ref={list}>
         <li><Link to={`/app/${orgId}/espaces`} className={'sp-dock-a' + (kind === 'choose' ? ' on' : '')} aria-current={kind === 'choose' ? 'page' : undefined}><Icon name="table-cells" fixedWidth /><span>{t('Accueil')}</span></Link></li>
-        {spaces.spaces.map((s) => {
-          const name = SHORT[s.id] ? t(SHORT[s.id]) : tsrv(s.title);
-          const full = `${tsrv(s.title)}${s.level === 'view' ? ' · ' + t('Consultation seule') : ''}`;
-          return (
-            <li key={s.id}>
-              <Link to={`/app/${orgId}/home/${s.id}`} className={'sp-dock-a' + (on(s.id) ? ' on' : '')} aria-current={on(s.id) ? 'page' : undefined} title={full} aria-label={full}>
-                <Icon name={s.icon} fixedWidth /><span>{name}</span>
-                {s.level === 'view' ? <i className="sp-eye" aria-hidden="true"><Icon name="eye" /></i> : null}
-              </Link>
-            </li>
-          );
-        })}
+        {spaces.spaces.map((s) => (
+          <li key={s.id}>
+            <Link to={`/app/${orgId}/home/${s.id}`} className={'sp-dock-a' + (on(s.id) ? ' on' : '')} aria-current={on(s.id) ? 'page' : undefined} title={full(s)} aria-label={full(s)}>
+              <Icon name={s.icon} fixedWidth /><span>{label(s)}</span>
+              {s.level === 'view' ? <i className="sp-eye" aria-hidden="true"><Icon name="eye" /></i> : null}
+            </Link>
+          </li>
+        ))}
       </ul>
       <div className="sp-dock-tools">
-        <button type="button" className="sp-dock-a" onClick={onAi}><Icon name="ai" fixedWidth /><span>{t('Assistant IA')}</span></button>
-        <button type="button" className="sp-dock-a" onClick={onMenu} aria-label={t('Ouvrir le menu')}><Icon name="menu" fixedWidth />{alerts ? <i className="dot" /> : null}<span>{t('Menu')}</span></button>
+        {over ? <button type="button" className="sp-dock-a sp-dock-more" aria-expanded={more} aria-haspopup="true" onClick={() => setMore(!more)}><Icon name="menu" fixedWidth /><span>{t('Plus')}</span></button> : null}
+        <button type="button" className="sp-dock-a sp-dock-tool" onClick={onAi}><Icon name="ai" fixedWidth /><span>{t('Assistant IA')}</span></button>
+        <button type="button" className="sp-dock-a sp-dock-tool" onClick={onMenu} aria-label={t('Ouvrir le menu')}><Icon name="menu" fixedWidth />{alerts ? <i className="dot" /> : null}<span>{t('Menu')}</span></button>
       </div>
+      {more ? (
+        <>
+          <div className="sp-more-scrim" onClick={() => setMore(false)} aria-hidden="true" />
+          <ul className="sp-more" aria-label={t('Mes espaces')}>
+            {spaces.spaces.map((s) => (
+              <li key={s.id}><Link to={`/app/${orgId}/home/${s.id}`} className={on(s.id) ? 'on' : ''} aria-current={on(s.id) ? 'page' : undefined}><Icon name={s.icon} fixedWidth /><span>{tsrv(s.title)}</span>{s.level === 'view' ? <i className="sp-more-eye"><Icon name="eye" /> {t('Consultation seule')}</i> : null}</Link></li>
+            ))}
+          </ul>
+        </>
+      ) : null}
     </nav>
   );
 }

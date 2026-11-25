@@ -16,7 +16,7 @@ const RANK = { member: 1, manager: 2, admin: 3, owner: 4 };
 
 /** Lit l'adresse : /app/<organisation>/<module>. Espaces par rôle : /app/<organisation>/home/<espace> (accueil d'un espace) et /app/<organisation>/espaces (choix de l'espace). */
 export function parseRoute(pathname) {
-  const m = /^\/app(?:\.html)?(?:\/(\d+)(?:\/([a-z]+)(?:\/([a-z]+))?)?)?/.exec(pathname || '');
+  const m = /^\/app(?:\.html)?(?:\/(\d+)(?:\/([a-z][a-z0-9_-]*)(?:\/([a-z0-9][a-z0-9_-]*))?)?)?/.exec(pathname || '');
   return m && m[1] ? { org: Number(m[1]), mod: m[2] || 'dashboard', sub: m[3] || '' } : null;
 }
 const routePath = (r) => (r ? (r.sub ? `${r.mod}/${r.sub}` : r.mod) : 'dashboard');

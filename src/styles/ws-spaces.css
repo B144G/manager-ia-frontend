@@ -20,7 +20,16 @@ body.nav-mini .sp-cur>div,body.nav-mini .sp-hint{display:none}
 .sp-dock-a.on .ui-ico{color:inherit}
 .sp-dock-a .sp-eye{right:2px;top:2px}
 .sp-dock-a .dot{position:absolute;top:6px;left:calc(50% + 6px);width:9px;height:9px;border-radius:50%;background:var(--danger);border:2px solid var(--nav-bg)}
-.sp-dock-tools{display:none}
+.sp-dock-tools{display:flex;flex:none}
+.sp-dock-tool{display:none}
+.sp-more-scrim{position:fixed;inset:0;z-index:calc(var(--z-nav) - 1)}
+.sp-more{position:absolute;right:clamp(12px,3vw,24px);bottom:calc(100% + var(--sp-2));z-index:var(--z-nav);list-style:none;margin:0;padding:var(--sp-2);width:min(320px,calc(100vw - 24px));max-height:min(60vh,420px);overflow:auto;display:grid;gap:2px;background:var(--nav-bg);border:1px solid var(--nav-line);border-radius:var(--radius-lg);box-shadow:var(--sh-3)}
+.sp-more a{display:flex;align-items:center;gap:var(--sp-3);min-height:var(--touch);padding:0 var(--sp-3);border-radius:var(--radius-md);color:var(--nav-text);text-decoration:none;font-size:var(--fs-md)}
+.sp-more a .ui-ico{color:var(--nav-muted)}
+.sp-more a:hover{background:var(--nav-bg-2);color:#fff}
+.sp-more a.on{background:var(--nav-active);color:var(--nav-on-active);font-weight:var(--fw-semibold)}
+.sp-more a.on .ui-ico{color:inherit}
+.sp-more-eye{margin-left:auto;font-size:var(--fs-xs);font-style:normal;color:var(--warn)}
 body.has-dock .ws-fab{bottom:calc(var(--touch) + var(--sp-2) * 2 + 20px)}
 /* Téléphone : la barre est fixe et défilable, avec l'assistant et le menu à droite (le menu latéral reste un tiroir). */
 @media (max-width:767px){
@@ -29,8 +38,10 @@ body.has-dock .ws-fab{bottom:calc(var(--touch) + var(--sp-2) * 2 + 20px)}
   .sp-dock-a{flex-direction:column;justify-content:center;gap:3px;padding:0 var(--sp-3);min-width:64px;border-radius:0;font-size:11px;font-weight:var(--fw-semibold)}
   .sp-dock-a .ui-ico{font-size:19px}
   .sp-dock-a .sp-eye{right:10px}
-  .sp-dock-tools{display:flex;flex:none;border-left:1px solid var(--nav-line)}
+  .sp-dock-tools{border-left:1px solid var(--nav-line)}
+  .sp-dock-tool{display:flex}
   .sp-dock-tools .sp-dock-a{min-width:58px}
+  .sp-more{right:0;left:0;margin:0 auto}
   body.has-dock .ws-fab{bottom:20px}
 }
 @media (max-width:767px) and (orientation:landscape){.sp-dock{--bottom-nav-h:48px}.sp-dock-a{flex-direction:row;gap:6px;font-size:12px}}

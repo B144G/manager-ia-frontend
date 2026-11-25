@@ -12,6 +12,8 @@ Le fonctionnement complet (droits, niveaux, routes serveur) est décrit dans `do
 - **Mémoire** : le dernier espace est retenu par personne et par entreprise dans `localStorage` (`mabah-nav:space:<org>:<utilisateur>`, protégé par try/catch), en plus de la mémoire serveur ; il sert à l'ouverture de `/app`.
 - **Téléphone (≤ 767 px)** : la même barre est fixe en bas, défilable à l'horizontale (l'espace actif reste centré), avec « Assistant IA » et « Menu » à droite ; le menu latéral reste un tiroir.
 - **Espaces coupés** (réglage propriétaire ou `SPACES_BY_ROLE=off`) : ni barre ni changement ; l'ancien menu général et l'ancienne barre basse s'affichent comme avant.
+- **Beaucoup d'espaces** (un espace = un rôle) : la barre défile à l'horizontale ; si elle déborde, un bouton « Plus » ouvre la liste complète (aussi sur téléphone). Les adresses acceptent des identifiants d'espace avec chiffres, tirets et soulignés (`/home/vendeur_2`).
+- **Aucune correspondance module → espace dans le site** : tout vient de `info.spaces.spaces` (id, titre, icône, niveau, modules ; un libellé court `short` optionnel). Un module présent dans plusieurs espaces de la personne s'ouvre dans l'espace du dernier usage (à défaut le premier) ; le bouton retour rouvre donc le module dans le dernier espace utilisé.
 - Libellés courts : table `SHORT` dans `SpaceFrame.jsx` (le serveur ne renvoie que les titres complets). Un nouvel espace sans libellé court retombe sur son titre complet.
 
 Captures : `docs/captures-navigation/`.
