@@ -25,6 +25,7 @@ export default {
   "structure copiée": "structure copied",
   "Journal des rattachements": "Linking log",
   "Organisation rattachée": "Organisation linked",
+  "Lien révoqué": "Link revoked",
   "Lien créé": "Link created",
   "Personne ajoutée": "Person added",
   "Pour quelle organisation ?": "For which organisation?",

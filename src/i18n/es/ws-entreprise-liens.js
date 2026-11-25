@@ -25,6 +25,7 @@ export default {
   "structure copiée": "estructura copiada",
   "Journal des rattachements": "Registro de vinculaciones",
   "Organisation rattachée": "Organización vinculada",
+  "Lien révoqué": "Enlace revocado",
   "Lien créé": "Enlace creado",
   "Personne ajoutée": "Persona añadida",
   "Pour quelle organisation ?": "¿Para qué organización?",
