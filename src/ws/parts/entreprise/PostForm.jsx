@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useT } from '../../../lib/i18n.jsx';
 import { tsrv } from '../../../lib/srv.js';
-import { Button } from '../../ui.jsx';
+import { Button, useLoad } from '../../ui.jsx';
 import { useWs } from '../../WsContext.jsx';
 import { SPACE_ORDER, SPACE_TITLE } from './lib.js';
 
@@ -15,6 +15,9 @@ export default function PostForm({ post, departmentId, directionId, done }) {
   const [spaces, setSpaces] = useState(() => ({ ...(post ? post.spaces : { projets: 'write' }) }));
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
+  const [profile, setProfile] = useState(post && post.profileKey ? post.profileKey : '');
+  const [applyRights, setApplyRights] = useState(false);
+  const profs = useLoad(() => oapi('GET', '/entreprise/profiles'), []);
   const owner = can('owner');
   const set = (sp, lv) => setSpaces((s) => { const n = { ...s }; if (lv) n[sp] = lv; else delete n[sp]; return n; });
   const save = (ev) => {
@@ -23,7 +26,7 @@ export default function PostForm({ post, departmentId, directionId, done }) {
     setBusy(true); setErr('');
     const body = { title: title.trim(), kind, headcount: Number(hc) || 1, spaces };
     const p = post ? oapi('PUT', '/entreprise/posts/' + post.id, body) : oapi('POST', '/entreprise/posts', { ...body, departmentId, directionId });
-    p.then(() => { toast(t('Poste enregistré.')); done(); }).catch((e) => { setErr(tsrv(e.message)); if (e.status === 401) fail(e); }).finally(() => setBusy(false));
+    p.then((j) => (profile || (post && post.profileKey) ? oapi('PUT', '/entreprise/posts/' + (post ? post.id : j.id) + '/profile', { key: profile || null, applyRights }) : null)).then(() => { toast(t('Poste enregistré.')); done(); }).catch((e) => { setErr(tsrv(e.message)); if (e.status === 401) fail(e); }).finally(() => setBusy(false));
   };
   return (
     <form className="ws-form" noValidate onSubmit={save}>
@@ -35,6 +38,12 @@ export default function PostForm({ post, departmentId, directionId, done }) {
           </select></label>
         <label className="fld"><span>{t('Nombre de places')}</span><input type="number" min="1" max="200" value={hc} onChange={(e) => setHc(e.target.value)} /></label>
       </div>
+      <label className="fld"><span>{t('Profil de rôle')}</span>
+        <select value={profile} onChange={(e) => setProfile(e.target.value)}>
+          <option value="">{t('Profil du modèle (automatique)')}</option>
+          {profs.data ? profs.data.profiles.map((x) => <option key={x.key} value={x.key}>{tsrv(x.title)}</option>) : null}
+        </select><small>{t("Le profil organise l'écran d'accueil de la personne ; il n'ouvre aucun droit.")}</small></label>
+      {profile ? <label className="sp-check"><input type="checkbox" checked={applyRights} onChange={(e) => setApplyRights(e.target.checked)} /> {t("Reprendre aussi les accès par défaut de ce profil")}</label> : null}
       <fieldset className="ent-access">
         <legend>{t('Ce que la personne affectée peut ouvrir')}</legend>
         <p className="muted small">{t("Visiteur : lecture seule. Membre : travaille avec ses droits habituels. Responsable : gère l'espace. Sans affectation, personne ne reçoit rien de plus.")}</p>

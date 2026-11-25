@@ -106,6 +106,7 @@ export function WsProvider({ children }) {
       setBrand(i.brand || null); // marque de l'entreprise (nom, assistant, logo, couleur, menu, vocabulaire) ; absente = affichage d'origine
       // Espaces par rôle (si l'entreprise les a activés) : à l'ouverture, la personne arrive dans SON espace, ou choisit entre ses espaces.
       let target = mod || 'dashboard';
+      if (target === 'dashboard' && i.profile && i.profile.landing) target = 'profil'; // personne affectée à un poste : elle arrive sur son profil de rôle
       const sp = i.spaces;
       if (sp && sp.enabled && target === 'dashboard') target = sp.choose || !sp.landing ? 'espaces' : `home/${sp.landing}`;
       setOrgId(id); setInfo(i); setOnboarding(null);

@@ -89,3 +89,17 @@
   .ent .ws-head .ui-btn,.ent-foot .ui-btn{flex:1 1 auto;justify-content:center;white-space:normal;text-align:center}
 }
 .ent-bigcode{font-size:var(--fs-2xl);letter-spacing:.12em}
+
+/* Profil de rôle (Mon espace de travail) */
+.ent-profile{display:grid;gap:var(--sp-4);min-width:0}
+.ent-blocks{display:grid;gap:var(--gap);min-width:0}
+.ent-block h2{margin-top:0}
+.ent-quick{display:flex;gap:var(--sp-2);flex-wrap:wrap;list-style:none;margin:0;padding:0}
+.ent-qbtn{display:inline-flex;align-items:center;gap:var(--sp-2);min-height:var(--touch);padding:0 var(--sp-4);border-radius:var(--radius-lg);background:var(--accent);color:var(--on-accent);text-decoration:none;font-weight:var(--fw-semibold)}
+.ent-qbtn:hover,.ent-qbtn:focus-visible{background:var(--accent-hover)}
+.ent-rowlink{color:var(--text);text-decoration:none;min-height:var(--touch)}.ent-rowlink:hover{color:var(--accent)}
+.layout-driver .ent-qbtn{flex:1 1 100%;justify-content:center;font-size:var(--fs-lg);min-height:56px}
+.layout-driver .ws-card input,.layout-driver .ws-card select,.layout-driver .ws-card textarea{font-size:16px;min-height:var(--touch)}
+.layout-compact .ent-blocks{gap:var(--sp-3)}
+@media (min-width:900px){.layout-standard .ent-blocks{grid-template-columns:repeat(2,minmax(0,1fr))}.layout-standard .ent-blocks .sp-tiles{grid-column:1/-1}}
+.ent-modgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:2px var(--sp-3)}
