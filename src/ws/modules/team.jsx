@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getLocale, useT } from '../../lib/i18n.jsx';
 import { tsrv } from '../../lib/srv.js';
 import { useWs } from '../WsContext.jsx';
@@ -28,6 +29,7 @@ export default function Team() {
         </div>
         {can('admin') ? <button className="btn primary small" type="button" onClick={invite}>{t("Inviter quelqu'un")}</button> : null}
       </div>
+      {can('admin') ? <div className="ws-card ent-cta"><span><b>{t('Entreprise et organigramme')}</b><small> {t("Directions, départements, postes et personnes de l'entreprise, avec un assistant de configuration.")}</small></span><Link className="btn small" to={'/app/' + info.org.id + '/entreprise'}>{t('Configurer mon entreprise')}</Link></div> : null}
       <div className="ws-cols">
         <div><TeamBox /></div>
         <div><Branches />{can('admin') ? <Invites ver={iv} /> : null}</div>

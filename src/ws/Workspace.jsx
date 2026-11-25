@@ -58,6 +58,8 @@ function Onboarding() {
   const { user, api, loadOrg, onboarding, setOnboarding, orgs, logout, firstName } = useWs();
   const t = useT();
   const go = (j) => loadOrg(j.id, 'dashboard');
+  // Entreprise qui vient d'être créée : l'assistant de configuration s'ouvre (étapes facultatives).
+  const created = (j) => { try { sessionStorage.setItem('mabah.ent.wizard.' + j.id, '1'); } catch { /* navigation privée */ } return loadOrg(j.id, 'entreprise'); };
   return (
     <Center>
       <div className="ws-card">
@@ -67,7 +69,7 @@ function Onboarding() {
         <div className="ws-cols">
           <div className="ws-sub">
             <h2>{t('Créer mon organisation')}</h2>
-            <Form submitText={t('Créer')} onSubmit={(v) => api('POST', '/orgs', v).then(go)} fields={[
+            <Form submitText={t('Créer')} onSubmit={(v) => api('POST', '/orgs', v).then(created)} fields={[
               { k: 'name', label: t('Nom'), required: true, placeholder: 'Boutique Awa' },
               { k: 'sector', label: t("Secteur d'activité"), placeholder: t('Commerce, restauration, services…') },
               { k: 'description', label: t('Décrivez votre activité'), type: 'textarea', rows: 3, hint: t("L'IA s'en sert pour mieux vous conseiller.") },
