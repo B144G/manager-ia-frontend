@@ -12,7 +12,7 @@ import PostForm from './PostForm.jsx';
 const STEPS = ['info', 'dg', 'directions', 'departments', 'people'];
 
 export default function Wizard({ close, onChange }) {
-  const { oapi, can, fail, modal } = useWs();
+  const { oapi, can, fail } = useWs();
   const t = useT();
   const [ov, setOv] = useState(null);
   const [chart, setChart] = useState(null);
