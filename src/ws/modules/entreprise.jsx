@@ -8,6 +8,8 @@ import InfoForm from '../parts/entreprise/InfoForm.jsx';
 import People from '../parts/entreprise/People.jsx';
 import Wizard from '../parts/entreprise/Wizard.jsx';
 import Links from '../parts/entreprise/Links.jsx';
+import Orgs from '../parts/entreprise/Orgs.jsx';
+import { DangerZone } from '../parts/entreprise/OrgActions.jsx';
 import Usage from '../parts/entreprise/Usage.jsx';
 import DirectionCard, { ExtrasCard } from '../parts/direction/DirectionCard.jsx';
 import Workflows from '../parts/direction/Workflows.jsx';
@@ -19,7 +21,7 @@ import '../../styles/ws-entreprise.css';
 const STEPS = ['info', 'dg', 'directions', 'departments', 'people'];
 
 export default function Entreprise() {
-  const { oapi, can, modal, orgId, fail, reloadOrg } = useWs();
+  const { oapi, can, modal, orgId, fail, reloadOrg, info } = useWs();
   const t = useT();
   const [ov, setOv] = useState(null);
   const [chart, setChart] = useState(null);
@@ -42,6 +44,7 @@ export default function Entreprise() {
     { id: 'people', label: t('Personnes'), icon: 'users', count: chart.people.length },
     { id: 'info', label: t('Entreprise'), icon: 'building' },
   ];
+  tabs.push({ id: 'orgs', label: t('Organisations'), icon: 'pv-sitemap' });
   if (can('admin')) tabs.push({ id: 'links', label: t('Organisations liées'), icon: 'link' });
   if (can('admin')) tabs.push({ id: 'usage', label: t('Abonnement et usage'), icon: 'gauge' });
   if (can('admin')) tabs.push({ id: 'workflows', label: t('Circuits de validation'), icon: 'circle-check' });
@@ -70,7 +73,8 @@ export default function Entreprise() {
       <div className="ent-tabbody">
         {tab === 'chart' ? <Chart chart={chart} reload={load} people={chart.people} /> : null}
         {tab === 'people' ? <People chart={chart} reload={load} /> : null}
-        {tab === 'info' ? <><Card title={t("Informations de l'entreprise")}><InfoForm ov={ov} onSaved={load} /></Card>{can('admin') ? <><DirectionCard ov={ov} reload={load} /><ExtrasCard ov={ov} reload={load} /></> : null}{can('admin') ? <CompanyAccess ov={ov} reload={load} /> : null}{can('owner') ? <RightsCard ov={ov} reload={() => { load(); reloadOrg(); }} /> : null}</> : null}
+        {tab === 'info' ? <><Card title={t("Informations de l'entreprise")}><InfoForm ov={ov} onSaved={load} /></Card>{can('admin') ? <><DirectionCard ov={ov} reload={load} /><ExtrasCard ov={ov} reload={load} /></> : null}{can('admin') ? <CompanyAccess ov={ov} reload={load} /> : null}{can('owner') ? <RightsCard ov={ov} reload={() => { load(); reloadOrg(); }} /> : null}{can('owner') ? <DangerZone org={{ id: orgId, name: info.org.name }} /> : null}</> : null}
+        {tab === 'orgs' ? <Orgs /> : null}
         {tab === 'links' ? <Links /> : null}
         {tab === 'usage' ? <Usage /> : null}
         {tab === 'workflows' ? <Workflows /> : null}
