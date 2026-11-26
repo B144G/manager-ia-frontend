@@ -1,3 +1,4 @@
+import { getLastSpace } from './spaces/lastSpace.js';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { api as wsApi, rq } from '../lib/api.js';
@@ -15,7 +16,7 @@ const RANK = { member: 1, manager: 2, admin: 3, owner: 4 };
 
 /** Lit l'adresse : /app/<organisation>/<module>. Espaces par rôle : /app/<organisation>/home/<espace> (accueil d'un espace) et /app/<organisation>/espaces (choix de l'espace). */
 export function parseRoute(pathname) {
-  const m = /^\/app(?:\.html)?(?:\/(\d+)(?:\/([a-z_]+)(?:\/([a-z_]+))?)?)?/.exec(pathname || '');
+  const m = /^\/app(?:\.html)?(?:\/(\d+)(?:\/([a-z][a-z0-9_-]*)(?:\/([a-z0-9][a-z0-9_-]*))?)?)?/.exec(pathname || '');
   return m && m[1] ? { org: Number(m[1]), mod: m[2] || 'dashboard', sub: m[3] || '' } : null;
 }
 const routePath = (r) => (r ? (r.sub ? `${r.mod}/${r.sub}` : r.mod) : 'dashboard');
@@ -108,7 +109,10 @@ export function WsProvider({ children }) {
       let target = mod || 'dashboard';
       if (target === 'dashboard' && i.profile && i.profile.landing) target = 'profil'; // personne affectée à un poste : elle arrive sur son profil de rôle
       const sp = i.spaces;
-      if (sp && sp.enabled && target === 'dashboard') target = sp.choose || !sp.landing ? 'espaces' : `home/${sp.landing}`;
+      if (sp && sp.enabled && target === 'dashboard') {
+        const mine = getLastSpace(id, i.me && i.me.userId); // dernier espace retenu sur cet appareil (personne + entreprise), s'il est toujours accordé
+        target = mine && sp.spaces.some((x) => x.id === mine) ? `home/${mine}` : sp.choose || !sp.landing ? 'espaces' : `home/${sp.landing}`;
+      }
       setOrgId(id); setInfo(i); setOnboarding(null);
       navigate(`/app/${id}/${target}`, { replace: Boolean(replace) });
       oapi('GET', '/dashboard').then(setDash, () => {});

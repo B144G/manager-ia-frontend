@@ -116,5 +116,6 @@ export default {
   "Votre menu est maintenant organisé par espaces de travail.": "Ihr Menü ist jetzt nach Arbeitsbereichen gegliedert.",
   "Vous gardez les mêmes accès qu'avant, regroupés par espace (Commercial, Stock, Comptabilité…). Le propriétaire peut vous affecter un espace précis ; changez d'espace à tout moment depuis le menu.": "Sie behalten den bisherigen Zugriff, nach Bereichen gruppiert (Vertrieb, Lager, Buchhaltung …). Der Inhaber kann Ihnen einen bestimmten Bereich zuweisen; den Bereich wechseln Sie jederzeit im Menü.",
   "Vous arrivez dans votre espace ; les autres espaces restent accessibles selon ce que le propriétaire vous accorde. Changez d'espace à tout moment depuis le menu.": "Sie landen in Ihrem eigenen Bereich; die übrigen Bereiche stehen je nach Freigabe des Inhabers offen. Den Bereich wechseln Sie jederzeit im Menü.",
+  "Choisissez un espace dans la barre en bas de l'écran : le menu affichera ses écrans.": "Wählen Sie unten in der Leiste einen Bereich: Das Menü zeigt dann dessen Bildschirme.",
   "J'ai compris": "Verstanden"
 };

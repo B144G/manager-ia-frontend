@@ -21,8 +21,9 @@ import Personalize, { sortMods } from './shell/Personalize.jsx';
 import { bindPalette } from './shell/screens.js';
 import { WsProvider, useWs } from './WsContext.jsx';
 // Espaces par rôle (réglage d'entreprise) : nouvelle navigation, active seulement si le serveur renvoie info.spaces.enabled.
-import { SpaceBottomNav, SpaceChooser, SpaceDenied, SpaceHome, SpaceSidebar, SpacesNotice, VisitorBanner, VisitorGuard, resolveSpaces } from './spaces/SpaceFrame.jsx';
+import { SpaceChooser, SpaceDenied, SpaceDock, SpaceHome, SpaceSidebar, SpacesNotice, VisitorBanner, VisitorGuard, resolveSpaces } from './spaces/SpaceFrame.jsx';
 import { Navigate } from 'react-router-dom';
+import { getLastSpace, setLastSpace as saveLastSpace } from './spaces/lastSpace.js';
 import { useChatUnread } from './parts/chat/unread.js';
 const ChatBeacon = lazy(() => import('./parts/chat/Beacon.jsx')); // position en direct (si activée) et pastille « non lus » du chat
 
@@ -103,7 +104,7 @@ function Shell() {
   const main = useRef(null);
   // ----- Espaces par rôle : si l'entreprise les a activés, le menu général est remplacé par le menu de l'espace courant (voir ./spaces). -----
   const spaces = ws.spaces; // null = ancien menu général
-  const [lastSpace, setLastSpace] = useState(null);
+  const [lastSpace, setLastSpace] = useState(() => getLastSpace(orgId, info.me.userId));
   const sr = spaces ? resolveSpaces(spaces, route, lastSpace) : null;
   const allMods = spaces ? spaces.spaces.flatMap((s) => s.modules) : null;
   const cb = useBrand();
@@ -116,9 +117,10 @@ function Shell() {
   const curMod = mods.find((m) => m.id === cur);
   const canBrand = ws.can('admin');
   const homeSpace = spaces ? (spaces.landing || (spaces.spaces[0] && spaces.spaces[0].id)) : null; // « Retour à mon espace »
-  useEffect(() => { if (sr && sr.cur) setLastSpace(sr.cur.id); }, [sr && sr.cur && sr.cur.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (sr && sr.cur) { setLastSpace(sr.cur.id); saveLastSpace(orgId, info.me.userId, sr.cur.id); } }, [sr && sr.cur && sr.cur.id]); // eslint-disable-line react-hooks/exhaustive-deps
   // Le dernier espace ouvert est mémorisé côté serveur (d'un appareil à l'autre) quand la personne ouvre l'accueil d'un espace.
   useEffect(() => { if (spaces && route && route.mod === 'home' && sr.cur && spaces.last !== sr.cur.id) ws.oapi('PUT', '/spaces/last', { space: sr.cur.id }).catch(() => {}); }, [spaces && route && route.mod === 'home' ? route.sub : '']); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!spaces) return undefined; document.body.classList.add('sp-merged'); return () => document.body.classList.remove('sp-merged'); }, [Boolean(spaces)]); // eslint-disable-line react-hooks/exhaustive-deps
   const visitor = Boolean(sr && sr.visitor);
   useEffect(() => { ws.setReadOnly(visitor); return () => ws.setReadOnly(false); }, [visitor]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -165,7 +167,7 @@ function Shell() {
       <a className="skip-link" href="#ws-main">{t('Aller au contenu')}</a>
       <div className="ws-scrim" onClick={() => setNavOpen(false)} aria-hidden="true" />
       {spaces ? (
-        <SpaceSidebar spaces={spaces} cur={sr.cur} curMod={cur === 'home' ? 'home' : cur} orgId={orgId} orgs={orgs} info={info} user={user} badgeOf={badgeOf} initials={ws.initials} onOrg={onOrg} onClose={() => setNavOpen(false)}
+        <SpaceSidebar cur={sr.cur} curMod={cur === 'home' ? 'home' : cur} orgId={orgId} orgs={orgs} info={info} user={user} badgeOf={badgeOf} initials={ws.initials} onOrg={onOrg} onClose={() => setNavOpen(false)}
           onSecurity={openSecurity} onLogout={logout} onPersonalize={personalize} mini={p.navMini} onMini={() => setPrefs({ navMini: !p.navMini })} />
       ) : (
       <Sidebar mods={mods} cur={cur} orgId={orgId} orgs={orgs} info={info} user={user} badgeOf={badgeOf} initials={ws.initials} onOrg={onOrg} onClose={() => setNavOpen(false)}
@@ -187,10 +189,11 @@ function Shell() {
           </div>
         </main>
         <Footer orgId={orgId} onFeedback={openFeedback} />
+        {spaces ? <SpaceDock spaces={spaces} cur={sr.cur} kind={sr.kind} orgId={orgId} onMenu={() => setNavOpen(true)} onAi={() => setAiOpen(!aiOpen)} alerts={bell} /> : null}
       </div>
       <AIPanel mod={AI_MODULES.has(cur) ? cur : 'general'} />
       <button className="ws-fab" id="aiBtn" type="button" onClick={() => setAiOpen(!aiOpen)}><Icon name="ai" /><span>{t('Assistant IA')}</span></button>
-      {spaces ? <SpaceBottomNav cur={sr.cur} curMod={cur} orgId={orgId} onMenu={() => setNavOpen(true)} onAi={() => setAiOpen(!aiOpen)} alerts={bell} />
+      {spaces ? null
         : <BottomNav mods={mods} cur={cur} orgId={orgId} onMenu={() => setNavOpen(true)} onAi={() => setAiOpen(!aiOpen)} alerts={bell} />}
       {palette ? <Palette mods={spaces ? allMods.filter((m, i, a) => hasModule(m.id) && a.findIndex((x) => x.id === m.id) === i) : mods} spaces={spaces} curSpace={sr && sr.cur} orgId={orgId} onClose={() => setPalette(false)} onPersonalize={personalize} onAsk={askAI} /> : null}
     </div>

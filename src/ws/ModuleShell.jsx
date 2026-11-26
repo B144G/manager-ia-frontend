@@ -30,19 +30,19 @@ export default function ModuleShell({ title, groups, active, onSelect, actions, 
   }, [active]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const flat = useMemo(() => groups.flatMap((g) => g.items.map((i) => ({ ...i, group: g.label }))), [groups]);
-  useEffect(() => { publishScreens({ title, items: flat, active, onSelect }); }, [title, flat, active, onSelect]);
-  useEffect(() => () => publishScreens({ title: '', items: [], active: null, onSelect: null }), []);
+  useEffect(() => { publishScreens({ title, items: flat, groups, active, onSelect, pick }); }, [title, flat, groups, active, onSelect]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => () => publishScreens({ title: '', items: [], groups: [], active: null, onSelect: null, pick: null }), []);
   const found = useMemo(() => {
     const s = q.trim().toLowerCase();
     return s ? flat.filter((i) => (i.label + ' ' + (i.hint || '') + ' ' + i.group).toLowerCase().includes(s)) : [];
   }, [q, flat]);
   const cur = flat.find((i) => i.id === active) || flat[0];
 
-  const pick = (id) => {
+  function pick(id) {
     setQ(''); setDrawer(false);
     const it = flat.find((x) => x.id === id);
     if (it && it.to) navigate(`/app/${orgId}/${it.to}`); else onSelect(id);
-  };
+  }
   const toggle = (id) => setOpen((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
 
   return (
